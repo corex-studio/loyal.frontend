@@ -1,0 +1,50 @@
+$colors: (
+  'black': #252525,
+  'black2': #353535,
+  'secondary': #929292,
+  'secondary1': #e9e9e9,
+  'secondary2': #f8f8f8,
+  'primary': #412782,
+  'primary1': #2c1b56,
+  'primary2': #462e84,
+  'accent1': #2d2680,
+  'accent2': #1e7b79,
+  'accent3': #47b7b3,
+  'accent4': #fefcc9,
+  'accent5': #811871,
+  'accent6': #5a39ac,
+  'accent7': #f5841c,
+  'transparent': #00000000,
+  'gray': #c4c4c4,
+  'white': #fff,
+  'deviated': #ff2b3f,
+  'success': #1ac30b,
+  'danger': #ff3b10,
+  'pink': #fca9b1,
+  'liner2': linear-gradient(0.79deg, #0c3635 0.65%, #1e7b79 99.32%),
+);
+
+@each $index, $color in $colors {
+  .bg-#{$index} {
+    background: $color !important;
+  }
+
+  .text-#{$index} {
+    color: $color !important;
+    &.q-select .q-field__native span {
+      color: $color !important;
+    }
+  }
+  .q-btn.underline.text-#{$index}:after,
+  .q-btn.underline-fixed.text-#{$index}:after {
+    background: $color !important;
+  }
+  .bg-#{$index} .q-field__label {
+    background: $color !important;
+    border-radius: 4px;
+  }
+}
+
+.bg-input-white-opacity {
+  background: rgba(255, 255, 255, 0.2) !important;
+}

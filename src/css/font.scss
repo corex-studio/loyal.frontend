@@ -1,0 +1,180 @@
+* {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.bold {
+  font-weight: 600 !important;
+  .q-field__label {
+    @extend .bold;
+  }
+  &.q-btn div {
+    @extend .bold;
+  }
+}
+
+.header {
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 39.2px;
+}
+
+.header2 {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 26.4px;
+}
+
+.subtitle-text {
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 21px;
+}
+
+.body {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16.8px;
+  .q-field__label,
+  &.q-btn div {
+    @extend .body;
+  }
+}
+
+.notification-text {
+  .q-btn {
+    @extend .body;
+  }
+}
+
+.secondary-text {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.85px;
+  .q-field__label,
+  .q-field__native,
+  textarea::placeholder {
+    @extend .secondary-text;
+  }
+}
+
+.caption-text {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.63px;
+  .q-field__label,
+  &.q-btn div {
+    @extend .caption-text;
+  }
+}
+
+textarea::placeholder {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 14.63px;
+}
+
+.notification-text {
+  .q-notification__message {
+    @extend .caption-text;
+  }
+}
+
+.caption-text2 {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12.19px;
+  .q-field__label {
+    @extend .caption-text2;
+  }
+}
+
+.card-text {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12.19px;
+}
+
+body.screen--md {
+  .header {
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 36.4px;
+  }
+
+  .subtitle-text {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 18.2px;
+  }
+
+  .body {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15.6px;
+  }
+  .secondary-text {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14.63px;
+  }
+}
+
+body.screen--sm {
+  .header {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .header2 {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 140%;
+  }
+
+  // .subtitle-text {
+  //   font-weight: 600;
+  //   font-size: 11px;
+  //   line-height: 15.4px;
+  // }
+
+  .caption-text {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 12.19px !important;
+  }
+
+  textarea::placeholder {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 12.19px;
+  }
+  .body {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 15.6px;
+  }
+  .secondary-text {
+    font-weight: 400;
+    font-size: 11px;
+    line-height: 13.41px;
+  }
+  .card-text {
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 12.19px;
+  }
+  .mobile-catalog-text {
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 10px !important;
+    line-height: 120% !important;
+    &.q-btn div {
+      @extend .mobile-catalog-text;
+    }
+  }
+}
+
+// .text-negative {
+//   color: $accent !important;
+// }
