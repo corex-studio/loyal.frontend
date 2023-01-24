@@ -34,9 +34,13 @@
 
 <script setup lang="ts">
 import { useQuasar } from 'quasar';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 
 const q = useQuasar();
+
+onMounted(() => {
+  window.location.replace(currentLink.value);
+});
 
 const currentLink = computed(() => {
   return q.platform.is.android
