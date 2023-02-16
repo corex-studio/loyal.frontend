@@ -106,7 +106,7 @@
                 color: #ffffff;
               "
             >
-              Скоро приложение будет доступно!
+              Скоро будет доступно приложение!
             </div>
           </template>
           <template v-if="tab === 'register'">
@@ -386,7 +386,7 @@ const getMe = async () => {
     }> = await api.get('/users/me/', {
       headers: {
         Authorization: `Bearer ${access}`,
-        'Company-Group': 'HooDoo',
+        'Company-Group': 'popyta',
       },
     });
     return res;
@@ -488,7 +488,7 @@ const sendRegister = async () => {
         { phone: getPhone(regPhone.value) },
         {
           headers: {
-            'Company-Group': 'HooDoo',
+            'Company-Group': 'popyta',
           },
         }
       );
@@ -523,7 +523,7 @@ watch(regCodeForLogin, async (val) => {
         },
         {
           headers: {
-            'Company-Group': 'HooDoo',
+            'Company-Group': 'popyta',
           },
         }
       );
@@ -533,7 +533,7 @@ watch(regCodeForLogin, async (val) => {
       if (!me?.data.registered_at) {
         tab.value = 'registerNewUser';
       } else {
-        tab.value = 'qrBlock';
+        setQrBlock();
       }
     } catch (e) {
       console.log(e);
@@ -565,7 +565,7 @@ const register = async () => {
       },
       {
         headers: {
-          'Company-Group': 'HooDoo',
+          'Company-Group': 'popyta',
           Authorization: `Bearer ${access}`,
         },
       }
