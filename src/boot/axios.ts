@@ -16,7 +16,7 @@ declare module '@vue/runtime-core' {
 
 let baseURL = process.env.DEV
   ? 'http://127.0.0.1:8000/api/v1'
-  : 'http://62.113.96.55:15190/api/v1';
+  : 'https://62.113.96.55:15190/api/v1';
 
 try {
   if (process.env.BASE_URL) baseURL = process.env.BASE_URL;
