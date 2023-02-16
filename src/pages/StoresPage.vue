@@ -339,17 +339,13 @@
 
 <script setup lang="ts">
 import moment from 'moment';
-import { Notify, useQuasar } from 'quasar';
-import rules from 'src/corexModels/rules';
 import { computed, onMounted, ref } from 'vue';
-import { useTimer } from 'vue-timer-hook';
 import { api } from 'src/boot/axios';
-import { store } from 'src/models/store';
 import { watch } from 'vue';
 import { AxiosResponse } from 'axios';
 import QrcodeVue from 'qrcode.vue';
 
-const q = useQuasar();
+// const q = useQuasar();
 
 const sexOptions = ref([
   {
@@ -366,7 +362,7 @@ const sexOptions = ref([
   },
 ]);
 
-const endDate = moment.utc('2023-02-16 09:49:00').local();
+// const endDate = moment.utc('2023-02-16 09:49:00').local();
 
 const time = new Date();
 time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
@@ -454,11 +450,6 @@ const regCodeForLogin = ref<number | null>(null);
 
 const processDataAccepted = ref(false);
 
-const isReady = computed(() => {
-  const currentTime = moment();
-  return endDate.diff(currentTime);
-});
-
 const toRegiser = () => {
   tab.value = 'register';
 };
@@ -466,11 +457,6 @@ const toRegiser = () => {
 const regError = ref(false);
 
 const lastAuthTryTime = ref<number | null>(null);
-
-const timeToNewAuthTry = computed(() => {
-  const current = moment();
-  return current.diff(lastAuthTryTime.value);
-});
 
 const getPhone = (v: string) => {
   const data = [];
@@ -557,7 +543,7 @@ const register = async () => {
   try {
     registerError.value = false;
     registerLoading.value = true;
-    const res = await api.post(
+    await api.post(
       '/users/register/',
       {
         ...registerData.value,
@@ -578,17 +564,17 @@ const register = async () => {
   }
 };
 
-const currentLink = computed(() => {
-  return q.platform.is.android
-    ? 'https://play.google.com/store/apps/details?id=studio.corex.hoodoo'
-    : q.platform.is.ios || q.platform.is.iphone || q.platform.is.ipad
-    ? 'https://apps.apple.com/us/app/hoodoo/id1667328735'
-    : 'https://apps.apple.com/us/app/hoodoo/id1667328735';
-});
+// const currentLink = computed(() => {
+//   return q.platform.is.android
+//     ? 'https://play.google.com/store/apps/details?id=studio.corex.hoodoo'
+//     : q.platform.is.ios || q.platform.is.iphone || q.platform.is.ipad
+//     ? 'https://apps.apple.com/us/app/hoodoo/id1667328735'
+//     : 'https://apps.apple.com/us/app/hoodoo/id1667328735';
+// });
 
-const toLink = () => {
-  window.open(currentLink.value, '_blank');
-};
+// const toLink = () => {
+//   window.open(currentLink.value, '_blank');
+// };
 </script>
 
 <style scoped lang="scss">
