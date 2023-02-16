@@ -14,9 +14,7 @@ declare module '@vue/runtime-core' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 
-let baseURL = process.env.DEV
-  ? 'http://127.0.0.1:8000/api/v1'
-  : 'https://62.113.96.55:15190/api/v1';
+let baseURL = process.env.DEV ? 'http://127.0.0.1:8000/api/v1' : '/api/v1';
 
 try {
   if (process.env.BASE_URL) baseURL = process.env.BASE_URL;
