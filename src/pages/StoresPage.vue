@@ -386,7 +386,7 @@ const getMe = async () => {
     }> = await api.get('/users/me/', {
       headers: {
         Authorization: `Bearer ${access}`,
-        'Company-Group': 'popyta',
+        'Company-Group': 'HooDoo',
       },
     });
     return res;
@@ -488,7 +488,7 @@ const sendRegister = async () => {
         { phone: getPhone(regPhone.value) },
         {
           headers: {
-            'Company-Group': 'popyta',
+            'Company-Group': 'HooDoo',
           },
         }
       );
@@ -523,7 +523,7 @@ watch(regCodeForLogin, async (val) => {
         },
         {
           headers: {
-            'Company-Group': 'popyta',
+            'Company-Group': 'HooDoo',
           },
         }
       );
@@ -565,7 +565,7 @@ const register = async () => {
       },
       {
         headers: {
-          'Company-Group': 'popyta',
+          'Company-Group': 'HooDoo',
           Authorization: `Bearer ${access}`,
         },
       }
