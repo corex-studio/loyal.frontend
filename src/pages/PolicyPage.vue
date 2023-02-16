@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="px-5">
     <div id="inputResult">
       <div class="row mb-4">
         <div class="col">
