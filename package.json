@@ -18,9 +18,11 @@
     "core-js": "^3.6.5",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
+    "qrcode.vue": "^3.3.3",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "vue-router": "^4.0.0",
+    "vue-timer-hook": "^1.0.60"
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.0.0",

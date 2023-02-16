@@ -29,7 +29,6 @@ import MobileMenu from './MobileMenu.vue';
 import { useQuasar } from 'quasar';
 import { onMounted, watch } from 'vue';
 import LeftMenu from './drawer/LeftMenu.vue';
-import { route } from 'quasar/wrappers';
 import { useRoute, useRouter } from 'vue-router';
 import { store } from 'src/models/store';
 import { menuRepo } from 'src/models/menu/menuRepo';

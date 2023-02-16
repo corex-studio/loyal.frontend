@@ -1,6 +1,5 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
-import { LANGUAGE } from 'src/boot/variables';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -17,16 +16,13 @@ declare module '@vue/runtime-core' {
 
 let baseURL = process.env.DEV
   ? 'http://127.0.0.1:8000/api/v1'
-  : 'https://corex.market/api/v1';
+  : 'http://62.113.96.55:15190/api/v1';
 
 try {
   if (process.env.BASE_URL) baseURL = process.env.BASE_URL;
 } catch {}
 const api = axios.create({ baseURL });
 
-Object.assign(api.defaults.headers, {
-  ['Accept-Language']: LANGUAGE ? LANGUAGE : 'ru-ru',
-});
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
