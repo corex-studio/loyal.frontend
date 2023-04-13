@@ -1,372 +1,52 @@
 <template>
-  <div v-if="!loader && !preloader" class="row pa-0 full-width justify-between">
-    <div class="cursor-pointer header2">
-      Current platform is:
-      <span style="font-weight: 400">
-        {{
-          $q.platform.is.mobile
-            ? $q.platform.is.android
-              ? 'android'
-              : $q.platform.is.ios
-              ? 'ios'
-              : 'other mobile platform'
-            : 'desktop'
-        }}
-      </span>
-      <div class="mt-5">
-        Link to store:
-
-        <span class="text-blue" style="font-weight: 400" @click="toLink()">
-          {{ currentLink }}
-        </span>
-      </div>
-    </div>
-    <CButton
-      :hover-text-color="'accent3'"
-      :text-color="'black'"
-      height="25px"
-      text-button
-      @click="$router.replace({ name: 'home' })"
-      >Back to home
-    </CButton>
-    <!--    <div style="width: 100vw; height: 100vh; position: relative" class="bcg">-->
-    <!--      <div class="col-12 flex justify-center pt-7 mb-45">-->
-    <!--        <q-img-->
-    <!--          src="../assets/tg_image_1622935803.jpeg"-->
-    <!--          style="max-height: 67px; max-width: 178px"-->
-    <!--        />-->
-    <!--      </div>-->
-    <!--      <div class="row" style="max-width: 825px; color: white; margin: 0 auto">-->
-    <!--        <div v-if="firstLoading" class="row justify-center col-12 mt-40">-->
-    <!--          <q-spinner color="white" size="128px" :thickness="10" />-->
-    <!--        </div>-->
-    <!--        <template v-if="!firstLoading">-->
-    <!--          <template v-if="tab === 'main'">-->
-    <!--            <div class="col-12 mb-30">-->
-    <!--              <div-->
-    <!--                style="-->
-    <!--                  font-family: 'Open Sans';-->
-    <!--                  font-style: normal;-->
-    <!--                  font-weight: 400;-->
-    <!--                  font-size: 32.4286px;-->
-    <!--                  line-height: 44px;-->
-    <!--                  text-align: center;-->
-    <!--                "-->
-    <!--              >-->
-    <!--                Будьте в числе первых! <br />-->
-    <!--                Дарим-->
-    <!--                <span class="bold" style="color: #ed772f">500</span> бонусов для-->
-    <!--                первых-->
-    <!--                <span class="bold" style="color: #ed772f">100 человек</span>-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--            <div-->
-    <!--              class="col-12 pa-40 row mb-30"-->
-    <!--              style="-->
-    <!--                background-color: rgba(255, 255, 255, 0.1);-->
-    <!--                border-radius: 15px;-->
-    <!--              "-->
-    <!--            >-->
-    <!--              <div-->
-    <!--                class="col-12 mb-16 text-center"-->
-    <!--                style="-->
-    <!--                  font-family: 'Open Sans';-->
-    <!--                  font-style: normal;-->
-    <!--                  font-weight: 600;-->
-    <!--                  font-size: 18px;-->
-    <!--                  line-height: 25px;-->
-    <!--                "-->
-    <!--              >-->
-    <!--                Зарегистрируйтесь и получите карту лояльности уже сейчас-->
-    <!--              </div>-->
-    <!--              <div class="col-12 flex justify-center">-->
-    <!--                <div-->
-    <!--                  @click="toRegiser"-->
-    <!--                  style="-->
-    <!--                    width: 377px;-->
-    <!--                    height: 50px;-->
-    <!--                    background: #ed772f;-->
-    <!--                    border-radius: 100px;-->
-    <!--                  "-->
-    <!--                  class="flex justify-center items-center cursor-pointer"-->
-    <!--                >-->
-    <!--                  Зарегистрироваться-->
-    <!--                </div>-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--            <div-->
-    <!--              class="col-12 text-ceter mb-7"-->
-    <!--              style="-->
-    <!--                font-family: 'Open Sans';-->
-    <!--                font-style: normal;-->
-    <!--                font-weight: 400;-->
-    <!--                font-size: 32.4286px;-->
-    <!--                line-height: 44px;-->
-    <!--                text-align: center;-->
-    <!--                color: #ffffff;-->
-    <!--              "-->
-    <!--            >-->
-    <!--              Скоро будет доступно приложение!-->
-    <!--            </div>-->
-    <!--          </template>-->
-    <!--          <template v-if="tab === 'register'">-->
-    <!--            <div class="column col-12 items-center" style="margin-top: 130px">-->
-    <!--              <q-input-->
-    <!--                style="max-width: 377px; width: 100%"-->
-    <!--                rounded-->
-    <!--                outlined-->
-    <!--                bg-color="white"-->
-    <!--                mask="7 (###) ###-##-##"-->
-    <!--                placeholder="7 (123) 456-78-90"-->
-    <!--                class="mb-10"-->
-    <!--                v-model="regPhone"-->
-    <!--                @update:model-value="regError = false"-->
-    <!--              />-->
-    <!--              <div-->
-    <!--                class="row items-center mb-19 cursor-pointer"-->
-    <!--                :class="{ processDataAccepted: !processDataAccepted }"-->
-    <!--                @click="-->
-    <!--                  (processDataAccepted = !processDataAccepted),-->
-    <!--                    (regError = false)-->
-    <!--                "-->
-    <!--              >-->
-    <!--                <q-checkbox-->
-    <!--                  :model-value="processDataAccepted"-->
-    <!--                  @click="-->
-    <!--                    (processDataAccepted = !processDataAccepted),-->
-    <!--                      (regError = false)-->
-    <!--                  "-->
-    <!--                />-->
-    <!--                <div>-->
-    <!--                  Я согласен на обработку моих-->
-    <!--                  <router-link-->
-    <!--                    style="color: white"-->
-    <!--                    :to="{-->
-    <!--                      name: 'policyPage',-->
-    <!--                      params: { externalId: 'HooDoo' },-->
-    <!--                    }"-->
-    <!--                    >персональных данных</router-link-->
-    <!--                  >-->
-    <!--                </div>-->
-    <!--              </div>-->
-    <!--              <div-->
-    <!--                @click="sendRegister"-->
-    <!--                style="-->
-    <!--                  width: 377px;-->
-    <!--                  height: 50px;-->
-    <!--                  background: #ed772f;-->
-    <!--                  border-radius: 100px;-->
-    <!--                "-->
-    <!--                class="flex justify-center items-center cursor-pointer"-->
-    <!--              >-->
-    <!--                Зарегистрироваться-->
-    <!--              </div>-->
-    <!--              <div class="text-danger body bold mt-10" v-if="regError">-->
-    <!--                Вы должны ввести номер телефона и принять правила обработки-->
-    <!--                персональных данных-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--          </template>-->
-    <!--          <template v-if="tab === 'codeInput'">-->
-    <!--            <div class="column col-12 items-center" style="margin-top: 130px">-->
-    <!--              <div-->
-    <!--                style="-->
-    <!--                  font-family: 'Open Sans';-->
-    <!--                  font-style: normal;-->
-    <!--                  font-weight: 400;-->
-    <!--                  font-size: 24px;-->
-    <!--                  line-height: 33px;-->
-    <!--                  text-align: center;-->
-    <!--                  color: #ffffff;-->
-    <!--                "-->
-    <!--                class="mb-20"-->
-    <!--              >-->
-    <!--                Введите код из смс-->
-    <!--              </div>-->
-    <!--              <q-input-->
-    <!--                style="max-width: 377px; width: 100%"-->
-    <!--                rounded-->
-    <!--                outlined-->
-    <!--                bg-color="white"-->
-    <!--                mask="####"-->
-    <!--                placeholder="1234"-->
-    <!--                v-model="regCodeForLogin"-->
-    <!--                @update:model-value="regError = false"-->
-    <!--              />-->
-
-    <!--              <div-->
-    <!--                class="mt-20"-->
-    <!--                style="-->
-    <!--                  font-family: 'Open Sans';-->
-    <!--                  font-style: normal;-->
-    <!--                  font-weight: 400;-->
-    <!--                  font-size: 15px;-->
-    <!--                  line-height: 20px;-->
-    <!--                  text-align: center;-->
-    <!--                  color: rgba(255, 255, 255, 0.6);-->
-    <!--                "-->
-    <!--              ></div>-->
-    <!--              <div class="body bold text-danger mt-10" v-if="codeSentFail">-->
-    <!--                Вы ввели неверный код-->
-    <!--              </div>-->
-    <!--            </div></template-->
-    <!--          >-->
-
-    <!--          <template v-if="tab === 'registerNewUser'">-->
-    <!--            <div class="column col-12 items-center" style="margin-top: 130px">-->
-    <!--              <div-->
-    <!--                style="-->
-    <!--                  font-family: 'Open Sans';-->
-    <!--                  font-style: normal;-->
-    <!--                  font-weight: 400;-->
-    <!--                  font-size: 24px;-->
-    <!--                  line-height: 33px;-->
-    <!--                  color: #ffffff;-->
-    <!--                "-->
-    <!--                class="mb-10"-->
-    <!--              >-->
-    <!--                Заполните поля-->
-    <!--              </div>-->
-    <!--              <q-input-->
-    <!--                style="max-width: 377px; width: 100%"-->
-    <!--                rounded-->
-    <!--                outlined-->
-    <!--                bg-color="white"-->
-    <!--                label="Имя"-->
-    <!--                v-model="registerData.first_name"-->
-    <!--                class="mb-10"-->
-    <!--              />-->
-    <!--              <q-input-->
-    <!--                style="max-width: 377px; width: 100%"-->
-    <!--                rounded-->
-    <!--                outlined-->
-    <!--                bg-color="white"-->
-    <!--                label="Дата рождения"-->
-    <!--                :model-value="-->
-    <!--                  registerData.birthday-->
-    <!--                    ? moment(registerData.birthday).format('DD.MM.YYYY')-->
-    <!--                    : null-->
-    <!--                "-->
-    <!--                class="mb-10"-->
-    <!--              >-->
-    <!--                <q-menu>-->
-    <!--                  <q-date v-model="registerData.birthday" mast="DD.MM.YYYY" />-->
-    <!--                </q-menu>-->
-    <!--              </q-input>-->
-    <!--              <q-select-->
-    <!--                style="max-width: 377px; width: 100%"-->
-    <!--                rounded-->
-    <!--                outlined-->
-    <!--                bg-color="white"-->
-    <!--                label="Пол"-->
-    <!--                :options="sexOptions"-->
-    <!--                option-label="label"-->
-    <!--                option-value="value"-->
-    <!--                emit-value-->
-    <!--                map-options-->
-    <!--                v-model="registerData.sex"-->
-    <!--                class="mb-10"-->
-    <!--              />-->
-    <!--            </div>-->
-    <!--            <div class="flex justify-center col-12">-->
-    <!--              <div-->
-    <!--                @click="register"-->
-    <!--                style="-->
-    <!--                  width: 377px;-->
-    <!--                  height: 50px;-->
-    <!--                  background: #ed772f;-->
-    <!--                  border-radius: 100px;-->
-    <!--                "-->
-    <!--                class="flex justify-center items-center cursor-pointer"-->
-    <!--              >-->
-    <!--                <div v-if="!registerLoading">Получить карту лояльности</div>-->
-    <!--                <q-spinner v-else color="primary" size="18px" />-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--            <div class="body bold text-danger" v-if="registerError">-->
-    <!--              Произошла ошибка, попробуйте еще раз через минуту-->
-    <!--            </div>-->
-    <!--          </template>-->
-    <!--          <template v-if="tab === 'qrBlock'">-->
-    <!--            <div-->
-    <!--              class="col-12 flex justify-center mb-12"-->
-    <!--              style="-->
-    <!--                font-family: 'Open Sans';-->
-    <!--                font-style: normal;-->
-    <!--                font-weight: 400;-->
-    <!--                font-size: 32.4286px;-->
-    <!--                line-height: 44px;-->
-    <!--                text-align: center;-->
-    <!--                color: #ed772f;-->
-    <!--              "-->
-    <!--            >-->
-    <!--              <div>-->
-    <!--                {{ qrBlockData.balance > -1 ? qrBlockData.balance : 0 }}-->
-    <!--              </div>-->
-    <!--               бонусов-->
-    <!--            </div>-->
-    <!--            <div class="col-12 flex justify-center mb-13">-->
-    <!--              <div class="pa-5 bg-white" style="border-radius: 10px">-->
-    <!--                <qrcode-vue-->
-    <!--                  :value="qrBlockData.codeForQr"-->
-    <!--                  :size="256"-->
-    <!--                  level="H"-->
-    <!--                />-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--            <div-->
-    <!--              class="col-12 row"-->
-    <!--              style="-->
-    <!--                font-family: 'Open Sans';-->
-    <!--                font-style: normal;-->
-    <!--                font-weight: 400;-->
-    <!--                font-size: 32.4286px;-->
-    <!--                line-height: 44px;-->
-    <!--                text-align: center;-->
-    <!--              "-->
-    <!--            >-->
-    <!--              <div class="col-12 text-center mb-10">-->
-    <!--                {{ qrBlockData.first_name }}-->
-    <!--              </div>-->
-    <!--              <div class="col-12 text-center">+{{ qrBlockData.phone }}</div>-->
-    <!--            </div>-->
-    <!--          </template>-->
-    <!--        </template>-->
-    <!--      </div>-->
-    <!--    </div>-->
-  </div>
-
-  <div v-else class="absolute-center items-center justify-center column">
-    <q-skeleton v-if="preloader" size="130px" type="QAvatar" class="mb-15" />
+  <div class="absolute-center items-center justify-center column">
+    <q-skeleton v-if="preloader && !error" size="300px" type="QAvatar" />
     <q-img
-      class="mb-15"
       v-else
-      sizes="40px"
       style="width: 300px; height: 300px; border-radius: 50%"
       :src="$uiSettings.item?.logo?.thumbnail || $store.images.empty"
     />
-    <q-skeleton v-if="preloader" width="300px" height="38px" class="mb-5" />
-    <div v-else>{{ $uiSettings.item?.companyGroup.name }}</div>
+    <q-skeleton
+      v-if="preloader && !error"
+      width="200px"
+      height="38px"
+      class="mb-5 mt-15"
+    />
+    <div class="mt-8" style="font-size: 18px">
+      {{ $uiSettings.item?.companyGroup.name }}
+    </div>
+    <q-skeleton
+      v-if="preloader && !error"
+      width="300px"
+      height="38px"
+      class="mb-5"
+    />
 
-    <div style="font-weight: 400 !important" class="header2 mt-10">
+    <div v-else style="font-weight: 400 !important" class="header2 mt-5">
       {{ error ? 'Произошла ошибка' : 'Сейчас вы будете перенаправлены' }}
     </div>
+    <CButton
+      @click="toLink()"
+      :style="`visibility: ${
+        !error && !preloader && !loader ? 'visible' : 'hidden'
+      }`"
+      text-color="blue"
+      hover-color="white"
+      hover-text-color="blue"
+      class="px-4 pt-2"
+      text-button
+      label="по ссылке"
+    />
   </div>
-  <!-- <div
-    v-if="preloader"
-    class="absolute-full items-center justify-center column"
-  >
-    <q-spinner-puff color="accent1" size="10%" />
-  </div> -->
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { useQuasar } from 'quasar';
-import CButton from 'components/template/buttons/CButton.vue';
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo';
 import { useRoute } from 'vue-router';
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo';
+import CButton from 'src/components/template/buttons/CButton.vue';
 // import QrcodeVue from 'qrcode.vue';
 
 const q = useQuasar();
@@ -415,7 +95,6 @@ const error = ref(false);
 onMounted(async () => {
   loader.value = true;
   preloader.value = true;
-  preloader.value = false;
 
   try {
     uiSettingsRepo.item = await uiSettingsRepo.fetchSettings(
@@ -426,28 +105,19 @@ onMounted(async () => {
   } catch (e) {
     console.log(e);
     error.value = true;
+    preloader.value = false;
   }
   try {
     await appSettingsRepo.getLinksSettings(String(route.params.externalId));
 
-    if (currentLink.value) {
-      window.location.replace(currentLink.value);
-    }
+    if (currentLink.value) window.location.replace(currentLink.value);
+
     loader.value = false;
   } catch (e) {
+    loader.value = false;
     console.log(e);
     error.value = true;
   }
-  // try {
-  //   firstLoading.value = true;
-  //   const res = await getMe();
-  //   firstLoading.value = false;
-  //   if (res) setQrBlock(res?.data);
-  //   else throw Error('');
-  // } catch {
-  //   tab.value = 'main';
-  //   firstLoading.value = false;
-  // }
 });
 //
 // const qrBlockData = ref({
