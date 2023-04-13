@@ -9,7 +9,12 @@ export type UiSettingsRaw = {
   border_radius: number;
   loader: string;
   favicon: string | null;
-  logo: string | null;
+  logo: {
+    uuid: string;
+    image: string;
+    thumbnail: string;
+    background_color: string;
+  } | null;
   background_image: string | null;
   loyalty_card_image: string | null;
   loyalty_card_logo: string | null;
@@ -18,7 +23,10 @@ export type UiSettingsRaw = {
   on_background_color: string | null;
   box_shadow: BoxShadow;
   company: string | null;
-  company_group: string;
+  company_group: {
+    uuid: string;
+    name: string;
+  };
   base_settings: UiSettingsRaw | null;
   menu_color: string | null;
   qr_code_description: string;
@@ -44,7 +52,12 @@ export class UiSetting implements BaseModel {
   borderRadius: number;
   loader: string;
   favicon: string | null;
-  logo: string | null;
+  logo: {
+    uuid: string;
+    image: string;
+    thumbnail: string;
+    background_color: string;
+  } | null;
   backgrounImage: string | null;
   loyaltyCardImage: string | null;
   loyaltyCardLogo: string | null;
@@ -53,7 +66,10 @@ export class UiSetting implements BaseModel {
   onBackgroundColor: string | null;
   boxShadow: BoxShadow;
   company: string | null;
-  companyGroup: string;
+  companyGroup: {
+    uuid: string;
+    name: string;
+  };
   baseSettings: UiSettingsRaw | null;
   menuColor: string | null;
   qrCodeDescription: string;

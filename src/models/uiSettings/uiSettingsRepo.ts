@@ -7,9 +7,10 @@ import { reactive } from 'vue';
 export class UiSettingsRepo extends BaseRepo<UiSetting> {
   api = uiSettingsApi;
 
-  async fetchSettings(): Promise<UiSetting> {
-    const res = await this.api.fetchSettings();
-    return (this.item = res);
+  async fetchSettings(header: string): Promise<UiSetting> {
+    const res = await this.api.fetchSettings(header);
+    this.item = res;
+    return res;
   }
 }
 

@@ -8,12 +8,12 @@ export class UiSettingsApi extends BaseModelApi<UiSetting> {
   routeName = 'ui_settings';
   fromJson = (json: UiSettingsRaw) => new UiSetting(json);
 
-  async fetchSettings(): Promise<UiSetting> {
+  async fetchSettings(header: string): Promise<UiSetting> {
     const res: AxiosResponse<UiSettingsRaw> = await api.get(
       `${this.routeName}/fetch/`,
       {
         headers: {
-          'Company-group': store.companyGroup,
+          'Company-group': header || store.companyGroup,
         },
       }
     );

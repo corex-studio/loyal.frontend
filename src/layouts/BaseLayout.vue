@@ -32,7 +32,6 @@ import LeftMenu from './drawer/LeftMenu.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { store } from 'src/models/store';
 import { menuRepo } from 'src/models/menu/menuRepo';
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo';
 
 const q = useQuasar();
 const route = useRoute();
@@ -79,6 +78,6 @@ onMounted(() => {
       menuRepo.item.groups[0].items[0].sizes[0].name = 'маленькая';
   });
 
-  void uiSettingsRepo.fetchSettings();
+  // void uiSettingsRepo.fetchSettings();
 });
 </script>

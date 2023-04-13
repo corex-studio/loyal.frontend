@@ -1,35 +1,34 @@
 <template>
-  <div class="row pa-0 full-width justify-between">
-     <div class="cursor-pointer header2">
-       Current platform is:
-       <span style="font-weight: 400">
+  <div v-if="!loader && !preloader" class="row pa-0 full-width justify-between">
+    <div class="cursor-pointer header2">
+      Current platform is:
+      <span style="font-weight: 400">
         {{
-           $q.platform.is.mobile
-               ? $q.platform.is.android
-                   ? 'android'
-                   : $q.platform.is.ios
-                       ? 'ios'
-                       : 'other mobile platform'
-               : 'desktop'
-         }}
+          $q.platform.is.mobile
+            ? $q.platform.is.android
+              ? 'android'
+              : $q.platform.is.ios
+              ? 'ios'
+              : 'other mobile platform'
+            : 'desktop'
+        }}
       </span>
-       <div class="mt-5">
-         Link to store:
+      <div class="mt-5">
+        Link to store:
 
-         <span class="text-blue" style="font-weight: 400" @click="toLink()">
+        <span class="text-blue" style="font-weight: 400" @click="toLink()">
           {{ currentLink }}
         </span>
-       </div>
-     </div>
+      </div>
+    </div>
     <CButton
-        :hover-text-color="'accent3'"
-        :text-color="'black'"
-        height="25px"
-        text-button
-        @click="$router.replace({ name: 'home' })"
-    >Back to home
-    </CButton
-    >
+      :hover-text-color="'accent3'"
+      :text-color="'black'"
+      height="25px"
+      text-button
+      @click="$router.replace({ name: 'home' })"
+      >Back to home
+    </CButton>
     <!--    <div style="width: 100vw; height: 100vh; position: relative" class="bcg">-->
     <!--      <div class="col-12 flex justify-center pt-7 mb-45">-->
     <!--        <q-img-->
@@ -336,15 +335,45 @@
     <!--      </div>-->
     <!--    </div>-->
   </div>
+
+  <div v-else class="absolute-center items-center justify-center column">
+    <q-skeleton v-if="preloader" size="130px" type="QAvatar" class="mb-15" />
+    <q-img
+      class="mb-15"
+      v-else
+      sizes="40px"
+      style="width: 300px; height: 300px; border-radius: 50%"
+      :src="$uiSettings.item?.logo?.thumbnail || $store.images.empty"
+    />
+    <q-skeleton v-if="preloader" width="300px" height="38px" class="mb-5" />
+    <div v-else>{{ $uiSettings.item?.companyGroup.name }}</div>
+
+    <div style="font-weight: 400 !important" class="header2 mt-10">
+      {{ error ? 'Произошла ошибка' : 'Сейчас вы будете перенаправлены' }}
+    </div>
+  </div>
+  <!-- <div
+    v-if="preloader"
+    class="absolute-full items-center justify-center column"
+  >
+    <q-spinner-puff color="accent1" size="10%" />
+  </div> -->
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted} from 'vue';
-import {useQuasar} from 'quasar';
+import { computed, onMounted, ref } from 'vue';
+import { useQuasar } from 'quasar';
 import CButton from 'components/template/buttons/CButton.vue';
+import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo';
+import { useRoute } from 'vue-router';
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo';
 // import QrcodeVue from 'qrcode.vue';
 
 const q = useQuasar();
+const loader = ref(false);
+const preloader = ref(false);
+const route = useRoute();
+const error = ref(false);
 
 // const sexOptions = ref([
 //   {
@@ -360,7 +389,6 @@ const q = useQuasar();
 //     value: 'not_stated',
 //   },
 // ]);
-
 
 // const firstLoading = ref(false);
 
@@ -384,9 +412,32 @@ const q = useQuasar();
 //     console.log(e);
 //   }
 // };
-
 onMounted(async () => {
-  window.location.replace(currentLink.value);
+  loader.value = true;
+  preloader.value = true;
+  preloader.value = false;
+
+  try {
+    uiSettingsRepo.item = await uiSettingsRepo.fetchSettings(
+      String(route.params.externalId)
+    );
+
+    preloader.value = false;
+  } catch (e) {
+    console.log(e);
+    error.value = true;
+  }
+  try {
+    await appSettingsRepo.getLinksSettings(String(route.params.externalId));
+
+    if (currentLink.value) {
+      window.location.replace(currentLink.value);
+    }
+    loader.value = false;
+  } catch (e) {
+    console.log(e);
+    error.value = true;
+  }
   // try {
   //   firstLoading.value = true;
   //   const res = await getMe();
@@ -560,10 +611,10 @@ onMounted(async () => {
 
 const currentLink = computed(() => {
   return q.platform.is.android
-      ? 'https://play.google.com/store/apps/details?id=studio.corex.hoodoo'
-      : q.platform.is.ios || q.platform.is.iphone || q.platform.is.ipad
-          ? 'https://apps.apple.com/us/app/hoodoo/id1667328735'
-          : 'https://apps.apple.com/us/app/hoodoo/id1667328735';
+    ? appSettingsRepo.linksData?.android_download_link
+    : q.platform.is.ios || q.platform.is.iphone || q.platform.is.ipad
+    ? appSettingsRepo.linksData?.ios_download_link
+    : appSettingsRepo.linksData?.android_download_link;
 });
 
 const toLink = () => {

@@ -1,5 +1,5 @@
 <template>
-  <div class="px-5">
+  <div v-if="!loader" class="px-5">
     <div id="inputResult">
       <div class="row mb-4">
         <div class="col">
@@ -25,7 +25,7 @@
               class="link mark owner-name-field"
               id="owner-name-value"
               data-scroll-to="#owner-name-field"
-              >HooDoo</span
+              >{{ $uiSettings.item?.companyGroup.name }}</span
             >
             (далее&nbsp;— Оператор).
           </div>
@@ -41,12 +41,13 @@
               1.2. Настоящая политика Оператора в&nbsp;отношении обработки
               персональных данных (далее&nbsp;— Политика) применяется
               ко&nbsp;всей информации, которую Оператор может получить
-              о&nbsp;посетителях веб-сайта
-              <span
+              о&nbsp;пользователях мобильного приложения
+              {{ $uiSettings.item?.companyGroup.name }}
+              <!-- <span
                 class="link mark owner-site-url-field"
                 data-scroll-to="#owner-site-url-field"
                 >https://loyal.corex.studio</span
-              >.
+              >. -->
             </div>
           </div>
         </div>
@@ -692,5 +693,21 @@
       </div>
     </div>
   </div>
+  <div v-else class="absolute-center items-center justify-center flex">
+    <q-spinner-puff color="accent1" size="20%" />
+  </div>
 </template>
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+const loader = ref(false);
+
+onMounted(async () => {
+  loader.value = true;
+  await uiSettingsRepo.fetchSettings(String(route.params.externalId));
+  loader.value = false;
+});
+</script>
