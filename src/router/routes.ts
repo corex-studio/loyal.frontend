@@ -32,6 +32,11 @@ const routes: RouteRecordRaw[] = [
     name: 'policyPage',
     component: () => import('pages/PolicyPage.vue'),
   },
+  {
+    path: '/:externalId/terms_of_service',
+    name: 'termsOfServicePage',
+    component: () => import('pages/TermsOfServicePage.vue'),
+  },
 
   // Always leave this as last one,
   // but you can also remove it
