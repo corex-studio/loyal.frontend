@@ -1,5 +1,24 @@
 <template>
-  <div>
+  <div
+    :class="[
+      { 'menu-mode': menuMode },
+      { 'rounded-text-area': $props.default && textArea },
+    ]"
+  >
+    <div
+      v-if="externalLabel"
+      :class="[
+        externalLabelClass
+          ? externalLabelClass
+          : _rounded
+          ? 'mb-4 secondary-text ml-6'
+          : 'mb-4 secondary-text',
+        { 'readonly-label': readonly },
+      ]"
+      class="bold"
+    >
+      {{ externalLabel }}
+    </div>
     <q-input
       @update:model-value="updateModelValue"
       :modelValue="
@@ -16,9 +35,9 @@
       @focus="_focusInput"
       ref="inputRef"
       :readonly="readonly"
-      :color="color"
+      :color="_color"
       :label-color="labelColor"
-      :standout="standout"
+      :standout="_standout"
       :label="label"
       :type="_type"
       :hint="hint"
@@ -26,20 +45,33 @@
       :rules="rules"
       :fill-mask="fillMask"
       :clearable="clearable"
-      :borderless="borderless"
-      :filled="filled"
+      :borderless="changeAmount || borderless"
+      :filled="
+        changeAmount || filled !== undefined
+          ? filled
+          : $uiSettings.item?.inputType === 'filled'
+      "
       :loading="loading"
-      :outlined="_outlined"
+      :outlined="
+        changeAmount
+          ? false
+          : outlined || $uiSettings.item?.inputType === 'outlined'
+      "
       :dense="dense"
       :input-style="inputStyle"
-      :input-class="inputClass"
+      :input-class="inputClass ? inputClass : 'text-on-input-color'"
       :placeholder="placeholder"
+      :rounded="_rounded"
       :bg-color="_bgColor"
       :autogrow="autoGrow"
       :disabled="_disabled"
       :disable="_disabled"
       :style="`width:${width || 'unset'}; height:${_height};`"
-      :class="{ 'label-top': _labelTop, 'no-icon': _noIcon }"
+      :class="{
+        'label-top': _labelTop,
+        'no-icon': _noIcon,
+        'default-input': !changeAmount,
+      }"
       :unmasked-value="unmaskedValue"
       :square="square ? true : false"
       :autocomplete="autocomplete"
@@ -139,8 +171,13 @@ const props = defineProps<{
   precision?: number
   preventEmitDirection?: boolean
   square?: boolean
+  externalLabel?: string
+  externalLabelClass?: string
+  changeAmount?: boolean
   autoGrow?: boolean
   autocomplete?: string
+  rounded?: boolean
+  menuMode?: boolean
 }>()
 
 const emitDirectionKeys = (
@@ -163,20 +200,41 @@ const _blurInput = () => {
   emit('blur')
 }
 
-const _outlined = computed(() => {
-  if (!props.outlined && (props.default || props.textArea)) {
+// const _outlined = computed(() => {
+//   if (!props.outlined && (props.textArea || props.default)) {
+//     return true;
+//   }
+//   return props.outlined;
+// });
+
+const _color = computed(() => {
+  if (props.color) return props.color
+  else return 'input-color'
+})
+
+const _rounded = computed(() => {
+  if (props.default && !props.textArea) {
     return true
   }
-  return props.outlined
+  return props.rounded
+})
+
+const _standout = computed(() => {
+  if (props.default) {
+    return true
+  }
+  return props.standout
 })
 
 const _bgColor = computed(() => {
-  if (!props.bgColor && (props.default || props.textArea)) {
-    return 'secondary2'
-  } else if (!props.bgColor && !props.default) {
-    return 'white'
-  }
-  return props.bgColor
+  return props.bgColor ? props.bgColor : 'input-color'
+
+  // if (!props.bgColor && (props.default || props.textArea)) {
+  //   return 'secondary2';
+  // } else if (!props.bgColor && !props.default) {
+  //   return 'white';
+  // }
+  // return props.bgColor;
 })
 
 const _noIcon = computed(() => {
@@ -197,7 +255,7 @@ const _height = computed(() => {
   if (!props.height && props.textArea) {
     return 'unset'
   } else if (!props.height && !props.textArea) {
-    return '42px'
+    return '40px'
   }
   return props.height
 })
@@ -248,6 +306,10 @@ watchEffect(() => {
 </script>
 
 <style lang="scss">
+.readonly-label {
+  opacity: 0.5;
+}
+
 body.screen--sm {
   .q-field {
     max-width: unset !important;
@@ -296,11 +358,27 @@ textarea + .q-field__label {
   display: none;
 }
 
+.default-input .q-field__control {
+  border-radius: var(--border-radius) !important;
+}
+
 .q-field--outlined .bg-black2.q-field__control:before {
   border: 1px solid $black2 !important;
 }
 
+.q-field__native .q-placeholder {
+  padding: 10px;
+}
+
 .q-input .q-field__label {
-  color: $black !important;
+  color: var(--on-input-color) !important;
+}
+
+.default-input .q-field__control {
+  padding: 0 5px 0 10px;
+}
+
+.rounded-text-area .q-field__control {
+  border-radius: 15px !important;
 }
 </style>

@@ -1,22 +1,24 @@
-import { api } from 'boot/axios'
-import { AxiosResponse } from 'axios'
+import { Customer, CustomerRaw } from './../../models/customer/customer';
+import { api } from 'boot/axios';
+import { AxiosResponse } from 'axios';
+
 import {
-  BaseAuthenticationUser,
-  BaseAuthenticationUserRaw,
-} from './baseAuthenticationUser'
-import { BaseAuthenticationTokens, TokensRaw } from './baseAuthenticationTokens'
-import moment from 'moment'
+  BaseAuthenticationTokens,
+  TokensRaw,
+} from './baseAuthenticationTokens';
+import moment from 'moment';
 
 export class BaseAuthentication {
-  user: BaseAuthenticationUser | null = null
-  tokens: BaseAuthenticationTokens
+  user: Customer | null = null;
+  tokens: BaseAuthenticationTokens;
 
-  tokensClass = BaseAuthenticationTokens
-  userClass = BaseAuthenticationUser
+  tokensClass = BaseAuthenticationTokens;
+  // userClass = Customer;
 
   settings = {
     urls: {
-      login: '/token/',
+      login: 'users/auth/',
+      sendSms: 'users/request_auth/',
       me: '/users/me/',
       register: '/users/',
       refresh: '/token/refresh/',
@@ -27,76 +29,90 @@ export class BaseAuthentication {
       key: 'Authorization',
       type: 'Bearer',
     },
-  }
+    companyGroupHeader: {
+      key: 'Company-Group',
+    },
+  };
 
   constructor() {
-    this.tokens = this.tokensClass.getFromStorage()
-    this.setApiHeader()
+    this.tokens = this.tokensClass.getFromStorage();
+    this.setApiHeader();
   }
 
   async me() {
-    if (!this.tokens.accessIsValid) throw Error('Access token is not valid.')
-    this.user = await this._loadUser()
-    return this.user
+    if (!this.tokens.accessIsValid) throw Error('Access token is not valid.');
+    this.user = await this._loadUser();
+    return this.user;
   }
 
   async refresh(): Promise<void> {
     const result: AxiosResponse<TokensRaw> = await api.post(
       this.settings.urls.refresh,
       { refresh: this.tokens.refresh }
-    )
-    this.tokens = new this.tokensClass(result.data.access, result.data.refresh)
-    this.setApiHeader()
+    );
+    this.tokens = new this.tokensClass(result.data.access, result.data.refresh);
+    this.setApiHeader();
   }
 
-  private async _loadUser(): Promise<BaseAuthenticationUser> {
+  private async _loadUser(): Promise<Customer> {
     try {
-      const response: AxiosResponse<BaseAuthenticationUserRaw> = await api.get(
+      const response: AxiosResponse<CustomerRaw> = await api.get(
         this.settings.urls.me
-      )
-      return new this.userClass(response.data)
+      );
+      return new Customer(response.data);
     } catch (e) {
-      throw Error('Fail with load user.')
+      throw Error('Fail with load user.');
     }
   }
 
+  async sendSms(data: any) {
+    try {
+      const response: AxiosResponse<{
+        success: boolean;
+        requested_at: string;
+        phone: string;
+      }> = await api.post(this.settings.urls.sendSms, data);
+      return response.data.success;
+    } catch {}
+  }
+
   async login(data: any) {
-    this.logout()
+    this.logout();
     try {
       const response: AxiosResponse<TokensRaw> = await api.post(
         this.settings.urls.login,
         data
-      )
+      );
       this.tokens = new this.tokensClass(
         response.data.access,
         response.data.refresh
-      )
-      this.setApiHeader()
-      this.user = await this._loadUser()
+      );
+      this.setApiHeader();
+      this.user = await this._loadUser();
       return {
         user: this.user,
         tokens: this.tokens,
-      }
+      };
     } catch (e) {
-      throw Error('Fail login')
+      throw Error('Fail login');
     }
   }
 
   async register(data: any) {
-    this.logout()
+    this.logout();
     try {
-      await api.post(this.settings.urls.register, data)
-      return await this.login(data)
+      await api.post(this.settings.urls.register, data);
+      return await this.login(data);
     } catch (e) {
-      throw Error('Register fail')
+      throw Error('Register fail');
     }
   }
 
   async changePassword(data: any) {
     try {
-      return await api.post(this.settings.urls.changePassword, data)
+      return await api.post(this.settings.urls.changePassword, data);
     } catch (e) {
-      throw Error('Change password fail')
+      throw Error('Change password fail');
     }
   }
 
@@ -104,38 +120,46 @@ export class BaseAuthentication {
     try {
       return await api.put(this.settings.urls.setLanguage, {
         language: language,
-      })
+      });
     } catch (e) {
-      throw Error('Language change fail')
+      throw Error('Language change fail');
     }
   }
 
   logout(): void {
-    this.user = null
-    this.tokens.removeTokens()
-    Object.assign(api.defaults.headers, { Authorization: null })
+    this.user = null;
+    this.tokens.removeTokens();
+    Object.assign(api.defaults.headers, { Authorization: null });
   }
 
   setApiHeader(): void {
-    const apiHeader = this.settings.apiHeader
-    if (!this.tokens.access) return
+    const apiHeader = this.settings.apiHeader;
+    if (!this.tokens.access) return;
     Object.assign(api.defaults.headers, {
       [apiHeader.key]: apiHeader.type
         ? `${apiHeader.type} ${this.tokens.access}`
         : this.tokens.access,
-    })
+    });
+  }
+
+  setCompanyGroupHeader(v: string): void {
+    Object.assign(api.defaults.headers, {
+      [this.settings.companyGroupHeader.key]: v,
+    });
+
+    // LocalStorage.set(this.settings.companyGroupHeader.key, v);
   }
 
   async validateTokens(): Promise<void> {
-    let shouldRefresh = false
+    let shouldRefresh = false;
     if (this.tokens.access) {
-      const date = this.tokens.getJwtData(this.tokens.access).date
+      const date = this.tokens.getJwtData(this.tokens.access).date;
       if (moment.utc().add('1', 'day') >= date) {
-        shouldRefresh = true
+        shouldRefresh = true;
       }
-    } else shouldRefresh = true
+    } else shouldRefresh = true;
     if (shouldRefresh && this.tokens.refreshIsValid) {
-      await this.refresh()
+      await this.refresh();
     }
   }
 }

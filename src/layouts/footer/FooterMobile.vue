@@ -6,7 +6,7 @@
     </div>
   </div>
   <q-list class="rounded-borders" style="width: 100%">
-    <q-separator style="background-color: #454545" />
+    <q-separator color="divider-color" />
   </q-list>
   <div class="mt-11 row full-width justify-between no-wrap">
     <CButton

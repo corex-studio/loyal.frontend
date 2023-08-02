@@ -23,6 +23,7 @@
         :label="count"
       />
       <q-btn
+        class="border-radius"
         @mouseover="_hover = true"
         @mouseleave="_hover = false"
         :ripple="ripple"
@@ -37,7 +38,7 @@
         :loading="loading"
         :disabled="_disabled"
         :disable="_disabled"
-        :class="classes"
+        :class="[classes, circle ? 'circle-button' : undefined]"
         :style="`${iconStyle}; width:${_size}; height:${_size}; padding: ${
           noPadding ? '0px' : '4px 16px'
         }`"
@@ -54,8 +55,8 @@
 </template>
 
 <script lang="ts" setup>
-import { useQuasar } from 'quasar'
-import { computed, ref } from 'vue'
+import { useQuasar } from 'quasar';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
   ripple: {
@@ -80,11 +81,11 @@ const props = defineProps({
   loading: Boolean,
   hoverColor: String,
   iconColor: {
-    default: 'primary',
+    default: 'black',
     type: String,
   },
   hoverIconColor: {
-    default: 'accent4',
+    default: 'primary',
     type: String,
   },
   size: {
@@ -106,63 +107,64 @@ const props = defineProps({
     type: String,
     default: 'inline-block',
   },
-})
+  circle: Boolean,
+});
 
-defineEmits(['click'])
+defineEmits(['click']);
 
-const _hover = ref(false)
-const quasar = useQuasar()
+const _hover = ref(false);
+const quasar = useQuasar();
 
 const _color = computed(() => {
-  return _hover.value && props.hoverColor ? props.hoverColor : props.color
-})
+  return _hover.value && props.hoverColor ? props.hoverColor : props.color;
+});
 
 const _disabled = computed(() => {
-  if (props.disabled) return true
-  else return undefined
-})
+  if (props.disabled) return true;
+  else return undefined;
+});
 
 const classes = computed(() => {
   if (props.outline && !props.iconClass) {
-    return 'borderedButton'
+    return 'borderedButton';
   } else if (props.outline && props.iconClass) {
-    return 'borderedButton ' + props.iconClass
+    return 'borderedButton ' + props.iconClass;
   } else {
-    return props.iconClass
+    return props.iconClass;
   }
-})
+});
 
 const _iconColor = computed(() => {
   if (quasar.platform.has.touch && !quasar.platform.is.desktop)
-    return props.iconColor
+    return props.iconColor;
 
   if (props.disabled) {
-    return 'secondary'
+    return 'secondary';
   }
   return _hover.value && props.hoverIconColor
     ? props.hoverIconColor
-    : props.iconColor
-})
+    : props.iconColor;
+});
 
 const _size = computed(() => {
-  let size = props.size
-  if (size === 'unset') return size
-  if (size.slice(size.length - 1, size.length) === '%') return size
+  let size = props.size;
+  if (size === 'unset') return size;
+  if (size.slice(size.length - 1, size.length) === '%') return size;
   if (size.slice(size.length - 2, size.length) !== 'px') {
-    return (size += 'px')
+    return (size += 'px');
   } else {
-    return size
+    return size;
   }
-})
+});
 
 const _iconSize = computed(() => {
-  let size = props.iconSize
+  let size = props.iconSize;
   if (size.slice(size.length - 2, size.length) !== 'px') {
-    return (size += 'px')
+    return (size += 'px');
   } else {
-    return size
+    return size;
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>
@@ -187,6 +189,10 @@ const _iconSize = computed(() => {
   min-width: 16px;
   transform: translate(33px, -7px);
   padding-top: 1px !important;
+}
+
+.circle-button {
+  border-radius: 50% !important;
 }
 
 .q-btn .q-icon {

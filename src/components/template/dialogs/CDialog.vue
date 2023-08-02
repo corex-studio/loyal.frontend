@@ -8,20 +8,25 @@
     @update:modelValue="$emit('update:modelValue')"
   >
     <q-card
-      :style="`max-width: ${width}; min-height: ${height}; height: ${heightPercent} `"
+      :style="`max-width: ${width}; min-height: ${height}; height: ${heightPercent}`"
       style="
         width: 100%;
         display: flex;
-        border-radius: 15px;
         box-shadow: 0px 0px 13px rgba(65, 39, 130, 0.2) !important;
-        background-color: #f8f8f8;
       "
-      class="relative-position no-overflow no-shadow"
+      class="relative-position no-overflow border-radius column no-wrap no-shadow bg-background-color"
     >
       <div
+        v-if="$slots.header"
+        style="height: 60px"
+        class="row full-width items-center header3 px-10 bg-modal-header-color text-on-modal-header-color"
+      >
+        <slot name="header"></slot>
+      </div>
+      <div
         :class="[
-          !noPadding ? 'pt-15 pb-15 px-10' : dialogClass,
-          withOverflow ? '' : '',
+          !noPadding ? 'pb-15 px-10' : dialogClass,
+          $slots.header ? (noPadding ? '' : 'pt-10') : 'pt-15 ',
         ]"
         style="
           overflow: auto;
@@ -30,25 +35,17 @@
           border-radius: 0;
         "
       >
-        <q-btn
-          v-if="!noClose"
-          icon="close"
-          style="
-            position: absolute;
-            right: -7px;
-            top: -7px;
-            background: white;
-            border-radius: 10px;
-            width: 30px;
-            height: 30px;
-            box-shadow: none;
-            z-index: 2;
-          "
-          class="pa-7 closeBtn"
-          flat
-          dense
-          v-close-popup
-        />
+        <div style="position: absolute; top: -20px; right: -25px; z-index: 1">
+          <CIcon
+            v-if="!noClose"
+            class="cursor-pointer"
+            hoverColor="primary"
+            color="white"
+            name="fa-light fa-xmark"
+            size="26px"
+            v-close-popup
+          />
+        </div>
 
         <slot></slot>
         <q-card-actions
@@ -63,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import CIcon from '../helpers/CIcon.vue';
 defineProps({
   hideActions: Boolean,
   alignActions: {

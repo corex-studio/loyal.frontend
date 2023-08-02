@@ -1,58 +1,94 @@
 <template>
-  <q-header :style="`background: #${$uiSettings.item?.backgroundColor}`">
-    <q-toolbar
-      :style="$q.screen.xs ? 'margin-left: -12px' : ''"
-      class="pl-sm-10"
-    >
-      <!-- <q-btn
-        v-if="$q.screen.lt.md"
-        flat
-        dense
-        round
-        icon="menu"
-        aria-label="Menu"
-        @click="$store.leftDrawer = !$store.leftDrawer"
-      /> -->
-
-      <q-toolbar-title>
-        <div
-          :style="`color: #${$uiSettings.item?.onBackgroundColor}`"
-          class="pl-xs-5 py-5"
-        >
-          {{ $menu.item?.name }}
-        </div></q-toolbar-title
+  <q-header class="text-black transition bg-background-color">
+    <div class="c-container full-height column">
+      <div
+        style="height: 60px"
+        class="row no-wrap items-center justify-between"
       >
-      <!-- <CButton
-        @click="
-          $router.push({
-            name: 'storesPage',
-            params: { externalId: 'HooDoo' },
-          })
-        "
-        label="stores"
-        text-button
-        class="pr-sm-15"
-        :text-color="'black'"
-        :hover-text-color="'black'"
-      ></CButton> -->
-      <CButton
-        v-if="!$q.screen.xs"
-        :to="'/'"
-        label="На главную"
-        text-button
-        class="pr-sm-15"
-        :text-color="'black'"
-        :hover-text-color="'black'"
-      ></CButton>
-    </q-toolbar>
-    <q-separator
-      :style="`background-color: #${$uiSettings.item?.primaryColor}`"
-    />
+        <div
+          class="col-2 cursor-pointer"
+          @click="$router.push({ name: 'home' })"
+        >
+          <img width="156" src="~/assets/corexLoyalLogo.png" />
+        </div>
+        <div class="col-7 row gap-15 body">
+          <CButton
+            class="body"
+            disabled
+            label="Новости"
+            text-button
+            text-color="on-bottom-menu-color"
+          />
+          <CButton
+            disabled
+            class="body"
+            label="Акции"
+            text-button
+            text-color="on-bottom-menu-color"
+          />
+          <CButton
+            disabled
+            class="body"
+            label="Контакты"
+            text-button
+            text-color="on-bottom-menu-color"
+          />
+
+          <ServiceSettingsBlock v-if="authentication.user" />
+        </div>
+        <div class="row no-wrap gap-8">
+          <CButton
+            v-if="authentication.user"
+            class="box-shadow"
+            height="33px"
+            style="border-radius: 100px"
+            icon="fa-light fa-piggy-bank"
+            color="blackground-color"
+            text-color="primary"
+            :label="
+              authentication.user && authentication.user.wallets[0]
+                ? authentication.user.wallets[0].balance
+                : 'Бонусы'
+            "
+          />
+
+          <CButton
+            @click="profileButtonClickHandler()"
+            class="box-shadow"
+            height="33px"
+            color="blackground-color"
+            text-color="primary"
+            style="border-radius: 100px"
+            icon="fa-light fa-user"
+            :label="authentication.user ? 'Профиль' : 'Войти'"
+          />
+        </div>
+      </div>
+    </div>
+    <q-separator class="divider-color" />
   </q-header>
 </template>
 
 <script setup lang="ts">
 import CButton from 'src/components/template/buttons/CButton.vue';
+import { authentication } from 'src/models/authentication/authentication';
+import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue';
+import { store } from 'src/models/store';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const profileButtonClickHandler = () => {
+  if (authentication.user) {
+    void router.push({ name: 'profilePage' });
+  } else {
+    store.authModal = true;
+  }
+};
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.q-header {
+  position: relative;
+}
+</style>

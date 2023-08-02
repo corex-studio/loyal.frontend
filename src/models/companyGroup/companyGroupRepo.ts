@@ -1,10 +1,15 @@
-import { CompanyGroup, TermsOfServiceInfo } from './companyGroup';
-import BaseRepo from 'src/corexModels/apiModels/baseRepo';
-import { companyGroupApi } from './companyGroupApi';
-import { reactive } from 'vue';
+import {
+  CompanyGroup,
+  TermsOfServiceInfo,
+  CompanyGroupRaw,
+  CompanyGroupAppSettings,
+} from './companyGroup'
+import BaseRepo from 'src/corexModels/apiModels/baseRepo'
+import { companyGroupApi } from './companyGroupApi'
+import { reactive } from 'vue'
 
 export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
-  api = companyGroupApi;
+  api = companyGroupApi
 
   async getTermsOfServiceInfo(header: string) {
     const res: TermsOfServiceInfo = await this.api.send({
@@ -13,10 +18,31 @@ export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
       headers: {
         'Company-Group': header,
       },
-    });
+    })
 
-    return res;
+    return res
+  }
+
+  async current() {
+    const res: CompanyGroupRaw = await this.api.send({
+      method: 'GET',
+      action: 'current',
+      params: {
+        only_visible: true,
+      },
+    })
+    this.item = new CompanyGroup(res)
+  }
+
+  async getAppSettings(id: string): Promise<CompanyGroupAppSettings> {
+    const res: CompanyGroupAppSettings = await this.api.send({
+      method: 'GET',
+      action: 'app_settings',
+      id,
+    })
+
+    return res
   }
 }
 
-export const companyGroupRepo = reactive(new CompanyGroupRepo());
+export const companyGroupRepo = reactive(new CompanyGroupRepo())

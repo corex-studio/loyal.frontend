@@ -1,0 +1,106 @@
+.c-gutter:not(.product-gutters) > * {
+  margin: 20px 0 0 20px;
+}
+
+.c-gutter {
+  margin: -20px 0 0 -20px;
+}
+
+.c-col-gutter > * {
+  padding: 20px 0 0 20px;
+}
+
+.c-col-gutter {
+  margin: -20px 0 0 -20px;
+}
+
+body.screen--xl {
+  @media (max-width: 1560px) {
+    .c-container {
+      padding-left: 60px !important;
+      padding-right: 60px !important;
+    }
+  }
+  @media (min-width: 1560px) {
+    .c-container {
+      padding-left: 0px !important;
+      padding-right: 0px !important;
+    }
+  }
+}
+
+body.screen--lg {
+  .c-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+}
+
+body.screen--md {
+  .c-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+  }
+
+  .c-gutter:not(.product-gutters) > * {
+    margin: 15px 0 0 15px;
+  }
+
+  .c-gutter:not(.product-gutters) {
+    margin: -15px 0 0 -15px;
+  }
+
+  .c-col-gutter > * {
+    padding: 15px 0 0 15px;
+  }
+
+  .c-col-gutter {
+    margin: -15px 0 0 -15px;
+  }
+}
+
+body.screen--sm {
+  .c-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .c-gutter:not(.product-gutters) > * {
+    margin: 10px 0 0 10px;
+  }
+
+  .c-gutter:not(.product-gutters) {
+    margin: -10px 0 0 -10px;
+  }
+
+  .c-col-gutter > * {
+    padding: 10px 0 0 10px;
+  }
+
+  .c-col-gutter {
+    margin: -10px 0 0 -10px;
+  }
+
+  .q-dialog__inner--minimized {
+    padding: 5px;
+  }
+}
+
+body.screen--xs {
+  .c-container {
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+.product-gutters {
+  grid-gap: 10px;
+  margin-top: 0 !important;
+}

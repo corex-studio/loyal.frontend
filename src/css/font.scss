@@ -1,9 +1,10 @@
 * {
-  font-family: 'Montserrat', sans-serif;
+  // font-family: 'Montserrat', sans-serif;
+  font-family: 'Rubik', sans-serif;
 }
 
 .bold {
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   .q-field__label {
     @extend .bold;
   }
@@ -12,15 +13,25 @@
   }
 }
 
+.light {
+  font-weight: 400 !important;
+}
+
 .header {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 28px;
   line-height: 39.2px;
 }
 
 .header2 {
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
+  line-height: 26.4px;
+}
+
+.header3 {
+  font-size: 18px;
+  font-weight: 500;
   line-height: 26.4px;
 }
 
@@ -30,9 +41,15 @@
   line-height: 21px;
 }
 
+.subtitle-text-light {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 21px;
+}
+
 .body {
   font-weight: 400;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 16.8px;
   .q-field__label,
   &.q-btn div {
@@ -103,6 +120,11 @@ body.screen--md {
 
   .subtitle-text {
     font-weight: 600;
+    font-size: 13px;
+    line-height: 18.2px;
+  }
+  .subtitle-text-light {
+    font-weight: 400;
     font-size: 13px;
     line-height: 18.2px;
   }

@@ -14,13 +14,16 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
+    "@vueuse/core": "^10.1.2",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "qrcode.vue": "^3.3.3",
     "quasar": "^2.6.0",
+    "swiper": "^9.3.1",
     "vue": "^3.0.0",
+    "vue-currency-input": "^3.0.4",
     "vue-router": "^4.0.0",
     "vue-timer-hook": "^1.0.60"
   },

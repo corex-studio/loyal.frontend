@@ -1,5 +1,8 @@
 <template>
-  <div v-if="!!info && !loading" class="px-35 pb-20">
+  <div
+    v-if="!!info && !loading"
+    class="px-xl-35 px-sm-20 px-xs-5 px-md-25 px-lg-30 pb-20"
+  >
     <div class="row mb-4">
       <div class="col">
         <h4>
@@ -27,7 +30,7 @@
               :key="index"
               class="column col-7 gap-5 mb-10"
             >
-              <q-separator v-if="index" />
+              <q-separator class="divider-color" v-if="index" />
               <div>{{ el.name || ' -' }}</div>
               <div>ИНН: {{ el.code || ' -' }}</div>
               <div>КПП: {{ el.registration_code || ' -' }}</div>
@@ -134,7 +137,7 @@
       </div>
       <div>
         <h6 class="my-0 bold">Документы:</h6>
-        <div class="row items-center gap-5 mt-10 ml-5">
+        <div class="row no-wrap items-center gap-5 mt-10 ml-5">
           <q-icon size="26px" name="fal fa-file-powerpoint" />
           <a
             :href="linkToPolicy"
@@ -152,28 +155,28 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { TermsOfServiceInfo } from 'src/models/companyGroup/companyGroup';
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo';
-import { computed, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { TermsOfServiceInfo } from 'src/models/companyGroup/companyGroup'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const info = ref<TermsOfServiceInfo | null>(null);
-const loading = ref(false);
-const route = useRoute();
+const info = ref<TermsOfServiceInfo | null>(null)
+const loading = ref(false)
+const route = useRoute()
 
 const linkToPolicy = computed(() => {
   return `http://${window.location.host}/${String(
     route.params.externalId
-  )}/policy`;
-});
+  )}/policy`
+})
 
 onMounted(async () => {
-  loading.value = true;
+  loading.value = true
   const res = await companyGroupRepo.getTermsOfServiceInfo(
     String(route.params.externalId)
-  );
-  info.value = res;
+  )
+  info.value = res
 
-  loading.value = false;
-});
+  loading.value = false
+})
 </script>

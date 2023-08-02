@@ -1,15 +1,17 @@
 <template>
-  <div
-    :style="`background: #${$uiSettings.item?.backgroundColor}`"
-    class="text-white pb-md-10"
-  >
-    <div class="c-container" v-if="$q.screen.gt.sm">
-      <div class="footer-wrap row items-center pt-10 px-20 row">
-        <FooterDesktop />
+  <div class="bg-backing-color">
+    <q-separator />
+    <div class="pb-md-10" style="bottom: 0; z-index: 2100">
+      <div class="c-container" v-if="$q.screen.gt.sm">
+        <div
+          class="footer-wrap text-black secondary-text row items-center pt-15"
+        >
+          <FooterDesktop />
+        </div>
       </div>
-    </div>
-    <div class="footer-wrap pt-10 px-10 row" v-else>
-      <FooterMobile />
+      <div class="footer-wrap pt-10 px-10 row" v-else>
+        <FooterMobile />
+      </div>
     </div>
   </div>
 </template>
@@ -19,7 +21,7 @@ import FooterDesktop from './FooterDesktop.vue';
 import FooterMobile from './FooterMobile.vue';
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .q-footer {
   min-height: 196px;
 }

@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
-import CHover from './CHover.vue'
+import { computed } from 'vue';
+import CHover from './CHover.vue';
 const props = defineProps({
   size: {
     type: [String, Number],
@@ -27,10 +27,10 @@ const props = defineProps({
   hoverColor: String,
   name: String,
   styles: String,
-})
+});
 
 const _size = computed(() => {
-  if (Number.isNaN(Number(props.size))) return props.size
-  return `${props.size}px`
-})
+  if (Number.isNaN(Number(props.size))) return props.size;
+  return `${props.size}px`;
+});
 </script>

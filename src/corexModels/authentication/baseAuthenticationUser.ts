@@ -1,25 +1,23 @@
 import { BaseModel } from '../apiModels/baseModel'
 
 export type BaseAuthenticationUserRaw = {
-  id: string | number | undefined
+  id: number | undefined
   email?: string
   phone?: string
   username?: string
   first_name?: string
   last_name?: string
-  is_superuser?: boolean
-  language: string | undefined
+  is_staff?: boolean
 }
 
 export class BaseAuthenticationUser implements BaseModel {
-  id: string | number | undefined
+  id: number | undefined
   email?: string
   phone?: string
   username?: string
   first_name?: string
   last_name?: string
-  is_superuser?: boolean
-  language: string | undefined
+  is_staff?: boolean
   constructor(raw: BaseAuthenticationUserRaw) {
     this.id = raw.id
     this.email = raw.email
@@ -27,8 +25,7 @@ export class BaseAuthenticationUser implements BaseModel {
     this.username = raw.username
     this.first_name = raw.first_name
     this.last_name = raw.last_name
-    this.is_superuser = raw.is_superuser
-    this.language = raw.language
+    this.is_staff = raw.is_staff
   }
   toJson(): Record<string, any> {
     return {

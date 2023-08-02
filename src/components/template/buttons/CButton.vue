@@ -11,12 +11,13 @@
     :to="to"
     :loading="loading"
     :disabled="_disabled"
-    class="c-btn"
+    class="c-btn border-radius"
     :class="{
       borderedButton: outline,
       block: textButton && !to,
       underline: underline,
       'underline-fixed': underlined,
+      'text-button': textButton,
     }"
     :style="`width:${_width}; height:${_height};font-size:${textSize}; padding:${
       textButton || noPadding ? '0px;' : '4px 16px;'
@@ -24,6 +25,7 @@
   >
     <slot name="append"></slot>
     <div
+      class="button-label"
       :class="`${contentClass ? contentClass : ''} ${
         contentFullWidth ? 'full-width' : ''
       }`"
@@ -54,6 +56,9 @@
             : ''
         "
         style="width: 100%"
+        :style="{
+          'line-height': labelLineHeight ? labelLineHeight : 'inherit',
+        }"
         v-if="label"
         >{{ label }}</span
       >
@@ -66,6 +71,7 @@
         :style="`font-size:${iconSize} !important;`"
       />
     </div>
+    <slot name="custom-icons"></slot>
   </q-btn>
 </template>
 
@@ -87,12 +93,15 @@ const props = defineProps({
   },
   outline: Boolean,
   color: {
-    default: 'primary',
+    default: 'button-color',
     type: String,
   },
   icon: String,
   iconRight: String,
-  textColor: String,
+  textColor: {
+    default: 'on-button-color',
+    type: String,
+  },
   to: [String, Object],
   loading: Boolean,
   hoverColor: {
@@ -125,6 +134,7 @@ const props = defineProps({
   breakSpaces: Boolean,
   ellipsis: Number,
   iconGap: [Number, String],
+  labelLineHeight: String,
 });
 
 const _hover = ref(false);
@@ -146,9 +156,9 @@ const _color = computed(() => {
   } else if (props.textButton) {
     return 'transparent';
   } else if (_hover.value && props.color === 'primary') {
-    return 'accent6';
-  } else if (_hover.value && props.color === 'accent3') {
-    return 'accent4';
+    return 'primary';
+  } else if (_hover.value && props.color === 'primary') {
+    return 'primary';
   } else {
     return props.color;
   }
@@ -158,9 +168,9 @@ const _textColor = computed(() => {
   if (_hover.value && props.hoverTextColor) {
     return props.hoverTextColor;
   } else if (_hover.value && props.color === 'secondary1') {
-    return 'accent4';
+    return 'primary';
   } else if (_hover.value && props.textButton) {
-    return 'accent4';
+    return 'primary';
   } else {
     return props.textColor;
   }
@@ -193,6 +203,7 @@ const _width = computed(() => {
   if (width === 'inherit') return width;
   if (
     width !== 'unset' &&
+    width !== 'auto' &&
     width.slice(width.length - 2, width.length) !== 'px' &&
     width.slice(width.length - 1) !== '%'
   ) {
@@ -291,5 +302,9 @@ const clickHandler = () => {
   span {
     @extend .ellipsis;
   }
+}
+
+.text-button .q-focus-helper {
+  display: none;
 }
 </style>

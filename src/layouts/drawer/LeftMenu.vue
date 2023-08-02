@@ -21,7 +21,9 @@
         class="mb-20"
         style="border-radius: 30%"
         :src="
-          $uiSettings.item?.logo ? $uiSettings.item?.logo : $store.images.empty
+          $uiSettings.item?.logo
+            ? $uiSettings.item?.logo.thumbnail
+            : $store.images.empty
         "
       ></q-img>
 

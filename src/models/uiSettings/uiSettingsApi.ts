@@ -1,4 +1,3 @@
-import { store } from 'src/models/store';
 import { AxiosResponse } from 'axios';
 import { BaseModelApi } from 'src/corexModels/apiModels/baseModelApi';
 import { UiSetting, UiSettingsRaw } from './uiSettings';
@@ -8,14 +7,10 @@ export class UiSettingsApi extends BaseModelApi<UiSetting> {
   routeName = 'ui_settings';
   fromJson = (json: UiSettingsRaw) => new UiSetting(json);
 
-  async fetchSettings(header: string): Promise<UiSetting> {
+  async fetchSettings(): Promise<UiSetting> {
     const res: AxiosResponse<UiSettingsRaw> = await api.get(
       `${this.routeName}/fetch/`,
-      {
-        headers: {
-          'Company-group': header || store.companyGroup,
-        },
-      }
+      {}
     );
     return this.fromJson(res.data);
   }

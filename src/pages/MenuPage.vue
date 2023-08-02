@@ -13,7 +13,7 @@
         :src="'https://placeimg.com/500/300/nature'"
       ></q-img>
       <q-separator
-        class="full-width mt-8"
+        class="full-width mt-8 divider-color"
         :color="`#${$uiSettings.item?.onBackgroundColor}`"
       />
       <div
