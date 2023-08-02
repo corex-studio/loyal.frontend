@@ -28,7 +28,7 @@ onMounted(async () => {
         parsedData.data.salesPoint.companyGroup
       )
       if (companyGroupAppSettings.app_redirect_link) {
-        window.open(companyGroupAppSettings.app_redirect_link, 'blank')
+        window.open(companyGroupAppSettings.app_redirect_link)
       }
     } catch {}
   }
