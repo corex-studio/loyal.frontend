@@ -21,18 +21,18 @@ onMounted(async () => {
     String(route.params.topologyItemId),
     String(route.query.type)
   )
-
+  let correctUrl = false
   if (parsedData.data && parsedData.data.salesPoint) {
     try {
       const companyGroupAppSettings = await companyGroupRepo.getAppSettings(
         parsedData.data.salesPoint.companyGroup
       )
       if (companyGroupAppSettings.app_redirect_link) {
-        window.open(companyGroupAppSettings.app_redirect_link)
+        window.location.replace(companyGroupAppSettings.app_redirect_link)
+        correctUrl = true
       }
     } catch {}
   }
-  loading.value = false
-  void router.push({ name: '404page' })
+  if (!correctUrl) void router.push({ name: '404page' })
 })
 </script>
