@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="$deliveryAddress.items.length"
     style="max-width: 416px; width: 100%; height: fit-content"
     class="column px-5 bg-backing-color border-radius text-on-backing-color"
   >
@@ -20,6 +21,18 @@
         />
       </div>
     </template>
+  </div>
+  <div
+    v-else
+    style="width: 416px; height: 200px"
+    class="bg-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
+  >
+    <CIcon name="fa-thin fa-location-plus" size="65px" />
+    <div class="row full-width justify-center">
+      <div class="header3 col-9" style="text-align: center">
+        У вас нет добавленных адресов доставки
+      </div>
+    </div>
   </div>
   <div class="row full-width mt-15">
     <div style="max-width: 416px; width: 100%" class="row justify-center">
@@ -43,6 +56,7 @@
     :model-value="deliveryAddressModal"
     :address="addressToEdit || undefined"
     @update:model-value="deliveryAddressModalCloseHandler()"
+    @create="deliveryAddressCreated()"
   />
 </template>
 <script lang="ts" setup>
@@ -57,6 +71,11 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 const deliveryAddressModal = ref(false)
 
 const addressToEdit = ref<DeliveryAddress | null>(null)
+
+const deliveryAddressCreated = async () => {
+  deliveryAddressModal.value = false
+  await loadAddresses()
+}
 
 const deliveryAddressModalCloseHandler = () => {
   addressToEdit.value = null

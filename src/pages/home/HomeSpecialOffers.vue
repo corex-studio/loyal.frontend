@@ -27,9 +27,13 @@
             style="min-height: 180px"
             fit="cover"
           />
-          <div class="px-5 py-7 column justify-between items-start full-height">
-            <div class="ellipsis text-on-backing-color">
-              {{ 'name' in item ? item.name : item.title }}
+          <div
+            class="px-5 py-7 column full-width relative-position items-start full-height"
+          >
+            <div class="row full-width text-on-backing-color">
+              <div class="ellipsis">
+                {{ 'name' in item ? item.name : item.title }}
+              </div>
             </div>
             <div
               v-if="
@@ -37,19 +41,20 @@
                   ? item.shortDescription?.length
                   : item.description?.length
               "
-              class="ellipsis-2-lines mt-5 text-on-backing-color"
+              class="mt-3 text-on-backing-color"
               style="opacity: 0.6"
             >
-              {{
-                'shortDescription' in item
-                  ? item.shortDescription
-                  : item.description
-              }}
+              <div class="ellipsis-2-lines">
+                {{
+                  'shortDescription' in item
+                    ? item.shortDescription
+                    : item.description
+                }}
+              </div>
             </div>
             <CButton
               @click="void 0"
-              class="mt-4"
-              style="margin-left: -2px"
+              style="position: absolute; bottom: 8px; left: 7px"
               text-button
               text-color="button-color"
             >

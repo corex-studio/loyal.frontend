@@ -1,10 +1,9 @@
 <template>
-  <q-breadcrumbs separator="" class="mb-15 mt-10 c-container">
+  <q-breadcrumbs separator="" class="mb-15 mt-10">
     <CHover v-slot="{ hover }">
       <q-breadcrumbs-el
         :label="
-          $menuGroup.currentGroups.find((el) => el.id === $menuItem.item?.group)
-            ?.name
+          $menuGroup.items.find((el) => el.id === $menuItem.item?.group)?.name
         "
         class="caption-text pb-2"
         :class="hover ? 'text-primary' : 'text-on-background-color'"
@@ -21,7 +20,7 @@
       class="caption-text text-on-background-color"
     />
   </q-breadcrumbs>
-  <div v-if="$menuItem.item" class="c-container">
+  <div v-if="$menuItem.item">
     <div
       class="row full-width justify-between no-wrap text-on-background-color"
     >
@@ -135,6 +134,7 @@
               @update:model-value="changeQuantity($event)"
             />
             <CButton
+              v-if="$cart.item"
               @click="addToCart()"
               text-color="on-primary"
               class="col-grow"
@@ -150,69 +150,69 @@
   </div>
 </template>
 <script lang="ts" setup>
-import TabPicker from 'src/components/template/buttons/TabPicker.vue';
-import CIcon from 'src/components/template/helpers/CIcon.vue';
-import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo';
-import { onMounted, ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import ChangeAmount from 'src/components/inputs/ChangeAmount.vue';
-import CButton from 'src/components/template/buttons/CButton.vue';
-import CHover from 'src/components/template/helpers/CHover.vue';
-import { Notify } from 'quasar';
-import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo';
-import { cartRepo } from 'src/models/carts/cartRepo';
-import { Cart } from 'src/models/carts/cart';
-import ModifiersSelector from './ModifiersSelector.vue';
-import { CartItemModifier } from 'src/models/carts/cartItem/cartItem';
-import { nutritionsNames } from 'src/models/menu/menu';
+import TabPicker from 'src/components/template/buttons/TabPicker.vue'
+import CIcon from 'src/components/template/helpers/CIcon.vue'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { onMounted, ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
+import CButton from 'src/components/template/buttons/CButton.vue'
+import CHover from 'src/components/template/helpers/CHover.vue'
+import { Notify } from 'quasar'
+import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import { Cart } from 'src/models/carts/cart'
+import ModifiersSelector from './ModifiersSelector.vue'
+import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
+import { nutritionsNames } from 'src/models/menu/menu'
 
-const route = useRoute();
+const route = useRoute()
 
-const quantity = ref(0);
+const quantity = ref(0)
 
-const currentTab = ref<string | null>(null);
+const currentTab = ref<string | null>(null)
 onMounted(() => {
   void menuItemRepo.retrieve(String(route.params.menuItemId)).then(() => {
     currentTab.value = menuItemRepo.item?.sizes[0]
       ? menuItemRepo.item?.sizes[0].name
-      : null;
-  });
-});
+      : null
+  })
+})
 
 const cartItemQuantity = computed(() => {
   const foundInCart = cartRepo.item?.cartItems.find(
     (el) => el.size.uuid === currentSize.value?.id
-  );
-  return foundInCart?.quantity || quantity.value;
-});
+  )
+  return foundInCart?.quantity || quantity.value
+})
 
 const currentSize = computed(() => {
-  return menuItemRepo.item?.sizes.find((v) => v.name == currentTab.value);
-});
+  return menuItemRepo.item?.sizes.find((v) => v.name == currentTab.value)
+})
 
 const changeQuantity = async (v: number) => {
   const foundInCart = cartRepo.item?.cartItems.find(
     (el) => el.size.uuid === currentSize.value?.id
-  );
+  )
   if (foundInCart) {
     try {
-      foundInCart.quantity = v;
-      await cartItemRepo.update(foundInCart);
-      await cartRepo.current();
-      quantity.value = v;
+      foundInCart.quantity = v
+      await cartItemRepo.update(foundInCart)
+      await cartRepo.current()
+      quantity.value = v
     } catch {
       Notify.create({
         message: 'Ошибка изменения кол-ва',
         color: 'danger',
-      });
+      })
     }
   } else {
-    quantity.value = v;
+    quantity.value = v
   }
-};
+}
 
 const addToCart = async () => {
-  if (!cartRepo.item || !currentSize.value) return;
+  if (!cartRepo.item || !currentSize.value) return
   try {
     const res = await cartItemRepo.createCartItem({
       cart: cartRepo.item?.id,
@@ -227,23 +227,23 @@ const addToCart = async () => {
                 quantity: el.quantity,
                 price: el.price || 0,
                 sum: String(Number(el.price) * el.quantity),
-              } as CartItemModifier;
+              } as CartItemModifier
             })
             .filter((e) => e.quantity)
         ) || [],
-    });
-    cartRepo.item = new Cart(res);
+    })
+    cartRepo.item = new Cart(res)
     Notify.create({
       message: 'Успешно добавлено в корзину',
-    });
+    })
   } catch (e) {
-    console.log(e);
+    console.log(e)
     Notify.create({
       message: 'Ошибка при добавлении в корзину',
       color: 'danger',
-    });
+    })
   }
-};
+}
 </script>
 
 <style lang="scss" scoped></style>

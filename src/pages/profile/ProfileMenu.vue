@@ -37,14 +37,21 @@
       </div>
     </div>
   </div>
+  <AcceptModal
+    :model-value="acceptModal"
+    @update:model-value="acceptModal = false"
+    @accept="logOut()"
+  />
 </template>
 <script lang="ts" setup>
+import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const acceptModal = ref(false)
 
 const tabs = ref([
   {
@@ -73,7 +80,7 @@ const tabs = ref([
   //   routeName: 'profileData',
   // },
   {
-    label: 'О приложении',
+    label: 'О нас',
     icon: 'fa-light fa-mobile',
     routeName: 'aboutUs',
   },
@@ -87,7 +94,12 @@ const tabClickHandler = async (routeName?: string) => {
   if (routeName) {
     await router.push({ name: routeName })
   } else {
-    void authentication.logout()
+    acceptModal.value = true
   }
+}
+
+const logOut = () => {
+  void authentication.logout()
+  acceptModal.value = false
 }
 </script>

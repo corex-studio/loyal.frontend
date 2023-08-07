@@ -1,3 +1,4 @@
+import { CompanyRepo, companyRepo } from './../models/company/companyRepo'
 import {
   PaymentCardRepo,
   paymentCardRepo,
@@ -62,6 +63,7 @@ declare module '@vue/runtime-core' {
     $salesPoint: SalesPointRepo
     $order: OrderRepo
     $paymentCard: PaymentCardRepo
+    $company: CompanyRepo
   }
 }
 
@@ -82,6 +84,7 @@ export default boot(({ app }) => {
   app.config.globalProperties.$salesPoint = salesPointRepo
   app.config.globalProperties.$order = orderRepo
   app.config.globalProperties.$paymentCard = paymentCardRepo
+  app.config.globalProperties.$company = companyRepo
 
   // app.config.globalProperties.$customer = customerRepo;
 })

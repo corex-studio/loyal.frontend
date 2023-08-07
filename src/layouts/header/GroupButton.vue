@@ -21,63 +21,68 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup';
-import { ref, onMounted, computed } from 'vue';
-import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo';
-import { useRoute, useRouter } from 'vue-router';
-const groupElement = ref<Element | null>(null);
+import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
+import { ref, onMounted, computed } from 'vue'
+import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import { useRoute, useRouter } from 'vue-router'
+const groupElement = ref<Element | null>(null)
 
-const route = useRoute();
+const route = useRoute()
 
-const router = useRouter();
+const router = useRouter()
 
 const props = defineProps<{
-  item: MenuGroup;
-  additional?: boolean;
-}>();
+  item: MenuGroup
+  additional?: boolean
+}>()
 
 const clickHandler = (v: MenuGroup) => {
   if (route.name === 'home') {
-    void scrollToGroup(v);
+    void scrollToGroup(v)
   } else {
     void router.push({ name: 'home' }).then(() => {
       setTimeout(() => {
-        void scrollToGroup(v);
-      }, 500);
-    });
+        void scrollToGroup(v)
+      }, 500)
+    })
   }
-};
+}
 
 const scrollToGroup = (v: MenuGroup) => {
-  groupElement.value = document.getElementById(v.id);
-  if (groupElement.value)
-    groupElement.value.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-      inline: 'nearest',
-    });
-};
+  groupElement.value = document.getElementById(v.id)
+  if (groupElement.value) {
+    const y =
+      groupElement.value.getBoundingClientRect().top + window.scrollY - 40
+    window.scrollTo({ top: y, behavior: 'smooth' })
+    // groupElement.value.scrollIntoView({
+    //   behavior: 'smooth',
+    //   block: 'start',
+    //   inline: 'nearest',
+    // })
+  }
+}
 
 const isHomePage = computed(() => {
-  return route.name === 'home';
-});
+  return route.name === 'home'
+})
 
 onMounted(() => {
-  groupElement.value = document.getElementById(props.item.id);
+  groupElement.value = document.getElementById(props.item.id)
 
   const observer = new window.IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
-        menuGroupRepo.elementInViewport = groupElement.value?.id || null;
-        return;
+        menuGroupRepo.elementInViewport = groupElement.value?.id || null
+        return
       }
     },
     {
       root: null,
       threshold: 0.9,
+      rootMargin: '0px',
     }
-  );
+  )
 
-  if (groupElement.value) observer.observe(groupElement.value);
-});
+  if (groupElement.value) observer.observe(groupElement.value)
+})
 </script>

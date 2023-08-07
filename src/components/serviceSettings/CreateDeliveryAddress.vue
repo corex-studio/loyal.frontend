@@ -103,8 +103,8 @@ const createAddress = async () => {
       Notify.create({
         message: 'Адрес успешно создан',
       })
+      emit('create')
     }
-    emit('create')
   } catch {
     if (props.address) {
       Notify.create({

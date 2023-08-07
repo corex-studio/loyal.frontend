@@ -77,7 +77,7 @@ const currentCategoryItem = computed(() => {
   const categoryId = route.params.categoryId;
   if (!categoryId) return;
   else {
-    const found = menuRepo.item?.groups.find((el) => el.uuid === categoryId);
+    const found = menuRepo.item?.groups?.find((el) => el.uuid === categoryId);
     return found;
   }
 });

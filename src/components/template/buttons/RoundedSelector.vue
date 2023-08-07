@@ -12,11 +12,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import CIcon from '../helpers/CIcon.vue';
+import CIcon from '../helpers/CIcon.vue'
 
 defineProps<{
-  modelValue: boolean;
-}>();
+  modelValue: boolean
+}>()
 </script>
 
 <style scoped lang="scss">

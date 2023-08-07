@@ -37,20 +37,20 @@
 
 .subtitle-text {
   font-weight: 600;
-  font-size: 15px;
-  line-height: 21px;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 .subtitle-text-light {
   font-weight: 400;
-  font-size: 15px;
-  line-height: 21px;
+  font-size: 16px;
+  line-height: 22px;
 }
 
 .body {
   font-weight: 400;
   font-size: 15px;
-  line-height: 16.8px;
+  line-height: 21px;
   .q-field__label,
   &.q-btn div {
     @extend .body;

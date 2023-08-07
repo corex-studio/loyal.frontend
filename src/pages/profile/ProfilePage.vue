@@ -63,6 +63,12 @@ import CHover from 'src/components/template/helpers/CHover.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import ProfileMenu from './ProfileMenu.vue'
+import { onMounted } from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
+
+onMounted(() => {
+  if (companyRepo.item) companyRepo.companyForProfile = companyRepo.item
+})
 </script>
 
 <style lang="scss" scoped>

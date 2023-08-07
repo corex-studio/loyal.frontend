@@ -1,8 +1,8 @@
 <template>
   <div
-    v-if="$menuGroup.currentGroups?.length"
+    v-if="$menuGroup.items?.length"
     class="row full-width bg-background-color"
-    style="position: sticky; top: 0px; z-index: 10"
+    style="position: sticky; top: 0px; z-index: 99"
     :style="
       verticalScroll > 60 ? 'box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.06)' : ''
     "
@@ -12,26 +12,24 @@
     >
       <div class="row gap-14 no-wrap items-center">
         <div
-          v-for="(el, index) in $menuGroup.currentGroups.filter(
-            (_, ind) => ind < 9
-          )"
+          v-for="(el, index) in $menuGroup.items.filter((_, ind) => ind < 7)"
           :key="index"
         >
           <GroupButton :key="key" :item="el" />
         </div>
         <div
-          v-if="$menuGroup.currentGroups.length > 9"
-          class="row no-wrap cursor-pointer"
+          v-if="$menuGroup.items.length > 7"
+          class="row no-wrap cursor-pointer text-on-background-color"
         >
           Еще
-          <CIcon name="fa-light fa-angle-down" />
+          <CIcon color="on-background-color" name="fa-light fa-angle-down" />
           <q-menu
             v-model="moreCategoriesMenu"
             class="border-radius bg-background-color pa-5 column gap-2"
           >
             <div
-              v-for="(el, index) in $menuGroup.currentGroups.filter(
-                (_, ind) => ind >= 9
+              v-for="(el, index) in $menuGroup.items.filter(
+                (_, ind) => ind >= 7
               )"
               :key="index"
               class="row items-center cursor-pointer"
@@ -65,46 +63,52 @@
 </template>
 
 <script setup lang="ts">
-import CIcon from 'src/components/template/helpers/CIcon.vue';
-import CButton from 'src/components/template/buttons/CButton.vue';
-import { onMounted, ref, watch } from 'vue';
-import { cartRepo } from 'src/models/carts/cartRepo';
-import { menuRepo } from 'src/models/menu/menuRepo';
-import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo';
-import GroupButton from './GroupButton.vue';
-import CartDrawer from '../drawer/cart/CartDrawer.vue';
-import { useRoute } from 'vue-router';
-import { authentication } from 'src/models/authentication/authentication';
+import CIcon from 'src/components/template/helpers/CIcon.vue'
+import CButton from 'src/components/template/buttons/CButton.vue'
+import { onMounted, ref, watch } from 'vue'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import GroupButton from './GroupButton.vue'
+import CartDrawer from '../drawer/cart/CartDrawer.vue'
+import { useRoute } from 'vue-router'
+import { authentication } from 'src/models/authentication/authentication'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { menuRepo } from 'src/models/menu/menuRepo'
 
-const key = ref(0);
+const key = ref(0)
 
-const verticalScroll = ref(0);
+const verticalScroll = ref(0)
 
-const moreCategoriesMenu = ref(false);
+const moreCategoriesMenu = ref(false)
 
-const route = useRoute();
+const route = useRoute()
 
 onMounted(() => {
   window.addEventListener('scroll', () => {
-    verticalScroll.value = window.scrollY;
-  });
-  void menuGroupRepo
-    .list({
-      menu: cartRepo.item
+    verticalScroll.value = window.scrollY
+  })
+
+  void menuRepo
+    .retrieve(
+      cartRepo.item
         ? cartRepo.item?.salesPoint.menu.id
-        : menuRepo.items[0].id,
+        : companyGroupRepo.item?.companies[0]?.salesPoints
+        ? companyGroupRepo.item?.companies[0]?.salesPoints[0].menu.id
+        : ''
+    )
+    .then(() => {
+      void menuGroupRepo.list({
+        menu: menuRepo.item?.id,
+      })
     })
-    .then((res) => {
-      menuGroupRepo.currentGroups = res.items;
-    });
-});
+})
 
 watch(
   () => route.name,
   (v) => {
     if (v === 'home') {
-      key.value++;
+      key.value++
     }
   }
-);
+)
 </script>

@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import CIcon from '../helpers/CIcon.vue';
+import CIcon from '../helpers/CIcon.vue'
 defineProps({
   hideActions: Boolean,
   alignActions: {
@@ -90,8 +90,8 @@ defineProps({
   noOverflow: Boolean,
   heightPercent: String,
   withOverflow: Boolean,
-});
-defineEmits(['update:modelValue']);
+})
+defineEmits(['update:modelValue'])
 </script>
 
 <style lang="scss" scoped>

@@ -1,19 +1,21 @@
-import { AxiosResponse } from 'axios';
-import { BaseModelApi } from 'src/corexModels/apiModels/baseModelApi';
-import { UiSetting, UiSettingsRaw } from './uiSettings';
-import { api } from 'boot/axios';
+import { AxiosResponse } from 'axios'
+import { BaseModelApi } from 'src/corexModels/apiModels/baseModelApi'
+import { UiSetting, UiSettingsRaw } from './uiSettings'
+import { api } from 'boot/axios'
 
 export class UiSettingsApi extends BaseModelApi<UiSetting> {
-  routeName = 'ui_settings';
-  fromJson = (json: UiSettingsRaw) => new UiSetting(json);
+  routeName = 'ui_settings'
+  fromJson = (json: UiSettingsRaw) => new UiSetting(json)
 
-  async fetchSettings(): Promise<UiSetting> {
+  async fetchSettings(companyGroup?: string): Promise<UiSetting> {
     const res: AxiosResponse<UiSettingsRaw> = await api.get(
       `${this.routeName}/fetch/`,
-      {}
-    );
-    return this.fromJson(res.data);
+      {
+        headers: companyGroup ? { 'Company-Group': companyGroup } : undefined,
+      }
+    )
+    return this.fromJson(res.data)
   }
 }
 
-export const uiSettingsApi = new UiSettingsApi();
+export const uiSettingsApi = new UiSettingsApi()

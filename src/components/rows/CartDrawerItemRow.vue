@@ -1,7 +1,7 @@
 <template>
   <div v-if="cartItem" class="row full-width items-center no-wrap gap-5">
     <CIcon
-      @click="deleteCartItem()"
+      @click="$emit('delete')"
       class="cursor-pointer"
       hover-color="primary"
       color="on-background-color"
@@ -14,8 +14,8 @@
       height="80px"
       fit="cover"
     />
-    <div class="row col items-end justify-between">
-      <div class="column col-10 gap-4 secondary-text">
+    <div class="row no-wrap col items-end justify-between">
+      <div class="column col gap-4 secondary-text">
         <div>{{ cartItem.size.name }}</div>
         <div class="caption-text text-on-background-color">
           {{
@@ -48,57 +48,39 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { CartItem } from 'src/models/carts/cartItem/cartItem';
-import CIcon from '../template/helpers/CIcon.vue';
-import ChangeAmount from '../inputs/ChangeAmount.vue';
-import { ref, onMounted } from 'vue';
-import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo';
-import { Notify } from 'quasar';
-import { cartRepo } from 'src/models/carts/cartRepo';
+import { CartItem } from 'src/models/carts/cartItem/cartItem'
+import CIcon from '../template/helpers/CIcon.vue'
+import ChangeAmount from '../inputs/ChangeAmount.vue'
+import { ref, onMounted } from 'vue'
+import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
+import { Notify } from 'quasar'
+import { cartRepo } from 'src/models/carts/cartRepo'
 
-const cartItem = ref<CartItem | null>(null);
+const cartItem = ref<CartItem | null>(null)
 
 const props = defineProps<{
-  item: CartItem;
-}>();
+  item: CartItem
+}>()
+
+defineEmits(['delete'])
 
 onMounted(() => {
-  cartItem.value = props.item;
-});
-
-const deleteCartItem = async () => {
-  try {
-    await cartItemRepo.delete(cartItem.value);
-    Notify.create({
-      message: 'Блюдо удалено из корзины',
-    });
-    await cartRepo.current();
-    const foundIndex = cartRepo.item?.cartItems.findIndex(
-      (v) => v.id === cartItem.value?.id
-    );
-    if (foundIndex !== undefined && foundIndex > -1)
-      cartRepo.item?.cartItems.splice(foundIndex, 1);
-  } catch {
-    Notify.create({
-      message: 'Ошибка при удалении',
-      color: 'danger',
-    });
-  }
-};
+  cartItem.value = props.item
+})
 
 const updateQuantity = async (v: number) => {
-  if (!v) return;
-  if (!cartItem.value) return;
-  cartItem.value.quantity = v;
+  if (!v) return
+  if (!cartItem.value) return
+  cartItem.value.quantity = v
   try {
-    cartRepo.loading = true;
-    await cartItemRepo.update(cartItem.value);
+    cartRepo.loading = true
+    await cartItemRepo.update(cartItem.value)
     // await cartRepo.current();
   } catch {
     Notify.create({
       message: 'Ошибка изменения товара',
       color: 'danger',
-    });
+    })
   }
-};
+}
 </script>

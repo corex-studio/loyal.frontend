@@ -47,20 +47,26 @@
       </div>
     </div>
     <CButton
+      @click="acceptModal = true"
       class="pr-3"
       text-button
       icon="fa-light fa-trash"
       height="40px"
       color="secondary-button-color"
       text-color="on-secondary-button-color"
-      disabled
       >Удалить аккаунт</CButton
     >
   </div>
+  <AcceptModal
+    :model-value="acceptModal"
+    @update:model-value="acceptModal = false"
+    @accept="deleteAccount()"
+  />
 </template>
 <script lang="ts" setup>
 import { cloneDeep, isEqual } from 'lodash'
 import { Notify } from 'quasar'
+import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
@@ -75,6 +81,8 @@ const item = computed(() => {
 })
 
 const _item = ref<Customer | null>(null)
+
+const acceptModal = ref(false)
 
 const isSaveAvailable = computed(() => {
   return (
@@ -112,4 +120,19 @@ const updateProfileData = async () => {
 onMounted(() => {
   _item.value = cloneDeep(item.value)
 })
+
+const deleteAccount = async () => {
+  try {
+    if (!item.value) return
+    await customerRepo.delete(item.value)
+    Notify.create({
+      message: 'Аккаунт успешно удален',
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при удалении аккаунта',
+      color: 'danger',
+    })
+  }
+}
 </script>

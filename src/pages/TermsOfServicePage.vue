@@ -165,7 +165,7 @@ const loading = ref(false)
 const route = useRoute()
 
 const linkToPolicy = computed(() => {
-  return `http://${window.location.host}/${String(
+  return `https://${window.location.host}/${String(
     route.params.externalId
   )}/policy`
 })

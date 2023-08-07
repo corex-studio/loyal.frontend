@@ -1,13 +1,15 @@
 <template>
   <div
-    @click="dialog = !dialog"
+    @click="openDialog()"
     class="row no-wrap gap-4 pt-2 pb-1 px-7 cursor-pointer box-shadow border-radius"
     :class="
       $cart.item?.type === 'delivery'
         ? 'bg-delivery-button-color text-on-delivery-button-color'
         : $cart.item?.type === 'pickup'
         ? 'bg-pickup-button-color text-on-pickup-button-color'
-        : 'bg-booking-button-color text-on-booking-button-color'
+        : $cart.item?.type === 'booking'
+        ? 'bg-booking-button-color text-on-booking-button-color'
+        : 'background-color text-on-background-color'
     "
     style="max-width: 265px; overflow: hidden"
   >
@@ -24,8 +26,8 @@
           : 'fa-light fa-square-question'
       "
     />
-    <div class="column gap-1 col-grow">
-      <div class="bold">
+    <div class="column col-grow">
+      <div style="line-height: 18px" class="bold">
         {{ $cart.item ? currentDeliveryType() : 'Тип доставки' }}
       </div>
       <div class="row full-width">
@@ -47,19 +49,28 @@
   />
 </template>
 <script lang="ts" setup>
-import { cartRepo } from 'src/models/carts/cartRepo';
-import ServiceSettingsModal from './ServiceSettingsModal.vue';
-import { ref } from 'vue';
+import { cartRepo } from 'src/models/carts/cartRepo'
+import ServiceSettingsModal from './ServiceSettingsModal.vue'
+import { ref } from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
+import { store } from 'src/models/store'
+
+const openDialog = () => {
+  if (!companyRepo.item) {
+    store.selectCompanyModal = true
+  }
+  dialog.value = true
+}
 
 const currentDeliveryType = () => {
   if (cartRepo.item?.type === 'pickup') {
-    return 'Самовывоз';
+    return 'Самовывоз'
   } else if (cartRepo.item?.type === 'delivery') {
-    return 'Доставка';
+    return 'Доставка'
   } else if (cartRepo.item?.type === 'booking') {
-    return 'Бронь';
+    return 'Бронь'
   }
-};
+}
 
-const dialog = ref(false);
+const dialog = ref(false)
 </script>

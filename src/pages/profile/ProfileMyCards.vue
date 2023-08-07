@@ -1,9 +1,10 @@
 <template>
   <div
+    v-if="currentCards.length"
     style="max-width: 416px; width: 100%; height: fit-content"
     class="column px-5 bg-backing-color border-radius text-on-backing-color"
   >
-    <div v-for="(el, index) in $paymentCard.items" :key="index">
+    <div v-for="(el, index) in currentCards" :key="index">
       <q-separator v-if="index" />
       <div class="row full-width items-center no-wrap my-7 justify-between">
         <div class="row gap-3 items-center">
@@ -42,14 +43,27 @@
       </div>
     </div>
   </div>
-  <Pagination
+  <div
+    v-else
+    style="width: 416px; height: 224px"
+    class="bg-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
+  >
+    <CIcon name="fa-thin fa-rectangle-history-circle-plus" size="65px" />
+    <div class="row full-width justify-center">
+      <div class="header3 col-9" style="text-align: center">
+        У вас нет сохраненных карт. <br />Вы можете сохранить карту во время
+        оплаты заказа
+      </div>
+    </div>
+  </div>
+  <!-- <Pagination
     :loading="$paymentCard.loadings.list"
     class="px-10 mt-15 full-width"
     @update:modelValue="setPage($event)"
     @appendItems="setPage($event, true)"
     :page="$paymentCard.pagination.page"
     :last-page="$paymentCard.pagination.last_page"
-  ></Pagination>
+  ></Pagination> -->
   <AcceptModal
     :model-value="acceptModal"
     @update:model-value="acceptModal = false"
@@ -57,7 +71,7 @@
   />
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { paymentCardRepo } from 'src/models/customer/paymentCards/paymentCardRepo'
 import {
   CardType,
@@ -66,26 +80,31 @@ import {
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import { Notify } from 'quasar'
-import Pagination from 'src/components/inputs/Pagination.vue'
 
 const acceptModal = ref(false)
 
 const cardToDelete = ref<PaymentCard | null>(null)
 
+const currentCards = computed(() => {
+  return paymentCardRepo.items.filter((v) => v.active)
+})
+
 const loadCards = async (page = 1, appendItems = false) => {
   await paymentCardRepo.list(
-    {},
+    {
+      active: true,
+    },
     {
       page: page ? page : paymentCardRepo.pagination.page,
       appendItems: appendItems,
-      pageSize: 10,
+      pageSize: 'all',
     }
   )
 }
 
-const setPage = async (page = 1, appendItems = false) => {
-  await loadCards(page, appendItems)
-}
+// const setPage = async (page = 1, appendItems = false) => {
+//   await loadCards(page, appendItems)
+// }
 
 onMounted(() => {
   void loadCards()
@@ -100,6 +119,7 @@ const deleteCard = async () => {
   if (!cardToDelete.value) return
   try {
     await paymentCardRepo.delete(cardToDelete.value)
+    cardToDelete.value.active = false
     Notify.create({
       message: 'Карта успешно удалена',
     })

@@ -2,12 +2,12 @@
   <div class="row full-width">
     <div class="column col-8 justify-between">
       <div class="row gap-40">
-        <div v-if="$menuGroup.currentGroups.length" class="column">
+        <div v-if="$menuGroup.items.length" class="column">
           <div class="bold mb-10 text-on-backing-color">Меню</div>
           <div class="row text-black3 gap-25">
             <div class="column gap-7">
               <div
-                v-for="(item, index) in $menuGroup.currentGroups.filter(
+                v-for="(item, index) in $menuGroup.items.filter(
                   (_, ind) => ind < 10
                 )"
                 :key="index"
@@ -23,7 +23,7 @@
             </div>
             <div class="column gap-7" style="min-width: 100px">
               <div
-                v-for="(item, index) in $menuGroup.currentGroups.filter(
+                v-for="(item, index) in $menuGroup.items.filter(
                   (_, ind) => ind >= 10 && ind < 20
                 )"
                 :key="index"
@@ -106,8 +106,8 @@
 </template>
 
 <script setup lang="ts">
-import CButton from 'src/components/template/buttons/CButton.vue';
-import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup';
+import CButton from 'src/components/template/buttons/CButton.vue'
+import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 
 const navigation = [
   'Новости',
@@ -117,15 +117,15 @@ const navigation = [
   'Политика конфиденциальности',
   'Пользовательское соглашение',
   'cookie',
-];
+]
 
 const scrollToGroup = (v: MenuGroup) => {
-  const groupElement = document.getElementById(v.id);
+  const groupElement = document.getElementById(v.id)
   if (groupElement)
     groupElement.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
       inline: 'nearest',
-    });
-};
+    })
+}
 </script>

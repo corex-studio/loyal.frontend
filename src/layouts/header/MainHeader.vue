@@ -6,10 +6,10 @@
         class="row no-wrap items-center justify-between"
       >
         <div
-          class="col-2 cursor-pointer"
+          class="col-2 row cursor-pointer"
           @click="$router.push({ name: 'home' })"
         >
-          <img width="156" src="~/assets/corexLoyalLogo.png" />
+          <img height="55" :src="$uiSettings.item?.logo?.thumbnail" />
         </div>
         <div class="col-7 row gap-15 body">
           <CButton
@@ -43,20 +43,20 @@
             height="33px"
             style="border-radius: 100px"
             icon="fa-light fa-piggy-bank"
-            color="blackground-color"
+            color="background-color"
             text-color="primary"
-            :label="
+            >{{
               authentication.user && authentication.user.wallets[0]
                 ? authentication.user.wallets[0].balance
                 : 'Бонусы'
-            "
-          />
+            }}</CButton
+          >
 
           <CButton
             @click="profileButtonClickHandler()"
             class="box-shadow"
             height="33px"
-            color="blackground-color"
+            color="background-color"
             text-color="primary"
             style="border-radius: 100px"
             icon="fa-light fa-user"
@@ -70,21 +70,21 @@
 </template>
 
 <script setup lang="ts">
-import CButton from 'src/components/template/buttons/CButton.vue';
-import { authentication } from 'src/models/authentication/authentication';
-import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue';
-import { store } from 'src/models/store';
-import { useRouter } from 'vue-router';
+import CButton from 'src/components/template/buttons/CButton.vue'
+import { authentication } from 'src/models/authentication/authentication'
+import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue'
+import { store } from 'src/models/store'
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 
 const profileButtonClickHandler = () => {
   if (authentication.user) {
-    void router.push({ name: 'profilePage' });
+    void router.push({ name: 'profilePage' })
   } else {
-    store.authModal = true;
+    store.authModal = true
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

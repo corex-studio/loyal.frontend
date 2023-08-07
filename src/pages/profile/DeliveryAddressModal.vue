@@ -18,10 +18,7 @@
         </div>
       </div>
     </template>
-    <CreateDeliveryAddress
-      :address="address"
-      @create="$emit('update:modelValue', false)"
-    />
+    <CreateDeliveryAddress :address="address" @create="$emit('create')" />
   </CDialog>
 </template>
 <script lang="ts" setup>
@@ -37,5 +34,6 @@ defineProps<{
 
 defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
+  (evt: 'create'): void
 }>()
 </script>

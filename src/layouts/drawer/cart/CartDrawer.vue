@@ -19,10 +19,10 @@
         >
           <div class="row items-center no-wrap gap-5">
             <div
+              @click="toPreviousStep()"
               class="bg-white-opacity cursor-pointer box-shadow py-4 px-5 border-radius"
             >
               <CIcon
-                @click="toPreviousStep()"
                 hover-color="primary"
                 color="on-secondary-button-color"
                 name="fa-light fa-angle-left"
@@ -53,7 +53,7 @@
               :key="index"
             >
               <q-separator v-if="index" class="my-5" color="divider-color" />
-              <CartDrawerItemRow :item="item" />
+              <CartDrawerItemRow @delete="deleteCartItem(item)" :item="item" />
             </template>
             <div
               class="row box-shadow border-radius bg-background-color pa-10 mt-15 justify-between items-center"
@@ -71,12 +71,16 @@
               </div>
             </div>
           </div>
-          <CartOutput v-else />
+          <CartOutput
+            v-else
+            @payment-selected="makeAnOrder($event)"
+            :show-payment-types="selectPaymentType"
+          />
         </template>
         <div v-else class="px-10">Корзина пуста</div>
       </div>
       <div
-        v-if="$cart.item?.cartItems.length"
+        v-if="$cart.item?.cartItems.length && !selectPaymentType"
         class="row full-width justify-center bg-background-color py-8"
         style="position: sticky; bottom: 0"
       >
@@ -84,6 +88,7 @@
           @click="toNextStep()"
           :loading="cartRepo.loading"
           class="body"
+          :disable="!isArrangeDisabled"
           height="50px"
           style="min-width: 261px"
           >{{ `Оформить заказ ${$cart.item?.discountedTotalSum} ₽` }}</CButton
@@ -93,34 +98,121 @@
   </div>
 </template>
 <script lang="ts" setup>
-import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue';
-import CButton from 'src/components/template/buttons/CButton.vue';
-import CIcon from 'src/components/template/helpers/CIcon.vue';
-import { store } from 'src/models/store';
-import { ref, computed } from 'vue';
-import CartOutput from './CartOutput.vue';
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo';
-import { cartRepo } from 'src/models/carts/cartRepo';
+import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
+import CButton from 'src/components/template/buttons/CButton.vue'
+import CIcon from 'src/components/template/helpers/CIcon.vue'
+import { store } from 'src/models/store'
+import { ref, computed, watch } from 'vue'
+import CartOutput from './CartOutput.vue'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import moment from 'moment'
+import { Notify } from 'quasar'
+import { CartItem } from 'src/models/carts/cartItem/cartItem'
+import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
+import { PaymentType } from 'src/models/order/order'
 
-const cartMode = ref<'cart' | 'output'>('cart');
+const cartMode = ref<'cart' | 'output'>('cart')
+
+const selectPaymentType = ref(false)
 
 const drawerBorderRadius = computed(() => {
-  return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px !important`;
-});
+  return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px !important`
+})
 
-const toNextStep = () => {
-  if (cartMode.value === 'cart') {
-    cartMode.value = 'output';
+const isArrangeDisabled = computed(() => {
+  return (
+    cartMode.value === 'cart' ||
+    (cartRepo.item?.deliveryTime && cartRepo.item.cartItems.length)
+  )
+})
+
+watch(
+  () => store.cartDrawer,
+  (v) => {
+    if (v) {
+      selectPaymentType.value = false
+    }
   }
-};
+)
+
+const deleteCartItem = async (item: CartItem) => {
+  try {
+    await cartItemRepo.delete(item)
+    Notify.create({
+      message: 'Блюдо удалено из корзины',
+    })
+    await cartRepo.current()
+    const foundIndex = cartRepo.item?.cartItems.findIndex(
+      (v) => v.id === item.id
+    )
+    if (foundIndex !== undefined && foundIndex > -1)
+      cartRepo.item?.cartItems.splice(foundIndex, 1)
+  } catch {
+    Notify.create({
+      message: 'Ошибка при удалении',
+      color: 'danger',
+    })
+  }
+}
+
+const toNextStep = async () => {
+  if (cartMode.value === 'cart') {
+    cartMode.value = 'output'
+  } else {
+    await selectDeliveryDate()
+    selectPaymentType.value = true
+  }
+}
+
+const selectDeliveryDate = async () => {
+  try {
+    await cartRepo.setParams({
+      delivery_time: cartRepo.item?.deliveryTime
+        ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
+            .utc()
+            .format('YYYY-MM-DD HH:mm:ss')
+        : undefined,
+      sales_point: cartRepo.item?.salesPoint.id || '',
+      type: cartRepo.item?.type || '',
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при установке даты доставки',
+      color: 'danger',
+    })
+  }
+}
+
+const makeAnOrder = async (paymentType: PaymentType) => {
+  try {
+    const order = await cartRepo.arrange({
+      sales_point: cartRepo.item?.salesPoint.id,
+      payment_data: {
+        type: paymentType,
+        save_next_card: true,
+        payment_service: 'card',
+      },
+    })
+    if (order.paymentUrl) {
+      window.open(order.paymentUrl, '_blank')
+    }
+  } catch {
+    cartRepo.arrangeLoading = false
+    Notify.create({
+      message: 'Ошибка при оформлении заказа',
+      color: 'danger',
+    })
+  }
+}
 
 const toPreviousStep = () => {
   if (cartMode.value === 'output') {
-    cartMode.value = 'cart';
+    cartMode.value = 'cart'
   } else {
-    store.cartDrawer = false;
+    store.cartDrawer = false
   }
-};
+}
 </script>
 
 <style lang="scss" scoped></style>

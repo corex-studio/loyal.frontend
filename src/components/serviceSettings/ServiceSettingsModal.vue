@@ -17,7 +17,7 @@
             @click="mode = 'select'"
             icon="fa-light fa-angle-left"
             hover-icon-color="primary"
-            class="box-shadow"
+            icon-class="box-shadow"
             color="white-opacity"
             icon-color="on-secondary-button-color"
             size="30px"
@@ -77,10 +77,7 @@
       >
         <q-tab-panel name="select" class="pa-0 column no-wrap pt-10 px-10">
           <!-- <div class="full-width header2 mb-10">Тип доставки</div> -->
-          <div
-            class="row no-wrap gap-5"
-            :class="{ 'mb-15': $deliveryAddress.items.length }"
-          >
+          <div class="row mb-15 no-wrap gap-5">
             <CButton
               @click="currentTab = 1"
               label="Доставка"
@@ -140,8 +137,8 @@
                 ($deliveryAddress.items.length < 6 && currentTab === 1) ||
                 currentTab === 2 ||
                 (currentTab === 3 &&
-                  ($companyGroup.item?.companies[0].salesPoints
-                    ? $companyGroup.item?.companies[0].salesPoints.length < 6
+                  ($company.item?.salesPoints
+                    ? $company.item?.salesPoints.length < 6
                     : true)) ||
                 !currentTab,
             }"
@@ -214,8 +211,7 @@
               <q-tab-panel :name="2" class="px-0 py-0 column">
                 <div class="full-width header2 mb-10">Адреса самовывоза</div>
                 <div
-                  v-for="(el, index) in $companyGroup.item?.companies[0]
-                    .salesPoints"
+                  v-for="(el, index) in $company.item?.salesPoints"
                   :key="index"
                   class="full-width"
                 >
@@ -251,8 +247,7 @@
               <q-tab-panel :name="3" class="px-0 py-0 column">
                 <div class="full-width header2 mb-10">Адреса заведений</div>
                 <div
-                  v-for="(el, index) in $companyGroup.item?.companies[0]
-                    .salesPoints"
+                  v-for="(el, index) in $company.item?.salesPoints"
                   :key="index"
                   class="full-width"
                 >
@@ -354,7 +349,7 @@
           class="pa-10"
         >
           <CreateDeliveryAddress
-            @create="(mode = 'select'), deliveryAddressRepo.list()"
+            @create=";(mode = 'select'), deliveryAddressRepo.list()"
           />
         </q-tab-panel>
         <q-tab-panel
@@ -374,93 +369,93 @@
   </CDialog>
 </template>
 <script lang="ts" setup>
-import CButton from '../template/buttons/CButton.vue';
-import CDialog from '../template/dialogs/CDialog.vue';
-import { ref, watch, computed } from 'vue';
-import CIcon from '../template/helpers/CIcon.vue';
-import CreateDeliveryAddress from './CreateDeliveryAddress.vue';
-import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo';
-import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress';
-import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo';
-import { cartRepo } from 'src/models/carts/cartRepo';
-import BookingInfo, { BookingModes } from './BookingInfo.vue';
-import CIconButton from '../template/buttons/CIconButton.vue';
-import { Notify } from 'quasar';
-import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue';
+import CButton from '../template/buttons/CButton.vue'
+import CDialog from '../template/dialogs/CDialog.vue'
+import { ref, watch, computed } from 'vue'
+import CIcon from '../template/helpers/CIcon.vue'
+import CreateDeliveryAddress from './CreateDeliveryAddress.vue'
+import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
+import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
+import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import BookingInfo, { BookingModes } from './BookingInfo.vue'
+import CIconButton from '../template/buttons/CIconButton.vue'
+import { Notify } from 'quasar'
+import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
 
-export type ServiceModes = 'create' | 'select' | 'bookingInfo';
-const currentTab = ref<number | null>(null);
+export type ServiceModes = 'create' | 'select' | 'bookingInfo'
+const currentTab = ref<number | null>(null)
 
-const selectedAddress = ref<DeliveryAddress | null>(null);
+const selectedAddress = ref<DeliveryAddress | null>(null)
 
-const selectedPickupAddress = ref<string | null>(null);
+const selectedPickupAddress = ref<string | null>(null)
 
-const selectedSalesPoint = ref<string | null>(null);
+const selectedSalesPoint = ref<string | null>(null)
 
-const mode = ref<ServiceModes>('select');
+const mode = ref<ServiceModes>('select')
 
-const bookingMode = ref<BookingModes>('bookingInfo');
+const bookingMode = ref<BookingModes>('bookingInfo')
 
 const props = defineProps<{
-  modelValue: boolean;
-}>();
+  modelValue: boolean
+}>()
 
 const emit = defineEmits<{
-  (evt: 'update:modelValue', value: boolean): void;
-}>();
+  (evt: 'update:modelValue', value: boolean): void
+}>()
 
 const disableFurtherButton = computed(() => {
   return currentTab.value === 2
     ? !selectedPickupAddress.value
-    : !selectedSalesPoint.value;
-});
+    : !selectedSalesPoint.value
+})
 
 watch(
   () => props.modelValue,
   (v) => {
     if (v) {
-      void deliveryAddressRepo.list();
+      void deliveryAddressRepo.list()
     }
   }
-);
+)
 
 const bookingBackHandler = () => {
   bookingMode.value === 'bookingInfo'
     ? (mode.value = 'select')
     : bookingMode.value === 'tablePicker'
     ? (bookingMode.value = 'bookingInfo')
-    : (bookingMode.value = 'tablePicker');
-};
+    : (bookingMode.value = 'tablePicker')
+}
 
 const selectAddress = async () => {
   if (selectedAddress.value && currentTab.value === 1) {
-    const res = await deliveryAreaRepo.byCoords(selectedAddress.value?.coords);
+    const res = await deliveryAreaRepo.byCoords(selectedAddress.value?.coords)
     if (!res.length) {
       Notify.create({
         message: 'По данному адресу не осуществляется доставка',
         color: 'danger',
-      });
-      return;
+      })
+      return
     }
 
     await cartRepo.setParams({
       sales_point: res[0].salesPoint,
       type: 'delivery',
       delivery_address: selectedAddress.value?.id,
-    });
-    emit('update:modelValue', false);
+    })
+    emit('update:modelValue', false)
   } else if (currentTab.value === 2) {
     await cartRepo.setParams({
       sales_point: selectedPickupAddress.value || '',
       type: 'pickup',
-    });
-    emit('update:modelValue', false);
+    })
+    emit('update:modelValue', false)
   } else if (currentTab.value === 3) {
-    mode.value = 'bookingInfo';
+    mode.value = 'bookingInfo'
     // await cartRepo.setParams({
     //   sales_point: selectedSalesPoint.value || '',
     //   type: 'booking',
     // });
   }
-};
+}
 </script>

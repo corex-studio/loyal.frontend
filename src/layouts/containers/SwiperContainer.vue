@@ -14,6 +14,7 @@
       }"
       :modules="modules"
       navigation
+      :class="noNavigation ? 'no-navigation' : 'navigation'"
     >
       <swiper-slide
         v-for="(item, index) in items"
@@ -27,32 +28,33 @@
 </template>
 
 <script setup lang="ts">
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import { Pagination, Navigation, Mousewheel } from 'swiper';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Pagination, Navigation, Mousewheel } from 'swiper'
+import 'swiper/css'
+import 'swiper/css/pagination'
+import 'swiper/css/navigation'
 
-import { computed } from 'vue';
+import { computed } from 'vue'
 
 const props = defineProps<{
-  items: Array<any>;
-  loop?: boolean;
-  spaceBetween?: number;
-  slidesPerView?: number;
-  useBullets?: boolean;
-}>();
+  items: Array<any>
+  loop?: boolean
+  spaceBetween?: number
+  slidesPerView?: number
+  useBullets?: boolean
+  noNavigation?: boolean
+}>()
 
 const modules = computed(() => {
-  const res = [];
-  res.push(Navigation);
-  res.push(Mousewheel);
+  const res = []
+  if (!props.noNavigation) res.push(Navigation)
+  res.push(Mousewheel)
   if (props.useBullets) {
-    res.push(Pagination);
+    res.push(Pagination)
   }
 
-  return res;
-});
+  return res
+})
 </script>
 
 <style scoped lang="scss">
@@ -78,7 +80,7 @@ const modules = computed(() => {
   border-radius: 5px;
 }
 
-.swiper :deep(.swiper-button-prev) {
+.navigation :deep(.swiper-button-prev) {
   color: black;
   height: 10px;
   width: 10px;
@@ -95,12 +97,20 @@ const modules = computed(() => {
   font-size: 20px;
 }
 
-.swiper :deep(.swiper-button-next) {
+.navigation :deep(.swiper-button-next) {
   color: black;
   height: 10px;
   width: 10px;
   margin-top: -40px;
   border: 20px rgba(255, 255, 255, 0.85) solid;
   border-radius: 50%;
+}
+
+.no-navigation :deep(.swiper-button-next) {
+  display: none;
+}
+
+.no-navigation :deep(.swiper-button-prev) {
+  display: none;
 }
 </style>

@@ -220,10 +220,7 @@ const _rounded = computed(() => {
 })
 
 const _standout = computed(() => {
-  if (props.default) {
-    return true
-  }
-  return props.standout
+  return props.standout || true
 })
 
 const _bgColor = computed(() => {

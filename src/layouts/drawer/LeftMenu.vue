@@ -52,15 +52,15 @@
 </template>
 
 <script setup lang="ts">
-import { useQuasar } from 'quasar';
-import { computed, ref } from 'vue';
+import { useQuasar } from 'quasar'
+import { computed, ref } from 'vue'
 
-const q = useQuasar();
+const q = useQuasar()
 
 const kek = computed(() => {
-  let footerHeight = ref(q.screen.lt.md ? 66 : 73.6);
-  return q.screen.height - 54 - footerHeight.value;
-});
+  let footerHeight = ref(q.screen.lt.md ? 66 : 73.6)
+  return q.screen.height - 54 - footerHeight.value
+})
 </script>
 
 <style scoped></style>
