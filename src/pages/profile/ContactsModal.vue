@@ -5,13 +5,13 @@
     width="456px"
   >
     <template v-slot:header> {{ contact?.label }} </template>
-    <div class="column full-width gap-8">
+    <div class="column text-on-background-color full-width gap-8">
       <div
         v-for="(el, index) in contactByField"
         :key="index"
         class="row items-center gap-5 body"
       >
-        <div class="bold">{{ el.name }}:</div>
+        <div v-if="el.name" class="bold">{{ el.name }}:</div>
         <div>{{ el.value }}</div>
       </div>
     </div>
@@ -42,6 +42,6 @@ defineEmits<{
 
 const contactByField = computed(() => {
   if (!props.contact) return
-  return companyRepo.item?.guestContacts[props.contact.type]
+  return companyRepo.companyForProfile?.guestContacts[props.contact.type]
 })
 </script>

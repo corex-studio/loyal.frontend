@@ -1,5 +1,5 @@
 <template>
-  <div class="pt-20">
+  <div v-if="$promotion.item" style="min-height: 450px" class="pt-20">
     <div class="c-container">
       <div class="row full-width justify-between text-on-background-color">
         <div class="column col-6">
@@ -11,11 +11,42 @@
         </div>
         <div class="col-5">
           <q-img
+            v-if="$promotion.item.images.length < 2"
             style="max-height: 300px"
             class="rounded-15"
             fit="contain"
             :src="$promotion.item?.image?.thumbnail || $store.images.empty"
           />
+          <SwiperContainer
+            v-else
+            no-navigation
+            class="col"
+            use-bullets
+            :slides-per-view="1.1"
+            :items="$promotion.item.images"
+          >
+            <template v-slot:item="{ item }">
+              <!-- :style="`border-radius:${getBorderRadius}`" -->
+              <q-img
+                class="border-radius"
+                :src="item.thumbnail || $store.images.empty"
+                fit="contain"
+                style="max-height: 300px; min-height: 300px"
+              >
+                <template v-slot:error>
+                  <span>
+                    <q-img
+                      class="border-radius"
+                      style="
+                        max-height: 300px !important;
+                        min-height: 300px !important;
+                      "
+                      :src="$store.images.empty"
+                    ></q-img>
+                  </span>
+                </template>
+              </q-img> </template
+          ></SwiperContainer>
         </div>
       </div>
     </div>
@@ -51,27 +82,27 @@
   </div>
 </template>
 <script lang="ts" setup>
-import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue';
-import { Promotions } from 'src/models/promotion/promotions';
-import { promotionsRepo } from 'src/models/promotion/promotionsRepo';
-import { onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
+import { Promotions } from 'src/models/promotion/promotions'
+import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
+import { onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const route = useRoute();
+const route = useRoute()
 
-const router = useRouter();
+const router = useRouter()
 
 onMounted(async () => {
-  await promotionsRepo.retrieve(String(route.params.promotionId));
-  if (!promotionsRepo.items.length) await promotionsRepo.list();
-});
+  await promotionsRepo.retrieve(String(route.params.promotionId))
+  if (!promotionsRepo.items.length) await promotionsRepo.list()
+})
 
 const goToItem = (item: Promotions) => {
   void router.push({
     name: 'promotionPage',
     params: { promotionId: item.id },
-  });
-};
+  })
+}
 </script>
 
 <style lang="scss" scoped>

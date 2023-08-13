@@ -7,6 +7,7 @@
       <div class="body">{{ item.name }}</div>
       <CIcon
         name="fa-light fa-angle-down"
+        color="on-backing-color"
         size="24px"
         :style="`${modifiersMenu ? 'transform: rotateZ(180deg);' : ''}`"
         style="transition: 0.2s"
@@ -95,10 +96,14 @@
             >
               <div
                 v-if="el.quantity"
-                class="bg-black row justify-center items-center"
+                class="bg-primary row justify-center items-center"
                 style="border-radius: 50%; width: 25px; height: 25px"
               >
-                <CIcon name="fa-solid fa-check" size="15px" color="white" />
+                <CIcon
+                  name="fa-solid fa-check"
+                  size="15px"
+                  color="on-primary"
+                />
               </div>
               <div
                 v-else
@@ -129,26 +134,26 @@
   </div>
 </template>
 <script lang="ts" setup>
-import CIcon from 'src/components/template/helpers/CIcon.vue';
-import { MenuModifierGroup } from 'src/models/menu/menuModifierGroup//menuModifierGroup';
-import { ref } from 'vue';
-import _ from 'lodash';
-import { MenuModifierGroupItem } from 'src/models/menu/menuModifierGroup//menuModifierGroup';
-import ChangeAmount from 'src/components/inputs/ChangeAmount.vue';
+import CIcon from 'src/components/template/helpers/CIcon.vue'
+import { MenuModifierGroup } from 'src/models/menu/menuModifierGroup//menuModifierGroup'
+import { ref } from 'vue'
+import _ from 'lodash'
+import { MenuModifierGroupItem } from 'src/models/menu/menuModifierGroup//menuModifierGroup'
+import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
 
-const modifiersMenu = ref(false);
+const modifiersMenu = ref(false)
 const props = defineProps<{
-  item: MenuModifierGroup;
-}>();
+  item: MenuModifierGroup
+}>()
 
 const selectModifier = (item: MenuModifierGroupItem) => {
   if (props.item.restrictions && props.item.restrictions.max_quantity < 2) {
-    props.item.items.forEach((el) => (el.quantity = 0));
-    item.quantity = 1;
+    props.item.items.forEach((el) => (el.quantity = 0))
+    item.quantity = 1
   }
-};
+}
 
 const clearSelection = () => {
-  props.item.items.forEach((el) => (el.quantity = 0));
-};
+  props.item.items.forEach((el) => (el.quantity = 0))
+}
 </script>

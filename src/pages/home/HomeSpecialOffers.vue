@@ -1,18 +1,18 @@
 <template>
-  <div>
+  <div id="offers">
     <div class="header mb-12 c-container">Спец предложения</div>
     <TabPicker
       class="c-container"
-      @update-tab="currentTab = $event"
+      @update-tab="$store.offersTab = $event"
       :tabs="tabs"
-      :model-value="currentTab"
+      :model-value="$store.offersTab"
     />
 
     <SwiperContainer
       use-bullets
       class="swiper"
       :slides-per-view="4"
-      :items="currentTab === 'Новости' ? $news.items : $promotion.items"
+      :items="$store.offersTab === 'Новости' ? $news.items : $promotion.items"
     >
       <template v-slot:item="{ item }">
         <div
@@ -26,7 +26,19 @@
             height="180px"
             style="min-height: 180px"
             fit="cover"
-          />
+          >
+            <template v-slot:error>
+              <span>
+                <q-img
+                  class="user-image"
+                  fit="cover"
+                  height="180px"
+                  :src="$store.images.empty"
+                ></q-img>
+              </span>
+            </template>
+          </q-img>
+
           <div
             class="px-5 py-7 column full-width relative-position items-start full-height"
           >
@@ -65,13 +77,13 @@
       </template></SwiperContainer
     >
     <div
-      v-if="currentTab === 'Новости' && !$news.items.length"
+      v-if="$store.offersTab === 'Новости' && !$news.items.length"
       class="header3 pl-6 my-20 c-container"
     >
       У вас нет новостей
     </div>
     <div
-      v-if="currentTab === 'Акции' && !$promotion.items.length"
+      v-if="$store.offersTab === 'Акции' && !$promotion.items.length"
       class="header3 pl-6 my-20 c-container"
     >
       У вас нет акций
@@ -84,7 +96,7 @@
 <script setup lang="ts">
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import { Promotions } from 'src/models/promotion/promotions'
 import { News } from 'src/models/news/news'
 import { useRouter } from 'vue-router'
@@ -101,8 +113,6 @@ const tabs = computed(() => {
 })
 
 const router = useRouter()
-
-const currentTab = ref('Новости')
 
 const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`

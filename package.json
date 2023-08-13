@@ -23,6 +23,7 @@
     "leaflet": "^1.9.4",
     "leaflet-draw": "^1.0.4",
     "moment": "^2.29.4",
+    "qr-ts": "^1.0.3",
     "qrcode.vue": "^3.3.3",
     "quasar": "^2.6.0",
     "swiper": "^9.3.1",

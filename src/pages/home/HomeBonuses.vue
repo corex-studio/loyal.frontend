@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-      <div class="col-3">
+      <!-- <div class="col-3">
         <div
           class="row no-wrap bg-sale-color pa-3 justify-between border-radius box-shadow bonus-block"
         >
@@ -86,13 +86,13 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import CIcon from 'src/components/template/helpers/CIcon.vue';
-import { authentication } from 'src/models/authentication/authentication';
+import CIcon from 'src/components/template/helpers/CIcon.vue'
+import { authentication } from 'src/models/authentication/authentication'
 </script>
 
 <style scoped lang="scss">

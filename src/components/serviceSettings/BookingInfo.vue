@@ -5,7 +5,7 @@
       animated
       :model-value="bookingMode"
       @update:model-value="$emit('changeBookingMode', $event)"
-      class="bg-backgroud-color full-height"
+      class="bg-background-color full-height"
     >
       <q-tab-panel
         v-if="currentBooking"
@@ -51,6 +51,7 @@
             <CButton
               @click="changeBookingMode('tablePicker')"
               style="width: 48.7%"
+              :disabled="!$section.items.length"
               height="40px"
               >{{
                 selectedTables.length
@@ -91,55 +92,55 @@
         />
       </q-tab-panel>
       <q-tab-panel name="successBooked" class="pa-0 column no-wrap">
-        <SuccessfullyBooked />
+        <SuccessfullyBooked @close="$emit('close')" />
       </q-tab-panel>
     </q-tab-panels>
   </div>
 </template>
 <script lang="ts" setup>
-import CIcon from '../template/helpers/CIcon.vue';
-import CInput from '../template/inputs/CInput.vue';
-import { ref, onMounted, computed } from 'vue';
-import CSelect from '../template/inputs/CSelect.vue';
-import CButton from '../template/buttons/CButton.vue';
-import { sectionRepo } from 'src/models/sections/sectionRepo';
-import BookingTableSelector from './BookingTableSelector.vue';
-import { Table, TableRaw } from 'src/models/sections/tables/table';
-import SuccessfullyBooked from './SuccessfullyBooked.vue';
+import CIcon from '../template/helpers/CIcon.vue'
+import CInput from '../template/inputs/CInput.vue'
+import { ref, onMounted, computed } from 'vue'
+import CSelect from '../template/inputs/CSelect.vue'
+import CButton from '../template/buttons/CButton.vue'
+import { sectionRepo } from 'src/models/sections/sectionRepo'
+import BookingTableSelector from './BookingTableSelector.vue'
+import { Table, TableRaw } from 'src/models/sections/tables/table'
+import SuccessfullyBooked from './SuccessfullyBooked.vue'
 import {
   BookingRequest,
   BookingStatus,
-} from 'src/models/bookingRequest/bookingRequest';
-import { bookingRequestRepo } from 'src/models/bookingRequest/bookingRequestRepo';
+} from 'src/models/bookingRequest/bookingRequest'
+import { bookingRequestRepo } from 'src/models/bookingRequest/bookingRequestRepo'
 
-import TableDetail from './TableDetail.vue';
-import { authentication } from 'src/models/authentication/authentication';
-import { Notify } from 'quasar';
-import { cartRepo } from 'src/models/carts/cartRepo';
+import TableDetail from './TableDetail.vue'
+import { authentication } from 'src/models/authentication/authentication'
+import { Notify } from 'quasar'
 
 export type BookingModes =
   | 'bookingInfo'
   | 'tablePicker'
   | 'tableDetail'
-  | 'successBooked';
+  | 'successBooked'
 
 const props = defineProps<{
-  bookingMode: BookingModes;
-  salesPoint: string;
-}>();
+  bookingMode: BookingModes
+  salesPoint: string
+}>()
 
 const emit = defineEmits<{
-  (evt: 'changeBookingMode', value: BookingModes): void;
-}>();
+  (evt: 'changeBookingMode', value: BookingModes): void
+  (evt: 'close'): void
+}>()
 
-const currentBooking = ref<BookingRequest | null>(null);
+const currentBooking = ref<BookingRequest | null>(null)
 
-const date = ref<string | null>(null);
-const time = ref<string | null>(null);
+const date = ref<string | null>(null)
+const time = ref<string | null>(null)
 
-const tableToOpen = ref<TableRaw | null>(null);
+const tableToOpen = ref<TableRaw | null>(null)
 
-const selectedTables = ref<TableRaw[]>([]);
+const selectedTables = ref<TableRaw[]>([])
 
 const guestsCountVariables = [
   '1',
@@ -152,28 +153,28 @@ const guestsCountVariables = [
   '8',
   '9',
   '10 или больше',
-];
+]
 
 const isContinueAvailable = computed(() => {
-  return currentBooking.value?.guestsCount?.length && date.value && time.value;
-});
+  return currentBooking.value?.guestsCount?.length && date.value && time.value
+})
 
 const tableDetailMode = (v: TableRaw) => {
-  if (selectedTables.value.map((v) => v.uuid).includes(v.uuid)) return;
-  tableToOpen.value = v;
-  emit('changeBookingMode', 'tableDetail');
-};
+  if (selectedTables.value.map((v) => v.uuid).includes(v.uuid)) return
+  tableToOpen.value = v
+  emit('changeBookingMode', 'tableDetail')
+}
 
 const deleteTableFromSelected = (index: number) => {
-  selectedTables.value.splice(index, 1);
-};
+  selectedTables.value.splice(index, 1)
+}
 
 const confirmTableSelectionHandler = () => {
-  if (!tableToOpen.value) return;
-  selectedTables.value.push(tableToOpen.value);
-  tableToOpen.value = null;
-  emit('changeBookingMode', 'tablePicker');
-};
+  if (!tableToOpen.value) return
+  selectedTables.value.push(tableToOpen.value)
+  tableToOpen.value = null
+  emit('changeBookingMode', 'tablePicker')
+}
 
 onMounted(() => {
   currentBooking.value = new BookingRequest({
@@ -184,34 +185,36 @@ onMounted(() => {
     customer_phone: String(authentication.user?.phone) || null,
     sales_point: props.salesPoint,
     tables: [],
-  });
+  })
   void sectionRepo.list({
     sales_point: props.salesPoint,
-  });
-});
+  })
+})
 
 const changeBookingMode = (mode: BookingModes) => {
-  emit('changeBookingMode', mode);
-};
+  emit('changeBookingMode', mode)
+}
 
 const createBooking = async () => {
-  if (!currentBooking.value) return;
+  if (!currentBooking.value) return
   try {
-    currentBooking.value.tables = selectedTables.value.map((v) => new Table(v));
-    currentBooking.value.date = `${date.value} ${time.value}`;
+    currentBooking.value.tables = selectedTables.value.map((v) => new Table(v))
+    currentBooking.value.date = `${date.value} ${time.value}`
     bookingRequestRepo.item = await bookingRequestRepo.create(
       currentBooking.value
-    );
-    await cartRepo.setParams({
-      sales_point: props.salesPoint,
-      type: 'booking',
-    });
-    emit('changeBookingMode', 'successBooked');
+    )
+    // await cartRepo.setParams({
+    //   sales_point: props.salesPoint,
+    //   type: 'booking',
+    // })
+    // await store.loadCatalog(props.salesPoint)
+
+    emit('changeBookingMode', 'successBooked')
   } catch {
     Notify.create({
       message: 'Ошибка при создании бронирования',
       color: 'danger',
-    });
+    })
   }
-};
+}
 </script>

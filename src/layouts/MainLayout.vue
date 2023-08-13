@@ -2,8 +2,17 @@
   <template v-if="ready">
     <PrepareUiSettings />
     <q-layout view="lHh Lpr lFf" class="bg-background-color">
-      <MainHeader />
-      <BottomHeader />
+      <div
+        style="position: sticky; top: 0px; z-index: 99"
+        :style="
+          $store.verticalScroll > 45
+            ? 'box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.06)'
+            : ''
+        "
+      >
+        <MainHeader />
+        <BottomHeader />
+      </div>
       <q-page-container
         :class="{
           'c-container':
@@ -14,20 +23,17 @@
         }"
         style="padding-bottom: 50px"
       >
-        <!-- {{ $cart.item?.salesPoint.id }} -->
-        <!-- {{ $route.name }} -->
         <router-view />
       </q-page-container>
 
-      <!-- <q-footer> -->
-      <CFooter />
-      <!-- </q-footer> -->
+      <q-footer>
+        <CFooter />
+      </q-footer>
     </q-layout>
     <AuthModal
       :model-value="$store.authModal"
       @update:model-value="$store.authModal = $event"
     />
-    <SelectCompanyModal />
   </template>
 </template>
 
@@ -46,11 +52,19 @@ import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
 import { handleMessage } from 'src/models/webSocket/webSocketRepo'
-import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
+import { newsRepo } from 'src/models/news/newsRepo'
+import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 
 const webSocket = ref<WebSocket | null>(null)
 
 const routesWithoutContainerPaddings = ['promotion']
+
+const q = useQuasar()
+const route = useRoute()
+const router = useRouter()
+const ready = ref(false)
 
 watch(
   () => authentication.user?.id,
@@ -66,11 +80,6 @@ watch(
     }
   }
 )
-
-const q = useQuasar()
-const route = useRoute()
-const router = useRouter()
-const ready = ref(false)
 
 const setBodyScrollClass = () => {
   if (q.platform.is.win) {
@@ -89,18 +98,26 @@ watch(
 )
 
 onMounted(async () => {
-  store.getCompanyGroup()
+  window.addEventListener('scroll', () => {
+    store.verticalScroll = window.scrollY
+  })
+  salesPointRepo.menuLoading = true
+  store.getCompanyGroup(String(route.params.companyGroup))
   setBodyScrollClass()
   await companyGroupRepo.current()
   await uiSettingsRepo.fetchSettings()
+  void appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
 
   try {
     await authentication.validateTokens()
-    await authentication.me()
+    void authentication.me()
     await cartRepo.current()
   } catch {
     // ready.value = true;
   }
+
+  if (!newsRepo.items.length) void newsRepo.list()
+  if (!promotionsRepo.items.length) void promotionsRepo.list()
   // await menuRepo.list({
   //   active: true,
   // })
@@ -111,5 +128,9 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .q-page-container {
   padding-top: 0px !important;
+}
+
+.q-footer {
+  position: relative;
 }
 </style>

@@ -9,6 +9,7 @@ export class CompanyRepo extends BaseRepo<Company> {
   api = companyApi
   availablePaymentTypes: AvailablePaymentType[] = []
   companyForProfile: Company | null = null
+  cartCompany: Company | null = null
 
   async addImage(
     company: Company,

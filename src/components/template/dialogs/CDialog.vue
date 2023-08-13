@@ -61,6 +61,7 @@
 
 <script setup lang="ts">
 import CIcon from '../helpers/CIcon.vue'
+
 defineProps({
   hideActions: Boolean,
   alignActions: {

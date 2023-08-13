@@ -22,7 +22,6 @@
       style="box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.04) !important"
       fit
       no-focus
-      class="bg-secondary2"
     >
       <div class="col px-5 py-3">
         <CButton
@@ -30,7 +29,7 @@
           :key="index"
           class="mb-4"
           text-button
-          text-color="secondary"
+          text-color="on-background-color"
           hover-text-color="primary"
           @click="selectAddress(el)"
         >

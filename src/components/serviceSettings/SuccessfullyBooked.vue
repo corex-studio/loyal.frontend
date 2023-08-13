@@ -35,7 +35,10 @@
         </div>
       </div>
     </div>
-    <div class="column mt-15 items-center gap-13 full-width">
+    <div class="row full-width mt-15 justify-center">
+      <CButton @click="$emit('close')" width="200px" label="Готово" />
+    </div>
+    <!-- <div class="column mt-15 items-center gap-13 full-width">
       <div class="header3">Хотите сделать предзаказ блюд?</div>
       <div class="row full-width gap-5 no-wrap">
         <CButton
@@ -46,13 +49,15 @@
         />
         <CButton class="col" label="Да" />
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script lang="ts" setup>
-import { bookingRequestRepo } from 'src/models/bookingRequest/bookingRequestRepo';
-import CButton from '../template/buttons/CButton.vue';
-import CIcon from '../template/helpers/CIcon.vue';
+import { bookingRequestRepo } from 'src/models/bookingRequest/bookingRequestRepo'
+import CButton from '../template/buttons/CButton.vue'
+import CIcon from '../template/helpers/CIcon.vue'
+
+defineEmits(['close'])
 
 const infoFields = [
   {
@@ -78,5 +83,5 @@ const infoFields = [
         : 'Стол',
     value: bookingRequestRepo.item?.tables.map((v) => v.number).join(', '),
   },
-];
+]
 </script>

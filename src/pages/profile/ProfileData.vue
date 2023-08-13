@@ -1,7 +1,7 @@
 <template>
   <div class="row justify-between full-width">
     <div class="col-5 text-on-background-color">
-      <div v-if="_item" class="column full-width gap-10">
+      <div v-if="_item" class="column full-width gap-12">
         <CInput v-model="_item.firstName" height="40px" external-label="Имя" />
         <CInput
           v-model="_item.lastName"
@@ -9,7 +9,7 @@
           external-label="Фамилия"
         />
         <CInput
-          v-model="_item.phone"
+          :model-value="parsedPhone"
           height="40px"
           readonly
           mask="+7 (###) ###-##-##"
@@ -53,7 +53,7 @@
       icon="fa-light fa-trash"
       height="40px"
       color="secondary-button-color"
-      text-color="on-secondary-button-color"
+      text-color="on-background-color"
       >Удалить аккаунт</CButton
     >
   </div>
@@ -83,6 +83,13 @@ const item = computed(() => {
 const _item = ref<Customer | null>(null)
 
 const acceptModal = ref(false)
+
+const parsedPhone = computed(() => {
+  const phone = String(_item.value?.phone)
+  if (phone.startsWith('7')) {
+    return phone.slice(1)
+  } else return phone
+})
 
 const isSaveAvailable = computed(() => {
   return (

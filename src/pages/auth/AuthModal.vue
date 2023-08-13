@@ -64,7 +64,7 @@
       <div
         v-if="currentStep === 2"
         @click="delay ? void 0 : sendSms()"
-        class="row justify-center mb-10"
+        class="row justify-center"
         style="text-decoration: underline"
         :class="{ 'cursor-pointer': !delay }"
       >
@@ -74,7 +74,6 @@
       <q-checkbox
         v-if="currentStep === 1"
         v-model="data.agreement"
-        class="mb-10"
         color="primary"
       >
         <div class="secondary-text">
@@ -87,7 +86,7 @@
         height="50px"
         :disabled="!data.agreement || !data.phone || data.phone.length < 10"
         :label="currentStep === 1 ? 'Далее' : 'Войти'"
-        class="body"
+        class="body mt-10"
         color="primary"
         text-color="on-primary"
       />
@@ -95,92 +94,94 @@
   </CDialog>
 </template>
 <script lang="ts" setup>
-import { Notify } from 'quasar';
-import CButton from 'src/components/template/buttons/CButton.vue';
-import CIconButton from 'src/components/template/buttons/CIconButton.vue';
-import CDialog from 'src/components/template/dialogs/CDialog.vue';
-import CInput from 'src/components/template/inputs/CInput.vue';
-import { authentication } from 'src/models/authentication/authentication';
+import { Notify } from 'quasar'
+import CButton from 'src/components/template/buttons/CButton.vue'
+import CIconButton from 'src/components/template/buttons/CIconButton.vue'
+import CDialog from 'src/components/template/dialogs/CDialog.vue'
+import CInput from 'src/components/template/inputs/CInput.vue'
+import { authentication } from 'src/models/authentication/authentication'
 
-import { ref, watch } from 'vue';
+import { ref, watch } from 'vue'
 
-const delay = ref(30);
-let interval: NodeJS.Timeout | null = null;
+const delay = ref(30)
+let interval: NodeJS.Timeout | null = null
 
 const data = ref({
   phone: '',
   sms: '',
   agreement: false,
-});
+})
 
-const currentStep = ref(1);
+const currentStep = ref(1)
 
 defineProps<{
-  modelValue: boolean;
-}>();
+  modelValue: boolean
+}>()
 
 const emit = defineEmits<{
-  (evt: 'update:modelValue', value: boolean): void;
-}>();
+  (evt: 'update:modelValue', value: boolean): void
+}>()
 
 const nextStepHandler = async () => {
   if (currentStep.value === 1) {
-    const res = await sendSms();
+    const res = await sendSms()
     if (res) {
-      currentStep.value = 2;
+      currentStep.value = 2
     }
   } else {
     try {
-      await auth();
+      await auth()
       // window.location.reload();
     } catch {
       Notify.create({
         message: 'Ошибка при авторизации',
         color: 'danger',
-      });
+      })
     }
   }
-};
+}
 
 const auth = async () => {
   try {
     await authentication.login({
       phone: `7${data.value.phone}`,
       code: data.value.sms,
-    });
+    })
     Notify.create({
       message: 'Вы успешно авторизованы',
-    });
-    emit('update:modelValue', false);
+    })
+    currentStep.value = 1
+
+    emit('update:modelValue', false)
   } catch (e) {
     Notify.create({
       message: 'Ошибка при авторизации',
       color: 'danger',
-    });
+    })
   }
-};
+}
 
 const sendSms = async () => {
   const res = await authentication.sendSms({
     phone: `7${data.value.phone}`,
-  });
+  })
   if (res) {
     Notify.create({
       message: 'Сообщение с кодом успешно отправлено',
-    });
-    delay.value = 30;
+    })
+    delay.value = 30
     interval = setInterval(() => {
-      if (!delay.value) return;
-      delay.value--;
-    }, 1000);
+      if (!delay.value) return
+      delay.value--
+    }, 1000)
   } else {
     Notify.create({
       message: 'Ошибка при отправке sms',
       color: 'danger',
-    });
+    })
   }
-  return res;
-};
+  return res
+}
 
 // watch(
 //   () => props.modelValue,
@@ -195,10 +196,10 @@ watch(
   () => currentStep.value,
   (v) => {
     if (v === 1 && interval) {
-      clearInterval(interval);
+      clearInterval(interval)
     }
   }
-);
+)
 </script>
 
 <style lang="scss" scoped>

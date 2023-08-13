@@ -10,7 +10,18 @@
       :src="item.image?.thumbnail || $store.images.empty"
       height="210px"
       fit="cover"
-    />
+    >
+      <template v-slot:error>
+        <span>
+          <q-img
+            class="user-image"
+            fit="cover"
+            height="210px"
+            :src="$store.images.empty"
+          ></q-img>
+        </span>
+      </template>
+    </q-img>
     <div
       class="px-6 py-8 column justify-between col-grow text-on-product-tile-color"
     >
@@ -20,7 +31,7 @@
 
       <div class="header3 text-on-product-tile-color">
         {{
-          typeof item.product !== 'string' ? item.product?.price || '0' : '-'
+          typeof item.product !== 'string' ? item.sizes[0].price || '0' : '-'
         }}
         ₽
       </div>
@@ -28,9 +39,9 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MenuItem } from 'src/models/menu/menuItem/menuItem';
+import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 
 defineProps<{
-  item: MenuItem;
-}>();
+  item: MenuItem
+}>()
 </script>

@@ -37,63 +37,70 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { ArrayElement } from 'src/services/types';
+import { computed, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { ArrayElement } from 'src/services/types'
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const route = useRoute()
 
 const props = withDefaults(
   defineProps<{
     tabs:
       | string[]
       | {
-          label: string;
-          to?: { name: string; [x: string]: any };
-          [x: string]: any;
-        }[];
-    modelValue?: string;
-    routerMethod?: 'replace' | 'push';
-    small?: boolean;
-    width?: string;
+          label: string
+          to?: { name: string; [x: string]: any }
+          [x: string]: any
+        }[]
+    modelValue?: string
+    routerMethod?: 'replace' | 'push'
+    small?: boolean
+    width?: string
   }>(),
   {
     routerMethod: 'replace',
     width: '300px',
   }
-);
+)
 
 const localTabs = computed(() => {
   return props.tabs.map((el) =>
     typeof el === 'string' ? { label: el, to: undefined } : el
-  );
-});
+  )
+})
 
 const emit = defineEmits<{
-  (evt: 'updateTab', value: string): void;
-}>();
+  (evt: 'updateTab', value: string): void
+}>()
 
-const selectedTab = ref<string | null>(null);
+const selectedTab = ref<string | null>(null)
 
 const selectTabHandler = (v: ArrayElement<typeof localTabs.value>) => {
-  selectedTab.value = v.label;
-  emit('updateTab', selectedTab.value);
-  if (v.to) router[props.routerMethod](v.to);
-};
+  selectedTab.value = v.label
+  emit('updateTab', selectedTab.value)
+  if (v.to) router[props.routerMethod](v.to)
+}
 
 onMounted(() => {
   if (props.modelValue) {
-    selectedTab.value = props.modelValue;
+    selectedTab.value = props.modelValue
   } else {
-    const found = localTabs.value.find((el) => el.to?.name === route.name);
-    if (found) selectedTab.value = found.label;
+    const found = localTabs.value.find((el) => el.to?.name === route.name)
+    if (found) selectedTab.value = found.label
     else
       selectedTab.value = localTabs.value.length
         ? localTabs.value[0].label
-        : null;
+        : null
   }
-});
+})
+
+watch(
+  () => props.modelValue,
+  (v) => {
+    if (v) selectedTab.value = v
+  }
+)
 </script>
 
 <stype lang="scss" scoped></stype>

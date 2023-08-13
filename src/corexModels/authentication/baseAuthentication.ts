@@ -1,3 +1,4 @@
+import { authentication } from './../../models/authentication/authentication'
 import { companyRepo } from './../../models/company/companyRepo'
 import { Customer, CustomerRaw } from './../../models/customer/customer'
 import { api } from 'boot/axios'
@@ -9,6 +10,7 @@ import moment from 'moment'
 export class BaseAuthentication {
   user: Customer | null = null
   tokens: BaseAuthenticationTokens
+  loading = false
 
   tokensClass = BaseAuthenticationTokens
   // userClass = Customer;
@@ -39,12 +41,14 @@ export class BaseAuthentication {
 
   async me() {
     if (!this.tokens.accessIsValid) throw Error('Access token is not valid.')
+    authentication.loading = true
     this.user = await this._loadUser()
     if (this.user.companyGroup.companies.length > 1) {
     } else {
       companyRepo.item = this.user.companyGroup.companies[0]
+      companyRepo.cartCompany = this.user.companyGroup.companies[0]
     }
-
+    authentication.loading = false
     return this.user
   }
 

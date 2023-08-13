@@ -25,9 +25,13 @@
   <div
     v-else
     style="width: 416px; height: 200px"
-    class="bg-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
+    class="bg-backing-color text-on-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
   >
-    <CIcon name="fa-thin fa-location-plus" size="65px" />
+    <CIcon
+      color="on-backing-color"
+      name="fa-thin fa-location-plus"
+      size="65px"
+    />
     <div class="row full-width justify-center">
       <div class="header3 col-9" style="text-align: center">
         У вас нет добавленных адресов доставки
@@ -67,6 +71,7 @@ import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAdd
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import { onMounted, ref } from 'vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
+import { authentication } from 'src/models/authentication/authentication'
 
 const deliveryAddressModal = ref(false)
 
@@ -103,6 +108,7 @@ const loadAddresses = async (page = 1, appendItems = false) => {
 }
 
 onMounted(() => {
+  if (!authentication.user) return
   void loadAddresses()
 })
 </script>

@@ -2833,6 +2833,11 @@ emoji-regex@^8.0.0:
   resolved "https://registry.npmjs.org/emoji-regex/-/emoji-regex-8.0.0.tgz"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
 
+emoji-regex@^9.2.2:
+  version "9.2.2"
+  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-9.2.2.tgz#840c8803b0d8047f4ff0cf963176b32d4ef3ed72"
+  integrity sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==
+
 emojis-list@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/emojis-list/-/emojis-list-3.0.0.tgz"
@@ -2842,6 +2847,11 @@ encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz"
   integrity sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==
+
+encoding-japanese@^1.0.30:
+  version "1.0.30"
+  resolved "https://registry.yarnpkg.com/encoding-japanese/-/encoding-japanese-1.0.30.tgz#537c4d62881767925d601acb4c79fb14db81703a"
+  integrity sha512-bd/DFLAoJetvv7ar/KIpE3CNO8wEuyrt9Xuw6nSMiZ+Vrz/Q21BPsMHvARL2Wz6IKHKXgb+DWZqtRg1vql9cBg==
 
 end-of-stream@^1.4.1:
   version "1.4.4"
@@ -4968,6 +4978,15 @@ punycode@^2.1.0:
   resolved "https://registry.npmjs.org/punycode/-/punycode-2.1.1.tgz"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
+qr-ts@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/qr-ts/-/qr-ts-1.0.3.tgz#faa26ebf3574d2bbddd102d0dfd5ba46e214f765"
+  integrity sha512-Dnig5hnQbItPVtD+xn/9nkNzRHR2fKhzqqFdsAnBElPD8hWoO3WYJnJEupeb5vA3yW6XhICborlUDfl5izw7Ig==
+  dependencies:
+    emoji-regex "^9.2.2"
+    encoding-japanese "^1.0.30"
+    runtypes "^6.4.0"
+
 qrcode.vue@^3.3.3:
   version "3.4.0"
   resolved "https://registry.npmjs.org/qrcode.vue/-/qrcode.vue-3.4.0.tgz"
@@ -5204,6 +5223,11 @@ run-parallel@^1.1.9:
   integrity sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==
   dependencies:
     queue-microtask "^1.2.2"
+
+runtypes@^6.4.0:
+  version "6.7.0"
+  resolved "https://registry.yarnpkg.com/runtypes/-/runtypes-6.7.0.tgz#5ffc7e3a51142639d8a8e0155ef4bb8c2ae4c54b"
+  integrity sha512-3TLdfFX8YHNFOhwHrSJza6uxVBmBrEjnNQlNXvXCdItS0Pdskfg5vVXUTWIN+Y23QR09jWpSl99UHkA83m4uWA==
 
 rxjs@^7.5.5:
   version "7.8.0"

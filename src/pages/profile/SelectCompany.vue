@@ -1,5 +1,5 @@
 <template>
-  <div style="max-width: 456px">
+  <div style="max-width: 456px" class="text-on-background-color">
     <div class="row full-width header2 mb-10">Все заведения</div>
     <div class="column gap-10">
       <CompanyRow
@@ -19,6 +19,4 @@ import { Company } from 'src/models/company/company'
 const selectCompany = (el: Company) => {
   companyRepo.companyForProfile = el
 }
-
-
 </script>

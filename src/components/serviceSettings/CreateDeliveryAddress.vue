@@ -1,5 +1,5 @@
 <template>
-  <div class="column items-center">
+  <div class="column items-center text-on-background-color">
     <div v-if="newAddress" class="column px-1 full-width gap-10">
       <CInput
         height="42px"
@@ -44,7 +44,7 @@
     <CButton
       @click="createAddress()"
       height="50px"
-      class="mt-15 mb-10"
+      class="mt-15"
       width="280px"
       label="Сохранить"
     />

@@ -1,7 +1,36 @@
 <template>
-  <div v-if="$menuGroup.items.length">
-    <div class="header mt-25">{{ $menu.item?.name || 'Меню' }}</div>
-    <div v-if="showCompaniesSelector" class="row full-width mt-10 gap-10">
+  <div>
+    <div
+      v-if="$companyGroup.item && $companyGroup.item.companies.length > 1"
+      class="row border-radius gap-20 no-wrap items-center mt-25"
+    >
+      <div class="row items-center gap-8">
+        <q-img
+          class="border-radius"
+          fit="contain"
+          style="width: 75px; height: 75px"
+          :src="$menu.item?.company.image?.thumbnail || $store.images.empty"
+        >
+          <template v-slot:error>
+            <span>
+              <q-img
+                class="user-image"
+                fit="contain"
+                :src="$store.images.empty"
+              ></q-img>
+            </span> </template
+        ></q-img>
+        <div class="header">
+          <template v-if="!$salesPoint.menuLoading">
+            {{ $menu.item?.company.name }}
+          </template>
+          <q-skeleton v-else width="150px" height="30px" />
+        </div>
+      </div>
+
+      <CButton @click="changeCompany()" label="Выбрать другое заведение" />
+    </div>
+    <!-- <div class="row full-width mt-10 gap-10">
       <div
         @click="selectCompany(el)"
         v-for="(el, index) in $companyGroup.item?.companies"
@@ -28,97 +57,133 @@
           {{ el.name }}
         </div>
       </div>
-    </div>
-    <div
-      v-for="(el, index) in $menuGroup.items"
-      :key="index"
-      class="full-width pt-18"
-      :id="el.id"
-    >
-      <div class="header2 mb-10">
-        {{ el.name }}
-      </div>
-      <div v-if="el.items.length" class="row full-width">
-        <div v-for="(el2, index2) in el.items" :key="index2" class="col-2">
-          <MenuItemCard
-            :class="[
-              { 'ml-10': !(!index2 || index2 % 6 === 0) },
-              { 'mt-10': index2 > 5 },
-            ]"
-            :item="el2"
-          />
+    </div> -->
+    <template v-if="!$salesPoint.menuLoading && $menu.item?.groups">
+      <div
+        v-for="(el, index) in $menu.item.groups"
+        :key="index"
+        class="full-width pt-18"
+        :id="el.id"
+      >
+        <div class="header2 mb-10">
+          {{ el.name }}
         </div>
+        <div v-if="el.items.length" class="row full-width">
+          <!-- <div v-for="(el2, index2) in el.items" :key="index2" class="col-2"> -->
+          <GridContainer :items="el.items" :lg="6" :xl="6" :md="5" :sm="4">
+            <template v-slot:item="{ item }">
+              <!-- <MenuItemSkeleton v-if="$salesPoint.menuLoading" /> -->
+              <MenuItemCard :item="(item as MenuItem)" />
+            </template>
+          </GridContainer>
+
+          <!-- </div> -->
+        </div>
+        <div v-else>Пусто</div>
       </div>
-      <div v-else>Пусто</div>
+    </template>
+    <div v-else class="full-width">
+      <q-skeleton type="text" width="210px" height="45px" class="mb-10 mt-18" />
+      <GridContainer
+        :items="[1, 2, 3, 4, 5, 6, 7, 8]"
+        :lg="6"
+        :xl="6"
+        :md="5"
+        :sm="4"
+      >
+        <template v-slot:item="{ item }">
+          <!-- <MenuItemSkeleton v-if="$salesPoint.menuLoading" /> -->
+          <MenuItemSkeleton :id="item" />
+        </template>
+      </GridContainer>
     </div>
-    <SelectSalesPointModal
+    <!-- <SelectSalesPointModal
       :company="selectedCompany"
       :model-value="selectSalesPointModal"
       @update:model-value="selectSalesPointModal = false"
       @select="loadBySalesPoint($event)"
+    /> -->
+    <SelectCompanyModal
+      :model-value="selectCompanyModal"
+      @update:model-value="selectCompanyModal = false"
+      @select="selectCompany($event)"
+    />
+
+    <ServiceSettingsModal
+      :model-value="serviceModal"
+      @update:model-value="serviceModal = false"
     />
   </div>
 </template>
 <script lang="ts" setup>
 import MenuItemCard from 'src/components/cards/MenuItemCard.vue'
 import { Company } from 'src/models/company/company'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import SelectSalesPointModal from 'src/components/dialogs/SelectSalesPointModal.vue'
-import { computed, ref } from 'vue'
-import { SalesPoint } from 'src/models/salesPoint/salesPoint'
+import { ref } from 'vue'
+import CButton from 'src/components/template/buttons/CButton.vue'
+import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
 import { companyRepo } from 'src/models/company/companyRepo'
+import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
+import MenuItemSkeleton from 'src/components/cards/MenuItemSkeleton.vue'
+import GridContainer from 'src/components/containers/GridContainer.vue'
+import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 
-const selectSalesPointModal = ref(false)
+const serviceModal = ref(false)
 
-const selectedCompany = ref<Company | null>(null)
+const selectCompanyModal = ref(false)
 
-const currentCompany = computed(() => {
-  return companyGroupRepo.item?.companies.find((v) =>
-    v.salesPoints?.some((el) => el.menu.id === currentMenu.value)
-  )
-})
+// const selectSalesPointModal = ref(false)
 
-const currentMenu = computed(() => {
-  return menuGroupRepo.items[0].menu
-})
+// const selectedCompany = ref<Company | null>(null)
 
-const showCompaniesSelector = computed(() => {
-  if (!companyGroupRepo.item) return
-  return (
-    companyGroupRepo.item?.companies.length > 1 ||
-    (companyRepo.item && companyRepo.item.salesPoints
-      ? companyRepo.item.salesPoints.filter((v) => v.active).length > 1
-      : false)
-  )
-})
+// const currentCompany = computed(() => {
+//   return companyGroupRepo.item?.companies.find((v) =>
+//     v.salesPoints?.some((el) => el.menu.id === currentMenu.value)
+//   )
+// })
 
-const loadBySalesPoint = async (v: SalesPoint) => {
-  selectSalesPointModal.value = false
+// const currentMenu = computed(() => {
+//   return menuGroupRepo.items[0].menu
+// })
 
-  await menuGroupRepo
-    .list({
-      menu: v.menu.id,
-    })
-    .then((res) => {
-      menuGroupRepo.items = res.items
-    })
+// const showCompaniesSelector = computed(() => {
+//   if (!companyGroupRepo.item || cartRepo.item) return
+//   return (
+//     companyGroupRepo.item?.companies.length > 1 ||
+//     (companyRepo.item && companyRepo.item.salesPoints
+//       ? companyRepo.item.salesPoints.filter((v) => v.active).length > 1
+//       : false)
+//   )
+// })
+
+const changeCompany = () => {
+  selectCompanyModal.value = true
 }
 
+// const loadBySalesPoint = async (v: SalesPoint) => {
+//   selectSalesPointModal.value = false
+//   await store.loadCatalog(v)
+//   // await menuRepo.retrieve(v.menu.id)
+//   // await menuGroupRepo
+//   //   .list({
+//   //     menu: v.menu.id,
+//   //   })
+//   //   .then((res) => {
+//   //     menuGroupRepo.items = res.items
+//   //   })
+// }
+
 const selectCompany = async (v: Company) => {
-  if (!v.salesPoints) return
-  if (v.salesPoints?.length > 1) {
-    selectedCompany.value = v
-    selectSalesPointModal.value = true
-  } else {
-    await menuGroupRepo
-      .list({
-        menu: v.salesPoints[0].menu.id,
-      })
-      .then((res) => {
-        menuGroupRepo.items = res.items
-      })
-  }
+  selectCompanyModal.value = false
+  companyRepo.cartCompany = v
+  serviceModal.value = true
+
+  // if (!v.salesPoints) return
+  // if (v.salesPoints?.length > 1) {
+  //   selectedCompany.value = v
+  //   selectSalesPointModal.value = true
+  // } else {
+  //   await store.loadCatalog(v.salesPoints[0])
+  // }
 }
 </script>
 
@@ -128,6 +193,7 @@ const selectCompany = async (v: Company) => {
 }
 
 .active-company {
+  width: fit-content;
   border: 2px var(--primary) solid;
 }
 </style>

@@ -46,9 +46,13 @@
   <div
     v-else
     style="width: 416px; height: 224px"
-    class="bg-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
+    class="bg-backing-color text-on-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
   >
-    <CIcon name="fa-thin fa-rectangle-history-circle-plus" size="65px" />
+    <CIcon
+      color="on-backing-color"
+      name="fa-thin fa-rectangle-history-circle-plus"
+      size="65px"
+    />
     <div class="row full-width justify-center">
       <div class="header3 col-9" style="text-align: center">
         У вас нет сохраненных карт. <br />Вы можете сохранить карту во время
@@ -80,6 +84,7 @@ import {
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import { Notify } from 'quasar'
+import { authentication } from 'src/models/authentication/authentication'
 
 const acceptModal = ref(false)
 
@@ -107,6 +112,7 @@ const loadCards = async (page = 1, appendItems = false) => {
 // }
 
 onMounted(() => {
+  if (!authentication.user) return
   void loadCards()
 })
 

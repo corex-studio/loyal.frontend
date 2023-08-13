@@ -1,10 +1,8 @@
 <template>
   <CDialog
-    :model-value="$store.selectCompanyModal"
-    @update:model-value="$store.selectCompanyModal = $event"
+    :model-value="modelValue"
+    @update:model-value="$emit('update:modelValue', $event)"
     width="456px"
-    no-close
-    persistent
   >
     <template v-slot:header>
       <div class="row full-width items-center justify-between gap-5 no-wrap">
@@ -30,12 +28,27 @@
 import { Company } from 'src/models/company/company'
 import CDialog from '../template/dialogs/CDialog.vue'
 import CIcon from '../template/helpers/CIcon.vue'
-import { companyRepo } from 'src/models/company/companyRepo'
-import { store } from 'src/models/store'
 import CompanyRow from 'src/pages/profile/CompanyRow.vue'
+import { watch } from 'vue'
+
+const props = defineProps<{
+  modelValue: boolean
+}>()
+
+const emit = defineEmits<{
+  (evt: 'update:modelValue', value: boolean): void
+  (evt: 'select', v: Company): void
+}>()
 
 const selectCompany = (v: Company) => {
-  companyRepo.item = v
-  store.selectCompanyModal = false
+  // if (v.salesPoints) salesPointRepo.item = v.salesPoints[0]
+  emit('select', v)
 }
+
+watch(
+  () => props.modelValue,
+  () => {
+    console.log(props.modelValue)
+  }
+)
 </script>

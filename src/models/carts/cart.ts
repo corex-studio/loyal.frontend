@@ -6,6 +6,22 @@ import { SalesPointRaw, SalesPoint } from './../salesPoint/salesPoint'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { CartItem, CartItemRaw } from './cartItem/cartItem'
 import moment from 'moment'
+import { WalletRaw } from '../customer/customer'
+
+export enum CartType {
+  PICKUP = 'pickup',
+  DELIVERY = 'delivery',
+  BOOKING = 'booking',
+}
+
+export type WalletPaymentRaw = {
+  active: boolean
+  applied_sum: number
+  cart: string
+  max_sum: number
+  uuid: string
+  wallet: WalletRaw
+}
 
 export type AvailableHours = {
   today: [
@@ -22,9 +38,9 @@ export type AvailableHours = {
   ]
 }
 
-export type CartToParams = {
-  sales_point: string
-  type: string
+export type CartParams = {
+  sales_point?: string
+  type?: string
   delivery_address?: string
   delivery_time?: string
   promo_code?: string
@@ -38,7 +54,7 @@ export type CartRaw = {
   uuid: string
   customer: string
   company: string
-  type: string
+  type: CartType
   sales_point: SalesPointRaw
   delivery_address: DeliveryAddressRaw | null
   sum: number
@@ -59,13 +75,14 @@ export type CartRaw = {
   delivery_area: string | null
   current_delivery_settings: string | null
   delivery_price: number
+  wallet_payments: WalletPaymentRaw[]
 }
 
 export class Cart implements BaseModel {
   id: string
   customer: string
   company: string
-  type: string
+  type: CartType
   salesPoint: SalesPoint
   deliveryAddress: DeliveryAddress | null
   sum: number
@@ -80,6 +97,8 @@ export class Cart implements BaseModel {
   comment: string | null
   cartItems: CartItem[]
   deliveryPrice: number
+  walletPayments: WalletPaymentRaw[]
+
   constructor(raw: CartRaw) {
     this.id = raw.uuid
     this.customer = raw.customer
@@ -106,6 +125,7 @@ export class Cart implements BaseModel {
     this.comment = raw.comment
     this.cartItems = raw.cart_items.map((item) => new CartItem(item))
     this.deliveryPrice = raw.delivery_price
+    this.walletPayments = raw.wallet_payments
   }
 
   toJson(): Record<string, any> {

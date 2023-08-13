@@ -1,5 +1,7 @@
 import { ImageRaw, Image } from 'src/models/image/image'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
+import { first } from 'lodash'
+import { parseAlphaColorsFromCorrect } from '../store'
 
 export type Color = {
   color: string
@@ -162,7 +164,14 @@ export class UiSetting implements BaseModel {
     this.onPrimaryColor = raw.on_primary_color
     this.onAccentColor = raw.on_accent_color
     this.onBackgroundColor = raw.on_background_color
-    this.boxShadow = raw.box_shadow
+    this.boxShadow = {
+      uuid: raw.box_shadow.uuid,
+      color: parseAlphaColorsFromCorrect(this.addHash(raw.box_shadow.color)),
+      blur: raw.box_shadow.blur,
+      spread: raw.box_shadow.spread,
+      offset_x: raw.box_shadow.offset_x,
+      offset_y: raw.box_shadow.offset_y,
+    }
     this.company = raw.company
     this.companyGroup = raw.company_group
     this.baseSettings = raw.base_settings
@@ -184,6 +193,11 @@ export class UiSetting implements BaseModel {
     this.cashButtonColor = raw.cash_button_color
     this.cardButtonColor = raw.card_button_color
     this.onlinePaymentButtonColor = raw.online_payment_button_color
+  }
+
+  addHash(v: string) {
+    if (first(v) !== '#') return '#' + v
+    return v
   }
 
   toJson() {

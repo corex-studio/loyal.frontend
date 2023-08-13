@@ -1,54 +1,16 @@
 <template>
   <div v-if="$cart.item" class="px-10 column pb-10">
-    <div
-      v-if="authentication.user && authentication.user.wallets[0]"
-      class="bg-bonus-color border-radius text-on-bonus-color px-6 py-5 mb-15"
-    >
-      <div class="row no-wrap items-center justify-between">
-        <div class="row gap-5 no-wrap items-center">
-          <div class="py-5 px-6 bg-white-opacity border-radius box-shadow">
-            <CIcon color="on-bonus-color" name="fa-light fa-piggy-bank" />
-          </div>
-          <div class="column gap-1">
-            <div class="caption-text">Баллы</div>
-            <div class="header3">
-              {{ authentication.user.wallets[0].balance }}
-            </div>
-          </div>
-        </div>
-        <CButton
-          @click="usePointsMode = true"
-          text-button
-          text-color="on-bonus-color"
-        >
-          <div class="secondary-text" style="text-decoration: underline">
-            Применить
-          </div>
-        </CButton>
-      </div>
-      <div
-        v-if="usePointsMode"
-        class="column gap-10 bg-background-color border-radius px-6 py-8 mt-7"
-      >
-        <div class="row no-wrap justify-between body bold">
-          <div>Доступно</div>
-          <div>
-            <span class="text-positive">{{ $cart.item.appliedBonuses }}</span>
-            {{ '/' + authentication.user.wallets[0].balance }}
-          </div>
-        </div>
-        <q-slider
-          color="accent5"
-          thumb-color="primary"
-          :min="0"
-          :max="authentication.user.wallets[0].balance"
-          v-model="$cart.item.appliedBonuses"
-        />
-      </div>
+    <div v-if="authentication.user" class="column full-width gap-8 mb-15">
+      <WalletSlider
+        v-for="(el, index) in $cart.item.walletPayments"
+        :key="index"
+        :item="el"
+        @apply="applyClickHandler(el)"
+      />
     </div>
     <div class="column">
       <div class="header2 mb-10">Итого</div>
-      <div class="box-shadow border-radius py-6 px-5 column gap-5">
+      <div class="box-shadow border-radius py-6 px-5 column gap-7">
         <div
           v-for="(el, index) in resultRows"
           :key="index"
@@ -76,15 +38,23 @@
           </div>
         </div>
       </div>
+
       <div class="row items-end gap-5 mt-10">
         <CInput
-          v-model="$cart.item.promoCode"
+          v-model="promocode"
           default
           class="body col-grow"
           height="50px"
           external-label="Промокод"
         />
-        <CButton height="50px" class="body" label="Применить" />
+        <CButton
+          @click="applyPromocode()"
+          height="50px"
+          :loading="$cart.loading"
+          :disabled="!promocode?.length"
+          class="body"
+          label="Применить"
+        />
       </div>
       <CInput
         :model-value="$cart.item.deliveryTime"
@@ -151,10 +121,14 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { AvailableHours } from 'src/models/carts/cart'
 import moment from 'moment'
 import { PaymentType } from 'src/models/order/order'
+import { Notify } from 'quasar'
+import { sum } from 'lodash'
+import WalletSlider from './WalletSlider.vue'
+import { WalletPaymentRaw } from 'src/models/carts/cart'
 
 defineProps<{
   showPaymentTypes: boolean
@@ -164,13 +138,27 @@ defineEmits<{
   (evt: 'paymentSelected', val: PaymentType): void
 }>()
 
-const usePointsMode = ref(false)
-
 const currentDay = ref('Сегодня')
 
 const deliveryTyme = ref<string | null>(null)
 
+const promocode = ref<string | null>(null)
+
 const availableHours = ref<AvailableHours | null>(null)
+
+watch(
+  () => cartRepo.item?.promoCode,
+  (v) => {
+    if (!promocode.value?.length) return
+    promocode.value = v || null
+    if (!v) {
+      Notify.create({
+        message: 'Введенный Вами промокод неверен или недействителен',
+        color: 'danger',
+      })
+    }
+  }
+)
 
 const paymentTypes = computed(() => {
   const result = []
@@ -198,6 +186,35 @@ const paymentTypes = computed(() => {
   return result
 })
 
+const usedPoints = computed(() => {
+  return sum(cartRepo.item?.walletPayments.map((v) => v.applied_sum))
+})
+
+const resultRows = computed(() => {
+  return [
+    {
+      label: 'Сумма заказа',
+      icon: 'fa-light fa-user',
+      value: cartRepo.item?.discountedSum,
+    },
+    {
+      label: 'Списать баллов',
+      icon: 'fa-light fa-piggy-bank',
+      value: usedPoints.value ? '—' + usedPoints.value : 0,
+    },
+    {
+      label: 'Доставка',
+      icon: 'fa-light fa-truck',
+      value: cartRepo.item?.deliveryPrice,
+    },
+    {
+      label: 'К оплате',
+      icon: 'fa-light fa-credit-card-blank',
+      value: cartRepo.item?.discountedTotalSum.toFixed(2),
+    },
+  ]
+})
+
 const dateOptions = (hr: number, min: number | null) => {
   if (!availableHours.value) return
   for (const v of currentDay.value === 'Сегодня'
@@ -214,7 +231,6 @@ const dateOptions = (hr: number, min: number | null) => {
 
     const startHour = Number(startTime.split(':')[0])
     const endHour = Number(endTime.split(':')[0])
-
     const startMin = Number(startTime.split(':')[1])
     const endMin = Number(endTime.split(':')[1])
 
@@ -226,30 +242,38 @@ const dateOptions = (hr: number, min: number | null) => {
   }
 }
 
-const resultRows = computed(() => {
-  return [
-    {
-      label: 'Сумма заказа',
-      icon: 'fa-light fa-user',
-      value: cartRepo.item?.discountedSum,
-    },
-    {
-      label: 'Списать баллов',
-      icon: 'fa-light fa-piggy-bank',
-      value: '—' + cartRepo.item?.appliedBonuses,
-    },
-    {
-      label: 'Доставка',
-      icon: 'fa-light fa-truck',
-      value: cartRepo.item?.deliveryPrice,
-    },
-    {
-      label: 'К оплате',
-      icon: 'fa-light fa-credit-card-blank',
-      value: cartRepo.item?.discountedTotalSum,
-    },
-  ]
-})
+const applyPromocode = async () => {
+  if (!cartRepo.item) return
+  try {
+    cartRepo.loading = true
+    await cartRepo.setParams({
+      promo_code: promocode.value || undefined,
+    })
+  } catch {}
+}
+
+const applyClickHandler = async (wallet: WalletPaymentRaw) => {
+  try {
+    await cartRepo.setParams({
+      sales_point: cartRepo.item?.salesPoint.id,
+      type: cartRepo.item?.type,
+      applied_wallet_payments: [
+        {
+          wallet_payment: wallet.uuid,
+          applied_sum: wallet.applied_sum,
+        },
+      ],
+    })
+    Notify.create({
+      message: 'Бонусы успешно использованы',
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при применении бонусов',
+      color: 'danger',
+    })
+  }
+}
 
 const setDeliveryTime = (v: string | null) => {
   if (!cartRepo.item) return

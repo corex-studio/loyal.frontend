@@ -29,7 +29,11 @@
           style="width: 50px; height: 50px"
           class="bg-background-color border-radius row items-center justify-center"
         >
-          <CIcon size="20px" name="fa-light fa-user" />
+          <CIcon
+            size="20px"
+            name="fa-light fa-user"
+            color="on-background-color"
+          />
         </div>
         <div class="column gap-4 text-on-primary">
           <div class="header3">
@@ -43,12 +47,12 @@
           <div class="secondary-text">{{ authentication.user?.phone }}</div>
         </div>
       </div>
-      <div
+      <!-- <div
         style="width: 40px; height: 40px"
         class="row justify-center items-center bell-icon border-radius cursor-pointer"
       >
         <CIcon color="on-primary" name="fa-light fa-bell" />
-      </div>
+      </div> -->
     </div>
     <div class="row no-wrap full-width mt-25 gap-40">
       <ProfileMenu />
@@ -65,9 +69,15 @@ import { authentication } from 'src/models/authentication/authentication'
 import ProfileMenu from './ProfileMenu.vue'
 import { onMounted } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
+import { useRouter } from 'vue-router'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+
+const router = useRouter()
 
 onMounted(() => {
-  if (companyRepo.item) companyRepo.companyForProfile = companyRepo.item
+  if (!authentication.user) void router.push({ name: 'home' })
+  if (companyGroupRepo.item && companyGroupRepo.item?.companies.length < 2)
+    companyRepo.companyForProfile = companyRepo.item
 })
 </script>
 

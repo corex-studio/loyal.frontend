@@ -8,11 +8,10 @@
       v-model="$store.cartDrawer"
       no-swipe-open
       behavior="mobile"
-      bordered
       :width="474"
       class="column full-height no-wrap justify-between bg-background-color text-on-background-color"
     >
-      <div class="column">
+      <div class="column pb-20">
         <div
           style="height: 60px"
           class="row no-wrap items-center bg-modal-header-color text-on-modal-header-color px-10 justify-between mb-10"
@@ -39,11 +38,23 @@
               {{ cartMode === 'cart' ? 'Корзина' : 'Итого' }}
             </div>
           </div>
-          <div class="bg-white-opacity box-shadow py-4 px-5 border-radius">
-            <CIcon
-              color="on-secondary-button-color"
-              name="fa-light fa-shopping-cart"
+          <div class="row gap-5">
+            <CIconButton
+              v-if="$cart.item?.cartItems.length"
+              size="38px"
+              icon-class="box-shadow"
+              icon="fa-light fa-trash-alt"
+              icon-color="on-secondary-button-color"
+              color="white-opacity"
+              @click="acceptModal = true"
             />
+
+            <div class="bg-white-opacity box-shadow py-4 px-5 border-radius">
+              <CIcon
+                color="on-secondary-button-color"
+                name="fa-light fa-shopping-cart"
+              />
+            </div>
           </div>
         </div>
         <template v-if="$cart.item?.cartItems.length">
@@ -96,6 +107,11 @@
       </div>
     </q-drawer>
   </div>
+  <AcceptModal
+    :model-value="acceptModal"
+    @update:model-value="acceptModal = false"
+    @accept="clearCart()"
+  />
 </template>
 <script lang="ts" setup>
 import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
@@ -111,10 +127,14 @@ import { Notify } from 'quasar'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { PaymentType } from 'src/models/order/order'
+import CIconButton from 'src/components/template/buttons/CIconButton.vue'
+import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 
 const cartMode = ref<'cart' | 'output'>('cart')
 
 const selectPaymentType = ref(false)
+
+const acceptModal = ref(false)
 
 const drawerBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px !important`
@@ -135,6 +155,20 @@ watch(
     }
   }
 )
+
+const clearCart = async () => {
+  try {
+    await cartRepo.clear()
+    Notify.create({
+      message: 'Корзина очищена',
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при очистке корзины',
+      color: 'danger',
+    })
+  }
+}
 
 const deleteCartItem = async (item: CartItem) => {
   try {
@@ -167,6 +201,7 @@ const toNextStep = async () => {
 
 const selectDeliveryDate = async () => {
   try {
+    cartRepo.loading = true
     await cartRepo.setParams({
       delivery_time: cartRepo.item?.deliveryTime
         ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
@@ -176,11 +211,13 @@ const selectDeliveryDate = async () => {
       sales_point: cartRepo.item?.salesPoint.id || '',
       type: cartRepo.item?.type || '',
     })
+    cartRepo.loading = false
   } catch {
     Notify.create({
       message: 'Ошибка при установке даты доставки',
       color: 'danger',
     })
+    cartRepo.loading = false
   }
 }
 
@@ -190,13 +227,24 @@ const makeAnOrder = async (paymentType: PaymentType) => {
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
         type: paymentType,
-        save_next_card: true,
-        payment_service: 'card',
+        payment_service:
+          paymentType === PaymentType.CASH
+            ? undefined
+            : paymentType === PaymentType.CARD
+            ? 'card'
+            : 'web_form',
       },
     })
+    cartMode.value = 'cart'
+    cartRepo.item = null
     if (order.paymentUrl) {
       window.open(order.paymentUrl, '_blank')
     }
+    Notify.create({
+      message: 'Заказ успешно оформлен',
+    })
+    cartRepo.item = null
+    // await cartRepo.current(order.salesPoint.id)
   } catch {
     cartRepo.arrangeLoading = false
     Notify.create({

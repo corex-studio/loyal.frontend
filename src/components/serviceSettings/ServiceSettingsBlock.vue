@@ -1,7 +1,7 @@
 <template>
   <div
     @click="openDialog()"
-    class="row no-wrap gap-4 pt-2 pb-1 px-7 cursor-pointer box-shadow border-radius"
+    class="row no-wrap gap-3 py-2 pl-5 pr-7 cursor-pointer box-shadow border-radius items-center"
     :class="
       $cart.item?.type === 'delivery'
         ? 'bg-delivery-button-color text-on-delivery-button-color'
@@ -11,55 +11,86 @@
         ? 'bg-booking-button-color text-on-booking-button-color'
         : 'background-color text-on-background-color'
     "
-    style="max-width: 265px; overflow: hidden"
+    :style="$cart.item ? 'max-width: 350px;' : ''"
+    style="overflow: hidden"
   >
-    <q-icon
-      class="pt-2"
-      size="18px"
-      :name="
-        $cart.item
-          ? $cart.item.type === 'pickup'
-            ? 'fa-light fa-person-walking'
-            : $cart.item.type === 'booking'
-            ? 'fa-light fa-calendar-day'
-            : 'fa-light fa-house'
-          : 'fa-light fa-square-question'
-      "
-    />
-    <div class="column col-grow">
+    <div style="background-color: #ffffff7f" class="border-radius px-4 py-3">
+      <q-icon
+        size="20px"
+        :name="
+          $cart.item
+            ? $cart.item.type === 'pickup'
+              ? 'fa-light fa-person-walking'
+              : $cart.item.type === 'booking'
+              ? 'fa-light fa-calendar-day'
+              : 'fa-light fa-house'
+            : 'fa-light fa-square-question'
+        "
+      />
+    </div>
+    <div class="column col gap-1">
       <div style="line-height: 18px" class="bold">
-        {{ $cart.item ? currentDeliveryType() : 'Тип доставки' }}
+        {{ $cart.item ? currentDeliveryType() : 'Укажите тип доставки' }}
       </div>
-      <div class="row full-width">
+      <div v-if="currentAddress" class="row full-width">
         <div class="ellipsis">
-          {{
-            $cart.item
-              ? $cart.item.type === 'delivery'
-                ? $cart.item.deliveryAddress?.name
-                : $cart.item.salesPoint.customAddress
-              : 'Не выбрано'
-          }}
+          {{ currentAddress }}
         </div>
       </div>
     </div>
   </div>
   <ServiceSettingsModal
     :model-value="dialog"
-    @update:model-value="dialog = $event"
+    @update:model-value="dialogCloseHandler()"
+  />
+  <SelectCompanyModal
+    :model-value="selectCompanyModal"
+    @update:model-value="companySelectModalCloseHandler"
+    @select="companySelected($event)"
   />
 </template>
 <script lang="ts" setup>
 import { cartRepo } from 'src/models/carts/cartRepo'
 import ServiceSettingsModal from './ServiceSettingsModal.vue'
-import { ref } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
-import { store } from 'src/models/store'
+import { ref, computed } from 'vue'
+import SelectCompanyModal from '../dialogs/SelectCompanyModal.vue'
+import { Company } from 'src/models/company/company'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+
+const dialog = ref(false)
+const selectCompanyModal = ref(false)
+
+const currentAddress = computed(() => {
+  return cartRepo.item
+    ? cartRepo.item.type === 'delivery'
+      ? cartRepo.item.deliveryAddress?.name
+      : cartRepo.item.salesPoint.customAddress ||
+        cartRepo.item.salesPoint.address
+    : ''
+})
+
+const companySelected = (v: Company) => {
+  companyRepo.cartCompany = v
+  selectCompanyModal.value = false
+  dialog.value = true
+}
+
+const companySelectModalCloseHandler = () => {
+  selectCompanyModal.value = false
+}
+
+const dialogCloseHandler = () => {
+  dialog.value = false
+}
 
 const openDialog = () => {
-  if (!companyRepo.item) {
-    store.selectCompanyModal = true
+  if (!companyGroupRepo.item) return
+  if (companyGroupRepo.item?.companies.length > 1) {
+    selectCompanyModal.value = true
+  } else {
+    dialog.value = true
   }
-  dialog.value = true
 }
 
 const currentDeliveryType = () => {
@@ -71,6 +102,4 @@ const currentDeliveryType = () => {
     return 'Бронь'
   }
 }
-
-const dialog = ref(false)
 </script>

@@ -1,12 +1,16 @@
 <template>
   <div v-if="company" class="column">
-    <q-breadcrumbs separator="" class="mb-15">
+    <q-breadcrumbs
+      v-if="$companyGroup.item && $companyGroup.item?.companies.length > 1"
+      separator=""
+      class="mb-15"
+    >
       <CHover v-slot="{ hover }">
         <q-breadcrumbs-el
           :label="'Все заведения'"
           class="cursor-pointer"
           :class="hover ? 'text-primary' : 'text-on-background-color'"
-          @click="$company.item = null"
+          @click="$company.companyForProfile = null"
         />
       </CHover>
       <q-icon
@@ -15,7 +19,7 @@
         style="font-size: 10px !important"
       />
       <q-breadcrumbs-el
-        :label="$company.item?.name || ''"
+        :label="$company.companyForProfile?.name || ''"
         class="text-on-background-color"
         style="opacity: 0.5"
       />
@@ -76,8 +80,7 @@
                 <span>
                   <q-img
                     class="border-radius"
-                    fit="contain"
-                    width="140px"
+                    fit="cover"
                     height="140px"
                     :src="$store.images.empty"
                   ></q-img>
@@ -87,7 +90,9 @@
           </div> </template
       ></SwiperContainer>
     </div>
-    <div class="subtitle-text-light mt-15">{{ company.description }}</div>
+    <div class="subtitle-text-light text-on-background-color mt-15">
+      {{ company.description }}
+    </div>
     <div class="mt-15 row gap-10">
       <div
         v-for="(el, index) in contacts"

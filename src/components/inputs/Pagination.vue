@@ -12,8 +12,6 @@
           @click="$emit('appendItems', page + 1)"
           width="120px"
           height="35px"
-          color="secondary1"
-          text-color="black"
           >{{ 'Показать еще' }}</CButton
         >
       </div>
@@ -120,11 +118,11 @@
 </template>
 
 <script setup lang="ts">
-import {} from 'vue';
-import CButton from '../template/buttons/CButton.vue';
-import CIconButton from '../template/buttons/CIconButton.vue';
+import {} from 'vue'
+import CButton from '../template/buttons/CButton.vue'
+import CIconButton from '../template/buttons/CIconButton.vue'
 
-defineEmits(['update:modelValue', 'appendItems']);
+defineEmits(['update:modelValue', 'appendItems'])
 
 defineProps({
   page: {
@@ -136,7 +134,7 @@ defineProps({
     default: 1,
   },
   loading: Boolean,
-});
+})
 </script>
 
 <style lang="scss" scoped></style>

@@ -26,17 +26,14 @@
         <div class="row items-center no-wrap gap-4">
           <div
             style="width: 40px; height: 40px"
-            :class="index2 ? 'bg-white-opacity' : 'bg-secondary-button-color'"
-            class="row items-center justify-center border-radius box-shadow"
+            class="row items-center justify-center border-radius box-shadow bg-white-opacity"
           >
             <CIcon :name="field.icon" />
           </div>
           <div>{{ field.label }}</div>
         </div>
-        <div class="col-6 column gap-2" style="text-align: end">
-          <div>
-            {{ field.val || '-' }}
-          </div>
+        <div class="col-8 column gap-2" style="text-align: end">
+          <div class="ellipsis-2-lines">{{ field.val || '-' }}</div>
           <div>{{ field.date }}</div>
         </div>
       </div>
@@ -76,21 +73,21 @@ const getDataFields = (order: Order) => {
     result.unshift({
       icon: 'fa-light fa-person-dolly',
       label: 'Самовывоз',
-      val: order.salesPoint.customAddress,
+      val: order.salesPoint.customAddress || order.salesPoint.address,
       date: order.deliveryTime,
     })
   } else if (order.type === 'delivery') {
     result.unshift({
       label: 'Доставка',
       icon: 'fa-light fa-truck',
-      val: order.salesPoint.customAddress,
+      val: order.salesPoint.customAddress || order.salesPoint.address,
       date: order.deliveryTime,
     })
   } else {
     result.unshift({
       label: 'Бронь',
       icon: 'fa-light fa-calendar-day',
-      val: order.salesPoint.customAddress,
+      val: order.salesPoint.customAddress || order.salesPoint.address,
       date: order.deliveryTime,
     })
   }

@@ -11,6 +11,19 @@
   display: none !important;
 }
 
+.q-menu {
+  background-color: var(--background-color);
+  color: var(--on-background-color);
+}
+
+.q-date__view {
+  background-color: var(--background-color);
+}
+
+.q-time__main {
+  background-color: var(--background-color);
+}
+
 .q-field--auto-height.q-field--labeled .q-field__control-container {
   padding-top: unset !important;
 }
@@ -70,6 +83,10 @@
   max-width: 1420px;
   width: 100%;
   margin: 0 auto;
+}
+
+.q-footer {
+  z-index: 50 !important;
 }
 
 .no-scrollbar::-webkit-scrollbar {

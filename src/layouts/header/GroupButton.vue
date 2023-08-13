@@ -1,6 +1,6 @@
 <template>
   <div
-    class="cursor-pointer border-radius"
+    class="cursor-pointer border-radius ellipsis"
     @click="clickHandler(item)"
     :style="[
       isHomePage
@@ -10,6 +10,7 @@
         : '',
       additional ? '' : 'margin-left: -10px',
     ]"
+    style="max-width: 150px"
     :class="[
       item.id === $menuGroup.elementInViewport && isHomePage && !additional
         ? 'bg-button-color text-on-button-color'
@@ -52,7 +53,7 @@ const scrollToGroup = (v: MenuGroup) => {
   groupElement.value = document.getElementById(v.id)
   if (groupElement.value) {
     const y =
-      groupElement.value.getBoundingClientRect().top + window.scrollY - 40
+      groupElement.value.getBoundingClientRect().top + window.scrollY - 100
     window.scrollTo({ top: y, behavior: 'smooth' })
     // groupElement.value.scrollIntoView({
     //   behavior: 'smooth',
@@ -78,7 +79,7 @@ onMounted(() => {
     },
     {
       root: null,
-      threshold: 0.9,
+      threshold: 0.4,
       rootMargin: '0px',
     }
   )

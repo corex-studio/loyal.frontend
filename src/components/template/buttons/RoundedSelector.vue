@@ -1,13 +1,15 @@
 <template>
   <div
     :class="modelValue ? 'bg-primary' : 'unselected'"
-    style="border-radius: 50%; padding: 4px 6px"
+    style="height: 29px; width: 29px; border-radius: 50%"
+    class="row justify-center items-center"
     :style="modelValue ? '' : 'border: 1px on-background-color solid'"
   >
     <CIcon
       :style="`visibility: ${modelValue ? 'visible' : 'hidden'}`"
       name="fa-solid fa-check"
       color="background-color"
+      size="17px"
     />
   </div>
 </template>

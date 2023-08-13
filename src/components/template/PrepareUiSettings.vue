@@ -108,7 +108,7 @@ onMounted(() => {
     onBookingButtonColor.value = `#${uiSettingsRepo.item.bookingButtonColor.on_color}`
     modalHeaderColor.value = `#${uiSettingsRepo.item.modalHeaderColor.color}`
     onModalHeaderColor.value = `#${uiSettingsRepo.item.modalHeaderColor.on_color}`
-    boxShadow.value = `${uiSettingsRepo.item.boxShadow.offset_x}px ${uiSettingsRepo.item.boxShadow.offset_y}px ${uiSettingsRepo.item.boxShadow.blur}px ${uiSettingsRepo.item.boxShadow.spread}px #${uiSettingsRepo.item.boxShadow.color}`
+    boxShadow.value = `${uiSettingsRepo.item.boxShadow.offset_x}px ${uiSettingsRepo.item.boxShadow.offset_y}px ${uiSettingsRepo.item.boxShadow.blur}px ${uiSettingsRepo.item.boxShadow.spread}px ${uiSettingsRepo.item.boxShadow.color}`
     cashButtonColor.value = `#${uiSettingsRepo.item.cashButtonColor.color}`
     onCashButtonColor.value = `#${uiSettingsRepo.item.cashButtonColor.on_color}`
     cardButtonColor.value = `#${uiSettingsRepo.item.cardButtonColor.color}`
@@ -271,6 +271,7 @@ $colors: (
   'booking-button-color': --booking-button-color,
   'on-booking-button-color': --on-booking-button-color,
   'modal-header-color': --modal-header-color,
+  'on-modal-header-color': --on-modal-header-color,
   'cash-button-color': --cash-button-color,
   'on-cash-button-color': --on-cash-button-color,
   'card-button-color': --card-button-color,

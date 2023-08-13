@@ -79,23 +79,48 @@
           <!-- <div class="full-width header2 mb-10">Тип доставки</div> -->
           <div class="row mb-15 no-wrap gap-5">
             <CButton
-              @click="currentTab = 1"
+              v-for="(type, index) in availableCartTypes"
+              :key="index"
+              @click="currentTab = type.type"
+              :label="type.label"
+              :icon="type.icon"
+              :class="
+                currentTab === type.type
+                  ? type.class
+                  : 'text-on-secondary-button-color'
+              "
+              :color="
+                currentTab === type.type ? type.color : 'secondary-button-color'
+              "
+            />
+            <!-- <CButton
+              v-if="
+                $company.item?.salesPoints?.some(
+                  (v) => v.settings.delivery_enabled
+                )
+              "
+              @click="currentTab = CartType.DELIVERY"
               label="Доставка"
               height="38px"
               icon="fa-light fa-home"
               class="box-shadow"
               :class="
-                currentTab === 1
+                currentTab === CartType.DELIVERY
                   ? 'text-on-delivery-button-color'
                   : 'text-on-secondary-button-color'
               "
               :color="
-                currentTab === 1
+                currentTab === CartType.DELIVERY
                   ? 'delivery-button-color'
                   : 'secondary-button-color'
               "
             />
             <CButton
+              v-if="
+                $company.item?.salesPoints?.some(
+                  (v) => v.settings.pickup_enabled
+                )
+              "
               @click="currentTab = 2"
               label="Самовывоз"
               height="38px"
@@ -113,6 +138,11 @@
               "
             />
             <CButton
+              v-if="
+                $company.item?.salesPoints?.some(
+                  (v) => v.settings.booking_enabled
+                )
+              "
               @click="currentTab = 3"
               label="Бронь"
               height="38px"
@@ -128,24 +158,28 @@
                   ? 'booking-button-color'
                   : 'secondary-button-color'
               "
-            />
+            /> -->
           </div>
 
           <div
             :class="{
               'col-grow':
-                ($deliveryAddress.items.length < 6 && currentTab === 1) ||
-                currentTab === 2 ||
-                (currentTab === 3 &&
-                  ($company.item?.salesPoints
-                    ? $company.item?.salesPoints.length < 6
+                ($deliveryAddress.items.length < 6 &&
+                  currentTab === CartType.DELIVERY) ||
+                currentTab === CartType.PICKUP ||
+                (currentTab === CartType.BOOKING &&
+                  ($company.cartCompany?.salesPoints
+                    ? $company.cartCompany?.salesPoints.length < 6
                     : true)) ||
                 !currentTab,
             }"
             class="relative-position column no-wrap justify-between items-center pb-10"
           >
             <div
-              v-if="!$deliveryAddress.items.length && currentTab === 1"
+              v-if="
+                !$deliveryAddress.items.length &&
+                currentTab === CartType.DELIVERY
+              "
             ></div>
             <q-tab-panels
               v-if="currentTab"
@@ -153,7 +187,10 @@
               v-model="currentTab"
               class="bg-transparent full-width"
             >
-              <q-tab-panel :name="1" class="px-0 py-0 full-height">
+              <q-tab-panel
+                :name="CartType.DELIVERY"
+                class="px-0 py-0 full-height"
+              >
                 <template v-if="!deliveryAddressRepo.items.length">
                   <div></div>
                   <div class="column items-center">
@@ -183,7 +220,13 @@
                       @click="selectedAddress = el"
                       class="row no-wrap cursor-pointer items-center pr-5 full-width justify-between"
                     >
-                      <div class="column body col-10">
+                      <div
+                        :class="{
+                          'text-primary':
+                            el.id === $cart.item?.deliveryAddress?.id,
+                        }"
+                        class="column body col-10"
+                      >
                         <div class="bold mb-3">
                           {{ el.name }}
                         </div>
@@ -208,10 +251,10 @@
                   </template>
                 </div>
               </q-tab-panel>
-              <q-tab-panel :name="2" class="px-0 py-0 column">
+              <q-tab-panel :name="CartType.PICKUP" class="px-0 py-0 column">
                 <div class="full-width header2 mb-10">Адреса самовывоза</div>
                 <div
-                  v-for="(el, index) in $company.item?.salesPoints"
+                  v-for="(el, index) in availablePickupAddresses"
                   :key="index"
                   class="full-width"
                 >
@@ -225,7 +268,14 @@
                     @click="selectedPickupAddress = el.id || null"
                     class="row no-wrap justify-between full-width cursor-pointer items-center"
                   >
-                    <div class="col-11 pr-5">
+                    <div
+                      :class="{
+                        'text-primary':
+                          el.id === $cart.item?.salesPoint?.id &&
+                          $cart.item?.type === CartType.PICKUP,
+                      }"
+                      class="col-11 pr-5"
+                    >
                       {{ el.customAddress || el.address }}
                     </div>
                     <RoundedSelector
@@ -244,10 +294,10 @@
                   </div>
                 </div>
               </q-tab-panel>
-              <q-tab-panel :name="3" class="px-0 py-0 column">
+              <q-tab-panel :name="CartType.BOOKING" class="px-0 py-0 column">
                 <div class="full-width header2 mb-10">Адреса заведений</div>
                 <div
-                  v-for="(el, index) in $company.item?.salesPoints"
+                  v-for="(el, index) in availableBookingAddresses"
                   :key="index"
                   class="full-width"
                 >
@@ -261,7 +311,14 @@
                     @click="selectedSalesPoint = el.id || null"
                     class="row justify-between no-wrap full-width cursor-pointer items-center"
                   >
-                    <div class="col-11 pr-5">
+                    <div
+                      :class="{
+                        'text-primary':
+                          el.id === $cart.item?.salesPoint?.id &&
+                          $cart.item?.type === CartType.BOOKING,
+                      }"
+                      class="col-11 pr-5"
+                    >
                       {{ el.customAddress || el.address }}
                     </div>
                     <!-- <div
@@ -287,7 +344,7 @@
             </q-tab-panels>
             <div v-else></div>
 
-            <div v-if="!currentTab" class="header3 column items-center">
+            <!-- <div v-if="!currentTab" class="header3 column items-center">
               <CIcon
                 size="75px"
                 class="mb-17"
@@ -295,10 +352,10 @@
                 name="fa-thin fa-truck"
               />
               <div>Выберите удобный для вас тип доставки</div>
-            </div>
+            </div> -->
 
             <div class="column mt-15 items-center">
-              <template v-if="currentTab === 1">
+              <template v-if="currentTab === CartType.DELIVERY">
                 <CButton
                   v-if="$deliveryAddress.items.length"
                   @click="mode = 'create'"
@@ -332,7 +389,7 @@
               <CButton
                 v-else
                 @click="selectAddress()"
-                :label="currentTab === 3 ? 'Далее' : 'Выбрать'"
+                :label="currentTab === CartType.BOOKING ? 'Далее' : 'Выбрать'"
                 :disabled="disableFurtherButton"
                 class=""
                 width="280"
@@ -360,6 +417,7 @@
           <BookingInfo
             v-if="selectedSalesPoint"
             @change-booking-mode="bookingMode = $event"
+            @close="$emit('update:modelValue', false)"
             :booking-mode="bookingMode"
             :sales-point="selectedSalesPoint"
           />
@@ -382,9 +440,13 @@ import BookingInfo, { BookingModes } from './BookingInfo.vue'
 import CIconButton from '../template/buttons/CIconButton.vue'
 import { Notify } from 'quasar'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
+import { store } from 'src/models/store'
+import { CartType } from 'src/models/carts/cart'
+import { companyRepo } from 'src/models/company/companyRepo'
 
 export type ServiceModes = 'create' | 'select' | 'bookingInfo'
-const currentTab = ref<number | null>(null)
+
+const currentTab = ref<CartType | null>(null)
 
 const selectedAddress = ref<DeliveryAddress | null>(null)
 
@@ -404,8 +466,63 @@ const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
+const availableCartTypes = computed(() => {
+  const result = []
+
+  if (
+    companyRepo.cartCompany?.salesPoints?.some(
+      (v) => v.settings.delivery_enabled
+    )
+  ) {
+    result.push({
+      label: 'Доставка',
+      type: CartType.DELIVERY,
+      icon: 'fa-light fa-home',
+      color: 'delivery-button-color',
+      class: 'text-on-delivery-button-color',
+    })
+  }
+  if (
+    companyRepo.cartCompany?.salesPoints?.some((v) => v.settings.pickup_enabled)
+  ) {
+    result.push({
+      label: 'Самовывоз',
+      type: CartType.PICKUP,
+      icon: 'fa-light fa-store',
+      color: 'pickup-button-color',
+      class: 'text-on-pickup-button-color',
+    })
+  }
+  if (
+    companyRepo.cartCompany?.salesPoints?.some(
+      (v) => v.settings.booking_enabled
+    )
+  ) {
+    result.push({
+      label: 'Бронирование',
+      type: CartType.BOOKING,
+      icon: 'fa-light fa-calendar-day',
+      color: 'booking-button-color',
+      class: 'text-on-booking-button-color',
+    })
+  }
+  return result
+})
+
+const availablePickupAddresses = computed(() => {
+  return companyRepo.cartCompany?.salesPoints?.filter(
+    (v) => v.settings.pickup_enabled
+  )
+})
+
+const availableBookingAddresses = computed(() => {
+  return companyRepo.cartCompany?.salesPoints?.filter(
+    (v) => v.settings.booking_enabled
+  )
+})
+
 const disableFurtherButton = computed(() => {
-  return currentTab.value === 2
+  return currentTab.value === CartType.PICKUP
     ? !selectedPickupAddress.value
     : !selectedSalesPoint.value
 })
@@ -414,10 +531,33 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) {
-      void deliveryAddressRepo.list()
+      bookingMode.value = 'bookingInfo'
+      void deliveryAddressRepo.list().then(() => {
+        selectCurrentAddress()
+        currentTab.value = availableCartTypes.value[0].type
+      })
     }
   }
 )
+
+watch(
+  () => currentTab.value,
+  () => {
+    selectCurrentAddress()
+  }
+)
+
+const selectCurrentAddress = () => {
+  if (cartRepo.item) {
+    if (cartRepo.item.type === CartType.DELIVERY) {
+      selectedAddress.value = cartRepo.item.deliveryAddress
+    }
+    if (cartRepo.item.type === CartType.PICKUP)
+      selectedPickupAddress.value = cartRepo.item.salesPoint.id || null
+    if (cartRepo.item.type === CartType.BOOKING)
+      selectedSalesPoint.value = cartRepo.item.salesPoint.id || null
+  }
+}
 
 const bookingBackHandler = () => {
   bookingMode.value === 'bookingInfo'
@@ -428,7 +568,7 @@ const bookingBackHandler = () => {
 }
 
 const selectAddress = async () => {
-  if (selectedAddress.value && currentTab.value === 1) {
+  if (selectedAddress.value && currentTab.value === CartType.DELIVERY) {
     const res = await deliveryAreaRepo.byCoords(selectedAddress.value?.coords)
     if (!res.length) {
       Notify.create({
@@ -443,14 +583,22 @@ const selectAddress = async () => {
       type: 'delivery',
       delivery_address: selectedAddress.value?.id,
     })
+
+    await store.loadCatalog(res[0].salesPoint)
+
     emit('update:modelValue', false)
-  } else if (currentTab.value === 2) {
+  } else if (
+    currentTab.value === CartType.PICKUP &&
+    selectedPickupAddress.value
+  ) {
     await cartRepo.setParams({
-      sales_point: selectedPickupAddress.value || '',
+      sales_point: selectedPickupAddress.value,
       type: 'pickup',
     })
+    await store.loadCatalog(selectedPickupAddress.value)
+
     emit('update:modelValue', false)
-  } else if (currentTab.value === 3) {
+  } else if (currentTab.value === CartType.BOOKING) {
     mode.value = 'bookingInfo'
     // await cartRepo.setParams({
     //   sales_point: selectedSalesPoint.value || '',
@@ -459,3 +607,10 @@ const selectAddress = async () => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.q-tab-panels.q-panel-parent {
+  overflow-y: unset !important;
+  overflow-x: hidden !important;
+}
+</style>

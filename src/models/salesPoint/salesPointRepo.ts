@@ -1,3 +1,4 @@
+import { Menu, MenuRaw } from './../menu/menu'
 import { AvailablePaymentType, PaymentSettings, SalesPoint } from './salesPoint'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { salesPointApi } from './salesPointApi'
@@ -7,6 +8,7 @@ import { Image, ImageRaw } from '../image/image'
 
 export class SalesPointRepo extends BaseRepo<SalesPoint> {
   api = salesPointApi
+  menuLoading = false
 
   paymentTypes: AvailablePaymentType[] = []
 
@@ -67,6 +69,17 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       id: this.item?.id,
       data: { image: image.id },
     })
+  }
+
+  async getMenu(id: string): Promise<Menu> {
+    this.menuLoading = true
+    const res: MenuRaw = await this.api.send({
+      method: 'GET',
+      action: 'menu',
+      id,
+    })
+    this.menuLoading = false
+    return new Menu(res)
   }
 }
 

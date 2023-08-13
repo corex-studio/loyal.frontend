@@ -20,7 +20,7 @@
     </template>
     <div class="column gap-8">
       <div
-        v-for="(el, index) in $company.item?.guestContacts.socials"
+        v-for="(el, index) in $company.companyForProfile?.guestContacts.socials"
         :key="index"
         @click="openSocial(el.link)"
         class="row items-center gap-4 cursor-pointer"

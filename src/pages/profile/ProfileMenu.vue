@@ -5,8 +5,8 @@
       max-width: 218px;
       height: fit-content;
       position: sticky;
-      top: 50px;
     "
+    :style="$menu.item?.groups?.length ? 'top: 120px' : 'top: 60px'"
     class="column"
   >
     <div v-for="(el, index) in tabs" :key="index">
@@ -100,6 +100,9 @@ const tabClickHandler = async (routeName?: string) => {
 
 const logOut = () => {
   void authentication.logout()
+  void router.push({
+    name: 'home',
+  })
   acceptModal.value = false
 }
 </script>

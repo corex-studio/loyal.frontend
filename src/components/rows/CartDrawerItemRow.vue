@@ -13,7 +13,19 @@
       width="80px"
       height="80px"
       fit="cover"
-    />
+    >
+      <template v-slot:error>
+        <span>
+          <q-img
+            class="user-image"
+            fit="cover"
+            width="80px"
+            height="80px"
+            :src="$store.images.empty"
+          ></q-img>
+        </span>
+      </template>
+    </q-img>
     <div class="row no-wrap col items-end justify-between">
       <div class="column col gap-4 secondary-text">
         <div>{{ cartItem.size.name }}</div>
@@ -51,7 +63,7 @@
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import CIcon from '../template/helpers/CIcon.vue'
 import ChangeAmount from '../inputs/ChangeAmount.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { Notify } from 'quasar'
 import { cartRepo } from 'src/models/carts/cartRepo'
@@ -67,6 +79,13 @@ defineEmits(['delete'])
 onMounted(() => {
   cartItem.value = props.item
 })
+
+watch(
+  () => props.item,
+  (v) => {
+    cartItem.value = v
+  }
+)
 
 const updateQuantity = async (v: number) => {
   if (!v) return
