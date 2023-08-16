@@ -98,7 +98,7 @@ onMounted(async () => {
   try {
     await appSettingsRepo.getLinksSettings(String(route.params.externalId))
 
-    // if (currentLink.value) window.location.replace(currentLink.value)
+    if (currentLink.value) window.location.replace(currentLink.value)
 
     loader.value = false
   } catch (e) {
