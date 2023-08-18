@@ -2,6 +2,11 @@ import { RouteRecordRaw } from 'vue-router'
 
 const routes: RouteRecordRaw[] = [
   {
+    path: '/successful_payment',
+    name: 'successfulPaymentPage',
+    component: () => import('src/pages/SuccessfulPayment.vue'),
+  },
+  {
     path: '/:companyGroup/',
     component: () => import('src/layouts/MainLayout.vue'),
     children: [
