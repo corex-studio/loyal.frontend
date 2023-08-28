@@ -38,6 +38,8 @@
             v-for="(el, index) in [1, 2, 3, 4, 5, 6, 7]"
             :key="index"
             width="130px"
+            class="mt-2"
+            style="margin-bottom: 13px"
           >
           </q-skeleton>
         </template>

@@ -21,14 +21,17 @@
       class="caption-text text-on-background-color"
     />
   </q-breadcrumbs>
-  <div v-if="$menuItem.item">
+  <div>
     <div
       style="min-height: 640px"
-      class="row full-width justify-between no-wrap text-on-background-color"
+      class="row full-width items-start justify-between no-wrap text-on-background-color"
     >
       <q-img
-        style="width: 40%"
-        :src="$menuItem.item.image?.thumbnail || $store.images.empty"
+        v-if="!$menuItem.loadings.retrieve"
+        style="width: 40%; min-height: 600px"
+        fit="contain"
+        class="main-image"
+        :src="$menuItem.item?.image?.thumbnail || $store.images.empty"
       >
         <template v-slot:error>
           <span>
@@ -36,10 +39,19 @@
           </span>
         </template>
       </q-img>
+      <q-skeleton v-else width="40%" height="450px" class="border-radius" />
 
       <div class="column col-6 gap-15">
         <div class="header row justify-between relative-position">
-          {{ $menuItem.item.name }}
+          <template v-if="!$menuItem.loadings.retrieve">
+            {{ $menuItem.item?.name }}
+          </template>
+          <q-skeleton
+            v-else
+            height="35px"
+            class="border-radius"
+            width="200px"
+          />
           <CIcon
             v-if="currentSize?.nutritions.length"
             size="24px"
@@ -53,7 +65,7 @@
                 v-for="(nutrition, index) in currentSize?.nutritions"
                 :key="index"
               >
-                <q-separator v-if="index" class="my-2" />
+                <q-separator v-if="index" class="my-5" />
                 <div class="row gap-2 bold mb-8">
                   <div>Пищевая ценность на</div>
                   <div>{{ `${nutritionsNames[nutrition.type]}` }}</div>
@@ -90,17 +102,25 @@
             </q-tooltip>
           </CIcon>
         </div>
-        <div v-if="$menuItem.item.description" class="body">
+        <div v-if="$menuItem.item?.description" class="body">
           {{ $menuItem.item.description }}
         </div>
         <div
           style="width: max-content"
           class="px-6 py-3 row border-radius bg-background-color box-shadow gap-5 no-wrap items-center text-primary"
         >
-          <div v-if="currentSize?.price" class="header">
-            {{ currentSize?.price + ' ₽' }}
-          </div>
-          <div v-else class="header">Цена не указана</div>
+          <template v-if="!$menuItem.loadings.retrieve">
+            <div v-if="currentSize?.price" class="header">
+              {{ currentSize?.price + ' ₽' }}
+            </div>
+            <div v-else class="header">Цена не указана</div>
+          </template>
+          <q-skeleton
+            v-else
+            width="90px"
+            height="32px"
+            class="border-radius my-2"
+          ></q-skeleton>
           <!-- <div class="header3 text-black3 text-strike mt-1">
             {{ 'Цена без скидки' }} ₽
           </div> -->
@@ -110,9 +130,12 @@
             v-if="currentSize && currentSize.characteristics"
             class="body text-primary"
           >
-            {{ currentSize?.characteristics.weight }} г
+            <template v-if="!$menuItem.loadings.retrieve">
+              {{ currentSize?.characteristics.weight }} г
+            </template>
+            <q-skeleton v-else width="100px" />
           </div>
-          <div class="relative-position">
+          <div v-if="$menuItem.item" class="relative-position">
             <TabPicker
               v-if="$menuItem.item.sizes.length > 1"
               @update-tab="currentTab = $event"
@@ -314,4 +337,8 @@ const addToCart = async () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.main-image :deep(.q-img__image) {
+  height: unset !important;
+}
+</style>

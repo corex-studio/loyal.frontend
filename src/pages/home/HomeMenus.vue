@@ -30,6 +30,7 @@
 
       <CButton @click="changeCompany()" label="Выбрать другое заведение" />
     </div>
+    <div v-else class="header mt-18">{{ $menu.item?.name }}</div>
     <!-- <div class="row full-width mt-10 gap-10">
       <div
         @click="selectCompany(el)"
