@@ -47,7 +47,7 @@
               <div
                 v-if="!item.hidden"
                 @click="item.click"
-                class="text-on-backing-color cursor-pointer"
+                class="text-on-backing-color cursor-pointer secondary-text"
               >
                 {{ item.label }}
               </div>
