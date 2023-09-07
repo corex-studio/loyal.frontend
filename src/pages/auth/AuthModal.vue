@@ -108,6 +108,7 @@ import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { authentication } from 'src/models/authentication/authentication'
+import { cartRepo } from 'src/models/carts/cartRepo'
 
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -169,15 +170,8 @@ const nextStepHandler = async () => {
       currentStep.value = 2
     }
   } else {
-    try {
-      await auth()
-      // window.location.reload();
-    } catch {
-      Notify.create({
-        message: 'Ошибка при авторизации',
-        color: 'danger',
-      })
-    }
+    await auth()
+    await cartRepo.current()
   }
 }
 
@@ -187,6 +181,7 @@ const auth = async () => {
       phone: `7${data.value.phone}`,
       code: data.value.sms,
     })
+
     Notify.create({
       message: 'Вы успешно авторизованы',
     })

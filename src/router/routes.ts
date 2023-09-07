@@ -18,7 +18,6 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         name: 'profilePage',
-        redirect: { name: 'profileData' },
         children: [
           {
             path: 'data',
@@ -79,6 +78,11 @@ const routes: RouteRecordRaw[] = [
         path: 'menu_item/:menuItemId',
         name: 'menuItemPage',
         component: () => import('src/pages/menuItem/MenuItemPage.vue'),
+      },
+      {
+        path: 'my_qr',
+        name: 'myQrPage',
+        component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue'),
       },
     ],
   },
