@@ -140,6 +140,24 @@ const buttons = computed(
         },
       },
       {
+        label: 'О нас',
+        semanticLabel: 'company_profile',
+        icon: 'fa-light fa-building ',
+        click: () => {
+          closeDialogs()
+          if (!authentication.user) {
+            store.authModal = true
+            return
+          }
+          void router.push({
+            name: 'aboutUs',
+          })
+        },
+        textColor: () => {
+          return route.name === 'aboutUs' ? 'primary' : 'on-bottom-menu-color'
+        },
+      },
+      {
         label: 'Профиль',
         icon: 'fa-light fa-user',
         semanticLabel: 'profile',
@@ -159,25 +177,15 @@ const buttons = computed(
             : 'on-bottom-menu-color'
         },
       },
-      {
-        label: 'О нас',
-        semanticLabel: 'company_profile',
-        icon: 'fa-light fa-building ',
-        click: () => {
-          closeDialogs()
-          void router.push({
-            name: 'aboutUs',
-          })
-        },
-        textColor: () => {
-          return route.name === 'aboutUs' ? 'primary' : 'on-bottom-menu-color'
-        },
-      },
     ]
   }
 )
 
 const openQrPage = () => {
+  if (!authentication.user) {
+    store.authModal = true
+    return
+  }
   void router.push({
     name: 'myQrPage',
   })
