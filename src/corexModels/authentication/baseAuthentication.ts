@@ -153,8 +153,6 @@ export class BaseAuthentication {
     Object.assign(api.defaults.headers, {
       [this.settings.companyGroupHeader.key]: v,
     })
-
-    // LocalStorage.set(this.settings.companyGroupHeader.key, v);
   }
 
   async validateTokens(): Promise<void> {

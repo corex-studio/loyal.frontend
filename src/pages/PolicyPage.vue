@@ -685,7 +685,7 @@
                 id="owner-privacy-url-value"
                 class="link mark owner-privacy-url-field"
                 data-scroll-to="#owner-privacy-url-field"
-                >https://loyal.corex.studio/policy</span
+                >https://loyal.corex.studio/{{ externalId }}/policy</span
               >.
             </div>
           </div>
@@ -698,16 +698,18 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo';
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const route = useRoute();
-const loader = ref(false);
+const route = useRoute()
+const loader = ref(false)
+const externalId = ref()
 
 onMounted(async () => {
-  loader.value = true;
-  await uiSettingsRepo.fetchSettings(String(route.params.externalId));
-  loader.value = false;
-});
+  loader.value = true
+  externalId.value = String(route.params.externalId)
+  await uiSettingsRepo.fetchSettings(externalId.value)
+  loader.value = false
+})
 </script>
