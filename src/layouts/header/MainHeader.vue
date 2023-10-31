@@ -3,7 +3,7 @@
     <div class="c-container full-height column">
       <div style="height: 60px" class="row no-wrap items-center">
         <div
-          class="col-sm-5 col-md-3 col-lg-3 col-xs-5 no-wrap row cursor-pointer items-center gap-5"
+          class="no-wrap row cursor-pointer items-center gap-5 pr-lg-35 pr-md-20 pr-sm-10 pr-xs-10"
           @click="$router.push({ name: 'home' })"
         >
           <img
