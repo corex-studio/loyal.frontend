@@ -3,7 +3,7 @@
     <div class="c-container full-height column">
       <div style="height: 60px" class="row no-wrap items-center">
         <div
-          class="col-sm-5 col-md-3 col-lg-2 col-xs-5 no-wrap row cursor-pointer items-center gap-5"
+          class="col-sm-5 col-md-3 col-lg-3 col-xs-5 no-wrap row cursor-pointer items-center gap-5"
           @click="$router.push({ name: 'home' })"
         >
           <img
@@ -24,7 +24,6 @@
           <ServiceSettingsSkeleton v-if="authentication.loading" />
           <template v-if="!$q.screen.lt.md">
             <CButton
-              v-if="$news.items.length"
               @click="scrollToBlock('offers', 'Новости')"
               class="body pl-10"
               label="Новости"
@@ -32,7 +31,6 @@
               text-color="on-background-color"
             />
             <CButton
-              v-if="$promotion.items.length"
               @click="scrollToBlock('offers', 'Акции')"
               class="body"
               label="Акции"
