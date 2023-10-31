@@ -11,13 +11,11 @@
       additional ? '' : 'margin-left: -10px',
     ]"
     style="max-width: 150px"
-    :class="[
-      item.id === $menuGroup.elementInViewport && isHomePage && !additional
-        ? 'bg-button-color text-on-button-color'
-        : 'text-on-background-color',
-      additional ? 'py-2 px-3' : 'py-4 px-5',
-    ]"
+    :class="[additional ? 'py-2 px-3' : 'py-4 px-5']"
   >
+    <!-- item.id === $menuGroup.elementInViewport && isHomePage && !additional
+        ? 'bg-button-color text-on-button-color'
+        : 'text-on-background-color', -->
     {{ item.name }}
   </div>
 </template>
