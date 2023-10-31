@@ -251,6 +251,8 @@ import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettings
 import { companyRepo } from 'src/models/company/companyRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { menuRepo } from 'src/models/menu/menuRepo'
+import { authentication } from 'src/models/authentication/authentication'
+import { store } from 'src/models/store'
 
 const route = useRoute()
 
@@ -334,6 +336,10 @@ const currentSize = computed(() => {
 // }
 
 const addToCart = async () => {
+  if (!authentication.user) {
+    store.authModal = true
+    return
+  }
   if (!cartRepo.item && salesPointRepo.item) {
     // companyRepo.item = salesPointRepo.item.company
     await companyRepo.retrieve(
