@@ -451,6 +451,7 @@ import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue
 import { store } from 'src/models/store'
 import { CartType } from 'src/models/carts/cart'
 import { companyRepo } from 'src/models/company/companyRepo'
+import { authentication } from 'src/models/authentication/authentication'
 
 export type ServiceModes = 'create' | 'select' | 'bookingInfo'
 
@@ -504,7 +505,8 @@ const availableCartTypes = computed(() => {
   if (
     companyRepo.cartCompany?.salesPoints?.some(
       (v) => v.settings.booking_enabled
-    )
+    ) &&
+    authentication.user
   ) {
     result.push({
       label: 'Бронирование',
@@ -540,12 +542,16 @@ watch(
   (v) => {
     if (v) {
       bookingMode.value = 'bookingInfo'
-      void deliveryAddressRepo.list().then(() => {
-        selectCurrentAddress()
-        if (availableCartTypes.value.length) {
-          currentTab.value = availableCartTypes.value[0].type
-        }
-      })
+      if (authentication.user) {
+        void deliveryAddressRepo.list().then(() => {
+          selectCurrentAddress()
+          if (availableCartTypes.value.length) {
+            currentTab.value = availableCartTypes.value[0].type
+          }
+        })
+      } else {
+        currentTab.value = availableCartTypes.value[0].type
+      }
     }
   }
 )
@@ -587,12 +593,12 @@ const selectAddress = async () => {
       })
       return
     }
-
-    await cartRepo.setParams({
-      sales_point: res[0].salesPoint,
-      type: 'delivery',
-      delivery_address: selectedAddress.value?.id,
-    })
+    if (authentication.user)
+      await cartRepo.setParams({
+        sales_point: res[0].salesPoint,
+        type: 'delivery',
+        delivery_address: selectedAddress.value?.id,
+      })
 
     await store.loadCatalog(res[0].salesPoint)
 
@@ -601,10 +607,11 @@ const selectAddress = async () => {
     currentTab.value === CartType.PICKUP &&
     selectedPickupAddress.value
   ) {
-    await cartRepo.setParams({
-      sales_point: selectedPickupAddress.value,
-      type: 'pickup',
-    })
+    if (authentication.user)
+      await cartRepo.setParams({
+        sales_point: selectedPickupAddress.value,
+        type: 'pickup',
+      })
     await store.loadCatalog(selectedPickupAddress.value)
 
     emit('update:modelValue', false)
