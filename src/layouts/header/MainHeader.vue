@@ -3,15 +3,20 @@
     <div class="c-container full-height column">
       <div style="height: 60px" class="row no-wrap items-center">
         <div
-          class="col-sm-5 col-md-3 col-lg-2 col-xs-5 row cursor-pointer"
+          class="col-sm-5 col-md-3 col-lg-2 col-xs-5 no-wrap row cursor-pointer items-center gap-5"
           @click="$router.push({ name: 'home' })"
         >
           <img
             v-if="$uiSettings.item?.logo?.thumbnail"
             height="50"
+            style="object-fit: cover"
+            width="50"
+            class="border-radius"
             :src="$uiSettings.item?.logo?.thumbnail"
           />
-          <div v-else class="header">Loyalhub</div>
+          <div class="header2">
+            {{ $companyGroup.item?.name }}
+          </div>
         </div>
         <div class="col-grow row gap-15 body">
           <ServiceSettingsBlock v-if="authentication.user" />
