@@ -30,7 +30,6 @@
         }"
         style="padding-bottom: 50px"
       >
-        <!-- {{ $route.name }} -->
         <router-view />
         <CartDrawer />
       </q-page-container>
