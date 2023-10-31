@@ -542,8 +542,9 @@ watch(
       bookingMode.value = 'bookingInfo'
       void deliveryAddressRepo.list().then(() => {
         selectCurrentAddress()
-        if (availableCartTypes.value.length)
+        if (availableCartTypes.value.length) {
           currentTab.value = availableCartTypes.value[0].type
+        }
       })
     }
   }

@@ -178,7 +178,7 @@
           class="body text-primary"
         >
           <template v-if="!$menuItem.loadings.retrieve">
-            {{ currentSize?.characteristics.weight }} г
+            {{ currentSize?.characteristics.weight.toFixed(2) }} г
           </template>
           <q-skeleton v-else width="100px" />
         </div>
