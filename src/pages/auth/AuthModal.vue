@@ -47,6 +47,7 @@
         v-if="currentStep === 1"
         input-class="header3 text-on-input-color input"
         height="50px"
+        class="pb-11 px-5"
         outlined
         mask="+7 (###) ###-##-##"
         unmasked-value
