@@ -23,6 +23,11 @@
   line-height: 39.2px;
 }
 
+.huge {
+  font-size: 48px;
+  line-height: 60px;
+}
+
 .header2 {
   font-size: 22px;
   font-weight: 500;
@@ -118,6 +123,11 @@ body.screen--md {
     line-height: 36.4px;
   }
 
+  .huge {
+    font-size: 40px;
+    line-height: 50px;
+  }
+
   .subtitle-text {
     font-weight: 500;
     font-size: 13px;
@@ -146,6 +156,11 @@ body.screen--sm {
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
+  }
+
+  .huge {
+    font-size: 38px;
+    line-height: 46px;
   }
 
   .header2 {
@@ -196,6 +211,11 @@ body.screen--xs {
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
+  }
+
+  .huge {
+    font-size: 30px;
+    line-height: 38px;
   }
 
   .header2 {
