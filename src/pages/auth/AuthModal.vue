@@ -47,7 +47,6 @@
         v-if="currentStep === 1"
         input-class="header3 text-on-input-color input"
         height="50px"
-        class="pb-11 px-5"
         outlined
         mask="+7 (###) ###-##-##"
         unmasked-value
@@ -61,7 +60,7 @@
           width="200px"
           style="overflow-x: hidden"
           :class="data.sms.length ? 'center-content' : ''"
-          class="mb-11 sms-field"
+          class="pb-11 px-10 sms-field"
           standout
           mask="####"
         />
