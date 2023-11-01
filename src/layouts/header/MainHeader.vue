@@ -31,7 +31,7 @@
             :src="$uiSettings.item?.logo?.thumbnail"
           />
         </div>
-        <div class="col-grow row gap-15 body">
+        <div class="col-grow row items-center gap-15 body">
           <ServiceSettingsBlock v-if="authentication.user" />
           <ServiceSettingsSkeleton v-if="authentication.loading" />
           <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
@@ -61,9 +61,17 @@
           </template>
           <div
             v-else
-            class="row no-wrap gap-10 col-lg-8 col-xl-7 col-md-9 justify-between"
+            class="row no-wrap gap-10 justify-between"
+            :class="
+              authentication.user
+                ? 'col-lg-6 col-xl-7 col-md-7'
+                : 'col-lg-8 col-xl-7 col-md-9'
+            "
           >
-            <div class="row gap-6 no-wrap">
+            <div
+              v-if="authentication.user ? $q.screen.gt.md : $q.screen.gt.sm"
+              class="row gap-6 no-wrap"
+            >
               <CIcon name="fa-light fa-phone" color="red" />
               <div class="column gap-1 no-wrap">
                 <div class="bold mt-1">+7 (401) 292-13-20</div>
@@ -72,7 +80,9 @@
                 </div>
               </div>
             </div>
-            <template v-if="$q.screen.gt.sm">
+            <template
+              v-if="authentication.user ? $q.screen.gt.md : $q.screen.gt.sm"
+            >
               <div class="row gap-6 no-wrap">
                 <CIcon name="fa-light fa-clock" color="red" />
                 <div class="column gap-1 no-wrap">
