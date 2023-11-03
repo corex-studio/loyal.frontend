@@ -163,10 +163,12 @@ onMounted(async () => {
   if (!newsRepo.items.length)
     void newsRepo.list({
       company_group: companyGroupRepo.item?.id,
+      active: true,
     })
   if (!promotionsRepo.items.length)
     void promotionsRepo.list({
       company_group: companyGroupRepo.item?.id,
+      active: true,
     })
 
   void store.loadCatalog(
