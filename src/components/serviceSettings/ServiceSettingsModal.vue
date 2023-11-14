@@ -274,7 +274,7 @@
                   <div
                     style="min-height: 29px"
                     @click="selectedPickupAddress = el.id || null"
-                    class="row no-wrap justify-between full-width cursor-pointer items-center"
+                    class="row no-wrap justify-between gap-3 full-width cursor-pointer items-center"
                   >
                     <div
                       :class="{
@@ -282,7 +282,7 @@
                           el.id === $cart.item?.salesPoint?.id &&
                           $cart.item?.type === CartType.PICKUP,
                       }"
-                      class="col-11 pr-5"
+                      class="col"
                     >
                       {{ el.customAddress || el.address }}
                     </div>
@@ -317,7 +317,7 @@
                   <div
                     style="min-height: 29px"
                     @click="selectedSalesPoint = el.id || null"
-                    class="row justify-between no-wrap full-width cursor-pointer items-center"
+                    class="row justify-between gap-3 no-wrap full-width cursor-pointer items-center"
                   >
                     <div
                       :class="{
@@ -325,7 +325,7 @@
                           el.id === $cart.item?.salesPoint?.id &&
                           $cart.item?.type === CartType.BOOKING,
                       }"
-                      class="col-11 pr-5"
+                      class="col"
                     >
                       {{ el.customAddress || el.address }}
                     </div>

@@ -200,7 +200,7 @@
         </div>
 
         <div
-          class="row items-center gap-sm-15 gap-xs-8"
+          class="row items-center gap-sm-15 gap-xs-10"
           :class="[
             { 'mt-15': currentSize?.modifierGroups?.length },
             { 'justify-between': $q.screen.xs },
