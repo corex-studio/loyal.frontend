@@ -70,7 +70,7 @@
     </div> -->
     <template v-if="!$salesPoint.menuLoading && $menu.item?.groups">
       <div
-        v-for="(el, index) in $menu.item.groups"
+        v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
         :key="index"
         class="full-width pt-18"
         :id="el.id"

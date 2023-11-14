@@ -24,6 +24,7 @@ import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 import { ref, onMounted, computed } from 'vue'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { useRoute, useRouter } from 'vue-router'
+
 const groupElement = ref<Element | null>(null)
 
 const route = useRoute()
