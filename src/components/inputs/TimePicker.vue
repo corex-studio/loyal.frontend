@@ -21,6 +21,7 @@
             width: 100px;
           "
           @mousewheel="hourScrollHandler"
+          @scroll="hourScrollHandler"
           ref="hourScrollElement"
         >
           <div
@@ -39,6 +40,7 @@
         </div>
         <div
           @mousewheel="minutesScrollHandler"
+          @scroll="minutesScrollHandler"
           class="column gap-5 no-wrap items-end hide-scroll-bar container"
           style="
             overflow: scroll;
@@ -206,7 +208,6 @@ const hourScrollHandler = (event: any) => {
     })
   }
 
-  // setTimeout(() => {
   if (!hourScrollElement.value) return
 
   currentHour.value = Math.round(
@@ -214,7 +215,6 @@ const hourScrollHandler = (event: any) => {
       hourScrollElement.value.scrollHeight
   )
   updateTime()
-  // })
 }
 
 const minutesScrollHandler = (event: any) => {
@@ -228,7 +228,6 @@ const minutesScrollHandler = (event: any) => {
     })
   }
 
-  // setTimeout(() => {
   if (!minutesScrollElement.value) return
 
   currentMinutes.value =
@@ -239,7 +238,6 @@ const minutesScrollHandler = (event: any) => {
       ) + 1
     ]
   updateTime()
-  // })
 }
 </script>
 
