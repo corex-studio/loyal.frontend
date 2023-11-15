@@ -452,6 +452,7 @@ import { store } from 'src/models/store'
 import { CartType } from 'src/models/carts/cart'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { authentication } from 'src/models/authentication/authentication'
+import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 
 export type ServiceModes = 'create' | 'select' | 'bookingInfo'
 
@@ -622,6 +623,7 @@ const selectAddress = async () => {
     //   type: 'booking',
     // });
   }
+  menuGroupRepo.elementsInViewport = []
 }
 </script>
 
