@@ -1,8 +1,6 @@
 <template>
   <div
-    v-if="
-      !$q.screen.xs || (authentication.user && $cart.item) || $store.tableMode
-    "
+    v-if="!$q.screen.xs || $store.tableMode"
     class="row full-width bg-background-color"
   >
     <div
