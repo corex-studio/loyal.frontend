@@ -1,12 +1,11 @@
 <template>
   <div
     class="full-width"
-    style="gap: 20px"
     :style="`display: grid; grid-template-columns:  ${
       products && $q.screen.width < 415
         ? 'repeat(auto-fill, minmax(175px, 1fr));'
         : `repeat(${columns}, minmax(0, 1fr))`
-    }`"
+    }; ${$q.screen.xs ? 'gap: 14px' : 'gap: 20px'} `"
   >
     <div v-for="(item, index) in items" :key="index">
       <slot name="item" v-bind:item="item"></slot>

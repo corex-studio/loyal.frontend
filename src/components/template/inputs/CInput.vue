@@ -11,8 +11,8 @@
         externalLabelClass
           ? externalLabelClass
           : _rounded
-          ? 'mb-4 secondary-text ml-6'
-          : 'mb-4 secondary-text',
+          ? 'mb-4 helper-text ml-6'
+          : 'mb-4 helper-text',
         { 'readonly-label': readonly },
       ]"
       class="bold"

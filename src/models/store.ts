@@ -9,6 +9,7 @@ import { reactive } from 'vue'
 
 export class Store {
   salesPoint = 'd253cd53-044b-468d-8881-232f43715f5e'
+  tableMode = false
   companyGroup = 'corex_demo'
   institution = '4a1d27e8-281e-42c5-95cc-6331a2e4cffa'
   authModal = false

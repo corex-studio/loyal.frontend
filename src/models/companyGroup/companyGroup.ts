@@ -1,8 +1,10 @@
+import { ImageRaw } from './../image/image'
 import { SalesPointRaw } from './../salesPoint/salesPoint'
 import { Company, CompanyRaw } from './../company/company'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { Contact } from '../types'
 import { store } from '../store'
+import { Image } from '../image/image'
 
 export enum BankType {
   SBER = 'sber',
@@ -163,6 +165,7 @@ export type CompanyGroupRaw = {
   enable_order_sending: boolean
   companies: CompanyRaw[]
   contacts: Contact
+  image?: ImageRaw | null
 }
 
 export class CompanyGroup implements BaseModel {
@@ -173,6 +176,7 @@ export class CompanyGroup implements BaseModel {
   enableOrderSending: boolean
   companies: Company[]
   contacts: Contact
+  image: Image | null
 
   constructor(raw: CompanyGroupRaw) {
     this.id = raw.uuid || ''
@@ -184,6 +188,7 @@ export class CompanyGroup implements BaseModel {
       ? raw.companies.map((v) => new Company(v))
       : []
     this.contacts = raw.contacts
+    this.image = raw.image ? new Image(raw.image) : null
   }
 
   get currentCompany() {

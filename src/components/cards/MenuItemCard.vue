@@ -1,14 +1,17 @@
 <template>
   <div
-    style="height: 320px; overflow: overlay"
-    class="bg-product-tile-color box-shadow border-radius column no-wrap cursor-pointer"
-    @click="
-      $router.push({ name: 'menuItemPage', params: { menuItemId: item.id } })
+    style="
+      height: 100%;
+
+      overflow: overlay;
+      overflow-x: hidden;
     "
+    class="bg-product-tile-color box-shadow border-radius column no-wrap cursor-pointer"
+    @click="openMenuItemPage(item)"
   >
     <q-img
+      height="100%"
       :src="item.image?.thumbnail || $store.images.empty"
-      height="210px"
       fit="cover"
     >
       <template v-slot:error>
@@ -16,7 +19,7 @@
           <q-img
             class="user-image"
             fit="cover"
-            height="210px"
+            height="100%"
             :src="$store.images.empty"
           ></q-img>
         </span>
@@ -38,8 +41,21 @@
 </template>
 <script lang="ts" setup>
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
+import { store } from 'src/models/store'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 defineProps<{
   item: MenuItem
 }>()
+
+const openMenuItemPage = (v: MenuItem) => {
+  void router.push({
+    name: store.tableMode ? 'qrMenuItemPage' : 'menuItemPage',
+    params: {
+      menuItemId: v.id,
+    },
+  })
+}
 </script>

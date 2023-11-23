@@ -76,9 +76,9 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue'
 
-const emit = defineEmits(['click']);
+const emit = defineEmits(['click'])
 
 const props = defineProps({
   ripple: {
@@ -135,92 +135,92 @@ const props = defineProps({
   ellipsis: Number,
   iconGap: [Number, String],
   labelLineHeight: String,
-});
+})
 
-const _hover = ref(false);
+const _hover = ref(false)
 
 const iconGap_ = computed(() => {
-  if (props.iconNoGutters) return '0';
-  if (!props.iconGap) return '3';
+  if (props.iconNoGutters) return '0'
+  if (!props.iconGap) return '3'
   if (Number.isNaN(Number(props.iconGap)))
     console.warn(
       'Icon gap prop expected number or numerical string, got string'
-    );
-  return props.iconGap;
-});
+    )
+  return props.iconGap
+})
 
 const _color = computed(() => {
   // return _hover.value && props.hoverColor ? props.hoverColor : props.textButton ? 'tranparent' : props.color
   if (_hover.value && props.hoverColor) {
-    return props.hoverColor;
+    return props.hoverColor
   } else if (props.textButton) {
-    return 'transparent';
+    return 'transparent'
   } else if (_hover.value && props.color === 'primary') {
-    return 'primary';
+    return 'primary'
   } else if (_hover.value && props.color === 'primary') {
-    return 'primary';
+    return 'primary'
   } else {
-    return props.color;
+    return props.color
   }
-});
+})
 
 const _textColor = computed(() => {
   if (_hover.value && props.hoverTextColor) {
-    return props.hoverTextColor;
+    return props.hoverTextColor
   } else if (_hover.value && props.color === 'secondary1') {
-    return 'primary';
+    return 'primary'
   } else if (_hover.value && props.textButton) {
-    return 'primary';
+    return 'primary'
   } else {
-    return props.textColor;
+    return props.textColor
   }
-});
+})
 
 const _height = computed(() => {
-  let height;
+  let height
   if (props.textButton && !props.height) {
-    height = 'unset';
+    height = 'unset'
   } else if (!props.height) {
-    height = '42px';
+    height = '42px'
   } else {
-    height = props.height;
+    height = props.height
   }
   if (
     height !== 'unset' &&
     height.slice(height.length - 2, height.length) !== 'px'
   ) {
-    return (height += 'px');
+    return (height += 'px')
   } else {
-    return height;
+    return height
   }
-});
+})
 
 const _width = computed(() => {
-  let width = props.textButton ? 'unset' : props.width;
+  let width = props.textButton ? 'unset' : props.width
   if (props.block) {
-    return '100%';
+    return '100%'
   }
-  if (width === 'inherit') return width;
+  if (width === 'inherit') return width
   if (
     width !== 'unset' &&
     width !== 'auto' &&
     width.slice(width.length - 2, width.length) !== 'px' &&
     width.slice(width.length - 1) !== '%'
   ) {
-    return (width += 'px');
+    return (width += 'px')
   } else {
-    return width;
+    return width
   }
-});
+})
 
 const _disabled = computed(() => {
-  if (props.disabled) return true;
-  else return null;
-});
+  if (props.disabled) return true
+  else return null
+})
 
 const clickHandler = () => {
-  emit('click');
-};
+  emit('click')
+}
 </script>
 
 <style lang="scss">

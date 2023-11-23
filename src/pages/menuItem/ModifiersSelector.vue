@@ -1,13 +1,13 @@
 <template>
   <div
     :class="{ 'box-shadow': modifiersMenu }"
-    class="row bg-backing-color border-radius text-on-backing-color cursor-pointer py-6"
+    class="row bg-selector-color border-radius text-on-selector-color cursor-pointer py-6"
   >
     <div class="row no-wrap items-center justify-between full-width px-7">
       <div class="body">{{ item.name }}</div>
       <CIcon
         name="fa-light fa-angle-down"
-        color="on-backing-color"
+        color="on-selector-color"
         size="24px"
         :style="`${modifiersMenu ? 'transform: rotateZ(180deg);' : ''}`"
         style="transition: 0.2s"

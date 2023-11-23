@@ -1,10 +1,10 @@
-import BaseRepo from 'src/corexModels/apiModels/baseRepo';
-import { reactive } from 'vue';
-import { Authentication } from './auth';
-import { authenticationApi } from './authApi';
+import BaseRepo from 'src/corexModels/apiModels/baseRepo'
+import { reactive } from 'vue'
+import { Authentication } from './auth'
+import { authenticationApi } from './authApi'
 
 export class AuthenticationRepo extends BaseRepo<Authentication> {
-  api = authenticationApi;
+  api = authenticationApi
   // availableCustomers: Customer[] = []
   // currentUser: Customer = this.availableCustomers[0]
 
@@ -21,4 +21,4 @@ export class AuthenticationRepo extends BaseRepo<Authentication> {
   // }
 }
 
-export const authRepo = reactive(new AuthenticationRepo());
+export const authRepo = reactive(new AuthenticationRepo())

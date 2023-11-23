@@ -11,12 +11,24 @@ export enum PaymentType {
   CASH = 'cash',
   CARD = 'card',
   ONLINE = 'online',
+  PAY_LATER = 'pay_later',
+  NET_MONET = 'net_monet',
+}
+
+export enum PaymentStatusType {
+  NOT_PAID = 'not_paid',
+  FULL_PAID = 'full_paid',
+  PART_PAID = 'part_paid',
+  REFUND = 'refund',
+  WAITING = 'waiting',
 }
 
 export const paymentTypeNames = {
   [PaymentType.CASH]: 'Наличными',
-  [PaymentType.CARD]: 'Картой курьеру',
+  [PaymentType.CARD]: 'Картой',
   [PaymentType.ONLINE]: 'Онлайн',
+  [PaymentType.PAY_LATER]: 'Внести в счет',
+  [PaymentType.NET_MONET]: 'netmonet',
 }
 
 export const paymentTypes = Object.keys(paymentTypeNames).map((el) => {
@@ -137,7 +149,7 @@ export type OrderItemRaw = {
 }
 
 export type OrderRaw = {
-  uuid: number | undefined
+  uuid: string | undefined
   sales_point: SalesPointRaw
   type: string
   customer: CustomerRaw
@@ -164,7 +176,7 @@ export type OrderRaw = {
 }
 
 export class Order implements BaseModel {
-  id: number | undefined
+  id: string | undefined
   salesPoint: SalesPoint
   type: string
   customer: Customer
@@ -220,9 +232,70 @@ export class Order implements BaseModel {
   }
 
   get getPaymentStatus() {
-    if (this.paymentStatus === 'not_paid') return 'Не оплачен'
-    else if (this.paymentStatus === 'full_paid') return 'Полностью оплачен'
-    else return 'Возвращен'
+    if (this.paymentStatus === PaymentStatusType.NOT_PAID)
+      return {
+        color: 'gray-light',
+        label: 'Не оплачен',
+        textColor: 'black',
+      }
+    if (this.paymentStatus === PaymentStatusType.FULL_PAID)
+      return {
+        color: 'green',
+        label: 'Оплачен',
+        textColor: 'white',
+      }
+    if (this.paymentStatus === PaymentStatusType.WAITING)
+      return {
+        color: 'yellow',
+        label: 'В ожидании',
+        textColor: 'black',
+      }
+    if (this.paymentStatus === PaymentStatusType.REFUND)
+      return {
+        color: 'red',
+        label: 'Возвращен',
+        textColor: 'white',
+      }
+    if (this.paymentStatus === PaymentStatusType.PART_PAID)
+      return {
+        color: 'primary',
+        label: 'Частично оплачен',
+        textColor: 'white',
+      }
+  }
+
+  get getPaymentType() {
+    const type = this.paymentType
+    if (type === PaymentType.ONLINE)
+      return {
+        label: 'Онлайн',
+        icon: 'fa-light fa-mobile',
+        color: 'success',
+      }
+    if (type === PaymentType.CARD)
+      return {
+        label: 'Картой курьеру',
+        icon: 'fa-light fa-credit-card',
+        color: 'primary',
+      }
+    if (type === PaymentType.CASH)
+      return {
+        label: 'Наличными',
+        icon: 'fa-light fa-coin',
+        color: 'accent2',
+      }
+    if (type === PaymentType.NET_MONET)
+      return {
+        label: 'net monet',
+        icon: 'fa-light fa-diagram-project',
+        color: 'danger',
+      }
+    if (type === PaymentType.PAY_LATER)
+      return {
+        label: 'Оплата позже',
+        icon: 'fa-light fa-timer',
+        color: 'gray-dark',
+      }
   }
 
   get orderStatus() {

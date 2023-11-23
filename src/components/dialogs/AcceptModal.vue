@@ -7,15 +7,19 @@
     <div class="header3 text-center mb-10 px-10 text-on-background-color">
       Вы подтверждаете действие?
     </div>
-    <div class="row gap-10 flex-center">
+    <div class="row gap-sm-10 gap-xs-5 flex-center">
       <CButton
         label="Отменить"
         @click="$emit('update:modelValue', false)"
         color="secondary-button-color"
         text-color="on-secondary-button-color"
-        width="46%"
+        :width="$q.screen.xs ? '100%' : '46%'"
       />
-      <CButton label="Подтвердить" @click="acceptHandler" width="46%" />
+      <CButton
+        label="Подтвердить"
+        @click="acceptHandler"
+        :width="$q.screen.xs ? '100%' : '46%'"
+      />
     </div>
   </CDialog>
 </template>

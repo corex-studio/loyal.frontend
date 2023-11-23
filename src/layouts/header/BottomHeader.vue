@@ -1,24 +1,35 @@
 <template>
   <div
-    v-if="!$q.screen.xs || (authentication.user && $cart.item)"
+    v-if="!$q.screen.xs || $store.tableMode"
     class="row full-width bg-background-color"
   >
     <div
-      :class="$q.screen.xs ? 'justify-end' : 'justify-between'"
-      class="row no-wrap c-container pt-5 pb-4 body items-center gap-10"
+      :class="$q.screen.xs ? ' full-width' : 'justify-between '"
+      class="row no-wrap pt-5 pb-4 body items-center gap-10 c-container"
     >
-      <div v-if="!$q.screen.xs" class="row gap-14 no-wrap items-center">
+      <div
+        v-if="!$q.screen.xs || $store.tableMode"
+        class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
+        :style="
+          $q.screen.xs
+            ? 'overflow-x: scroll; scroll-behavior: smooth;'
+            : undefined
+        "
+      >
         <template v-if="categories && !$salesPoint.menuLoading">
           <div
-            v-for="(el, index) in categories.filter((_, ind) =>
-              $q.screen.sm ? ind < 5 : ind < 8
-            )"
+            v-for="(el, index) in $q.screen.xs
+              ? categories
+              : categories.filter((_, ind) =>
+                  $q.screen.sm ? ind < 5 : ind < 8
+                )"
             :key="index"
+            ref="groupButtons"
           >
             <GroupButton :key="key" :item="el" />
           </div>
           <div
-            v-if="categories.length > 8"
+            v-if="categories.length > 8 && !$q.screen.xs"
             class="row no-wrap cursor-pointer text-on-background-color"
           >
             Еще
@@ -81,21 +92,38 @@ import GroupButton from './GroupButton.vue'
 import { useRoute } from 'vue-router'
 import { authentication } from 'src/models/authentication/authentication'
 import { menuRepo } from 'src/models/menu/menuRepo'
+import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import { useQuasar } from 'quasar'
 
 const key = ref(0)
 
 const moreCategoriesMenu = ref(false)
 
+const q = useQuasar()
+
 const route = useRoute()
+
+const groupButtons = ref<Element[]>([])
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
 })
 
 watch(
+  () => menuGroupRepo.elementsInViewport[0],
+  (v) => {
+    if (menuGroupRepo.scrollingToGroup || !q.screen.xs) return
+    const foundElementIndex = categories.value?.findIndex((el) => el.id === v)
+    if (foundElementIndex !== undefined && foundElementIndex > -1) {
+      groupButtons.value[foundElementIndex].scrollIntoView({})
+    }
+  }
+)
+
+watch(
   () => route.name,
   (v) => {
-    if (v === 'home') {
+    if (v === 'home' || v === 'qrHome') {
       key.value++
     }
   }

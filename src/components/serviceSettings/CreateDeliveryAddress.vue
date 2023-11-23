@@ -35,7 +35,6 @@
       </div>
       <CInput
         placeholder="Комментарий"
-        class="rounded-10"
         input-style="border-radius: 15px !important"
         v-model="newAddress.description"
         text-area

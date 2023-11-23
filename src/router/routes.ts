@@ -50,11 +50,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/profile/ProfilePage.vue'),
       },
       {
-        path: '',
-        name: 'testPage',
-        component: () => import('pages/IndexPage.vue'),
-      },
-      {
         path: 'menu',
         name: 'menuPage',
         component: () => import('src/pages/MenuPage.vue'),
@@ -83,6 +78,32 @@ const routes: RouteRecordRaw[] = [
         path: 'my_qr',
         name: 'myQrPage',
         component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue'),
+      },
+    ],
+  },
+  {
+    path: '/:companyGroup/qr_menu/:padId',
+    component: () => import('src/layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'qrHome',
+        component: () => import('src/pages/qrMenu/home/QRHome.vue'),
+      },
+      {
+        path: 'menu_item/:menuItemId',
+        name: 'qrMenuItemPage',
+        component: () => import('src/pages/menuItem/MenuItemPage.vue'),
+      },
+      {
+        path: 'current_order',
+        name: 'currentOrderPage',
+        component: () => import('src/pages/qrMenu/order/QRCurrentOrder.vue'),
+      },
+      {
+        path: 'order_review',
+        name: 'orderReviewPage',
+        component: () => import('src/pages/qrMenu/order/QROrderReview.vue'),
       },
     ],
   },

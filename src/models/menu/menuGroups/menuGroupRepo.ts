@@ -6,6 +6,7 @@ import { Image, ImageRaw } from 'src/models/image/image'
 
 export class MenuGroupRepo extends BaseRepo<MenuGroup> {
   elementsInViewport: string[] = []
+  scrollingToGroup = false
   api = menuGroupApi
 
   async setImage(

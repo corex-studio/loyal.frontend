@@ -1,7 +1,19 @@
 <template>
   <template v-if="ready">
     <PrepareUiSettings />
-    <q-layout view="lHh Lpr lFf" class="bg-background-color pb-xs-27 pb-sm-0">
+    <q-layout
+      view="lHh Lpr lFf"
+      class="bg-background-color pb-sm-0"
+      :class="
+        $store.tableMode
+          ? $cart.item?.cartItems.length
+            ? 'pb-xs-40'
+            : 'pb-xs-27'
+          : 'pb-xs-27'
+      "
+    >
+      <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+
       <div
         ref="header"
         style="position: sticky; top: 0px; z-index: 99"
@@ -13,10 +25,14 @@
       >
         <template v-if="!$q.screen.xs">
           <MainHeader />
-          <BottomHeader />
         </template>
+
+        <BottomHeader
+          v-if="$store.tableMode ? $route.name === 'qrHome' : true"
+        />
         <div class="full-width" v-if="$q.screen.lt.sm">
-          <MobileMenu />
+          <MobileMenu v-if="!$store.tableMode" />
+          <QRMobileMenu v-else-if="$pad.item?.isEnabled" />
         </div>
       </div>
       <q-page-container
@@ -28,17 +44,22 @@
         :class="{
           'c-container':
             $route.name !== 'home' &&
+            $route.name !== 'qrHome' &&
             !routesWithoutContainerPaddings.some((v) =>
               $route.path.includes(v)
             ),
         }"
         style="padding-bottom: 50px"
       >
+        <!-- {{ $cart.item }} -->
+        <!-- {{ $route.name }} -->
+        <!-- {{ $menuGroup.elementsInViewport }} -->
+
         <router-view />
         <CartDrawer />
       </q-page-container>
 
-      <q-footer>
+      <q-footer v-if="!$store.tableMode">
         <CFooter
           ref="footer"
           class="full-width"
@@ -87,10 +108,20 @@ import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
 import { Company } from 'src/models/company/company'
 import { companyRepo } from 'src/models/company/companyRepo'
 import CFooter from './footer/CFooter.vue'
+import { padRepo } from 'src/models/pads/padRepo'
+import { api } from 'src/boot/axios'
+import { waiterCallRepo } from 'src/models/customer/waiterCall/waiterCallRepo'
+import { orderRepo } from 'src/models/order/orderRepo'
+import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
+import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 
-const routesWithoutContainerPaddings = ['promotion']
+const routesWithoutContainerPaddings = [
+  'promotion',
+  'current_order',
+  'order_review',
+]
 
 const q = useQuasar()
 const route = useRoute()
@@ -106,11 +137,22 @@ watch(
   () => authentication.user?.id,
   (v) => {
     if (!v) return
-
     webSocket.value = new WebSocket(`wss://loyalhub.ru/ws/customers/${v}/`)
-
     webSocket.value.onmessage = (event) => {
       handleMessage(event)
+    }
+  }
+)
+
+watch(
+  () => padRepo.item?.id,
+  (v) => {
+    if (!v) return
+    if (store.tableMode) {
+      webSocket.value = new WebSocket(`wss://loyalhub.ru/ws/pads/${v}/`)
+      webSocket.value.onmessage = (event) => {
+        handleMessage(event)
+      }
     }
   }
 )
@@ -139,49 +181,74 @@ onMounted(async () => {
   window.addEventListener('scroll', () => {
     store.verticalScroll = window.scrollY
   })
+  if (route.path.includes('qr_menu')) {
+    store.tableMode = true
+  }
   salesPointRepo.menuLoading = true
-  store.getCompanyGroup(String(route.params.companyGroup))
   setBodyScrollClass()
-  await companyGroupRepo.current()
-  await uiSettingsRepo.fetchSettings()
-  void appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
 
-  setTimeout(() => {
-    headerHeight.value = header.value?.clientHeight || 0
-    footerHeight.value = footer.value?.clientHeight || 0
-    document.addEventListener('resize', () => {
+  if (!store.tableMode) {
+    store.getCompanyGroup(String(route.params.companyGroup))
+    await companyGroupRepo.current()
+    await uiSettingsRepo.fetchSettings()
+    await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
+
+    setTimeout(() => {
       headerHeight.value = header.value?.clientHeight || 0
       footerHeight.value = footer.value?.clientHeight || 0
-    })
-  }, 50)
+      document.addEventListener('resize', () => {
+        headerHeight.value = header.value?.clientHeight || 0
+        footerHeight.value = footer.value?.clientHeight || 0
+      })
+    }, 50)
 
-  try {
-    await authentication.validateTokens()
-    await authentication.me()
-    await cartRepo.current()
-  } catch {
-    authentication.loading = false
-    ready.value = true
+    try {
+      await authentication.validateTokens()
+      await authentication.me()
+      await cartRepo.current()
+    } catch {
+      authentication.loading = false
+      ready.value = true
+    }
+
+    if (!newsRepo.items.length)
+      void newsRepo.list({
+        company_group: companyGroupRepo.item?.id,
+        active: true,
+      })
+    if (!promotionsRepo.items.length)
+      void promotionsRepo.list({
+        company_group: companyGroupRepo.item?.id,
+        active: true,
+      })
+
+    void store.loadCatalog(
+      cartRepo.item
+        ? cartRepo.item?.salesPoint
+        : companyGroupRepo.item?.companies[0]?.salesPoints
+        ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
+        : ''
+    )
+  } else {
+    Object.assign(api.defaults.headers, {
+      ['User-Role']: 'pad_manager',
+    })
+    Object.assign(api.defaults.headers, {
+      ['Company-Group']: route.params.companyGroup,
+    })
+    await padRepo.retrieve(String(route.params.padId))
+    if (!padRepo.item?.companyGroup) return
+    await companyGroupRepo.retrieve(padRepo.item.companyGroup)
+    store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
+    await uiSettingsRepo.fetchSettings()
+    await store.loadCatalog(padRepo.item?.salesPoint?.id || '')
+    await waiterCallRepo.list({
+      pad: padRepo.item.id,
+    })
+    waiterCallRepo.item = waiterCallRepo.items[0]
+    await orderRepo.current(padRepo.item)
+    await cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
   }
-
-  if (!newsRepo.items.length)
-    void newsRepo.list({
-      company_group: companyGroupRepo.item?.id,
-      active: true,
-    })
-  if (!promotionsRepo.items.length)
-    void promotionsRepo.list({
-      company_group: companyGroupRepo.item?.id,
-      active: true,
-    })
-
-  void store.loadCatalog(
-    cartRepo.item
-      ? cartRepo.item?.salesPoint
-      : companyGroupRepo.item?.companies[0]?.salesPoints
-      ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
-      : ''
-  )
 
   ready.value = true
 })
