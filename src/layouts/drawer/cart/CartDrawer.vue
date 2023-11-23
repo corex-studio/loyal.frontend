@@ -78,31 +78,37 @@
                 <div class="text-primary body">К оплате</div>
               </div>
               <div class="text-primary body">
-                {{ $cart.item?.discountedTotalSum }} ₽
+                {{ $cart.item?.discountedTotalSum.toFixed(2) }} ₽
               </div>
             </div>
           </div>
           <CartOutput
             v-else
-            @payment-selected="makeAnOrder($event)"
+            @payment-selected="currentPaymentType = $event"
             :show-payment-types="selectPaymentType"
           />
         </template>
         <div v-else class="px-10">Корзина пуста</div>
       </div>
+
       <div
-        v-if="$cart.item?.cartItems.length && !selectPaymentType"
+        v-if="
+          ($cart.item?.cartItems.length && !selectPaymentType) ||
+          $cart.arrangeLoading
+        "
         class="row full-width justify-center bg-background-color py-8"
         style="position: sticky; bottom: 0"
       >
         <CButton
           @click="toNextStep()"
-          :loading="cartRepo.loading"
+          :loading="cartRepo.loading || $cart.arrangeLoading || loading"
           class="body"
-          :disable="!isArrangeDisabled"
+          :disable="!isArrangeEnabled"
           height="50px"
           style="min-width: 261px"
-          >{{ `Оформить заказ ${$cart.item?.discountedTotalSum} ₽` }}</CButton
+          >{{
+            `Оформить заказ ${$cart.item?.discountedTotalSum.toFixed(2)} ₽`
+          }}</CButton
         >
       </div>
     </q-drawer>
@@ -129,21 +135,33 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { PaymentType } from 'src/models/order/order'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
+import { padRepo } from 'src/models/pads/padRepo'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { orderRepo } from 'src/models/order/orderRepo'
+import { useRouter } from 'vue-router'
 
 const cartMode = ref<'cart' | 'output'>('cart')
 
 const selectPaymentType = ref(false)
 
+const router = useRouter()
+
+const currentPaymentType = ref<PaymentType | null>(null)
+
 const acceptModal = ref(false)
+
+const loading = ref(false)
 
 const drawerBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px !important`
 })
 
-const isArrangeDisabled = computed(() => {
+const isArrangeEnabled = computed(() => {
   return (
     cartMode.value === 'cart' ||
-    (cartRepo.item?.deliveryTime && cartRepo.item.cartItems.length)
+    (store.tableMode
+      ? !!currentPaymentType.value
+      : cartRepo.item?.deliveryTime && cartRepo.item.cartItems.length)
   )
 })
 
@@ -196,6 +214,7 @@ const toNextStep = async () => {
   } else {
     await selectDeliveryDate()
     selectPaymentType.value = true
+    await makeAnOrder()
   }
 }
 
@@ -221,36 +240,58 @@ const selectDeliveryDate = async () => {
   }
 }
 
-const makeAnOrder = async (paymentType: PaymentType) => {
+const makeAnOrder = async () => {
   try {
+    loading.value = true
+    const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
+    if (!status) {
+      Notify.create({
+        message: 'В данный момент невозможно оформить заказ',
+        color: 'danger',
+      })
+      return
+    }
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
-        type: paymentType,
+        type: currentPaymentType.value,
         payment_service:
-          paymentType === PaymentType.CASH
+          currentPaymentType.value === PaymentType.CASH ||
+          currentPaymentType.value === PaymentType.PAY_LATER
             ? undefined
-            : paymentType === PaymentType.CARD
+            : currentPaymentType.value === PaymentType.CARD
             ? 'card'
             : 'web_form',
       },
+      pad: store.tableMode ? padRepo.item?.id : undefined,
     })
     cartMode.value = 'cart'
-    cartRepo.item = null
+    if (store.tableMode) {
+      await cartRepo.current(
+        padRepo.item?.salesPoint?.id,
+        padRepo.item || undefined
+      )
+      void router.push({
+        name: 'currentOrderPage',
+      })
+    } else {
+      cartRepo.item = null
+    }
     if (order.paymentUrl) {
       window.open(order.paymentUrl, '_blank')
     }
     Notify.create({
       message: 'Заказ успешно оформлен',
     })
-    cartRepo.item = null
-    // await cartRepo.current(order.salesPoint.id)
+    orderRepo.item = order
   } catch {
     cartRepo.arrangeLoading = false
     Notify.create({
       message: 'Ошибка при оформлении заказа',
       color: 'danger',
     })
+  } finally {
+    loading.value = false
   }
 }
 

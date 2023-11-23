@@ -1,7 +1,11 @@
 <template>
   <div>
     <div
-      v-if="$companyGroup.item && $companyGroup.item.companies.length > 1"
+      v-if="
+        $companyGroup.item &&
+        $companyGroup.item.companies.length > 1 &&
+        !$store.tableMode
+      "
       class="row border-radius gap-md-20 gap-sm-10 gap-xs-5 items-center mt-sm-20 mt-md-25 mt-xs-15"
     >
       <div class="row no-wrap items-center gap-8 pr-10">
@@ -39,7 +43,9 @@
 
       <CButton @click="changeCompany()" label="Выбрать другое заведение" />
     </div>
-    <div v-else class="header mt-18">{{ $menu.item?.name }}</div>
+    <!-- <div v-else class="header" :class="$store.tableMode ? 'mt-5' : 'mt-18'">
+      {{ $menu.item?.name }}
+    </div> -->
     <!-- <div class="row full-width mt-10 gap-10">
       <div
         @click="selectCompany(el)"
@@ -72,7 +78,7 @@
       <div
         v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
         :key="index"
-        class="full-width pt-18"
+        class="full-width pt-sm-18 pt-xs-10"
         :id="el.id"
       >
         <div class="header2 mb-10">
@@ -80,7 +86,6 @@
         </div>
         <div v-if="el.items.length" class="row full-width">
           <GridContainer
-            products
             :items="el.items"
             :lg="6"
             :xl="6"

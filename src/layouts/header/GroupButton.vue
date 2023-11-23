@@ -8,7 +8,7 @@
           ? 'transition: background-color 0.4s ease-out'
           : 'transition: background-color 0.3s ease-out'
         : '',
-      additional ? '' : 'margin-left: -10px',
+      additional ? '' : !$q.screen.xs ? 'margin-left: -10px' : '',
     ]"
     style="max-width: 150px"
     :class="[
@@ -23,11 +23,11 @@
 </template>
 <script lang="ts" setup>
 import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
 import { useIntersectionObserver } from '@vueuse/core'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import { store } from 'src/models/store'
 
 const groupElement = ref()
 
@@ -35,38 +35,30 @@ const route = useRoute()
 
 const router = useRouter()
 
-const visible = ref()
+let timeout: NodeJS.Timeout | null = null
 
 const props = defineProps<{
   item: MenuGroup
   additional?: boolean
 }>()
 
-useIntersectionObserver(
-  groupElement,
-  ([{ isIntersecting }]) => {
-    if (isIntersecting) {
-      if (!menuGroupRepo.elementsInViewport.includes(props.item.id))
-        menuGroupRepo.elementsInViewport.push(props.item.id)
-    } else {
-      const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
-        (el) => el === props.item.id
-      )
-      if (elementIndex > -1)
-        menuGroupRepo.elementsInViewport.splice(elementIndex, 1)
+watch(
+  () => route.name,
+  (v) => {
+    if (v === 'home' || v === 'qrHome') {
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        startScrollMonitoring()
+      }, 500)
     }
-    visible.value = isIntersecting
-  },
-  {
-    rootMargin: '-100px',
   }
 )
 
 const clickHandler = (v: MenuGroup) => {
-  if (route.name === 'home') {
+  if (route.name === 'home' || route.name === 'qrHome') {
     void scrollToGroup(v)
   } else {
-    void router.push({ name: 'home' }).then(() => {
+    void router.push({ name: store.tableMode ? 'qrHome' : 'home' }).then(() => {
       setTimeout(() => {
         void scrollToGroup(v)
       }, 500)
@@ -79,6 +71,7 @@ const scrollToGroup = (v: MenuGroup) => {
   if (groupElement.value) {
     const y =
       groupElement.value.getBoundingClientRect().top + window.scrollY - 100
+    menuGroupRepo.scrollingToGroup = true
     window.scrollTo({ top: y, behavior: 'smooth' })
 
     setTimeout(() => {
@@ -92,16 +85,40 @@ const scrollToGroup = (v: MenuGroup) => {
             (_, index) => index !== elementIndex
           ),
         ]
+      menuGroupRepo.scrollingToGroup = false
     }, 600)
   }
 }
 
 const isHomePage = computed(() => {
-  return route.name === 'home'
+  return route.name === 'home' || route.name === 'qrHome'
 })
+
+const startScrollMonitoring = () => {
+  useIntersectionObserver(
+    groupElement,
+    ([{ isIntersecting }]) => {
+      if (isIntersecting) {
+        if (!menuGroupRepo.elementsInViewport.includes(props.item.id))
+          menuGroupRepo.elementsInViewport.push(props.item.id)
+      } else {
+        const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
+          (el) => el === props.item.id
+        )
+        if (elementIndex > -1)
+          menuGroupRepo.elementsInViewport.splice(elementIndex, 1)
+      }
+    },
+    {
+      rootMargin: '-100px',
+    }
+  )
+}
 
 onMounted(() => {
   groupElement.value = document.getElementById(props.item.id)
+
+  startScrollMonitoring()
 
   // visible.value = useElementVisibility(groupElement)
 

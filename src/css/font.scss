@@ -3,6 +3,11 @@
   font-family: 'Rubik', sans-serif;
 }
 
+.bottom-bar-text {
+  font-size: 12px;
+  line-height: 19px;
+}
+
 .bold {
   font-weight: 500 !important;
   .q-field__label {
@@ -70,6 +75,12 @@
   .q-btn {
     @extend .body;
   }
+}
+
+.helper-text {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 15.85px;
 }
 
 .secondary-text {
@@ -215,6 +226,12 @@ body.screen--xs {
     font-weight: 500;
     font-size: 20px;
     line-height: 24px;
+  }
+
+  .header3 {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 26.4px;
   }
 
   .huge {

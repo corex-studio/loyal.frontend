@@ -29,6 +29,6 @@ const showBonuses = computed(() => {
 })
 
 onMounted(() => {
-  menuGroupRepo.elementInViewport = null
+  menuGroupRepo.elementsInViewport = []
 })
 </script>

@@ -28,7 +28,7 @@
   <div
     :style="$q.screen.lt.md ? '' : 'min-height: 640px'"
     :class="$q.screen.xs ? 'column' : 'no-wrap row justify-between'"
-    class="full-width relative-position items-start text-on-background-color mt-xs-5"
+    class="full-width relative-position items-start text-on-background-color"
   >
     <q-img
       v-if="!$menuItem.loadings.retrieve"
@@ -186,12 +186,11 @@
           v-if="$menuItem.item && $menuItem.item.sizes.length > 1"
           class="relative-position"
         >
-          <TabPicker
-            @update-tab="currentTab = $event"
-            :tabs="$menuItem.item.sizes.map((v) => v.name)"
-            :model-value="currentSize?.name"
-          >
-          </TabPicker>
+          <ItemSizeSelector
+            :sizes="$menuItem.item.sizes"
+            :model-value="currentSize || undefined"
+            @update-tab="currentSize = $event"
+          />
         </div>
       </div>
       <div :style="$q.screen.xs ? '' : 'max-width: 456px'">
@@ -207,13 +206,18 @@
           ]"
         >
           <ChangeAmount background-color="white" v-model="quantity" />
+          <div
+            v-if="$store.tableMode && !$pad.item?.settings.orders_enabled"
+            class="full-width text-danger"
+          >
+            Оформление заказов временно недоступно
+          </div>
           <CButton
             @click="addToCart()"
-            text-color="on-primary"
             :class="{ 'col-grow': !$q.screen.xs }"
             height="50px"
             :loading="loading"
-            :style="$q.screen.xs ? 'max-width: 280px; width: 100%' : ''"
+            :style="$q.screen.xs ? ' width: 100%' : ''"
             :disabled="isAddToCardDisabled"
             icon="fa-light fa-shopping-cart"
             label="Добавить в корзину"
@@ -232,7 +236,6 @@
   />
 </template>
 <script lang="ts" setup>
-import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { onMounted, ref, computed } from 'vue'
@@ -245,7 +248,7 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import ModifiersSelector from './ModifiersSelector.vue'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
-import { nutritionsNames } from 'src/models/menu/menu'
+import { ItemSize, nutritionsNames } from 'src/models/menu/menu'
 import { sum } from 'lodash'
 import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import { companyRepo } from 'src/models/company/companyRepo'
@@ -253,6 +256,9 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { authentication } from 'src/models/authentication/authentication'
 import { store } from 'src/models/store'
+import { padRepo } from 'src/models/pads/padRepo'
+import ItemNotFoundModal from './ItemNotFoundModal.vue'
+import ItemSizeSelector from './ItemSizeSelector.vue'
 
 const route = useRoute()
 
@@ -262,16 +268,16 @@ const cartConfigureModal = ref(false)
 
 const quantity = ref(1)
 
-const currentTab = ref<string | null>(null)
-
 const itemNotFoundModal = ref(false)
 
 const loading = ref(false)
 
+const currentSize = ref<ItemSize | null>(null)
+
 onMounted(() => {
   void menuItemRepo.retrieve(String(route.params.menuItemId)).then(() => {
-    currentTab.value = menuItemRepo.item?.sizes[0]
-      ? menuItemRepo.item?.sizes[0].name
+    currentSize.value = menuItemRepo.item?.sizes[0]
+      ? menuItemRepo.item?.sizes[0]
       : null
   })
 })
@@ -299,19 +305,14 @@ const cartModalCloseHandler = () => {
 
 const isAddToCardDisabled = computed(() => {
   return (
+    (store.tableMode && !padRepo.item?.settings.orders_enabled) ||
     currentSize.value?.modifierGroups?.some(
       (v) =>
         v.restrictions?.min_quantity &&
         sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity
-    ) || !quantity.value
+    ) ||
+    !quantity.value
   )
-  // _.sum(item.items.map((el) => el.quantity))
-  // ? item.items.find((v) => v.quantity)?.name
-  // : 'Обязательно к выбору'
-})
-
-const currentSize = computed(() => {
-  return menuItemRepo.item?.sizes.find((v) => v.name == currentTab.value)
 })
 
 // const changeQuantity = async (v: number) => {
@@ -336,7 +337,7 @@ const currentSize = computed(() => {
 // }
 
 const addToCart = async () => {
-  if (!authentication.user) {
+  if (!authentication.user && !store.tableMode) {
     store.authModal = true
     return
   }
@@ -371,13 +372,12 @@ const addToCart = async () => {
       })
       quantity.value = 1
       loading.value = false
-      Notify.create({
-        message: 'Успешно добавлено в корзину',
-      })
+      // Notify.create({
+      //   message: 'Успешно добавлено в корзину',
+      // })
     } catch (e) {
       loading.value = false
 
-      console.log(e)
       Notify.create({
         message: 'Ошибка при добавлении в корзину',
         color: 'danger',

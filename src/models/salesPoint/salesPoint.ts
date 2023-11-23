@@ -62,6 +62,8 @@ export type PaymentSettings = {
     online: string
   }
   update_on_parent_change?: boolean
+  net_monet_enabled: boolean
+  pay_later_enabled: boolean
 }
 
 export type SalesPointRaw = {

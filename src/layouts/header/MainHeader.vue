@@ -112,7 +112,7 @@
           > -->
 
           <CButton
-            v-if="!authentication.loading"
+            v-if="!authentication.loading && !$store.tableMode"
             @click="profileButtonClickHandler()"
             class="box-shadow"
             height="33px"

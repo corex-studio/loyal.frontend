@@ -1,3 +1,12 @@
+import {
+  OrderReviewRepo,
+  orderReviewRepo,
+} from './../models/order/orderReview/orderReviewRepo'
+import {
+  WaiterCallRepo,
+  waiterCallRepo,
+} from './../models/customer/waiterCall/waiterCallRepo'
+import { PadRepo, padRepo } from './../models/pads/padRepo'
 import { customerRepo, CustomerRepo } from './../models/customer/customerRepo'
 import {
   AppSettingsRepo,
@@ -71,6 +80,9 @@ declare module '@vue/runtime-core' {
     $company: CompanyRepo
     $appSettings: AppSettingsRepo
     $customer: CustomerRepo
+    $pad: PadRepo
+    $waiterCall: WaiterCallRepo
+    $orderReview: OrderReviewRepo
   }
 }
 
@@ -94,4 +106,7 @@ export default boot(({ app }) => {
   app.config.globalProperties.$company = companyRepo
   app.config.globalProperties.$appSettings = appSettingsRepo
   app.config.globalProperties.$customer = customerRepo
+  app.config.globalProperties.$pad = padRepo
+  app.config.globalProperties.$waiterCall = waiterCallRepo
+  app.config.globalProperties.$orderReview = orderReviewRepo
 })

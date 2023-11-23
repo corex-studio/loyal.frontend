@@ -12,6 +12,20 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
 
   paymentTypes: AvailablePaymentType[] = []
 
+  async status(sales_point?: string): Promise<boolean> {
+    const res: {
+      sales_point: {
+        order_creation_available: boolean
+      }
+    } = await this.api.send({
+      method: 'GET',
+      action: 'status',
+      id: sales_point,
+    })
+
+    return res.sales_point.order_creation_available
+  }
+
   async getExternalPaymentTypes() {
     const res: {
       results: AvailablePaymentType[]
