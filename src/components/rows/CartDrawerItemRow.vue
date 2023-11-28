@@ -1,13 +1,13 @@
 <template>
   <template v-if="cartItem">
     <div class="row full-width items-center no-wrap gap-sm-5 gap-xs-4">
-      <CIcon
+      <!-- <CIcon
         @click="$emit('delete')"
         class="cursor-pointer"
         hover-color="primary"
         color="on-background-color"
         name="fa-light fa-xmark "
-      />
+      /> -->
       <q-img
         class="rounded-5"
         :src="cartItem.size.image?.thumbnail || $store.images.empty"
@@ -78,7 +78,6 @@
 </template>
 <script lang="ts" setup>
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
-import CIcon from '../template/helpers/CIcon.vue'
 import ChangeAmount from '../inputs/ChangeAmount.vue'
 import { ref, onMounted, watch } from 'vue'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
@@ -93,7 +92,7 @@ const props = defineProps<{
   item: CartItem
 }>()
 
-defineEmits(['delete'])
+const emit = defineEmits(['delete'])
 
 onMounted(() => {
   cartItem.value = props.item
@@ -107,7 +106,10 @@ watch(
 )
 
 const updateQuantity = async (v: number) => {
-  if (!v) return
+  if (!v) {
+    emit('delete')
+    return
+  }
   if (!cartItem.value) return
   cartItem.value.quantity = v
   try {

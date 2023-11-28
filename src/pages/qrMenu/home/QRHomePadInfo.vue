@@ -12,7 +12,7 @@
       <q-avatar>
         <q-img
           fit="cover"
-          :src="$salesPoint.item?.image?.thumbnail || $store.images.empty"
+          :src="$companyGroup.item?.image?.thumbnail || $store.images.empty"
         >
           <template v-slot:error>
             <q-img fit="cover" :src="$store.images.empty"></q-img> </template

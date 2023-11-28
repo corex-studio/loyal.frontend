@@ -1,13 +1,16 @@
 <template>
   <div class="bg-backing-color">
-    <q-separator />
+    <q-separator v-if="!$q.screen.xs && $route.name !== 'menuItemPage'" />
     <div class="pb-md-10" style="bottom: 0; z-index: 2100">
       <div class="c-container" v-if="$q.screen.gt.sm">
         <div class="footer-wrap secondary-text row items-center pt-15">
           <FooterDesktop />
         </div>
       </div>
-      <div class="footer-wrap py-10 px-10 row" v-else>
+      <div
+        class="footer-wrap py-10 px-10 row"
+        v-else-if="$route.name !== 'menuItemPage' || $q.screen.sm"
+      >
         <FooterMobile />
       </div>
     </div>

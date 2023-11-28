@@ -6,7 +6,7 @@ import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { onMounted, ref } from 'vue'
 
 const borderRadius = ref<string>('15px')
-const primaryColor = ref<string>('#ed772f')
+const primaryColor = ref<string>('#000')
 const onPrimaryColor = ref<string>('#000')
 
 const accentColor = ref<string>('#fdffb7')

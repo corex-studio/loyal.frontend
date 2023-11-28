@@ -17,11 +17,7 @@
       <div
         ref="header"
         style="position: sticky; top: 0px; z-index: 99"
-        :style="
-          $store.verticalScroll > 45
-            ? 'box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.06)'
-            : ''
-        "
+        :class="{ 'box-shadow': $store.verticalScroll > 45 }"
       >
         <template v-if="!$q.screen.xs">
           <MainHeader />
@@ -30,9 +26,13 @@
         <BottomHeader
           v-if="$store.tableMode ? $route.name === 'qrHome' : true"
         />
-        <div class="full-width" v-if="$q.screen.lt.sm">
-          <MobileMenu v-if="!$store.tableMode" />
-          <QRMobileMenu v-else-if="$pad.item?.isEnabled" />
+        <div v-if="$q.screen.lt.sm" class="full-width">
+          <MobileMenu
+            v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
+          />
+          <QRMobileMenu
+            v-else-if="$pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'"
+          />
         </div>
       </div>
       <q-page-container
@@ -121,6 +121,7 @@ const routesWithoutContainerPaddings = [
   'promotion',
   'current_order',
   'order_review',
+  'menu_item',
 ]
 
 const q = useQuasar()
@@ -236,18 +237,22 @@ onMounted(async () => {
     Object.assign(api.defaults.headers, {
       ['Company-Group']: route.params.companyGroup,
     })
+    void uiSettingsRepo.fetchSettings()
+
     await padRepo.retrieve(String(route.params.padId))
     if (!padRepo.item?.companyGroup) return
     await companyGroupRepo.retrieve(padRepo.item.companyGroup)
     store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
-    await uiSettingsRepo.fetchSettings()
-    await store.loadCatalog(padRepo.item?.salesPoint?.id || '')
-    await waiterCallRepo.list({
-      pad: padRepo.item.id,
-    })
-    waiterCallRepo.item = waiterCallRepo.items[0]
-    await orderRepo.current(padRepo.item)
-    await cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
+    void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
+    void waiterCallRepo
+      .list({
+        pad: padRepo.item.id,
+      })
+      .then(() => {
+        waiterCallRepo.item = waiterCallRepo.items[0]
+      })
+    void orderRepo.current(padRepo.item)
+    void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
   }
 
   ready.value = true

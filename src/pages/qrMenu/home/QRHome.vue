@@ -1,9 +1,7 @@
 <template>
   <template v-if="$pad.item?.isEnabled">
-    <div class="column">
-      <div class="no-wrap column text-on-background-color">
-        <HomeMenus class="c-container" />
-      </div>
+    <div class="no-wrap column text-on-background-color">
+      <HomeMenus class="c-container" />
     </div>
   </template>
   <div
