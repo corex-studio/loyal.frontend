@@ -1,11 +1,6 @@
 <template>
   <div
-    style="
-      height: 100%;
-
-      overflow: overlay;
-      overflow-x: hidden;
-    "
+    style="height: 100%; overflow: overlay; overflow-x: hidden"
     class="bg-product-tile-color box-shadow border-radius column no-wrap cursor-pointer"
     @click="openMenuItemPage(item)"
   >
@@ -16,12 +11,7 @@
     >
       <template v-slot:error>
         <span>
-          <q-img
-            class="user-image"
-            fit="cover"
-            height="100%"
-            :src="$store.images.empty"
-          ></q-img>
+          <q-img fit="cover" height="100%" :src="$store.images.empty"></q-img>
         </span>
       </template>
     </q-img>

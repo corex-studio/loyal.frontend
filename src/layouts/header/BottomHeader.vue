@@ -105,6 +105,8 @@ const route = useRoute()
 
 const groupButtons = ref<Element[]>([])
 
+const initWatcher = ref(false)
+
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
 })
@@ -112,10 +114,15 @@ const categories = computed(() => {
 watch(
   () => menuGroupRepo.elementsInViewport[0],
   (v) => {
+    if (!initWatcher.value) {
+      initWatcher.value = true
+      return
+    }
+
     if (menuGroupRepo.scrollingToGroup || !q.screen.xs) return
     const foundElementIndex = categories.value?.findIndex((el) => el.id === v)
     if (foundElementIndex !== undefined && foundElementIndex > -1) {
-      groupButtons.value[foundElementIndex].scrollIntoView({})
+      groupButtons.value[foundElementIndex].scrollIntoView()
     }
   }
 )

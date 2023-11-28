@@ -1,7 +1,6 @@
 <template>
   <div
-    :class="{ 'box-shadow': modifiersMenu }"
-    class="row bg-selector-color border-radius text-on-selector-color cursor-pointer py-6"
+    class="row bg-selector-color border-radius text-on-selector-color cursor-pointer py-6 box-shadow"
   >
     <div class="row no-wrap items-center justify-between full-width px-7">
       <div class="body">{{ item.name }}</div>

@@ -14,7 +14,7 @@
       <div class="column pb-20">
         <div
           style="height: 60px"
-          class="row no-wrap items-center bg-modal-header-color text-on-modal-header-color px-10 justify-between mb-10"
+          class="row no-wrap items-center text-on-background-color px-10 justify-between mb-10"
         >
           <div class="row items-center no-wrap gap-5">
             <div
@@ -49,12 +49,12 @@
               @click="acceptModal = true"
             />
 
-            <div class="bg-white-opacity box-shadow py-4 px-5 border-radius">
+            <!-- <div class="bg-white-opacity box-shadow py-4 px-5 border-radius">
               <CIcon
                 color="on-secondary-button-color"
                 name="fa-light fa-shopping-cart"
               />
-            </div>
+            </div> -->
           </div>
         </div>
         <template v-if="$cart.item?.cartItems.length">
@@ -66,7 +66,7 @@
               <q-separator v-if="index" class="my-5" color="divider-color" />
               <CartDrawerItemRow @delete="deleteCartItem(item)" :item="item" />
             </template>
-            <div
+            <!-- <div
               class="row box-shadow border-radius bg-background-color pa-10 mt-15 justify-between items-center"
             >
               <div class="row gap-5 items-center no-wrap">
@@ -80,7 +80,7 @@
               <div class="text-primary body">
                 {{ $cart.item?.discountedTotalSum.toFixed(2) }} ₽
               </div>
-            </div>
+            </div> -->
           </div>
           <CartOutput
             v-else
@@ -96,7 +96,7 @@
           ($cart.item?.cartItems.length && !selectPaymentType) ||
           $cart.arrangeLoading
         "
-        class="row full-width justify-center bg-background-color py-8"
+        class="row full-width justify-center bg-background-color py-8 pl-xs-5 pr-xs-3 pr-sm-0 pl-sm-0"
         style="position: sticky; bottom: 0"
       >
         <CButton
@@ -106,6 +106,7 @@
           :disable="!isArrangeEnabled"
           height="50px"
           style="min-width: 261px"
+          :width="$q.screen.xs ? '100%' : undefined"
           >{{
             `Оформить заказ ${$cart.item?.discountedTotalSum.toFixed(2)} ₽`
           }}</CButton

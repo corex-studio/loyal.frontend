@@ -11,25 +11,25 @@
           "
           @click="$router.push({ name: 'home' })"
         >
-          <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
-            <img
-              v-if="$uiSettings.item?.logo?.thumbnail"
-              height="50"
-              style="object-fit: cover"
-              width="50"
-              class="border-radius"
-              :src="$uiSettings.item?.logo?.thumbnail"
-            />
-            <div class="header2">
-              {{ $companyGroup.item?.name }}
-            </div>
-          </template>
+          <!-- <template> -->
           <img
-            v-else
-            style="object-fit: contain"
-            width="170"
+            v-if="$uiSettings.item?.logo?.thumbnail"
+            height="50"
+            style="object-fit: cover"
+            width="50"
+            class="border-radius"
             :src="$uiSettings.item?.logo?.thumbnail"
           />
+          <div class="header2">
+            {{ $companyGroup.item?.name }}
+          </div>
+          <!-- </template> -->
+          <!-- <img
+            v-else
+            style="object-fit: contain"
+            width="126"
+            :src="$uiSettings.item?.logo?.thumbnail"
+          /> -->
         </div>
         <div class="col-grow row items-center gap-15 body">
           <ServiceSettingsBlock v-if="authentication.user" />
