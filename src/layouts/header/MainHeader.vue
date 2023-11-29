@@ -11,18 +11,15 @@
           "
           @click="$router.push({ name: 'home' })"
         >
-          <!-- <template> -->
           <img
             v-if="$uiSettings.item?.logo?.thumbnail"
-            height="50"
-            style="object-fit: cover"
-            width="50"
-            class="border-radius"
+            height="42"
+            style="object-fit: contain"
             :src="$uiSettings.item?.logo?.thumbnail"
           />
-          <div class="header2">
+          <!-- <div class="header2">
             {{ $companyGroup.item?.name }}
-          </div>
+          </div> -->
           <!-- </template> -->
           <!-- <img
             v-else

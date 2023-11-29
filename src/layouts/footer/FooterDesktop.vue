@@ -2,14 +2,17 @@
   <div id="footer" class="row full-width">
     <div class="column col-8 justify-between">
       <div class="row gap-40">
-        <div v-if="$menu.item?.groups?.length" class="column">
+        <div
+          v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
+          class="column"
+        >
           <div class="bold mb-10 text-on-backing-color">Меню</div>
           <div class="row gap-25">
             <div class="column gap-7">
               <div
-                v-for="(item, index) in $menu.item.groups.filter(
-                  (_, ind) => ind < 10
-                )"
+                v-for="(item, index) in $menu.item.groups
+                  .filter((el) => el.items.length)
+                  .filter((_, ind) => ind < 10)"
                 :key="index"
               >
                 <CButton
