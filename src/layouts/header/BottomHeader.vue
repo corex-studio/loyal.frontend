@@ -4,8 +4,11 @@
     class="row full-width bg-background-color"
   >
     <div
-      :class="$q.screen.xs ? ' full-width' : 'justify-between '"
-      class="row no-wrap pt-5 pb-4 body items-center gap-10 c-container"
+      :class="[
+        $q.screen.xs ? ' full-width' : 'justify-between',
+        { 'pt-5 pb-4': $cart.item || categories?.length },
+      ]"
+      class="row no-wrap body items-center gap-10 c-container"
     >
       <div
         v-if="!$q.screen.xs || $store.tableMode"
