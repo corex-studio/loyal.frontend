@@ -270,20 +270,18 @@ const resultRows = computed(() => {
     },
   ]
   if (!store.tableMode) {
-    res.splice(
-      2,
-      0,
-      {
+    if (cartRepo.item?.walletPayments.length) {
+      res.splice(res.length, 0, {
         label: 'Списать баллов',
         icon: 'fa-light fa-piggy-bank',
         value: usedPoints.value ? '—' + usedPoints.value : 0,
-      },
-      {
-        label: 'Доставка',
-        icon: 'fa-light fa-truck',
-        value: cartRepo.item?.deliveryPrice,
-      }
-    )
+      })
+    }
+    res.splice(res.length, 0, {
+      label: 'Доставка',
+      icon: 'fa-light fa-truck',
+      value: cartRepo.item?.deliveryPrice,
+    })
   }
   return res
 })
