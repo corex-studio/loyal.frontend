@@ -18,11 +18,11 @@
     <div
       class="px-6 py-8 column justify-between col-grow text-on-product-tile-color"
     >
-      <div class="body mb-5 ellipsis-2-lines">
+      <div style="height: 42px" class="body ellipsis-2-lines">
         {{ item.name }}
       </div>
 
-      <div class="header3 text-on-product-tile-color">
+      <div class="header3 text-on-product-tile-color mt-2">
         {{ item.sizes[0].price }}
         ₽
       </div>
