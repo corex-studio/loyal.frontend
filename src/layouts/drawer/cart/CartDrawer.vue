@@ -92,10 +92,7 @@
       </div>
 
       <div
-        v-if="
-          ($cart.item?.cartItems.length && !selectPaymentType) ||
-          $cart.arrangeLoading
-        "
+        v-if="$cart.item?.cartItems.length || $cart.arrangeLoading"
         class="row full-width justify-center bg-background-color py-8 pl-xs-5 pr-xs-3 pr-sm-0 pl-sm-0"
         style="position: sticky; bottom: 0"
       >
@@ -212,9 +209,11 @@ const deleteCartItem = async (item: CartItem) => {
 const toNextStep = async () => {
   if (cartMode.value === 'cart') {
     cartMode.value = 'output'
-  } else {
+  } else if (!selectPaymentType.value) {
     await selectDeliveryDate()
     selectPaymentType.value = true
+    if (store.tableMode) await makeAnOrder()
+  } else {
     await makeAnOrder()
   }
 }

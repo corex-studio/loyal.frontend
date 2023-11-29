@@ -10,7 +10,7 @@
         : '',
       additional ? '' : !$q.screen.xs ? 'margin-left: -10px' : '',
     ]"
-    style="max-width: 150px"
+    style="max-width: 180px"
     :class="[
       additional ? 'py-2 px-3' : 'py-4 px-5',
       item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional

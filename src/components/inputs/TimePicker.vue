@@ -1,5 +1,10 @@
 <template>
-  <CInput :model-value="date" :external-label="label" default :height="height">
+  <CInput
+    :model-value="date || 'Не указано'"
+    :external-label="label"
+    default
+    :height="height"
+  >
     <q-menu
       v-model="menu"
       style="overflow: hidden"
