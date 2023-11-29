@@ -184,4 +184,13 @@ body.screen--sm {
     padding-right: 10px;
   }
 }
+
+body.screen--xs {
+  .swiper :deep(.swiper.swiper-initialized.swiper-horizontal) {
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
 </style>
