@@ -112,7 +112,7 @@
           class="full-width"
           external-label="Способ оплаты"
           :items="paymentTypes"
-          height="35px"
+          :height="$q.screen.lt.md ? '35px' : '50px'"
           v-model="selectedPaymentType"
           @update:model-value="$emit('paymentSelected', $event.type)"
         />
@@ -369,7 +369,7 @@ const setDeliveryTime = (v: string | null) => {
   const today = moment().format('DD.MM.YYYY')
   const tomorrow = moment().add(1, 'day').format('DD.MM.YYYY')
   if (v === 'error') {
-    cartRepo.item.deliveryTime = 'Не указано'
+    cartRepo.item.deliveryTime = null
   } else {
     if (currentDay.value === 'Сегодня') {
       cartRepo.item.deliveryTime = [today, v].join(' ')

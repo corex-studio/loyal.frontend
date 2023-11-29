@@ -110,11 +110,11 @@ const profileBreadcrumbClickHandler = () => {
 }
 
 onMounted(() => {
-  // if (q.screen.gt.xs) {
-  //   router.replace({
-  //     name: 'profileData',
-  //   })
-  // }
+  if (q.screen.gt.xs && route.name === 'profilePage') {
+    router.replace({
+      name: 'profileData',
+    })
+  }
   if (!authentication.user) void router.push({ name: 'home' })
   if (companyGroupRepo.item && companyGroupRepo.item?.companies.length < 2) {
     companyRepo.companyForProfile = companyRepo.item
