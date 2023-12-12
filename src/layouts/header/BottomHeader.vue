@@ -1,7 +1,10 @@
 <template>
+  <!-- :class="{ 'box-shadow': $store.verticalScroll > 56 }" -->
+
   <div
     v-if="!$q.screen.xs || $store.tableMode"
-    class="row full-width bg-background-color"
+    class="row full-width bg-background-color sticky-block"
+    ref="bottomHeader"
   >
     <div
       :class="[
@@ -90,13 +93,15 @@
 <script setup lang="ts">
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import GroupButton from './GroupButton.vue'
 import { useRoute } from 'vue-router'
 import { authentication } from 'src/models/authentication/authentication'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { useQuasar } from 'quasar'
+
+const bottomHeader = ref<Element | null>(null)
 
 const key = ref(0)
 
@@ -138,4 +143,24 @@ watch(
     }
   }
 )
+
+onMounted(() => {
+  const observer = new IntersectionObserver(
+    ([e]) => e.target.classList.toggle('isSticky', e.intersectionRatio < 1),
+    { threshold: [1] }
+  )
+  if (bottomHeader.value) observer.observe(bottomHeader.value)
+})
 </script>
+
+<style lang="scss" scoped>
+.sticky-block {
+  position: sticky;
+  top: -1px;
+  z-index: 1;
+  transition: 0.3s ease;
+}
+.sticky-block.isSticky {
+  box-shadow: var(--box-shadow);
+}
+</style>

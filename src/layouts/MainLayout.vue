@@ -15,18 +15,14 @@
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
       <TopHeader />
 
-      <div
-        ref="header"
-        style="position: sticky; top: 0px; z-index: 99"
-        :class="{ 'box-shadow': $store.verticalScroll > 56 }"
-      >
+      <div ref="header">
         <template v-if="!$q.screen.xs">
           <MainHeader />
         </template>
 
-        <BottomHeader
+        <!-- <BottomHeader
           v-if="$store.tableMode ? $route.name === 'qrHome' : true"
-        />
+        /> -->
         <div v-if="$q.screen.lt.sm" class="full-width">
           <MobileMenu
             v-if="!$store.tableMode && $route.name !== 'menuItemPage'"

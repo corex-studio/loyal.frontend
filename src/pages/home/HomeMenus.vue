@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div
+    <!-- <div
       v-if="
         $companyGroup.item &&
         $companyGroup.item.companies.length > 1 &&
@@ -42,7 +42,7 @@
       </div>
 
       <CButton @click="changeCompany()" label="Выбрать другое заведение" />
-    </div>
+    </div> -->
     <!-- <div v-else class="header" :class="$store.tableMode ? 'mt-5' : 'mt-18'">
       {{ $menu.item?.name }}
     </div> -->

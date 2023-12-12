@@ -34,12 +34,11 @@
         <CButton
           v-if="!authentication.loading && !$store.tableMode"
           @click="profileButtonClickHandler()"
-          class="box-shadow"
-          height="33px"
+          height="44px"
+          width="130px"
+          class="profile-button"
           color="background-color"
           text-color="primary"
-          style="border-radius: 100px"
-          icon="fa-light fa-user"
           :label="authentication.user ? 'Профиль' : 'Войти'"
         />
       </div>
@@ -93,5 +92,9 @@ const selectCompany = async (v: Company) => {
 <style scoped lang="scss">
 .q-header {
   position: relative;
+}
+
+.profile-button {
+  border: 2px var(--primary) solid;
 }
 </style>

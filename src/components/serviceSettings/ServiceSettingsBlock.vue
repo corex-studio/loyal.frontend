@@ -34,7 +34,7 @@
         <!-- style="background-color: #ffffff7f" -->
 
         <div class="border-radius px-4 py-3 bg-on-primary">
-          <q-icon size="20px" :name="'fa-solid fa-box'" />
+          <q-icon color="primary" size="20px" :name="'fa-solid fa-box'" />
         </div>
         <div>{{ currentDeliveryType() }}</div>
       </div>
