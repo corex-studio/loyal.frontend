@@ -108,6 +108,11 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: '/:companyGroup/delete_account',
+    name: 'deleteAccountPage',
+    component: () => import('src/pages/auth/DeleteAccountPage.vue'),
+  },
+  {
     path: '/qr_data/:topologyItemId',
     name: 'parseTopologyQr',
     component: () => import('src/pages/ParseTopologyQr.vue'),
