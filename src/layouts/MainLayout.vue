@@ -13,11 +13,12 @@
       "
     >
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+      <TopHeader />
 
       <div
         ref="header"
         style="position: sticky; top: 0px; z-index: 99"
-        :class="{ 'box-shadow': $store.verticalScroll > 45 }"
+        :class="{ 'box-shadow': $store.verticalScroll > 56 }"
       >
         <template v-if="!$q.screen.xs">
           <MainHeader />
@@ -51,9 +52,7 @@
         }"
         style="padding-bottom: 50px"
       >
-        <!-- {{ $cart.item }} -->
         <!-- {{ $route.name }} -->
-        <!-- {{ $menuGroup.elementsInViewport }} -->
 
         <router-view />
         <CartDrawer />
@@ -114,6 +113,7 @@ import { waiterCallRepo } from 'src/models/customer/waiterCall/waiterCallRepo'
 import { orderRepo } from 'src/models/order/orderRepo'
 import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
 import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
+import TopHeader from './header/TopHeader.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 

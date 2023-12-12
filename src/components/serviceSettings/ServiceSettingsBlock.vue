@@ -1,8 +1,5 @@
 <template>
-  <div
-    @click="openDialog()"
-    class="row no-wrap gap-3 py-2 pl-xs-3 pl-sm-5 pr-xs-3 pr-sm-7 cursor-pointer box-shadow border-radius items-center"
-    :class="
+  <!-- :class="
       $cart.item?.type === 'delivery'
         ? 'bg-delivery-button-color text-on-delivery-button-color'
         : $cart.item?.type === 'pickup'
@@ -10,17 +7,39 @@
         : $cart.item?.type === 'booking'
         ? 'bg-booking-button-color text-on-booking-button-color'
         : 'background-color text-on-background-color'
-    "
-    :style="
-      $cart.item
-        ? $q.screen.sm
-          ? 'max-width: 250px'
-          : 'max-width: 350px;'
-        : ''
-    "
-    style="overflow: hidden"
+    " -->
+  <div
+    @click="openDialog()"
+    class="row no-wrap gap-20 cursor-pointer border-radius items-center bg-secondary-button-color"
+    style="overflow: hidden; height: 44px; padding: 0 40px"
   >
-    <div style="background-color: #ffffff7f" class="border-radius px-4 py-3">
+    <div v-if="!$cart.item" class="row no-wrap gap-4 items-center">
+      <div style="background-color: #ffffff7f" class="border-radius px-4 py-3">
+        <q-icon size="20px" :name="'fa-light fa-square-question'" />
+      </div>
+      <div>Укажите тип доставки</div>
+    </div>
+    <template v-else>
+      <div class="row no-wrap gap-4 items-center">
+        <div class="border-radius bg-on-primary px-4 py-3">
+          <q-icon
+            size="20px"
+            color="primary"
+            :name="'fa-solid fa-location-dot'"
+          />
+        </div>
+        <div>{{ currentAddress }}</div>
+      </div>
+      <div class="row no-wrap gap-4 items-center">
+        <!-- style="background-color: #ffffff7f" -->
+
+        <div class="border-radius px-4 py-3 bg-on-primary">
+          <q-icon size="20px" :name="'fa-solid fa-box'" />
+        </div>
+        <div>{{ currentDeliveryType() }}</div>
+      </div>
+    </template>
+    <!-- <div style="background-color: #ffffff7f" class="border-radius px-4 py-3">
       <q-icon
         size="20px"
         :name="
@@ -43,7 +62,7 @@
           {{ currentAddress }}
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script lang="ts" setup>

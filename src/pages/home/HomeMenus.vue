@@ -116,37 +116,15 @@
         </template>
       </GridContainer>
     </div>
-    <!-- <SelectSalesPointModal
-      :company="selectedCompany"
-      :model-value="selectSalesPointModal"
-      @update:model-value="selectSalesPointModal = false"
-      @select="loadBySalesPoint($event)"
-    /> -->
-    <SelectCompanyModal
-      :model-value="selectCompanyModal"
-      @update:model-value="selectCompanyModal = false"
-      @select="selectCompany($event)"
-    />
-
-    <ServiceSettingsModal
-      :model-value="serviceModal"
-      @update:model-value="serviceModal = false"
-    />
   </div>
 </template>
 <script lang="ts" setup>
 import MenuItemCard from 'src/components/cards/MenuItemCard.vue'
-import { Company } from 'src/models/company/company'
 import { ref } from 'vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
-import { companyRepo } from 'src/models/company/companyRepo'
-import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import MenuItemSkeleton from 'src/components/cards/MenuItemSkeleton.vue'
 import GridContainer from 'src/components/containers/GridContainer.vue'
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
-
-const serviceModal = ref(false)
 
 const selectCompanyModal = ref(false)
 
@@ -190,20 +168,6 @@ const changeCompany = () => {
 //   //     menuGroupRepo.items = res.items
 //   //   })
 // }
-
-const selectCompany = async (v: Company) => {
-  selectCompanyModal.value = false
-  companyRepo.cartCompany = v
-  serviceModal.value = true
-
-  // if (!v.salesPoints) return
-  // if (v.salesPoints?.length > 1) {
-  //   selectedCompany.value = v
-  //   selectSalesPointModal.value = true
-  // } else {
-  //   await store.loadCatalog(v.salesPoints[0])
-  // }
-}
 </script>
 
 <style lang="scss" scoped>
