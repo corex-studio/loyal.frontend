@@ -39,6 +39,8 @@
           input-class="header3 text-on-input-color"
           height="46px"
           unmasked-value
+          outlined
+          color="primary"
         />
         <CInput
           v-else
@@ -50,8 +52,10 @@
           style="overflow-x: hidden"
           :class="data.code?.length ? 'center-content' : ''"
           class="pb-12 px-10 sms-field"
+          color="primary"
           standout
           mask="####"
+          outlined
         />
       </div>
       <div style="text-align: center" class="subtitle-text-light mb-12">
