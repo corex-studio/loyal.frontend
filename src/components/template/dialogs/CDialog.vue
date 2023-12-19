@@ -8,7 +8,7 @@
     @update:modelValue="$emit('update:modelValue')"
   >
     <q-card
-      :style="`max-width: ${width}; min-height: ${height}; height: ${heightPercent}`"
+      :style="`max-width: ${width}; min-height: ${height}; max-height: ${height}; height: ${heightPercent}`"
       style="
         width: 100%;
         display: flex;
@@ -28,12 +28,11 @@
           !noPadding ? 'pb-15 px-10' : dialogClass,
           $slots.header ? (noPadding ? '' : 'pt-10') : 'pt-15 ',
         ]"
-        style="
-          overflow: auto;
+        :style="`overflow:${noOverflow ? 'hidden' : 'auto'};
           width: 100%;
+          height: 100%;
           max-height: inherit;
-          border-radius: 0;
-        "
+          border-radius: 0;`"
       >
         <div style="position: absolute; top: -20px; right: -25px; z-index: 1">
           <CIcon

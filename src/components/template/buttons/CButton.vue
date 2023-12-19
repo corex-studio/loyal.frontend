@@ -18,6 +18,7 @@
       underline: underline,
       'underline-fixed': underlined,
       'text-button': textButton,
+      outlined: outlined,
     }"
     :style="`width:${_width}; height:${_height};font-size:${textSize}; padding:${
       textButton || noPadding ? '0px;' : '4px 16px;'
@@ -92,6 +93,7 @@ const props = defineProps({
     type: Boolean,
   },
   outline: Boolean,
+  outlined: Boolean,
   color: {
     default: 'button-color',
     type: String,
@@ -262,6 +264,10 @@ const clickHandler = () => {
 .c-btn:disabled:not(.block):not(.bg-secondary2) {
   background-color: $secondary !important;
   opacity: 1 !important;
+}
+
+.c-btn.outlined {
+  border: 2px var(--primary) solid;
 }
 
 .c-btn.underline:after {

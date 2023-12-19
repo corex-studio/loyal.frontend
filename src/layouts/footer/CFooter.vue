@@ -1,7 +1,7 @@
 <template>
   <div class="bg-backing-color">
     <q-separator v-if="!$q.screen.xs && $route.name !== 'menuItemPage'" />
-    <div class="pb-md-10" style="bottom: 0; z-index: 2100">
+    <div class="pb-md-30" style="bottom: 0; z-index: 2100">
       <div class="c-container" v-if="$q.screen.gt.sm">
         <div class="footer-wrap secondary-text row items-center pt-15">
           <FooterDesktop />

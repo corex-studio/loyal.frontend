@@ -1,13 +1,12 @@
 <template>
   <div
-    class="row items-center no-wrap"
+    class="row items-center no-wrap bg-secondary-button-color border-radius px-1"
     :class="{ 'full-width justify-between': fullWidth }"
   >
     <CIconButton
       icon="fal fa-minus"
       icon-color="on-secondary-button-color"
       :color="'secondary-button-color'"
-      circle
       :size="_height"
       :hover-icon-color="minValue >= modelValue ? 'secondary' : 'primary'"
       @click="minus"
@@ -27,7 +26,7 @@
           ? 'mx-3'
           : noPadding
           ? 'mx-6'
-          : 'mx-8'
+          : 'mx-6'
       "
     >
       <div ref="inputWrapper">
@@ -74,7 +73,6 @@
       :color="'secondary-button-color'"
       :size="_height"
       :hover-icon-color="minValue >= modelValue ? 'secondary' : 'primary'"
-      circle
       @click="plus"
       :disabled="disabled || disableAdding || noEdit"
       no-padding
@@ -151,7 +149,7 @@ const unitQuantity = computed(() => {
 })
 
 const _height = computed(() => {
-  return props.small ? '34px' : '42px'
+  return props.small ? '34px' : '40px'
 })
 
 const setInputRef = () => {

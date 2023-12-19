@@ -6,14 +6,22 @@
           class="no-wrap row cursor-pointer items-center gap-14 items-center"
           @click="$router.push({ name: 'home' })"
         >
+          <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
+            <img
+              v-if="$company.item?.image?.thumbnail"
+              height="48"
+              class="border-radius"
+              style="object-fit: contain"
+              :src="$company.item?.image?.thumbnail"
+            />
+          </template>
           <img
-            v-if="$uiSettings.item?.logo?.thumbnail"
-            height="44"
+            v-else
+            height="48"
             class="border-radius"
             style="object-fit: contain"
-            :src="$uiSettings.item?.logo?.thumbnail"
+            src="~assets/tochkaLogo.png"
           />
-
           <CButton
             v-if="
               $companyGroup.item &&
@@ -21,26 +29,50 @@
               !$store.tableMode
             "
             @click="selectCompanyModal = true"
-            height="44px"
-            label="Изменить заведение"
+            height="48px"
             color="secondary-button-color"
             text-color="on-secondary-button-color"
+          >
+            <div class="row no-wrap gap-4 items-end">
+              <!-- <q-img
+                height="34px"
+                width="34px"
+                class="border-radius"
+                :src="$company.item?.image?.thumbnail"
+              >
+                <template v-slot:error>
+                  <span>
+                    <q-img
+                      class="border-radius"
+                      style="height: 34px; width: 34px"
+                      :src="$store.images.empty"
+                    ></q-img>
+                  </span> </template
+              ></q-img> -->
+              <div class="text-on-background-color subtitle-text">
+                Изменить заведение
+              </div>
+              <CIcon size="20px" name="fa-solid fa-angle-down" />
+            </div>
+          </CButton>
+        </div>
+        <div class="row gap-12 no-wrap">
+          <div class="body">
+            <ServiceSettingsBlock v-if="authentication.user" />
+            <ServiceSettingsSkeleton v-if="authentication.loading" />
+          </div>
+          <CButton
+            v-if="!authentication.loading && !$store.tableMode"
+            @click="profileButtonClickHandler()"
+            height="48px"
+            width="160px"
+            icon="fa-solid fa-user"
+            class="subtitle-text"
+            color="secondary-button-color"
+            text-color="on-secondary-button-color"
+            :label="authentication.user ? 'Профиль' : 'Войти'"
           />
         </div>
-        <div class="row items-center gap-15 body">
-          <ServiceSettingsBlock v-if="authentication.user" />
-          <ServiceSettingsSkeleton v-if="authentication.loading" />
-        </div>
-        <CButton
-          v-if="!authentication.loading && !$store.tableMode"
-          @click="profileButtonClickHandler()"
-          height="44px"
-          width="130px"
-          class="profile-button"
-          color="background-color"
-          text-color="primary"
-          :label="authentication.user ? 'Профиль' : 'Войти'"
-        />
       </div>
     </div>
   </q-header>
@@ -67,6 +99,7 @@ import { ref } from 'vue'
 import { Company } from 'src/models/company/company'
 import { companyRepo } from 'src/models/company/companyRepo'
 import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
+import CIcon from 'src/components/template/helpers/CIcon.vue'
 
 const router = useRouter()
 
@@ -92,9 +125,5 @@ const selectCompany = async (v: Company) => {
 <style scoped lang="scss">
 .q-header {
   position: relative;
-}
-
-.profile-button {
-  border: 2px var(--primary) solid;
 }
 </style>

@@ -79,6 +79,11 @@ const routes: RouteRecordRaw[] = [
         name: 'myQrPage',
         component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue'),
       },
+      {
+        path: 'arrangement',
+        name: 'arrangementPage',
+        component: () => import('src/pages/arrangement/ArrangementPage.vue'),
+      },
     ],
   },
   {

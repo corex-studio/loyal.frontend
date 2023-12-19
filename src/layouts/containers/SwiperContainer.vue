@@ -12,6 +12,7 @@
         sensitivity: 0.5,
         forceToAxis: true,
       }"
+      :initial-slide="initialSlide"
       :modules="modules"
       navigation
       :class="noNavigation ? 'no-navigation' : 'navigation'"
@@ -43,6 +44,7 @@ const props = defineProps<{
   slidesPerView?: number
   useBullets?: boolean
   noNavigation?: boolean
+  initialSlide?: number
 }>()
 
 const modules = computed(() => {

@@ -6,8 +6,8 @@
         ? 'repeat(auto-fill, minmax(175px, 1fr));'
         : `repeat(${columns}, minmax(0, 1fr))`
     }; ${
-      $q.screen.xs ? 'gap: 14px' : 'gap: 20px'
-    }; grid-auto-rows: minmax(0px, 1fr)`"
+      gap ? `gap: ${gap}` : $q.screen.xs ? 'gap: 14px' : 'gap: 30px'
+    }; grid-auto-rows: minmax(0px, 1fr`"
   >
     <div v-for="(item, index) in items" :key="index">
       <slot name="item" v-bind:item="item"></slot>
@@ -18,15 +18,26 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { Screen } from 'quasar'
-const props = defineProps({
-  items: Array,
-  sm: { type: [Number, String], default: 2 },
-  md: { type: [Number, String], default: 4 },
-  lg: { type: [Number, String], default: 4 },
-  xl: { type: [Number, String], default: 5 },
-  xs: { type: [Number, String], default: 2 },
-  products: Boolean,
-})
+
+const props = withDefaults(
+  defineProps<{
+    items: Array<any>
+    sm?: number | string
+    md?: number | string
+    lg?: number | string
+    xl?: number | string
+    xs?: number | string
+    products?: boolean
+    gap?: string
+  }>(),
+  {
+    sm: 2,
+    md: 4,
+    lg: 4,
+    xl: 5,
+    xs: 2,
+  }
+)
 
 const columns = computed(() => {
   const name = Screen.name

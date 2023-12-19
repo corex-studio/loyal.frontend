@@ -19,6 +19,7 @@
       <CButton
         @click="el.click()"
         text-button
+        class="subtitle-text"
         text-color="on-backhround-color"
         :label="el.label"
       />

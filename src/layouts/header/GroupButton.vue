@@ -1,6 +1,6 @@
 <template>
   <div
-    class="cursor-pointer border-radius ellipsis"
+    class="cursor-pointer border-radius"
     @click="clickHandler(item)"
     :style="[
       isHomePage
@@ -8,17 +8,18 @@
           ? 'transition: background-color 0.4s ease-out'
           : 'transition: background-color 0.3s ease-out'
         : '',
-      additional ? '' : !$q.screen.xs ? 'margin-left: -10px' : '',
     ]"
-    style="max-width: 180px"
+    style="max-width: 160px; height: 45px"
     :class="[
-      additional ? 'py-2 px-3' : 'py-4 px-5',
+      additional ? 'px-3' : 'px-6 ',
       item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional
-        ? 'bg-button-color text-on-button-color'
+        ? 'bg-backing-color text-on-backing-color'
         : 'text-on-background-color',
     ]"
   >
-    {{ item.name }}
+    <div class="ellipsis" style="transform: translate(0, 53%)">
+      {{ item.name }}
+    </div>
   </div>
 </template>
 <script lang="ts" setup>

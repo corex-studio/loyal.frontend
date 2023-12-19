@@ -3,111 +3,110 @@
     <q-drawer
       side="right"
       style="z-index: 999999; height: 100%"
-      :style="`border-radius: ${$q.screen.xs ? '' : drawerBorderRadius}`"
       overlay
       v-model="$store.cartDrawer"
       no-swipe-open
       behavior="mobile"
-      :width="$q.screen.xs ? $q.screen.width : 474"
+      :width="$q.screen.xs ? $q.screen.width : 581"
       class="column full-height no-wrap justify-between bg-background-color text-on-background-color"
     >
-      <div class="column pb-20">
+      <CIcon
+        @click="$store.cartDrawer = false"
+        size="37px"
+        style="position: absolute; top: 40px; left: -50px"
+        name="fa-light fa-xmark"
+        hover-color="primary"
+        class="cursor-pointer"
+        color="white"
+      />
+      <div class="column pb-50">
         <div
-          style="height: 60px"
-          class="row no-wrap items-center text-on-background-color px-10 justify-between mb-10"
+          class="row no-wrap items-center text-on-background-color px-15 justify-between py-15"
         >
-          <div class="row items-center no-wrap gap-5">
+          <div class="row items-center no-wrap gap-5 header2 bold">
+            <div class="bold">Ваша корзина</div>
             <div
-              @click="toPreviousStep()"
-              class="bg-white-opacity cursor-pointer box-shadow py-4 px-5 border-radius"
-            >
-              <CIcon
-                hover-color="primary"
-                color="on-secondary-button-color"
-                name="fa-light fa-angle-left"
-              />
-            </div>
-            <!-- <CIconButton
-              icon="fa-light fa-angle-left"
-              color="secondary-button-color"
-              icon-color="on-secondary-button-color"
-              size="37"
-              @click="toPreviousStep()"
-            /> -->
-            <div class="header3">
-              {{ cartMode === 'cart' ? 'Корзина' : 'Итого' }}
-            </div>
+              style="width: 5px; height: 5px; border-radius: 50%"
+              class="bg-primary"
+            ></div>
+            <div class="bold">{{ $cart.item?.sum }}₽</div>
           </div>
-          <div class="row gap-5">
-            <CIconButton
-              v-if="$cart.item?.cartItems.length"
-              size="38px"
-              icon-class="box-shadow"
-              icon="fa-light fa-trash-alt"
-              icon-color="on-secondary-button-color"
-              color="white-opacity"
-              @click="acceptModal = true"
-            />
-
-            <!-- <div class="bg-white-opacity box-shadow py-4 px-5 border-radius">
-              <CIcon
-                color="on-secondary-button-color"
-                name="fa-light fa-shopping-cart"
-              />
-            </div> -->
-          </div>
-        </div>
-        <template v-if="$cart.item?.cartItems.length">
-          <div v-if="cartMode === 'cart'" class="column px-10">
-            <template
-              v-for="(item, index) in $cart.item?.cartItems"
-              :key="index"
-            >
-              <q-separator v-if="index" class="my-5" color="divider-color" />
-              <CartDrawerItemRow @delete="deleteCartItem(item)" :item="item" />
-            </template>
-            <!-- <div
-              class="row box-shadow border-radius bg-background-color pa-10 mt-15 justify-between items-center"
-            >
-              <div class="row gap-5 items-center no-wrap">
-                <div
-                  class="py-4 px-5 box-shadow border-radius bg-white-opacity"
-                >
-                  <CIcon color="primary" name="fa-light fa-credit-card-blank" />
-                </div>
-                <div class="text-primary body">К оплате</div>
-              </div>
-              <div class="text-primary body">
-                {{ $cart.item?.discountedTotalSum.toFixed(2) }} ₽
-              </div>
-            </div> -->
-          </div>
-          <CartOutput
-            v-else
-            @payment-selected="currentPaymentType = $event"
-            :show-payment-types="selectPaymentType"
+          <CButton
+            @click="clearCart()"
+            label="Очистить"
+            class="subtitle-text"
+            text-button
+            text-color="primary"
           />
-        </template>
-        <div v-else class="px-10">Корзина пуста</div>
+        </div>
+        <q-separator class="mb-15" color="divider-color" />
+        <div class="column full-width px-15">
+          <CartDeliveryInfo class="mb-15" />
+          <template v-if="$cart.item?.cartItems.length">
+            <div class="column">
+              <template
+                v-for="(item, index) in $cart.item?.cartItems"
+                :key="index"
+              >
+                <q-separator v-if="index" class="my-10" color="divider-color" />
+                <CartDrawerItemRow
+                  @delete="deleteCartItem(item)"
+                  :item="item"
+                />
+              </template>
+              <q-separator color="divider-color" class="my-12" />
+              <CartTotalInfo />
+              <!-- <CartOutput showPaymentTypes /> -->
+            </div>
+          </template>
+          <div v-else class="subtitle-text">Корзина пуста</div>
+        </div>
       </div>
 
       <div
         v-if="$cart.item?.cartItems.length || $cart.arrangeLoading"
-        class="row full-width justify-center bg-background-color py-8 pl-xs-5 pr-xs-3 pr-sm-0 pl-sm-0"
+        class="row full-width justify-center bg-background-color py-8 px-15 py-13"
         style="position: sticky; bottom: 0"
       >
-        <CButton
+        <!-- <CButton
           @click="toNextStep()"
           :loading="cartRepo.loading || $cart.arrangeLoading || loading"
           class="body"
-          :disable="!isArrangeEnabled"
-          height="50px"
+          :disable="!$cart.item?.cartItems.length"
+          height="59px"
           style="min-width: 261px"
-          :width="$q.screen.xs ? '100%' : undefined"
-          >{{
-            `Оформить заказ ${$cart.item?.discountedTotalSum.toFixed(2)} ₽`
-          }}</CButton
+          width="100%"
+          >
+
+          {{
+            `Оформить заказ ${$cart.item?.discountedTotalSum.toFixed(2)} `
+          }}
+          </CButton
+        > -->
+        <div
+          @click="arrange"
+          class="border-radius bg-button-color row items-center justify-between cursor-pointer px-10 subtitle-text text-on-button-color"
+          style="height: 59px; width: 100%"
         >
+          <div
+            class="row justify-center full-width"
+            v-if="cartRepo.loading || $cart.arrangeLoading || loading"
+          >
+            <q-spinner size="28px" />
+          </div>
+          <template v-else>
+            <div>Оформить заказ</div>
+            <q-badge
+              style="
+                border-radius: 8px;
+                backdrop-filter: blur(5px);
+                background-color: rgba(0, 0, 0, 0.1);
+              "
+              class="subtitle-text py-4 px-5"
+              >{{ $cart.item?.discountedTotalSum.toFixed(2) }} ₽</q-badge
+            >
+          </template>
+        </div>
       </div>
     </q-drawer>
   </div>
@@ -122,46 +121,20 @@ import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { store } from 'src/models/store'
-import { ref, computed, watch } from 'vue'
-import CartOutput from './CartOutput.vue'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { ref, watch } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import moment from 'moment'
 import { Notify } from 'quasar'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
-import { PaymentType } from 'src/models/order/order'
-import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
-import { padRepo } from 'src/models/pads/padRepo'
-import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { orderRepo } from 'src/models/order/orderRepo'
-import { useRouter } from 'vue-router'
-
-const cartMode = ref<'cart' | 'output'>('cart')
+import CartDeliveryInfo from './CartDeliveryInfo.vue'
+import CartTotalInfo from './CartTotalInfo.vue'
 
 const selectPaymentType = ref(false)
-
-const router = useRouter()
-
-const currentPaymentType = ref<PaymentType | null>(null)
 
 const acceptModal = ref(false)
 
 const loading = ref(false)
-
-const drawerBorderRadius = computed(() => {
-  return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px !important`
-})
-
-const isArrangeEnabled = computed(() => {
-  return (
-    cartMode.value === 'cart' ||
-    (store.tableMode
-      ? !!currentPaymentType.value
-      : cartRepo.item?.deliveryTime && cartRepo.item.cartItems.length)
-  )
-})
 
 watch(
   () => store.cartDrawer,
@@ -206,102 +179,72 @@ const deleteCartItem = async (item: CartItem) => {
   }
 }
 
-const toNextStep = async () => {
-  if (cartMode.value === 'cart') {
-    cartMode.value = 'output'
-  } else if (!selectPaymentType.value) {
-    await selectDeliveryDate()
-    selectPaymentType.value = true
-    if (store.tableMode) await makeAnOrder()
-  } else {
-    await makeAnOrder()
-  }
+const arrange = () => {
+  return
 }
 
-const selectDeliveryDate = async () => {
-  try {
-    cartRepo.loading = true
-    await cartRepo.setParams({
-      delivery_time: cartRepo.item?.deliveryTime
-        ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-            .utc()
-            .format('YYYY-MM-DD HH:mm:ss')
-        : undefined,
-      sales_point: cartRepo.item?.salesPoint.id || '',
-      type: cartRepo.item?.type || '',
-    })
-    cartRepo.loading = false
-  } catch {
-    Notify.create({
-      message: 'Ошибка при установке даты доставки',
-      color: 'danger',
-    })
-    cartRepo.loading = false
-  }
-}
+// const makeAnOrder = async () => {
+//   try {
+//     loading.value = true
+//     const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
+//     if (!status) {
+//       Notify.create({
+//         message: 'В данный момент невозможно оформить заказ',
+//         color: 'danger',
+//       })
+//       return
+//     }
+//     const order = await cartRepo.arrange({
+//       sales_point: cartRepo.item?.salesPoint.id,
+//       payment_data: {
+//         type: currentPaymentType.value,
+//         payment_service:
+//           currentPaymentType.value === PaymentType.CASH ||
+//           currentPaymentType.value === PaymentType.PAY_LATER
+//             ? undefined
+//             : currentPaymentType.value === PaymentType.CARD
+//             ? 'card'
+//             : 'web_form',
+//       },
+//       pad: store.tableMode ? padRepo.item?.id : undefined,
+//     })
+//     cartMode.value = 'cart'
+//     if (store.tableMode) {
+//       await cartRepo.current(
+//         padRepo.item?.salesPoint?.id,
+//         padRepo.item || undefined
+//       )
+//       void router.push({
+//         name: 'currentOrderPage',
+//       })
+//     } else {
+//       cartRepo.item = null
+//     }
+//     if (order.paymentUrl) {
+//       window.open(order.paymentUrl, '_blank')
+//     }
+//     Notify.create({
+//       message: 'Заказ успешно оформлен',
+//     })
+//     orderRepo.item = order
+//   } catch {
+//     cartRepo.arrangeLoading = false
+//     Notify.create({
+//       message: 'Ошибка при оформлении заказа',
+//       color: 'danger',
+//     })
+//   } finally {
+//     loading.value = false
+//   }
+// }
 
-const makeAnOrder = async () => {
-  try {
-    loading.value = true
-    const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
-    if (!status) {
-      Notify.create({
-        message: 'В данный момент невозможно оформить заказ',
-        color: 'danger',
-      })
-      return
-    }
-    const order = await cartRepo.arrange({
-      sales_point: cartRepo.item?.salesPoint.id,
-      payment_data: {
-        type: currentPaymentType.value,
-        payment_service:
-          currentPaymentType.value === PaymentType.CASH ||
-          currentPaymentType.value === PaymentType.PAY_LATER
-            ? undefined
-            : currentPaymentType.value === PaymentType.CARD
-            ? 'card'
-            : 'web_form',
-      },
-      pad: store.tableMode ? padRepo.item?.id : undefined,
-    })
-    cartMode.value = 'cart'
-    if (store.tableMode) {
-      await cartRepo.current(
-        padRepo.item?.salesPoint?.id,
-        padRepo.item || undefined
-      )
-      void router.push({
-        name: 'currentOrderPage',
-      })
-    } else {
-      cartRepo.item = null
-    }
-    if (order.paymentUrl) {
-      window.open(order.paymentUrl, '_blank')
-    }
-    Notify.create({
-      message: 'Заказ успешно оформлен',
-    })
-    orderRepo.item = order
-  } catch {
-    cartRepo.arrangeLoading = false
-    Notify.create({
-      message: 'Ошибка при оформлении заказа',
-      color: 'danger',
-    })
-  } finally {
-    loading.value = false
-  }
-}
-
-const toPreviousStep = () => {
-  if (cartMode.value === 'output') {
-    cartMode.value = 'cart'
-  } else {
-    store.cartDrawer = false
-  }
-}
+// const toPreviousStep = () => {
+//   if (cartMode.value === 'output') {
+//     cartMode.value = 'cart'
+//   } else {
+//     store.cartDrawer = false
+//   }
+// }
 </script>
 
 <style lang="scss" scoped></style>

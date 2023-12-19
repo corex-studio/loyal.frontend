@@ -50,7 +50,7 @@
           mask="####"
         />
       </div>
-      <div style="text-align: center" class="subtitle-text-light mb-12">
+      <div style="text-align: center" class="subtitle-text mb-12">
         Ваши персональные данные будут удалены, история заказов и система
         лояльности будут анонимизированы
       </div>

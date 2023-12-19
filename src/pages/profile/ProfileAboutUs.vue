@@ -91,7 +91,7 @@
           </div> </template
       ></SwiperContainer>
     </div>
-    <div class="subtitle-text-light text-on-background-color mt-15">
+    <div class="subtitle-text text-on-background-color mt-15">
       {{ company.description }}
     </div>
     <div class="mt-15 row gap-10">
