@@ -13,7 +13,7 @@
     :class="[
       additional ? 'px-3' : 'px-6 ',
       item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional
-        ? 'bg-backing-color text-on-backing-color'
+        ? 'bg-secondary-button-color text-on-secondary-button-color'
         : 'text-on-background-color',
     ]"
   >

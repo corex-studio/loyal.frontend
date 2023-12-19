@@ -9,7 +9,7 @@
       <div
         :class="[
           $q.screen.xs ? ' full-width' : 'justify-between full-width',
-          isSticky ? '' : 'bg-backing-color',
+          isSticky ? '' : 'bg-secondary-button-color',
         ]"
         :style="$cart.item || categories?.length ? 'height: 62px' : ''"
         class="row border-radius no-wrap subtitle-text items-center gap-10 content-row px-5 relative-position"
