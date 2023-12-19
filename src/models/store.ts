@@ -18,8 +18,9 @@ export class Store {
   serviceSettingsModal = false
   selectCompanyModal = false
   verticalScroll = 0
-  offersTab = 'Новости'
+  offersTab = 'Акции'
   externalID = 'HooDoo'
+  menuItemModal = false
   images = {
     empty: 'https://mtraktor.ru/images/no-image.png',
   }

@@ -1,6 +1,23 @@
+@font-face {
+  font-family: 'Gilroy';
+  src: local('Gilroy'), url(src/fonts/Gilroy/Gilroy-Medium.ttf);
+}
+
+@font-face {
+  font-family: 'Gilroy-Bold';
+  src: local('Gilroy'), url(src/fonts/Gilroy/Gilroy-SemiBold.ttf);
+}
+
 * {
   // font-family: 'Montserrat', sans-serif;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Gilroy', sans-serif;
+}
+
+.ellipsis-4-lines {
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  display: -webkit-box;
 }
 
 .bottom-bar-text {
@@ -9,7 +26,8 @@
 }
 
 .bold {
-  font-weight: 500 !important;
+  // font-weight: 600 !important;
+  font-family: 'Gilroy-Bold' !important;
   .q-field__label {
     @extend .bold;
   }
@@ -37,6 +55,11 @@
   line-height: 60px;
 }
 
+.huge2 {
+  font-size: 40px;
+  line-height: 44px;
+}
+
 .header2 {
   font-size: 22px;
   font-weight: 500;
@@ -44,26 +67,20 @@
 }
 
 .header3 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
-  line-height: 26.4px;
+  line-height: 26px;
 }
 
 .subtitle-text {
   font-weight: 500;
-  font-size: 16px;
-  line-height: 22px;
-}
-
-.subtitle-text-light {
-  font-weight: 400;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 22px;
 }
 
 .body {
-  font-weight: 400;
-  font-size: 15px;
+  font-weight: 500;
+  font-size: 16px;
   line-height: 21px;
   .q-field__label,
   &.q-btn div {
@@ -148,12 +165,6 @@ body.screen--md {
     font-size: 13px;
     line-height: 18.2px;
   }
-  .subtitle-text-light {
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 18.2px;
-  }
-
   .body {
     font-weight: 400;
     font-size: 13px;

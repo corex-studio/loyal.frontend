@@ -16,6 +16,7 @@ export type MenuItemRaw = {
   group: string | null
   sizes: ItemSizeRaw[] | null
   active?: boolean
+  allow_instant_addition?: boolean
 }
 
 export class MenuItem implements BaseModel {
@@ -30,6 +31,7 @@ export class MenuItem implements BaseModel {
   externalId: string | null
   group: string | null
   sizes: ItemSize[]
+  allowInstantAddition: boolean
   active?: boolean
 
   constructor(raw: MenuItemRaw) {
@@ -49,6 +51,7 @@ export class MenuItem implements BaseModel {
     this.externalId = raw.external_id
     this.group = raw.group
     this.sizes = raw.sizes ? raw.sizes.map((v) => new ItemSize(v)) : []
+    this.allowInstantAddition = raw.allow_instant_addition || false
   }
 
   toJson(): Record<string, any> {

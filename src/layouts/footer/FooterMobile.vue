@@ -135,14 +135,14 @@
 
 <script setup lang="ts">
 import CExpansionItem from 'src/components/template/panels/CExpansionItem.vue'
-import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
+// import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 import { newsRepo } from 'src/models/news/newsRepo'
 import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
 import { store } from 'src/models/store'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import * as qr from 'qr-ts'
+// import * as qr from 'qr-ts'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { LinkType } from 'src/models/company/company'
 
@@ -217,33 +217,33 @@ const getImage = (link: LinkType | null) => {
   }
 }
 
-const createQrs = () => {
-  let iosCode: HTMLCanvasElement | null = null
-  let androidCode: HTMLCanvasElement | null = null
-  if (appSettingsRepo.linksData?.ios_download_link) {
-    iosCode = qr.renderOnCanvas(
-      qr.generate(appSettingsRepo.linksData?.ios_download_link),
-      'iosQr'
-    )
-  }
-  if (appSettingsRepo.linksData?.android_download_link) {
-    androidCode = qr.renderOnCanvas(
-      qr.generate(appSettingsRepo.linksData?.android_download_link),
-      'androidQr'
-    )
-  }
-  const iosQrElement = document.getElementById('iosQr')
-  const androidQrElement = document.getElementById('androidQr')
+// const createQrs = () => {
+//   let iosCode: HTMLCanvasElement | null = null
+//   let androidCode: HTMLCanvasElement | null = null
+//   if (appSettingsRepo.linksData?.ios_download_link) {
+//     iosCode = qr.renderOnCanvas(
+//       qr.generate(appSettingsRepo.linksData?.ios_download_link),
+//       'iosQr'
+//     )
+//   }
+//   if (appSettingsRepo.linksData?.android_download_link) {
+//     androidCode = qr.renderOnCanvas(
+//       qr.generate(appSettingsRepo.linksData?.android_download_link),
+//       'androidQr'
+//     )
+//   }
+//   const iosQrElement = document.getElementById('iosQr')
+//   const androidQrElement = document.getElementById('androidQr')
 
-  if (iosCode && iosQrElement) {
-    iosCode.style.height = '99px'
-    iosQrElement.replaceWith(iosCode)
-  }
-  if (androidCode && androidQrElement) {
-    androidCode.style.height = '99px'
-    androidQrElement.replaceWith(androidCode)
-  }
-}
+//   if (iosCode && iosQrElement) {
+//     iosCode.style.height = '99px'
+//     iosQrElement.replaceWith(iosCode)
+//   }
+//   if (androidCode && androidQrElement) {
+//     androidCode.style.height = '99px'
+//     androidQrElement.replaceWith(androidCode)
+//   }
+// }
 
 const scrollToGroup = (v: MenuGroup) => {
   const groupElement = document.getElementById(v.id)
@@ -276,9 +276,9 @@ const scrollToBlock = (v: string, tab?: string) => {
   }
 }
 
-onMounted(() => {
-  createQrs()
-})
+// onMounted(() => {
+//   createQrs()
+// })
 </script>
 
 <style lang="scss" scoped></style>

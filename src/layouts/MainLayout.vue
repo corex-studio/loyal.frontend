@@ -12,29 +12,31 @@
           : 'pb-xs-27'
       "
     >
-      <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+      <template v-if="!isArrangementPage">
+        <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+        <TopHeader />
 
-      <div
-        ref="header"
-        style="position: sticky; top: 0px; z-index: 99"
-        :class="{ 'box-shadow': $store.verticalScroll > 45 }"
-      >
-        <template v-if="!$q.screen.xs">
-          <MainHeader />
-        </template>
+        <div ref="header">
+          <template v-if="!$q.screen.xs">
+            <MainHeader />
+          </template>
 
-        <BottomHeader
+          <!-- <BottomHeader
           v-if="$store.tableMode ? $route.name === 'qrHome' : true"
-        />
-        <div v-if="$q.screen.lt.sm" class="full-width">
-          <MobileMenu
-            v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
-          />
-          <QRMobileMenu
-            v-else-if="$pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'"
-          />
+        /> -->
+          <div v-if="$q.screen.lt.sm" class="full-width">
+            <MobileMenu
+              v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
+            />
+            <QRMobileMenu
+              v-else-if="
+                $pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'
+              "
+            />
+          </div>
         </div>
-      </div>
+      </template>
+
       <q-page-container
         :style="
           $q.screen.lt.md
@@ -51,15 +53,12 @@
         }"
         style="padding-bottom: 50px"
       >
-        <!-- {{ $cart.item }} -->
         <!-- {{ $route.name }} -->
-        <!-- {{ $menuGroup.elementsInViewport }} -->
-
         <router-view />
         <CartDrawer />
       </q-page-container>
 
-      <q-footer v-if="!$store.tableMode">
+      <q-footer v-if="!$store.tableMode && !isArrangementPage">
         <CFooter
           ref="footer"
           class="full-width"
@@ -80,6 +79,7 @@
       @update:model-value="$store.selectCompanyModal = false"
       @select="companySelected($event)"
     />
+    <MenuItemModal v-model="$store.menuItemModal" />
   </template>
 </template>
 
@@ -89,7 +89,6 @@ import { Screen, useQuasar } from 'quasar'
 import { onMounted, ref, watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
-import BottomHeader from './header/BottomHeader.vue'
 import AuthModal from 'src/pages/auth/AuthModal.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
@@ -114,6 +113,8 @@ import { waiterCallRepo } from 'src/models/customer/waiterCall/waiterCallRepo'
 import { orderRepo } from 'src/models/order/orderRepo'
 import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
 import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
+import TopHeader from './header/TopHeader.vue'
+import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -169,6 +170,10 @@ watch(
 
 const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? headerHeight.value + footerHeight.value : '0'
+})
+
+const isArrangementPage = computed(() => {
+  return route.path.includes('arrangement')
 })
 
 const setBodyScrollClass = () => {

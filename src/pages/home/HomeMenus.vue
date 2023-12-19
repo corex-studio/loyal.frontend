@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div
+    <!-- <div
       v-if="
         $companyGroup.item &&
         $companyGroup.item.companies.length > 1 &&
@@ -42,7 +42,7 @@
       </div>
 
       <CButton @click="changeCompany()" label="Выбрать другое заведение" />
-    </div>
+    </div> -->
     <!-- <div v-else class="header" :class="$store.tableMode ? 'mt-5' : 'mt-18'">
       {{ $menu.item?.name }}
     </div> -->
@@ -78,17 +78,17 @@
       <div
         v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
         :key="index"
-        class="full-width pt-sm-18 pt-xs-10"
+        class="full-width pt-sm-20 pt-xs-12"
         :id="el.id"
       >
-        <div class="header2 mb-10">
+        <div class="huge2 bold mb-12">
           {{ el.name }}
         </div>
         <div v-if="el.items.length" class="row full-width">
           <GridContainer
             :items="el.items"
-            :lg="6"
-            :xl="6"
+            :lg="4"
+            :xl="4"
             :md="4"
             :sm="3"
             :xs="2"
@@ -111,99 +111,17 @@
         :sm="4"
       >
         <template v-slot:item="{ item }">
-          <!-- <MenuItemSkeleton v-if="$salesPoint.menuLoading" /> -->
           <MenuItemSkeleton :id="item" />
         </template>
       </GridContainer>
     </div>
-    <!-- <SelectSalesPointModal
-      :company="selectedCompany"
-      :model-value="selectSalesPointModal"
-      @update:model-value="selectSalesPointModal = false"
-      @select="loadBySalesPoint($event)"
-    /> -->
-    <SelectCompanyModal
-      :model-value="selectCompanyModal"
-      @update:model-value="selectCompanyModal = false"
-      @select="selectCompany($event)"
-    />
-
-    <ServiceSettingsModal
-      :model-value="serviceModal"
-      @update:model-value="serviceModal = false"
-    />
   </div>
 </template>
 <script lang="ts" setup>
 import MenuItemCard from 'src/components/cards/MenuItemCard.vue'
-import { Company } from 'src/models/company/company'
-import { ref } from 'vue'
-import CButton from 'src/components/template/buttons/CButton.vue'
-import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
-import { companyRepo } from 'src/models/company/companyRepo'
-import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import MenuItemSkeleton from 'src/components/cards/MenuItemSkeleton.vue'
 import GridContainer from 'src/components/containers/GridContainer.vue'
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
-
-const serviceModal = ref(false)
-
-const selectCompanyModal = ref(false)
-
-// const selectSalesPointModal = ref(false)
-
-// const selectedCompany = ref<Company | null>(null)
-
-// const currentCompany = computed(() => {
-//   return companyGroupRepo.item?.companies.find((v) =>
-//     v.salesPoints?.some((el) => el.menu.id === currentMenu.value)
-//   )
-// })
-
-// const currentMenu = computed(() => {
-//   return menuGroupRepo.items[0].menu
-// })
-
-// const showCompaniesSelector = computed(() => {
-//   if (!companyGroupRepo.item || cartRepo.item) return
-//   return (
-//     companyGroupRepo.item?.companies.length > 1 ||
-//     (companyRepo.item && companyRepo.item.salesPoints
-//       ? companyRepo.item.salesPoints.filter((v) => v.active).length > 1
-//       : false)
-//   )
-// })
-
-const changeCompany = () => {
-  selectCompanyModal.value = true
-}
-
-// const loadBySalesPoint = async (v: SalesPoint) => {
-//   selectSalesPointModal.value = false
-//   await store.loadCatalog(v)
-//   // await menuRepo.retrieve(v.menu.id)
-//   // await menuGroupRepo
-//   //   .list({
-//   //     menu: v.menu.id,
-//   //   })
-//   //   .then((res) => {
-//   //     menuGroupRepo.items = res.items
-//   //   })
-// }
-
-const selectCompany = async (v: Company) => {
-  selectCompanyModal.value = false
-  companyRepo.cartCompany = v
-  serviceModal.value = true
-
-  // if (!v.salesPoints) return
-  // if (v.salesPoints?.length > 1) {
-  //   selectedCompany.value = v
-  //   selectSalesPointModal.value = true
-  // } else {
-  //   await store.loadCatalog(v.salesPoints[0])
-  // }
-}
 </script>
 
 <style lang="scss" scoped>

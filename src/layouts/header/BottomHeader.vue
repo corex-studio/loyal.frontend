@@ -1,88 +1,135 @@
 <template>
+  <!-- :class="{ 'box-shadow': $store.verticalScroll > 56 }" -->
   <div
     v-if="!$q.screen.xs || $store.tableMode"
-    class="row full-width bg-background-color"
+    class="row full-width bg-background-color sticky-block"
+    ref="bottomHeader"
   >
-    <div
-      :class="[
-        $q.screen.xs ? ' full-width' : 'justify-between',
-        { 'pt-5 pb-4': $cart.item || categories?.length },
-      ]"
-      class="row no-wrap body items-center gap-10 c-container"
-    >
+    <div class="row no-wrap items-center c-container">
       <div
-        v-if="!$q.screen.xs || $store.tableMode"
-        class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
-        :style="
-          $q.screen.xs
-            ? 'overflow-x: scroll; scroll-behavior: smooth;'
-            : undefined
-        "
+        :class="[
+          $q.screen.xs ? ' full-width' : 'justify-between full-width',
+          isSticky ? '' : 'bg-backing-color',
+        ]"
+        :style="$cart.item || categories?.length ? 'height: 62px' : ''"
+        class="row border-radius no-wrap subtitle-text items-center gap-10 content-row px-5 relative-position"
       >
-        <template v-if="categories && !$salesPoint.menuLoading">
+        <div
+          v-if="!$q.screen.xs || $store.tableMode"
+          class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
+          :style="
+            $q.screen.xs
+              ? 'overflow-x: scroll; scroll-behavior: smooth;'
+              : undefined
+          "
+        >
           <div
-            v-for="(el, index) in $q.screen.xs
-              ? categories
-              : categories.filter((_, ind) =>
-                  $q.screen.sm ? ind < 5 : ind < 8
-                )"
-            :key="index"
-            ref="groupButtons"
+            v-if="replacementAvailable"
+            class="row no-wrap gap-4 items-center cursor-pointer subtitle-text"
+            style="position: absolute"
           >
-            <GroupButton :key="key" :item="el" />
-          </div>
-          <div
-            v-if="categories.length > 8 && !$q.screen.xs"
-            class="row no-wrap cursor-pointer text-on-background-color"
-          >
-            Еще
-            <CIcon color="on-background-color" name="fa-light fa-angle-down" />
-            <q-menu
-              v-model="moreCategoriesMenu"
-              class="border-radius bg-background-color pa-5 column gap-2"
+            <q-img
+              height="40px"
+              width="40px"
+              class="border-radius"
+              :src="$company.item?.image?.thumbnail"
             >
-              <div
-                v-for="(el, index) in categories.filter((_, ind) =>
-                  $q.screen.sm ? ind >= 5 : ind >= 8
-                )"
-                :key="index"
-                class="row items-center cursor-pointer"
-              >
-                <GroupButton additional :key="key" :item="el" />
-              </div>
-            </q-menu>
+              <template v-slot:error>
+                <span>
+                  <q-img
+                    class="border-radius"
+                    style="height: 40px; width: 40px"
+                    :src="$store.images.empty"
+                  ></q-img>
+                </span> </template
+            ></q-img>
+            <div class="text-primary">Изменить заведение</div>
           </div>
-        </template>
-        <template v-if="$salesPoint.menuLoading">
-          <q-skeleton
-            v-for="(el, index) in [1, 2, 3, 4, 5, 6, 7]"
-            :key="index"
-            width="130px"
-            class="mt-2"
-            style="margin-bottom: 13px"
+          <div
+            v-if="categories && !$salesPoint.menuLoading"
+            class="gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar row"
+            :style="replacementAvailable ? 'padding-left: 255px' : ''"
+            style="transition: 0.25s all ease"
           >
-          </q-skeleton>
-        </template>
-      </div>
+            <div
+              v-for="(el, index) in $q.screen.xs
+                ? categories
+                : categories.filter((_, ind) =>
+                    $q.screen.sm
+                      ? ind < 5
+                      : ind < (replacementAvailable ? 6 : 8)
+                  )"
+              :key="index"
+              ref="groupButtons"
+            >
+              <GroupButton :key="key" :item="el" />
+            </div>
+            <div
+              v-if="categories.length > 8 && !$q.screen.xs"
+              class="row mt-2 no-wrap gap-4 cursor-pointer text-on-background-color"
+            >
+              Еще
+              <CIcon
+                color="on-background-color"
+                name="fa-regular fa-angle-down"
+                style="transition: transform 0.25s ease"
+                :style="moreCategoriesMenu ? 'transform:rotate(180deg)' : ''"
+              />
+              <q-menu
+                v-model="moreCategoriesMenu"
+                auto-close
+                class="border-radius bg-background-color pa-5 column gap-2"
+              >
+                <div
+                  v-for="(el, index) in categories.filter((_, ind) =>
+                    $q.screen.sm ? ind >= 5 : ind >= 8
+                  )"
+                  :key="index"
+                  class="row items-center cursor-pointer"
+                >
+                  <GroupButton additional :key="key" :item="el" />
+                </div>
+              </q-menu>
+            </div>
+          </div>
+          <template v-if="$salesPoint.menuLoading">
+            <q-skeleton
+              v-for="(el, index) in [1, 2, 3, 4, 5, 6, 7]"
+              :key="index"
+              width="130px"
+              class="mt-2"
+              style="margin-bottom: 13px"
+            >
+            </q-skeleton>
+          </template>
+        </div>
 
-      <CButton
-        v-if="authentication.user && $cart.item"
-        height="33px"
-        class="box-shadow"
-        color="blackground-color"
-        text-color="primary"
-        @click="$store.cartDrawer = !$store.cartDrawer"
-        style="border-radius: 100px"
-        icon="fa-light fa-shopping-cart"
-      >
-        <div>
-          {{
-            $cart.item && $cart.item.cartItems.length
-              ? $cart.item.discountedTotalSum + ' ₽'
-              : 'Корзина'
-          }}
-        </div></CButton
-      >
+        <CButton
+          v-if="authentication.user && $cart.item"
+          height="48px"
+          class="subtitle-text"
+          color="primary"
+          text-color="on-primary"
+          @click="$store.cartDrawer = !$store.cartDrawer"
+          style="position: absolute; right: 12px"
+        >
+          <div class="row gap-4">
+            <CIcon
+              size="17px"
+              name="fa-solid fa-basket-shopping"
+              color="on-button-color"
+            />
+            <div v-if="!$cart.item.cartItems.length">Корзина</div>
+            <div v-else>{{ $cart.item.discountedTotalSum }} ₽</div>
+            <!-- <template v-if="$cart.item.cartItems.length">
+              <div>|</div>
+              <div>
+                {{ $cart.item.cartItems.length }}
+              </div>
+            </template> -->
+          </div></CButton
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -90,13 +137,17 @@
 <script setup lang="ts">
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
 import GroupButton from './GroupButton.vue'
 import { useRoute } from 'vue-router'
 import { authentication } from 'src/models/authentication/authentication'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { useQuasar } from 'quasar'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { store } from 'src/models/store'
+
+const bottomHeader = ref<Element | null>(null)
 
 const key = ref(0)
 
@@ -110,8 +161,19 @@ const groupButtons = ref<Element[]>([])
 
 const initWatcher = ref(false)
 
+const isSticky = ref(false)
+
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
+})
+
+const replacementAvailable = computed(() => {
+  return (
+    isSticky.value &&
+    companyGroupRepo.item &&
+    companyGroupRepo.item.companies.length > 1 &&
+    !store.tableMode
+  )
 })
 
 watch(
@@ -138,4 +200,32 @@ watch(
     }
   }
 )
+
+onMounted(() => {
+  const observer = new IntersectionObserver(
+    ([e]) => {
+      if (e.boundingClientRect.top < 200) {
+        e.target.classList.toggle('isSticky', e.intersectionRatio < 1)
+        isSticky.value = e.target.classList.contains('isSticky')
+      }
+    },
+    { rootMargin: '-1px 0px 0px 0px', threshold: [1] }
+  )
+  if (bottomHeader.value) observer.observe(bottomHeader.value)
+})
 </script>
+
+<style lang="scss" scoped>
+.content-row {
+  transition: background-color 0.3s ease;
+}
+.sticky-block {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  transition: 0.3s ease;
+}
+.sticky-block.isSticky {
+  box-shadow: var(--box-shadow);
+}
+</style>

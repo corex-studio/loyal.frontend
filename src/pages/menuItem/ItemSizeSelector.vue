@@ -3,7 +3,7 @@
     <div
       :style="`max-width: ${width}`"
       style="height: fit-content"
-      class="body box-shadow bg-selector-color border-radius row full-width no-wrap pa-2"
+      class="bg-selector-color border-radius row full-width no-wrap pa-1"
     >
       <div
         v-for="(size, index) in sizes"
@@ -18,9 +18,9 @@
           modelValue?.id === size.id
             ? 'bg-selector-active-color text-on-selector-active-color'
             : 'text-on-selector-color',
-          'py-7',
+          'py-3',
         ]"
-        class="cursor-pointer border-radius col row justify-center rounded-10 secondary-text relative-position"
+        class="cursor-pointer border-radius col row justify-center rounded-10 body relative-position"
       >
         {{ size.name }}
         <slot name="append"></slot>

@@ -1,129 +1,90 @@
 <template>
   <q-header class="text-black transition bg-background-color">
     <div class="c-container full-height column">
-      <div style="height: 60px" class="row no-wrap items-center">
+      <div class="row no-wrap justify-between items-center pt-10">
         <div
-          class="no-wrap row cursor-pointer items-center gap-5"
-          :class="
-            $companyGroup.item?.externalId === 'corex_demo'
-              ? 'pr-lg-45 pr-md-25 pr-sm-10 pr-xs-10'
-              : 'pr-lg-35 pr-md-20 pr-sm-10 pr-xs-10'
-          "
+          class="no-wrap row cursor-pointer items-center gap-14 items-center"
           @click="$router.push({ name: 'home' })"
         >
-          <img
-            v-if="$uiSettings.item?.logo?.thumbnail"
-            height="42"
-            style="object-fit: contain"
-            :src="$uiSettings.item?.logo?.thumbnail"
-          />
-          <!-- <div class="header2">
-            {{ $companyGroup.item?.name }}
-          </div> -->
-          <!-- </template> -->
-          <!-- <img
-            v-else
-            style="object-fit: contain"
-            width="126"
-            :src="$uiSettings.item?.logo?.thumbnail"
-          /> -->
-        </div>
-        <div class="col-grow row items-center gap-15 body">
-          <ServiceSettingsBlock v-if="authentication.user" />
-          <ServiceSettingsSkeleton v-if="authentication.loading" />
           <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
-            <template v-if="!$q.screen.lt.md">
-              <CButton
-                @click="scrollToBlock('offers', 'Новости')"
-                class="body pl-10"
-                label="Новости"
-                text-button
-                text-color="on-background-color"
-              />
-              <CButton
-                @click="scrollToBlock('offers', 'Акции')"
-                class="body"
-                label="Акции"
-                text-button
-                text-color="on-background-color"
-              />
-              <CButton
-                @click="scrollToBlock('footer')"
-                class="body"
-                label="Контакты"
-                text-button
-                text-color="on-background-color"
-              />
-            </template>
+            <img
+              v-if="$company.item?.image?.thumbnail"
+              height="48"
+              class="border-radius"
+              style="object-fit: contain"
+              :src="$company.item?.image?.thumbnail"
+            />
           </template>
-          <div
+          <img
             v-else
-            class="row no-wrap gap-10 justify-between"
-            :class="
-              authentication.user
-                ? 'col-lg-6 col-xl-7 col-md-7'
-                : 'col-lg-8 col-xl-7 col-md-9'
+            height="48"
+            class="border-radius"
+            style="object-fit: contain"
+            src="~assets/tochkaLogo.png"
+          />
+          <CButton
+            v-if="
+              $companyGroup.item &&
+              $companyGroup.item.companies.length > 1 &&
+              !$store.tableMode
             "
+            @click="selectCompanyModal = true"
+            height="48px"
+            color="secondary-button-color"
+            text-color="on-secondary-button-color"
           >
-            <div
-              v-if="authentication.user ? $q.screen.gt.md : $q.screen.gt.sm"
-              class="row gap-6 no-wrap"
-            >
-              <CIcon name="fa-light fa-phone" color="red" />
-              <div class="column gap-1 no-wrap">
-                <div class="bold mt-1">+7 (401) 292-13-20</div>
-                <div class="secondary-text text-secondary">
-                  Звоните прямо сейчас!
-                </div>
+            <div class="row no-wrap gap-4 items-end">
+              <!-- <q-img
+                height="34px"
+                width="34px"
+                class="border-radius"
+                :src="$company.item?.image?.thumbnail"
+              >
+                <template v-slot:error>
+                  <span>
+                    <q-img
+                      class="border-radius"
+                      style="height: 34px; width: 34px"
+                      :src="$store.images.empty"
+                    ></q-img>
+                  </span> </template
+              ></q-img> -->
+              <div class="text-on-background-color subtitle-text">
+                Изменить заведение
               </div>
+              <CIcon size="20px" name="fa-solid fa-angle-down" />
             </div>
-            <template
-              v-if="authentication.user ? $q.screen.gt.md : $q.screen.gt.sm"
-            >
-              <div class="row gap-6 no-wrap">
-                <CIcon name="fa-light fa-clock" color="red" />
-                <div class="column gap-1 no-wrap">
-                  <div class="bold mt-1">Принимаем заказы 11:00-22:45</div>
-                  <div class="secondary-text text-secondary">
-                    заказ и доставка суши и роллов на дом
-                  </div>
-                </div>
-              </div>
-            </template>
-          </div>
+          </CButton>
         </div>
-        <div class="row no-wrap gap-8">
-          <!-- <CButton
-            v-if="authentication.user && !$q.screen.sm"
-            class="box-shadow"
-            height="33px"
-            style="border-radius: 100px"
-            icon="fa-light fa-piggy-bank"
-            color="background-color"
-            text-color="primary"
-            >{{
-              authentication.user && authentication.user.wallets[0]
-                ? authentication.user.wallets[0].balance
-                : 'Бонусы'
-            }}</CButton
-          > -->
-
+        <div class="row gap-12 no-wrap">
+          <div class="body">
+            <ServiceSettingsBlock v-if="authentication.user" />
+            <ServiceSettingsSkeleton v-if="authentication.loading" />
+          </div>
           <CButton
             v-if="!authentication.loading && !$store.tableMode"
             @click="profileButtonClickHandler()"
-            class="box-shadow"
-            height="33px"
-            color="background-color"
-            text-color="primary"
-            style="border-radius: 100px"
-            icon="fa-light fa-user"
+            height="48px"
+            width="160px"
+            icon="fa-solid fa-user"
+            class="subtitle-text"
+            color="secondary-button-color"
+            text-color="on-secondary-button-color"
             :label="authentication.user ? 'Профиль' : 'Войти'"
           />
         </div>
       </div>
     </div>
-    <q-separator class="divider-color" />
   </q-header>
+  <SelectCompanyModal
+    :model-value="selectCompanyModal"
+    @update:model-value="selectCompanyModal = false"
+    @select="selectCompany($event)"
+  />
+  <ServiceSettingsModal
+    :model-value="serviceModal"
+    @update:model-value="serviceModal = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -131,13 +92,20 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue'
 import { store } from 'src/models/store'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import ServiceSettingsSkeleton from 'src/components/serviceSettings/ServiceSettingsSkeleton.vue'
+import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
+import { ref } from 'vue'
+import { Company } from 'src/models/company/company'
+import { companyRepo } from 'src/models/company/companyRepo'
+import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 
 const router = useRouter()
 
-const route = useRoute()
+const selectCompanyModal = ref(false)
+
+const serviceModal = ref(false)
 
 const profileButtonClickHandler = () => {
   if (authentication.user) {
@@ -147,22 +115,10 @@ const profileButtonClickHandler = () => {
   }
 }
 
-const scrollToBlock = (v: string, tab?: string) => {
-  if (route.name !== 'home') {
-    void router.push({
-      name: 'home',
-    })
-    setTimeout(() => {
-      scrollToBlock(v, tab)
-    }, 300)
-  } else {
-    const groupElement = document.getElementById(v)
-    if (groupElement) {
-      if (tab) store.offersTab = tab
-      const y = groupElement.getBoundingClientRect().top + window.scrollY - 120
-      window.scrollTo({ top: y, behavior: 'smooth' })
-    }
-  }
+const selectCompany = async (v: Company) => {
+  selectCompanyModal.value = false
+  companyRepo.cartCompany = v
+  serviceModal.value = true
 }
 </script>
 

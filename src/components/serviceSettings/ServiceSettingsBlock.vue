@@ -1,8 +1,5 @@
 <template>
-  <div
-    @click="openDialog()"
-    class="row no-wrap gap-3 py-2 pl-xs-3 pl-sm-5 pr-xs-3 pr-sm-7 cursor-pointer box-shadow border-radius items-center"
-    :class="
+  <!-- :class="
       $cart.item?.type === 'delivery'
         ? 'bg-delivery-button-color text-on-delivery-button-color'
         : $cart.item?.type === 'pickup'
@@ -10,17 +7,39 @@
         : $cart.item?.type === 'booking'
         ? 'bg-booking-button-color text-on-booking-button-color'
         : 'background-color text-on-background-color'
-    "
-    :style="
-      $cart.item
-        ? $q.screen.sm
-          ? 'max-width: 250px'
-          : 'max-width: 350px;'
-        : ''
-    "
-    style="overflow: hidden"
+    " -->
+  <div
+    @click="openDialog()"
+    class="row no-wrap gap-20 subtitle-text cursor-pointer border-radius items-center bg-primary text-on-primary"
+    style="overflow: hidden; height: 48px; padding: 0 40px"
   >
-    <div style="background-color: #ffffff7f" class="border-radius px-4 py-3">
+    <div v-if="!$cart.item" class="row no-wrap gap-4 items-center">
+      <!-- <div style="background-color: #ffffff7f" class="border-radius px-4 py-3"> -->
+      <q-icon size="20px" :name="'fa-solid fa-location-dot'" />
+      <!-- </div> -->
+      <div>Выбрать способ получения</div>
+    </div>
+    <template v-else>
+      <div class="row no-wrap gap-4 items-center">
+        <!-- style="background-color: #ffffff7f" -->
+
+        <div class="border-radius px-4 py-3 bg-on-primary">
+          <q-icon color="primary" size="20px" :name="'fa-solid fa-box'" />
+        </div>
+        <div>{{ $cart.item.currentDeliveryType }}</div>
+      </div>
+      <div class="row no-wrap gap-4 items-center">
+        <div class="border-radius bg-on-primary px-4 py-3">
+          <q-icon
+            size="20px"
+            color="primary"
+            :name="'fa-solid fa-location-dot'"
+          />
+        </div>
+        <div>{{ $cart.item.currentAddress }}</div>
+      </div>
+    </template>
+    <!-- <div style="background-color: #ffffff7f" class="border-radius px-4 py-3">
       <q-icon
         size="20px"
         :name="
@@ -43,23 +62,12 @@
           {{ currentAddress }}
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script lang="ts" setup>
-import { cartRepo } from 'src/models/carts/cartRepo'
-import { computed } from 'vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
-
-const currentAddress = computed(() => {
-  return cartRepo.item
-    ? cartRepo.item.type === 'delivery'
-      ? cartRepo.item.deliveryAddress?.name
-      : cartRepo.item.salesPoint.customAddress ||
-        cartRepo.item.salesPoint.address
-    : ''
-})
 
 const openDialog = () => {
   if (!companyGroupRepo.item) return
@@ -67,16 +75,6 @@ const openDialog = () => {
     store.selectCompanyModal = true
   } else {
     store.serviceSettingsModal = true
-  }
-}
-
-const currentDeliveryType = () => {
-  if (cartRepo.item?.type === 'pickup') {
-    return 'Самовывоз'
-  } else if (cartRepo.item?.type === 'delivery') {
-    return 'Доставка'
-  } else if (cartRepo.item?.type === 'booking') {
-    return 'Бронь'
   }
 }
 </script>

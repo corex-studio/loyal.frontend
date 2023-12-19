@@ -128,6 +128,20 @@ export class Cart implements BaseModel {
     this.walletPayments = raw.wallet_payments
   }
 
+  get currentAddress() {
+    return this.type === 'delivery'
+      ? this.deliveryAddress?.name
+      : this.salesPoint.customAddress || this.salesPoint.address
+  }
+
+  get currentDeliveryType() {
+    return this.type === 'pickup'
+      ? 'Самовывоз'
+      : this.type === 'delivery'
+      ? 'Доставка'
+      : 'Бронь'
+  }
+
   toJson(): Record<string, any> {
     return {
       // id: this.id,
