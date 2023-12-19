@@ -84,20 +84,20 @@ export const beautifyNumber = (x: number, toFixed = false) => {
 }
 
 export const parseAlphaColorsFromCorrect = (str: string) => {
-  if (str.length === 9) {
-    const firstTwo = str.substr(1, 2)
-    const res = str.charAt(0) + str.substr(3, str.length) + firstTwo
+  if (str.length === 8) {
+    const firstTwo = str.substr(0, 2)
+    const res = str.substr(2, str.length) + firstTwo
     return res
   } else return str
 }
 
-export const parseAlphaColorsToCorrect = (str: string) => {
-  if (str.length === 9) {
-    const lastTwo = str.substr(-2)
-    const res = str.charAt(0) + lastTwo + str.substr(1, str.length - 3)
-    return res
-  } else return str
-}
+// export const parseAlphaColorsToCorrect = (str: string) => {
+//   if (str.length === 8) {
+//     const lastTwo = str.substr(-2)
+//     const res = str.charAt(0) + lastTwo + str.substr(1, str.length - 3)
+//     return res
+//   } else return str
+// }
 
 export const addHash = (v: string) => {
   if (first(v) !== '#') return '#' + v

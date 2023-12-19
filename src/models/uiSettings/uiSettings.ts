@@ -1,4 +1,3 @@
-import { addHash } from './../store'
 import { ImageRaw, Image } from 'src/models/image/image'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { parseAlphaColorsFromCorrect } from '../store'
@@ -30,8 +29,8 @@ export class Color implements BaseModel {
   color: string
   on_color: string
   constructor(raw: ColorRaw) {
-    this.color = parseAlphaColorsFromCorrect(addHash(raw.color))
-    this.on_color = parseAlphaColorsFromCorrect(addHash(raw.on_color))
+    this.color = parseAlphaColorsFromCorrect(raw.color)
+    this.on_color = parseAlphaColorsFromCorrect(raw.on_color)
   }
 
   toJson() {
@@ -204,7 +203,7 @@ export class UiSetting implements BaseModel {
     this.onBackgroundColor = raw.on_background_color
     this.boxShadow = {
       uuid: raw.box_shadow.uuid,
-      color: parseAlphaColorsFromCorrect(addHash(raw.box_shadow.color)),
+      color: parseAlphaColorsFromCorrect(raw.box_shadow.color),
       blur: raw.box_shadow.blur,
       spread: raw.box_shadow.spread,
       offset_x: raw.box_shadow.offset_x,
