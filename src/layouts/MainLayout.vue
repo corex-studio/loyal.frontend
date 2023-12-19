@@ -40,8 +40,8 @@
       <q-page-container
         :style="
           $q.screen.lt.md
-            ? ''
-            : `min-height: calc(100vh - ${footerAndHeaderHeight}px);`
+            ? 'padding-bottom: 50px'
+            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: 100px`
         "
         :class="{
           'c-container':
@@ -51,7 +51,6 @@
               $route.path.includes(v)
             ),
         }"
-        style="padding-bottom: 50px"
       >
         <!-- {{ $route.name }} -->
         <router-view />
