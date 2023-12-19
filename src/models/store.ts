@@ -1,3 +1,4 @@
+import { first } from 'lodash'
 import { companyGroupRepo } from './companyGroup/companyGroupRepo'
 import { companyRepo } from './company/companyRepo'
 import { menuRepo } from './menu/menuRepo'
@@ -96,6 +97,11 @@ export const parseAlphaColorsToCorrect = (str: string) => {
     const res = str.charAt(0) + lastTwo + str.substr(1, str.length - 3)
     return res
   } else return str
+}
+
+export const addHash = (v: string) => {
+  if (first(v) !== '#') return '#' + v
+  return v
 }
 
 export const store = reactive(new Store())
