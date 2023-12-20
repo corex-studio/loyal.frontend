@@ -11,7 +11,7 @@ export type MenuModifierGroupItemRaw = {
   sorting: number
   modifier_group: string | null
   is_hidden: boolean
-  price: string | null
+  price: number | null
   restrictions: {
     max_quantity: number
     min_quantity: number
@@ -49,7 +49,7 @@ export class MenuModifierGroupItem implements BaseModel {
   sorting: number
   modifier_group: string | null
   is_hidden: boolean
-  price: string | null
+  price: number | null
   restrictions: {
     max_quantity: number
     min_quantity: number

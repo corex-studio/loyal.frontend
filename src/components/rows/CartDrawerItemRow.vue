@@ -1,6 +1,6 @@
 <template>
   <template v-if="cartItem">
-    <div class="row full-width items-start no-wrap justify-between">
+    <div class="row full-width items-start no-wrap justify-between gap-5">
       <div class="row gap-6 items-center no-wrap">
         <q-img
           class="rounded-5"

@@ -1,24 +1,25 @@
 <template>
   <div class="row">
-    <div class="row no-wrap items-center justify-between full-width mb-6">
-      <div class="header3 bold col ellipsis-2-lines">{{ group.name }}</div>
-      <div
+    <div class="row no-wrap justify-between full-width mb-6">
+      <div class="header3 bold ellipsis-2-lines">{{ group.name }}</div>
+      <q-chip
         v-if="
           group.restrictions?.min_quantity &&
           !_.sum(group.items.map((el) => el.quantity))
         "
-        class="body px-7 text-danger"
+        class="text-on-secondary-button-color"
+        color="secondary-button-color"
       >
         {{ 'Обязательно' }}
-      </div>
+      </q-chip>
     </div>
 
     <div class="column full-width no-wrap">
       <div
         v-if="group.restrictions && group.restrictions.max_quantity > 1"
-        class="row justify-between mb-10"
+        class="row justify-between mb-10 pr-5"
       >
-        <div class="bold">
+        <div style="opacity: 0.5" class="bold">
           Добавлено: {{ _.sum(group.items.map((v) => v.quantity)) }} /{{
             group.restrictions?.max_quantity
           }}
@@ -33,42 +34,33 @@
         />
       </div>
       <div class="column">
-        <template
-          v-if="group.restrictions && group.restrictions?.max_quantity < 2"
-        >
-          <template v-for="(el, index) in group.items" :key="index">
-            <div
-              :class="[
-                { 'pt-6': index },
-                { 'pb-6': index !== group.items.length - 1 },
-              ]"
-              @click="selectModifier(el)"
-              class="row full-width items-center justify-between cursor-pointer body"
-            >
-              <div class="row no-wrap items-center gap-3">
-                <q-checkbox
-                  @click="selectModifier(el)"
-                  size="40px"
-                  dense
-                  :model-value="!!el.quantity"
-                />
-                <div :class="{ 'text-primary': el.quantity }" class="column">
-                  <div
-                    :class="{
-                      bold:
-                        group.restrictions &&
-                        group.restrictions?.max_quantity > 1,
-                    }"
-                  >
-                    {{ el.name }}
-                  </div>
-                </div>
-              </div>
-              <div>+{{ el.price }} ₽</div>
-            </div>
-          </template>
+        <template v-if="modifierViewType === 'radio'">
+          <ModifierRadioSelectorRow
+            v-for="(el, index) in group.items"
+            :key="index"
+            @select="radioClickHandler($event)"
+            :item="el"
+          />
         </template>
-        <div v-else-if="group.restrictions" class="row full-width">
+
+        <template v-if="modifierViewType === 'check'">
+          <ModifierCheckSelectorRow
+            v-for="(el, index) in group.items"
+            :key="index"
+            @select="checkboxClickHandler($event)"
+            :item="el"
+          />
+        </template>
+        <template v-if="modifierViewType === 'row'">
+          <ModifierSelectorRow
+            v-for="(el, index) in group.items"
+            :key="index"
+            :item="el"
+            :group="group"
+          />
+        </template>
+
+        <div v-if="modifierViewType === 'card'" class="row full-width">
           <GridContainer
             :items="group.items"
             :lg="3"
@@ -76,21 +68,10 @@
             :md="3"
             :sm="2"
             :xs="2"
-            gap="12px"
+            gap="20px"
           >
             <template v-slot:item="{ item }: { item: MenuModifierGroupItem }">
-              <OptionalModifierCard :modifier="item" />
-              <!-- <ChangeAmount
-                small
-                :model-value="item.quantity"
-                @update:model-value="item.quantity = $event"
-                :disable-adding="
-                  _.sum(group.items.map((v) => v.quantity)) >=
-                    item.restrictions.max_quantity ||
-                  item.quantity >= item.restrictions.max_quantity
-                "
-              /> -->
-              <!-- <MenuItemCard :item="(item as MenuItem)" /> -->
+              <OptionalModifierCard :group="group" :modifier="item" />
             </template>
           </GridContainer>
         </div>
@@ -107,16 +88,37 @@ import {
 import _ from 'lodash'
 import GridContainer from 'src/components/containers/GridContainer.vue'
 import OptionalModifierCard from './OptionalModifierCard.vue'
+import { computed } from 'vue'
+import ModifierRadioSelectorRow from './ModifierRadioSelectorRow.vue'
+import ModifierCheckSelectorRow from './ModifierCheckSelectorRow.vue'
+import ModifierSelectorRow from './ModifierSelectorRow.vue'
 
 const props = defineProps<{
   group: MenuModifierGroup
 }>()
 
-const selectModifier = (item: MenuModifierGroupItem) => {
-  if (props.group.restrictions && props.group.restrictions.max_quantity < 2) {
-    props.group.items.forEach((el) => (el.quantity = 0))
-    item.quantity = 1
-  }
+const modifierViewType = computed(() => {
+  if (props.group.restrictions) {
+    if (props.group.restrictions?.max_quantity < 2) {
+      return 'radio'
+    } else {
+      if (props.group.items.every((v) => v.restrictions.max_quantity === 1)) {
+        return 'check'
+      } else {
+        if (props.group.items.some((v) => v.image)) return 'card'
+        else return 'row'
+      }
+    }
+  } else return undefined
+})
+
+const radioClickHandler = (item: MenuModifierGroupItem) => {
+  props.group.items.forEach((el) => (el.quantity = 0))
+  item.quantity = 1
+}
+
+const checkboxClickHandler = (item: MenuModifierGroupItem) => {
+  item.quantity = !!item.quantity ? 0 : 1
 }
 
 const clearSelection = () => {

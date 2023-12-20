@@ -5,9 +5,7 @@
       products && $q.screen.width < 415
         ? 'repeat(auto-fill, minmax(175px, 1fr));'
         : `repeat(${columns}, minmax(0, 1fr))`
-    }; ${
-      gap ? `gap: ${gap}` : $q.screen.xs ? 'gap: 14px' : 'gap: 30px'
-    }; grid-auto-rows: minmax(0px, 1fr`"
+    }; ${gap ? `gap: ${gap}` : $q.screen.xs ? 'gap: 14px' : 'gap: 30px'}; `"
   >
     <div v-for="(item, index) in items" :key="index">
       <slot name="item" v-bind:item="item"></slot>

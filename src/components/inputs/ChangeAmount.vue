@@ -1,15 +1,19 @@
 <template>
   <div
-    class="row items-center no-wrap bg-secondary-button-color border-radius px-1"
-    :class="{ 'full-width justify-between': fullWidth }"
+    class="row items-center no-wrap border-radius px-1"
+    :class="[
+      { 'full-width justify-between': fullWidth },
+      backgroundClass || 'bg-secondary-button-color',
+    ]"
+    :style="`height: ${_height}`"
   >
     <CIconButton
       icon="fal fa-minus"
       icon-color="on-secondary-button-color"
-      :color="'secondary-button-color'"
+      :color="buttonsColor || 'secondary-button-color'"
       :size="_height"
       :hover-icon-color="minValue >= modelValue ? 'secondary' : 'primary'"
-      @click="minus"
+      @click.capture.stop="minus"
       :disabled="disabled || noEdit"
       no-padding
     ></CIconButton>
@@ -70,10 +74,10 @@
     <CIconButton
       icon="fal fa-plus"
       icon-color="on-secondary-button-color"
-      :color="'secondary-button-color'"
+      :color="buttonsColor || 'secondary-button-color'"
       :size="_height"
       :hover-icon-color="minValue >= modelValue ? 'secondary' : 'primary'"
-      @click="plus"
+      @click.capture.stop="plus"
       :disabled="disabled || disableAdding || noEdit"
       no-padding
     >
@@ -100,10 +104,6 @@ const props = defineProps({
   small: Boolean,
   extraSmall: Boolean,
   height: String,
-  backgroundColor: {
-    type: String,
-    default: 'secondary6',
-  },
   modelValue: {
     type: Number,
     default: 0,
@@ -125,6 +125,8 @@ const props = defineProps({
   textColor: String,
   denominator: String,
   disableAdding: Boolean,
+  buttonsColor: String,
+  backgroundClass: String,
 })
 
 const inputValue = ref(0)
@@ -149,7 +151,7 @@ const unitQuantity = computed(() => {
 })
 
 const _height = computed(() => {
-  return props.small ? '34px' : '40px'
+  return props.small ? '36px' : '40px'
 })
 
 const setInputRef = () => {

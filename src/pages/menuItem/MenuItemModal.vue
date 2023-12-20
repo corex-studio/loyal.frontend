@@ -7,7 +7,7 @@
     height-percent="100%"
     no-overflow
   >
-    <div class="row gap-15 full-height">
+    <div class="row full-height">
       <q-img
         :ratio="1"
         class="col"
@@ -27,7 +27,7 @@
       ></q-img>
       <div
         style="overflow-x: auto"
-        class="column no-wrap col justify-between full-height"
+        class="column no-wrap col justify-between full-height pl-15"
       >
         <div class="column full-width">
           <div class="header bold mb-6">{{ $menuItem.item?.name }}</div>
@@ -48,14 +48,14 @@
               v-for="(el, index) in currentSize?.modifierGroups"
               :key="index"
             >
-              <q-separator v-if="index" color="divider-color" class="my-12" />
+              <q-separator v-if="index" color="divider-color" class="my-8" />
               <ModifiersSelector :group="el" />
             </div>
           </div>
         </div>
 
         <div
-          class="row items-center gap-sm-15 gap-xs-5"
+          class="row items-center gap-sm-15 gap-xs-5 pr-5"
           :class="[
             { 'mt-15': currentSize?.modifierGroups?.length },
             {
