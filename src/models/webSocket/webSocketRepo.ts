@@ -1,3 +1,4 @@
+import { Notify } from 'quasar'
 import { waiterCallRepo } from './../customer/waiterCall/waiterCallRepo'
 import {
   WaiterCallRaw,
@@ -23,6 +24,12 @@ export const handleMessage = (v: MessageEvent<string>) => {
   if (response.type === 'cart.updated') {
     cartRepo.item = new Cart(response.data as CartRaw)
     cartRepo.loading = false
+    cartRepo.item.errors.forEach((error) => {
+      Notify.create({
+        message: error.description || undefined,
+        color: 'danger',
+      })
+    })
   }
   if (response.type === 'user.updated') {
     authentication.user = new Customer(response.data as CustomerRaw)

@@ -3,7 +3,12 @@
     class="row full-width items-center justify-between cursor-pointer body pr-5 py-7"
   >
     <div @click="$emit('select', item)" class="row no-wrap items-center gap-5">
-      <div
+      <RoundedSelector
+        height="24px"
+        width="24px"
+        :model-value="!!item.quantity"
+      />
+      <!-- <div
         :class="!!item.quantity ? 'radio-selected' : 'radio'"
         style="height: 24px; width: 24px; border-radius: 50%"
         class="row items-center justify-center"
@@ -13,7 +18,7 @@
           class="bg-primary"
           style="height: 10px; width: 10px; border-radius: 50%"
         ></div>
-      </div>
+      </div> -->
       <div>
         {{ item.name }}
       </div>
@@ -27,6 +32,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
 import { MenuModifierGroupItem } from 'src/models/menu/menuModifierGroup/menuModifierGroup'
 
 defineProps<{

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-backing-color">
+  <div ref="footer" class="bg-backing-color">
     <q-separator v-if="!$q.screen.xs && $route.name !== 'menuItemPage'" />
     <div class="pb-md-30" style="bottom: 0; z-index: 2100">
       <div class="c-container" v-if="$q.screen.gt.sm">
@@ -18,8 +18,22 @@
 </template>
 
 <script setup lang="ts">
+import { store } from 'src/models/store'
 import FooterDesktop from './FooterDesktop.vue'
 import FooterMobile from './FooterMobile.vue'
+import { onMounted, ref } from 'vue'
+
+const footer = ref<HTMLDivElement>()
+
+onMounted(() => {
+  setTimeout(() => {
+    store.footerHeight = footer.value?.clientHeight || 0
+
+    document.addEventListener('resize', () => {
+      store.footerHeight = footer.value?.clientHeight || 0
+    })
+  }, 50)
+})
 </script>
 
 <style scoped lang="scss">

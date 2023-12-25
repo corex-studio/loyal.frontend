@@ -7,6 +7,24 @@ import moment from 'moment'
 import { ImageRaw } from '../image/image'
 import { MenuModifierGroupRaw } from '../menu/menuModifierGroup/menuModifierGroup'
 
+export type PaymentObjectType = {
+  label: string
+  type: PaymentType
+  class: string
+  icon: string
+}
+
+export enum OrderStatusType {
+  CREATED = 'created',
+  VALIDATED = 'validated',
+  ACCEPTED = 'accepted',
+  COOKING = 'cooking',
+  READY = 'ready',
+  ON_WAY = 'on_way',
+  DECLINED = 'declined',
+  CLOSED = 'closed',
+}
+
 export enum PaymentType {
   CASH = 'cash',
   CARD = 'card',
@@ -153,7 +171,7 @@ export type OrderRaw = {
   sales_point: SalesPointRaw
   type: string
   customer: CustomerRaw
-  status: string
+  status: OrderStatusType
   external_status: string | null
   external_id: string | null
   payment_status: string
@@ -180,7 +198,7 @@ export class Order implements BaseModel {
   salesPoint: SalesPoint
   type: string
   customer: Customer
-  status: string
+  status: OrderStatusType
   externalStatus: string | null
   externalId: string | null
   paymentStatus: string

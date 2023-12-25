@@ -2,13 +2,13 @@
   <div class="column gap-6 subtitle-text full-width">
     <div class="row full-width justify-between items-center">
       <div>Сумма за товары</div>
-      <div>{{ $cart.item?.sum }}</div>
+      <div>{{ $cart.item?.sum }} ₽</div>
     </div>
     <div class="row full-width justify-between items-center">
       <div>Доставка</div>
-      <div>{{ $cart.item?.deliveryPrice }}</div>
+      <div>{{ $cart.item?.deliveryPrice }} ₽</div>
     </div>
-    <div class="row full-width justify-between items-center">
+    <!-- <div class="row full-width justify-between items-center">
       <div class="column gap-2">
         <div>Бонусы</div>
         <CButton
@@ -20,7 +20,7 @@
       </div>
       <q-chip v-if="usedPoints" color="primary"></q-chip>
       <div v-else>0</div>
-    </div>
+    </div> -->
     <q-separator color="divider-color" class="my-2" />
     <div class="header3 bold row justify-between items-center">
       <div>Итого</div>
@@ -29,12 +29,12 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { sum } from 'lodash'
-import CButton from 'src/components/template/buttons/CButton.vue'
-import { cartRepo } from 'src/models/carts/cartRepo'
-import { computed } from 'vue'
+// import { sum } from 'lodash'
+// import CButton from 'src/components/template/buttons/CButton.vue'
+// import { cartRepo } from 'src/models/carts/cartRepo'
+// import { computed } from 'vue'
 
-const usedPoints = computed(() => {
-  return sum(cartRepo.item?.walletPayments.map((v) => v.applied_sum))
-})
+// const usedPoints = computed(() => {
+//   return sum(cartRepo.item?.walletPayments.map((v) => v.applied_sum))
+// })
 </script>

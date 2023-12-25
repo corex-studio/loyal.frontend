@@ -2,45 +2,71 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    width="456px"
+    width="735px"
   >
-    <template v-slot:header>
-      <div class="row full-width items-center justify-between gap-5 no-wrap">
-        <div>Выберите заведение</div>
-        <div
-          class="row box-shadow bg-white-opacity px-4 py-2 border-radius justify-center items-center"
-        >
-          <CIcon color="on-secondary-button-color" name="fa-light fa-shop" />
-        </div>
-      </div>
-    </template>
-    <div class="column full-width gap-8">
-      <CompanyRow
-        @click="selectCompany(el)"
-        v-for="(el, index) in $companyGroup.item?.companies"
-        :key="index"
-        :item="el"
-      />
+    <template v-slot:header> Выберите заведение </template>
+    <!-- {{ selectedCompany }} -->
+    <div v-if="$companyGroup.item" class="row full-width">
+      <GridContainer
+        :items="$companyGroup.item?.companies"
+        :lg="3"
+        :xl="3"
+        :md="2"
+        :sm="2"
+        :xs="2"
+        gap="18px"
+      >
+        <template v-slot:item="{ item }">
+          <CompanyRow
+            @click="selectCompany(item)"
+            :item="item"
+            :selected="selectedCompany?.id === item.id"
+            class="col-4"
+          />
+        </template>
+      </GridContainer>
     </div>
+    <CButton
+      @click="$emit('select', selectedCompany)"
+      label="Выбрать заведение"
+      :disabled="!selectedCompany"
+      height="48px"
+      width="100%"
+      style="max-width: 288px"
+      class="body mt-15"
+    />
   </CDialog>
 </template>
 <script lang="ts" setup>
 import { Company } from 'src/models/company/company'
 import CDialog from '../template/dialogs/CDialog.vue'
-import CIcon from '../template/helpers/CIcon.vue'
 import CompanyRow from 'src/pages/profile/CompanyRow.vue'
+import GridContainer from '../containers/GridContainer.vue'
+import CButton from '../template/buttons/CButton.vue'
+import { ref, watch } from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
 
-defineProps<{
+const props = defineProps<{
   modelValue: boolean
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
-  (evt: 'select', v: Company): void
+  (evt: 'select', v: Company | null): void
 }>()
 
+const selectedCompany = ref<Company | null>(null)
+
+watch(
+  () => props.modelValue,
+  (v) => {
+    if (v && companyRepo.item) {
+      selectedCompany.value = companyRepo.item
+    }
+  }
+)
+
 const selectCompany = (v: Company) => {
-  // if (v.salesPoints) salesPointRepo.item = v.salesPoints[0]
-  emit('select', v)
+  selectedCompany.value = v
 }
 </script>

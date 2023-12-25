@@ -16,16 +16,16 @@
       "
       class="relative-position no-overflow border-radius column no-wrap no-shadow bg-background-color"
     >
+      <!-- bg-modal-header-color text-on-modal-header-color -->
       <div
         v-if="$slots.header"
-        style="height: 60px"
-        class="row full-width items-center header3 px-10 bg-modal-header-color text-on-modal-header-color"
+        class="row full-width items-center header2 bold px-15 bg-background-color text-on-background-color mt-15"
       >
         <slot name="header"></slot>
       </div>
       <div
         :class="[
-          !noPadding ? 'pb-15 px-10' : dialogClass,
+          !noPadding ? 'pb-15 px-15' : dialogClass,
           $slots.header ? (noPadding ? '' : 'pt-10') : 'pt-15 ',
         ]"
         :style="`overflow:${noOverflow ? 'hidden' : 'auto'};

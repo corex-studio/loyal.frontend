@@ -12,30 +12,21 @@
           : 'pb-xs-27'
       "
     >
-      <template v-if="!isArrangementPage">
-        <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
-        <TopHeader />
+      <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+      <TopHeader v-if="!isArrangementPage" />
 
-        <div ref="header">
-          <template v-if="!$q.screen.xs">
-            <MainHeader />
-          </template>
-
-          <!-- <BottomHeader
-          v-if="$store.tableMode ? $route.name === 'qrHome' : true"
-        /> -->
-          <div v-if="$q.screen.lt.sm" class="full-width">
-            <MobileMenu
-              v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
-            />
-            <QRMobileMenu
-              v-else-if="
-                $pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'
-              "
-            />
-          </div>
-        </div>
+      <template v-if="!$q.screen.xs">
+        <MainHeader />
       </template>
+
+      <div v-if="$q.screen.lt.sm" class="full-width">
+        <MobileMenu
+          v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
+        />
+        <QRMobileMenu
+          v-else-if="$pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'"
+        />
+      </div>
 
       <q-page-container
         :style="
@@ -52,17 +43,12 @@
             ),
         }"
       >
-        <!-- {{ $route.name }} -->
         <router-view />
         <CartDrawer />
       </q-page-container>
 
-      <q-footer v-if="!$store.tableMode && !isArrangementPage">
-        <CFooter
-          ref="footer"
-          class="full-width"
-          style="bottom: 0; z-index: 2100"
-        />
+      <q-footer v-if="!$store.tableMode">
+        <CFooter class="full-width" style="bottom: 0; z-index: 2100" />
       </q-footer>
     </q-layout>
     <AuthModal
@@ -129,11 +115,6 @@ const route = useRoute()
 const router = useRouter()
 const ready = ref(false)
 
-const header = ref<HTMLDivElement>()
-const footer = ref<HTMLDivElement>()
-const footerHeight = ref(0)
-const headerHeight = ref(0)
-
 watch(
   () => authentication.user?.id,
   (v) => {
@@ -168,7 +149,7 @@ watch(
 )
 
 const footerAndHeaderHeight = computed(() => {
-  return Screen.gt.sm ? headerHeight.value + footerHeight.value : '0'
+  return Screen.gt.sm ? store.headerHeight + store.footerHeight : '0'
 })
 
 const isArrangementPage = computed(() => {
@@ -197,15 +178,6 @@ onMounted(async () => {
     await companyGroupRepo.current()
     await uiSettingsRepo.fetchSettings()
     await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
-
-    setTimeout(() => {
-      headerHeight.value = header.value?.clientHeight || 0
-      footerHeight.value = footer.value?.clientHeight || 0
-      document.addEventListener('resize', () => {
-        headerHeight.value = header.value?.clientHeight || 0
-        footerHeight.value = footer.value?.clientHeight || 0
-      })
-    }, 50)
 
     try {
       await authentication.validateTokens()

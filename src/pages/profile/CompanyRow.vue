@@ -1,11 +1,12 @@
 <template>
   <div
-    class="row gap-5 items-center no-wrap pa-3 company-row border-radius cursor-pointer"
+    class="row justify-center border-radius cursor-pointer"
+    style="overflow: hidden; max-height: 138px"
+    :style="`border: 1px ${getBorderColor} solid`"
   >
     <q-img
-      class="border-radius"
+      height="138px"
       fit="contain"
-      style="width: 75px; height: 75px"
       :src="item.image?.thumbnail || $store.images.empty"
     >
       <template v-slot:error>
@@ -17,17 +18,27 @@
           ></q-img>
         </span> </template
     ></q-img>
-    <div class="body bold">
+    <!-- <div class="body bold">
       {{ item.name }}
-    </div>
+    </div> -->
   </div>
 </template>
 <script lang="ts" setup>
 import { Company } from 'src/models/company/company'
+import { lightColor } from 'src/models/store'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   item: Company
+  selected: boolean
 }>()
+
+const getBorderColor = computed(() => {
+  return props.selected
+    ? '#' + uiSettingsRepo.item?.primaryColor.color
+    : lightColor(uiSettingsRepo.item?.backgroundColor.on_color || '000', '20')
+})
 </script>
 
 <style lang="scss" scoped>
