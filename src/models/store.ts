@@ -9,6 +9,8 @@ import { LocalStorage } from 'quasar'
 import { reactive } from 'vue'
 
 export class Store {
+  footerHeight = 0
+  headerHeight = 0
   salesPoint = 'd253cd53-044b-468d-8881-232f43715f5e'
   tableMode = false
   companyGroup = 'corex_demo'
@@ -25,6 +27,7 @@ export class Store {
   images = {
     empty: 'https://mtraktor.ru/images/no-image.png',
   }
+  catalogLoading = false
 
   getCompanyGroup(externalId: string) {
     // LocalStorage.getItem('Company-Group')
@@ -52,6 +55,7 @@ export class Store {
   }
 
   async loadCatalog(point: SalesPoint | string) {
+    this.catalogLoading = true
     let salesPoint: SalesPoint | null = null
 
     if (typeof point === 'string') {
@@ -73,6 +77,7 @@ export class Store {
       if (foundCompany) companyRepo.item = foundCompany
       menuRepo.item = await salesPointRepo.getMenu(salesPoint.id || '')
     }
+    this.catalogLoading = false
   }
 }
 
@@ -102,6 +107,14 @@ export const parseAlphaColorsFromCorrect = (str: string) => {
 export const addHash = (v: string) => {
   if (first(v) !== '#') return '#' + v
   return v
+}
+
+export const lightColor = (v: string, opacityValue: string) => {
+  if (v.length === 6) {
+    return `#${v}${opacityValue}`
+  } else {
+    return `#${v.slice(0, 6)}${opacityValue}`
+  }
 }
 
 export const store = reactive(new Store())

@@ -359,6 +359,10 @@ textarea + .q-field__label {
   border-radius: var(--border-radius) !important;
 }
 
+.default-input ::placeholder {
+  font: var(--header2);
+}
+
 .q-field--outlined .bg-black2.q-field__control:before {
   border: 1px solid $black2 !important;
 }
@@ -371,9 +375,9 @@ textarea + .q-field__label {
   color: var(--on-input-color) !important;
 }
 
-.default-input .q-field__control {
-  padding: 0 5px 0 10px;
-}
+// .default-input .q-field__control {
+//   padding: 0 5px 0 10px;
+// }
 
 .rounded-text-area .q-field__control {
   border-radius: 15px !important;

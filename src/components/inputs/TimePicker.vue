@@ -1,9 +1,10 @@
 <template>
   <CInput
-    :model-value="date || 'Не указано'"
+    :model-value="date || 'Ко времени'"
     :external-label="label"
     default
     :height="height"
+    input-class="body"
   >
     <q-menu
       v-model="menu"
@@ -73,6 +74,14 @@
         </div>
       </div>
     </q-menu>
+    <template v-slot:append>
+      <CIcon
+        class="cursor-pointer"
+        name="fa-solid fa-calendar-clock"
+        color="secondary-button-color"
+        size="20px"
+      />
+    </template>
   </CInput>
 </template>
 <script lang="ts" setup>
@@ -80,6 +89,7 @@ import { range } from 'lodash'
 import CInput from '../template/inputs/CInput.vue'
 import { ref, watch } from 'vue'
 import moment from 'moment'
+import CIcon from '../template/helpers/CIcon.vue'
 
 const props = defineProps<{
   date: string | null

@@ -129,10 +129,13 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import CartDeliveryInfo from './CartDeliveryInfo.vue'
 import CartTotalInfo from './CartTotalInfo.vue'
+import { useRouter } from 'vue-router'
 
 const selectPaymentType = ref(false)
 
 const acceptModal = ref(false)
+
+const router = useRouter()
 
 const loading = ref(false)
 
@@ -180,7 +183,9 @@ const deleteCartItem = async (item: CartItem) => {
 }
 
 const arrange = () => {
-  return
+  void router.push({
+    name: 'arrangementPage',
+  })
 }
 
 // const makeAnOrder = async () => {

@@ -1,8 +1,6 @@
 <template>
   <div>
-    <ArrangementHeader />
+    <router-view />
   </div>
 </template>
-<script lang="ts" setup>
-import ArrangementHeader from './ArrangementHeader.vue'
-</script>
+<script lang="ts" setup></script>

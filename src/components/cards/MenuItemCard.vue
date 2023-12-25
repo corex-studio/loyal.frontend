@@ -3,7 +3,10 @@
     style="height: 100%; overflow: overlay; overflow-x: hidden"
     :style="
       $companyGroup.item?.externalId === 'corex_demo'
-        ? 'border: 1px #f5f5f5 solid'
+        ? `border: 1px ${lightColor(
+            $uiSettings.item?.backgroundColor.on_color || '000',
+            '10'
+          )} solid`
         : ''
     "
     class="border-radius box-shadow column no-wrap cursor-pointer relative-position"
@@ -34,9 +37,10 @@
         </span>
       </template>
     </q-img>
+    <!-- text-on-product-tile-color -->
     <div
       style="height: 208px"
-      class="px-8 py-8 column no-wrap justify-between col-grow text-on-product-tile-color"
+      class="px-8 py-8 column no-wrap justify-between col-grow text-on-backgroun-color"
     >
       <div class="column no-wrap mb-14">
         <div class="row full-width no-wrap gap-6">
@@ -54,15 +58,17 @@
         </div>
       </div>
       <div class="row no-wrap full-width justify-between items-center">
-        <div class="header3 bold text-on-product-tile-color">
+        <div class="header3 bold text-on-backgroun-color">
           {{ item.sizes[0].price }}
           ₽
         </div>
-        <!-- {{ getButtonBg }} -->
         <CButton
           @click.capture.stop="toCartClickHandler()"
           color="background-color"
-          :style="`background-color: ${getButtonBg} !important`"
+          :style="`background-color: ${lightColor(
+            $uiSettings.item?.primaryColor.color || '000',
+            '27'
+          )} !important`"
           text-color="primary"
           height="42px"
           class="subtitle-text"
@@ -75,32 +81,23 @@
 </template>
 <script lang="ts" setup>
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
-import { store } from 'src/models/store'
+import { lightColor, store } from 'src/models/store'
 import CButton from '../template/buttons/CButton.vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { authentication } from 'src/models/authentication/authentication'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { Notify } from 'quasar'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 const props = defineProps<{
   item: MenuItem
 }>()
 
 const loading = ref(false)
-
-const getButtonBg = computed(() => {
-  if (uiSettingsRepo.item?.primaryColor.color.length === 6) {
-    return `#${uiSettingsRepo.item?.primaryColor.color}27`
-  } else {
-    return `#${uiSettingsRepo.item?.primaryColor.color.slice(0, 6)}27`
-  }
-})
 
 const toCartClickHandler = async () => {
   if (!cartRepo.item && salesPointRepo.item) {

@@ -86,7 +86,7 @@ export type CustomerRaw = {
   loyalty_system: string | null
   active: boolean
   user: number
-  phone: number
+  phone: number | null
   last_authorization: string | null
   registered_at: string | null
   description: string | null
@@ -119,7 +119,7 @@ export class Customer implements BaseModel {
   loyaltySystem: string | null
   active: boolean
   user: number
-  phone: number
+  phone: number | null
   lastAuthorization: string | null
   registeredAt: string
   description: string | null

@@ -3,7 +3,7 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="320px"
-    height="359px"
+    height="385px"
   >
     <!-- <CButton label="выйти" @click="authentication.logout()" /> -->
     <div class="column text-on-background-color">

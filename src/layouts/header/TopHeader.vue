@@ -20,7 +20,7 @@
         @click="el.click()"
         text-button
         class="subtitle-text"
-        text-color="on-backhround-color"
+        text-color="on-background-color"
         :label="el.label"
       />
       <!-- {{ el.label }} -->

@@ -14,10 +14,16 @@
       additional ? 'px-3' : 'px-6 ',
       item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional
         ? 'bg-secondary-button-color text-on-secondary-button-color'
-        : 'text-on-background-color',
+        : isSticky
+        ? 'text-on-background-color'
+        : 'text-on-secondary-button-color',
     ]"
   >
-    <div class="ellipsis" style="transform: translate(0, 53%)">
+    <div
+      class="ellipsis"
+      :class="{ 'text-on-background-color': additional }"
+      style="transform: translate(0, 53%)"
+    >
       {{ item.name }}
     </div>
   </div>
@@ -41,6 +47,7 @@ let timeout: NodeJS.Timeout | null = null
 const props = defineProps<{
   item: MenuGroup
   additional?: boolean
+  isSticky?: boolean
 }>()
 
 watch(

@@ -27,6 +27,7 @@
         >
           <div
             v-if="replacementAvailable"
+            @click="$store.selectCompanyModal = true"
             class="row no-wrap gap-4 items-center cursor-pointer subtitle-text"
             style="position: absolute"
           >
@@ -64,15 +65,22 @@
               :key="index"
               ref="groupButtons"
             >
-              <GroupButton :key="key" :item="el" />
+              <GroupButton :is-sticky="isSticky" :key="key" :item="el" />
             </div>
             <div
               v-if="categories.length > 8 && !$q.screen.xs"
-              class="row mt-2 no-wrap gap-4 cursor-pointer text-on-background-color"
+              class="row mt-2 no-wrap gap-4 cursor-pointer"
+              :class="
+                isSticky
+                  ? 'text-on-background-color'
+                  : 'text-on-secondary-button-color'
+              "
             >
               Еще
               <CIcon
-                color="on-background-color"
+                :color="
+                  isSticky ? 'on-background-color' : 'on-secondary-button-color'
+                "
                 name="fa-regular fa-angle-down"
                 style="transition: transform 0.25s ease"
                 :style="moreCategoriesMenu ? 'transform:rotate(180deg)' : ''"

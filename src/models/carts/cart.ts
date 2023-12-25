@@ -48,6 +48,7 @@ export type CartParams = {
     wallet_payment: string
     applied_sum: number
   }[]
+  comment?: string | null
 }
 
 export type CartRaw = {
@@ -76,6 +77,10 @@ export type CartRaw = {
   current_delivery_settings: string | null
   delivery_price: number
   wallet_payments: WalletPaymentRaw[]
+  errors: {
+    description: string | null
+    title: string | null
+  }[]
 }
 
 export class Cart implements BaseModel {
@@ -98,6 +103,10 @@ export class Cart implements BaseModel {
   cartItems: CartItem[]
   deliveryPrice: number
   walletPayments: WalletPaymentRaw[]
+  errors: {
+    description: string | null
+    title: string | null
+  }[]
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -126,6 +135,7 @@ export class Cart implements BaseModel {
     this.cartItems = raw.cart_items.map((item) => new CartItem(item))
     this.deliveryPrice = raw.delivery_price
     this.walletPayments = raw.wallet_payments
+    this.errors = raw.errors
   }
 
   get currentAddress() {

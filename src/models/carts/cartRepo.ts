@@ -8,9 +8,11 @@ import { Pad } from '../pads/pad'
 export class CartRepo extends BaseRepo<Cart> {
   api = cartApi
   loading = false
+  setParamsLoading = false
   arrangeLoading = false
 
   async setParams(data: CartParams) {
+    this.setParamsLoading = true
     if (!data.sales_point && this.item?.salesPoint.id) {
       data.sales_point = this.item.salesPoint.id
     }
@@ -19,6 +21,7 @@ export class CartRepo extends BaseRepo<Cart> {
       action: 'set_params',
       data: { ...data },
     })
+    this.setParamsLoading = false
     this.item = new Cart(res)
     return this.item
   }
