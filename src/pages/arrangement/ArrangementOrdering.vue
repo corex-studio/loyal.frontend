@@ -2,9 +2,14 @@
   <div v-if="$cart.item" class="row pt-20 text-on-background-color">
     <div class="col column gap-15">
       <div class="column gap-12">
-        <!-- <div class="header2 bold">Заказ на доставку</div>
+        <div class="header2 bold">
+          Заказ на
+          {{ isDelivery ? 'доставку' : 'самовывоз' }}
+        </div>
         <div class="row body full-width gap-5 items-center">
-          <div class="col-4">Адрес доставки</div>
+          <div class="col-4">
+            Адрес {{ isDelivery ? 'доставки' : 'самовывоза' }}
+          </div>
           <div
             :style="
               $uiSettings.item?.inputType === 'outlined'
@@ -16,14 +21,15 @@
           >
             <div>{{ $cart.item?.currentAddress }}</div>
             <CButton
-              @click="kek()"
+              v-if="isDelivery"
+              @click="deliveryAddressesModal = true"
               text-button
               label="Изменить"
               class="body pr-5"
               text-color="primary"
             />
           </div>
-        </div> -->
+        </div>
         <div class="row body full-width gap-5 items-center">
           <div class="col-4">Время доставки</div>
           <div class="row gap-8 col text-on-input-color">
@@ -172,11 +178,12 @@
         <div style="opacity: 0.8" class="subtitle-text mb-2">Состав заказа</div>
         <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
           <div class="row body full-width no-wrap gap-5 py-3">
-            <div class="row gap-6 col-grow items-center">
+            <div class="row no-wrap gap-6 col-10 items-center">
               <q-img
                 :src="item.size.image?.thumbnail || $store.images.empty"
                 height="65px"
                 width="65px"
+                style="min-height: 65px; min-width: 65px"
                 fit="contain"
               >
                 <template v-slot:error>
@@ -184,6 +191,7 @@
                     <q-img
                       class="user-image"
                       fit="cover"
+                      style="min-height: 65px; min-width: 65px"
                       width="65px"
                       height="65px"
                       :src="$store.images.empty"
@@ -192,18 +200,24 @@
                 </template>
               </q-img>
               <div class="column gap-1">
-                {{ item.size.name }}
+                <div class="ellipsis-2-lines">
+                  {{ item.size.name }}
+                </div>
 
                 <div style="opacity: 0.6">{{ item.quantity }} шт</div>
               </div>
             </div>
-            <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
+            <div class="col-2 row justify-end" style="white-space: no-wrap">
+              {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
+            </div>
           </div>
         </template>
         <q-separator color="divider-color" />
         <div class="row full-width justify-between">
           <div class="body">Итого</div>
-          <div class="header2 bold">{{ $cart.item?.discountedTotalSum }} ₽</div>
+          <div class="header2 bold">
+            {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
+          </div>
         </div>
       </div>
     </div>
@@ -216,6 +230,10 @@
     @select="selectedPaymentType = $event"
   />
   <PromocodeModal v-model="promocodeModal" />
+  <DeliveryAddressesModal
+    @address-selected="changeDeliveryAddress($event)"
+    v-model="deliveryAddressesModal"
+  />
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
@@ -224,7 +242,7 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
-import { AvailableHours } from 'src/models/carts/cart'
+import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { PaymentType, PaymentObjectType } from 'src/models/order/order'
 import { beautifyNumber, store } from 'src/models/store'
@@ -237,6 +255,10 @@ import { Notify } from 'quasar'
 import { padRepo } from 'src/models/pads/padRepo'
 import { useRouter } from 'vue-router'
 import { orderRepo } from 'src/models/order/orderRepo'
+import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
+import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
+import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
+import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 
 const currentDay = ref('Сегодня')
 
@@ -254,8 +276,14 @@ const loading = ref(false)
 
 const router = useRouter()
 
+const deliveryAddressesModal = ref(false)
+
 const isArrangeAvailable = computed(() => {
   return !!selectedPaymentType.value && !!cartRepo.item?.deliveryTime?.length
+})
+
+const isDelivery = computed(() => {
+  return cartRepo.item?.type === CartType.DELIVERY
 })
 
 const options = computed(() => {
@@ -413,16 +441,41 @@ const makeAnOrder = async () => {
   }
 }
 
+const changeDeliveryAddress = async (address: DeliveryAddress) => {
+  if (address.id === cartRepo.item?.deliveryAddress?.id) {
+    deliveryAddressesModal.value = false
+    return
+  }
+  const res = await deliveryAreaRepo.byCoords(address.coords)
+  if (!res.length) {
+    Notify.create({
+      message: 'По данному адресу не осуществляется доставка',
+      color: 'danger',
+    })
+    deliveryAddressesModal.value = false
+    return
+  }
+  try {
+    await cartRepo.setParams({
+      sales_point: res[0].salesPoint,
+      type: 'delivery',
+      delivery_address: address.id,
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка',
+      color: 'danger',
+    })
+  } finally {
+    deliveryAddressesModal.value = false
+  }
+}
+
 onMounted(() => {
   void cartRepo.getAvailableHours().then((res) => {
     availableHours.value = res
   })
-  // if (cartRepo.item?.deliveryTime) {
-  //   deliveryTyme.value = moment(
-  //     cartRepo.item.deliveryTime,
-  //     'DD.MM.YYYY HH:mm:ss'
-  //   ).format('HH:mm')
-  // }
+  void deliveryAddressRepo.list()
 })
 </script>
 

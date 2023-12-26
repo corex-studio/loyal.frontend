@@ -68,7 +68,11 @@
               <GroupButton :is-sticky="isSticky" :key="key" :item="el" />
             </div>
             <div
-              v-if="categories.length > 8 && !$q.screen.xs"
+              v-if="
+                replacementAvailable
+                  ? categories.length > 6
+                  : categories.length > 8 && !$q.screen.xs
+              "
               class="row mt-2 no-wrap gap-4 cursor-pointer"
               :class="
                 isSticky
@@ -92,7 +96,11 @@
               >
                 <div
                   v-for="(el, index) in categories.filter((_, ind) =>
-                    $q.screen.sm ? ind >= 5 : ind >= 8
+                    $q.screen.sm
+                      ? ind >= 5
+                      : replacementAvailable
+                      ? ind >= 6
+                      : ind >= 8
                   )"
                   :key="index"
                   class="row items-center cursor-pointer"

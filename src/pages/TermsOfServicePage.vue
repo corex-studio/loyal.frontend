@@ -38,7 +38,9 @@
           </h6>
           <ol class="gap-5 column pl-8">
             <li v-for="(el, index) in info.sales_points" :key="index">
-              {{ el.address }} ({{ getLegalEntity(el)?.name || '-' }})
+              {{ el.custom_address || el.address }} ({{
+                getLegalEntity(el)?.name || '-'
+              }})
             </li>
           </ol>
         </div>

@@ -75,7 +75,7 @@
         v-model="mode"
         class="bg-transparent full-height"
       >
-        <q-tab-panel name="select" class="pa-0 column no-wrap pt-10 px-10">
+        <q-tab-panel name="select" class="pa-0 column no-wrap pt-10 px-15">
           <div class="full-width">
             <div
               :style="$q.screen.xs ? 'overflow-x: auto' : ''"
