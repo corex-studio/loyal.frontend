@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 366px">
+  <div>
     <div
       class="column no-wrap full-width full-height gap-8 pb-34"
       style="overflow: scroll"
@@ -19,44 +19,30 @@
           />
           <div class="subtitle-text">{{ el.address }}</div>
         </div>
-        <CIcon
+        <!-- <CIcon
           class="cursor-pointer"
           hover-color="primary"
           size="22px"
           name="fa-light fa-pen"
           color="secondary-button-color"
-        />
+        /> -->
       </div>
     </div>
     <div
-      style="position: sticky; bottom: 0"
-      class="row bg-background-color full-width gap-6"
+      style="position: absolute; bottom: 0; left: 0"
+      class="row bg-background-color full-width py-10 border-radius px-15"
     >
-      <CButton
-        height="48px"
-        @click="$emit('confirm')"
-        label="Выбрать"
-        :loading="$cart.setParamsLoading || $store.catalogLoading"
-        class="col subtitle-text"
-      />
-      <CButton
-        @click="$emit('addAddress')"
-        label="Добавить адрес"
-        height="48px"
-        color="secondary-button-color"
-        class="col subtitle-text"
-        text-color="on-secondary-button-color"
-      />
+      <template v-if="$slots.bottom">
+        <slot name="bottom"></slot>
+      </template>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import RoundedSelector from '../template/buttons/RoundedSelector.vue'
-import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { lightColor } from 'src/models/store'
-import CButton from '../template/buttons/CButton.vue'
 
 const props = defineProps<{
   currentAddress: DeliveryAddress | null

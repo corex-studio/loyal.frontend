@@ -55,6 +55,10 @@
                 />
               </template>
               <q-separator color="divider-color" class="my-12" />
+              <CartBonuses
+                v-if="$cart.item.walletPayments.length"
+                class="mb-12"
+              />
               <CartTotalInfo />
               <!-- <CartOutput showPaymentTypes /> -->
             </div>
@@ -68,21 +72,6 @@
         class="row full-width justify-center bg-background-color py-8 px-15 py-13"
         style="position: sticky; bottom: 0"
       >
-        <!-- <CButton
-          @click="toNextStep()"
-          :loading="cartRepo.loading || $cart.arrangeLoading || loading"
-          class="body"
-          :disable="!$cart.item?.cartItems.length"
-          height="59px"
-          style="min-width: 261px"
-          width="100%"
-          >
-
-          {{
-            `Оформить заказ ${$cart.item?.discountedTotalSum.toFixed(2)} `
-          }}
-          </CButton
-        > -->
         <div
           @click="arrange"
           class="border-radius bg-button-color row items-center justify-between cursor-pointer px-10 subtitle-text text-on-button-color"
@@ -130,6 +119,7 @@ import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import CartDeliveryInfo from './CartDeliveryInfo.vue'
 import CartTotalInfo from './CartTotalInfo.vue'
 import { useRouter } from 'vue-router'
+import CartBonuses from './CartBonuses.vue'
 
 const selectPaymentType = ref(false)
 
@@ -182,7 +172,23 @@ const deleteCartItem = async (item: CartItem) => {
   }
 }
 
+const applyBonuses = () => {
+  if (cartRepo.item?.walletPayments.some((v) => v.applied_sum)) {
+    void cartRepo.setParams({
+      sales_point: cartRepo.item?.salesPoint.id,
+      type: cartRepo.item?.type,
+      applied_wallet_payments: [
+        {
+          wallet_payment: cartRepo.item.walletPayments[0].uuid,
+          applied_sum: cartRepo.item.walletPayments[0].applied_sum,
+        },
+      ],
+    })
+  }
+}
+
 const arrange = () => {
+  applyBonuses()
   void router.push({
     name: 'arrangementPage',
   })

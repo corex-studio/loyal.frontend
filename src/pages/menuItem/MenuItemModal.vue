@@ -198,6 +198,8 @@ const addToCart = async () => {
         message: 'Ошибка при добавлении в корзину',
         color: 'danger',
       })
+    } finally {
+      emit('update:modelValue', false)
     }
   }
   if (q.screen.xs) {

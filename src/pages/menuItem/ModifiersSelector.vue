@@ -1,7 +1,10 @@
 <template>
   <div class="row">
-    <div class="row no-wrap justify-between full-width mb-6">
-      <div class="header3 bold ellipsis-2-lines">{{ group.name }}</div>
+    <div
+      style="min-height: 36px"
+      class="row no-wrap justify-between full-width mb-4"
+    >
+      <div class="header3 bold col-8 ellipsis-2-lines">{{ group.name }}</div>
       <q-chip
         v-if="
           group.restrictions?.min_quantity &&
@@ -118,7 +121,18 @@ const radioClickHandler = (item: MenuModifierGroupItem) => {
 }
 
 const checkboxClickHandler = (item: MenuModifierGroupItem) => {
-  item.quantity = !!item.quantity ? 0 : 1
+  if (!item.quantity) {
+    if (
+      props.group.restrictions &&
+      _.sum(props.group.items.map((v) => v.quantity)) <
+        props.group.restrictions?.max_quantity
+    )
+      item.quantity = 1
+    else return
+  } else {
+    item.quantity = 0
+  }
+  // item.quantity = !!item.quantity ? 0 : 1
 }
 
 const clearSelection = () => {

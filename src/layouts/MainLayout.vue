@@ -234,7 +234,7 @@ onMounted(async () => {
   ready.value = true
 })
 
-const companySelected = (v: Company) => {
+const companySelected = (v: Company | null) => {
   companyRepo.cartCompany = v
   store.selectCompanyModal = false
   store.serviceSettingsModal = true
