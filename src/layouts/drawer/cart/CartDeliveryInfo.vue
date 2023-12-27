@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-backing-color border-radius row no-wrap full-width pa-10 gap-8 items-center"
+    class="bg-backing-color text-on-backing-color border-radius row no-wrap full-width pa-10 gap-8 items-center"
   >
     <img
       v-if="$company.item?.image?.thumbnail"
