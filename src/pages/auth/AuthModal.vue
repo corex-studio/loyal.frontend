@@ -181,6 +181,7 @@ const auth = async () => {
       phone: `7${data.value.phone}`,
       code: data.value.sms,
     })
+    await authentication.me()
 
     Notify.create({
       message: 'Вы успешно авторизованы',
