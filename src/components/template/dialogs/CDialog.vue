@@ -23,10 +23,11 @@
       >
         <slot name="header"></slot>
       </div>
+
       <div
         :class="[
           !noPadding ? 'pb-15 px-15' : dialogClass,
-          $slots.header ? (noPadding ? '' : 'pt-10') : 'pt-15 ',
+          noPadding ? '' : $slots.header ? 'pt-10' : 'pt-15',
         ]"
         :style="`overflow:${noOverflow ? 'hidden' : 'auto'};
           width: 100%;
