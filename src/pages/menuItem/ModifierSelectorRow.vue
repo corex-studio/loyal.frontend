@@ -17,7 +17,7 @@
       @update:model-value="item.quantity = $event"
       :disable-adding="
         (group.restrictions &&
-          _.sum(group.items.map((v) => v.quantity)) >=
+          sum(group.items.map((v) => v.quantity)) >=
             group.restrictions.max_quantity) ||
         item.quantity >= item.restrictions.max_quantity
       "
@@ -25,7 +25,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import _ from 'lodash'
+import { sum } from 'lodash'
 import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
 import {
   MenuModifierGroupItem,

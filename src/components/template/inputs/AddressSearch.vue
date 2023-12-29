@@ -14,6 +14,7 @@
     @icon-click="$emit('iconClick')"
     @update:modelValue="$emit('update:modelValue', $event), (updated = true)"
     :rules="[() => validateAddress(currentFullAddress)]"
+    :placeholder="placeholder"
   >
     <q-menu
       v-model="menu"
@@ -60,6 +61,7 @@ const props = withDefaults(
     iconClass?: string
     iconColor?: string
     loadingColor?: string
+    placeholder?: string
   }>(),
   { inputColor: 'secondary2', type: 'delivery' }
 )

@@ -2,17 +2,20 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    width="900px"
+    width="1150px"
     height="600px"
     height-percent="100%"
     no-overflow
+    no-padding
   >
-    <div class="row full-height">
+    <div class="row full-height no-wrap full-width gap-15">
       <q-img
         :ratio="1"
         class="col"
-        fit="contain"
+        :style="`border-radius: ${getBorderRadius}`"
+        fit="cover"
         height="100%"
+        style="max-width: 600px; width: 100%; min-width: 600px"
         :src="$menuItem.item?.image?.thumbnail || $store.images.empty"
       >
         <template v-slot:error>
@@ -21,13 +24,14 @@
               :ratio="1"
               fit="cover"
               height="100%"
+              width="600px"
               :src="$store.images.empty"
             ></q-img>
           </span> </template
       ></q-img>
       <div
         style="overflow-x: auto"
-        class="column no-wrap col justify-between full-height pl-15"
+        class="column no-wrap justify-between full-height pr-15 py-15"
       >
         <div class="column full-width">
           <div class="header bold mb-6">{{ $menuItem.item?.name }}</div>
@@ -111,6 +115,7 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { Notify, useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 const props = defineProps<{
   modelValue: boolean
@@ -131,6 +136,10 @@ const q = useQuasar()
 const route = useRoute()
 
 const router = useRouter()
+
+const getBorderRadius = computed(() => {
+  return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px`
+})
 
 watch(
   () => menuItemRepo.item,

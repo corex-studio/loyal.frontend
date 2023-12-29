@@ -10,7 +10,7 @@
     " -->
   <div
     @click="openDialog()"
-    class="row no-wrap gap-20 subtitle-text cursor-pointer border-radius items-center bg-primary text-on-primary"
+    class="row no-wrap gap-20 body cursor-pointer border-radius items-center bg-primary text-on-primary"
     style="overflow: hidden; height: 48px; padding: 0 40px"
   >
     <div v-if="!$cart.item" class="row no-wrap gap-4 items-center">

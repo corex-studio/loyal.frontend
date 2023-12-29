@@ -53,7 +53,7 @@
                     ></q-img>
                   </span> </template
               ></q-img> -->
-                <div class="subtitle-text">Изменить заведение</div>
+                <div class="body">Изменить заведение</div>
                 <CIcon size="20px" name="fa-solid fa-angle-right" />
               </div>
             </CButton>
@@ -69,7 +69,7 @@
               height="48px"
               width="160px"
               icon="fa-solid fa-user"
-              class="subtitle-text"
+              class="body"
               color="secondary-button-color"
               text-color="on-secondary-button-color"
               :label="authentication.user ? 'Профиль' : 'Войти'"

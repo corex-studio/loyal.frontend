@@ -96,8 +96,10 @@
         <div class="row body full-width gap-5">
           <div class="col-4 mt-8">Комментарий</div>
           <CInput
-            text-area
-            class="col body"
+            auto-grow
+            height="fit-content"
+            class="col"
+            input-class="body"
             placeholder="Напишите ваши пожелания"
             v-model="$cart.item.comment"
           />
@@ -177,7 +179,7 @@
       >
         <div style="opacity: 0.8" class="subtitle-text mb-2">Состав заказа</div>
         <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
-          <div class="row body full-width no-wrap gap-5 py-3">
+          <div class="row body full-width no-wrap py-3">
             <div class="row no-wrap gap-6 col-10 items-center">
               <q-img
                 :src="item.size.image?.thumbnail || $store.images.empty"
@@ -316,7 +318,7 @@ const paymentTypes = computed(() => {
         label: 'Онлайн',
         type: PaymentType.ONLINE,
         class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-money-bill',
+        icon: 'fa-light fa-ruble-sign',
       })
     }
   } else {
@@ -339,7 +341,7 @@ const paymentTypes = computed(() => {
         label: 'Онлайн',
         type: PaymentType.ONLINE,
         class: 'bg-online-button-color text-on-online-button-color',
-        icon: 'fa-light fa-dollar',
+        icon: 'fa-light fa-ruble-sign',
       })
   }
   return result

@@ -2,14 +2,8 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    :width="
-      newAddressMode
-        ? '1094px'
-        : currentTab === CartType.PICKUP
-        ? '1300px'
-        : '649px'
-    "
-    height="540px"
+    :width="modalWidth"
+    height="600px"
     no-padding
   >
     <template v-if="!newAddressMode">
@@ -17,7 +11,22 @@
         class="row full-width no-wrap bg-background-color text-on-background-color border-radius"
       >
         <div class="col-grow column py-15 px-15">
-          <ServiceModalHeader :tab="currentTab" />
+          <ServiceModalHeader :tab="currentTab">
+            <template v-slot:action>
+              <CIcon
+                v-if="
+                  bookingMode === 'tablePicker' ||
+                  bookingMode === 'tableDetail' ||
+                  bookingMode === 'successBooked'
+                "
+                @click="navigationButtonClickHandler()"
+                name="fa-solid fa-angle-left"
+                hover-color="primary"
+                class="cursor-pointer"
+                size="22px"
+              />
+            </template>
+          </ServiceModalHeader>
           <ServiceSettingsTabPicker
             class="mt-12"
             @update-tab="currentTab = $event"
@@ -29,6 +38,7 @@
               v-if="currentTab === CartType.DELIVERY"
               :current-address="selectedDeliveryAddress"
               @select="selectedDeliveryAddress = $event"
+              @edit="editAddressHandler($event)"
             >
               <template v-slot:bottom>
                 <div class="row full-width gap-6">
@@ -57,28 +67,57 @@
               :current-point="selectedPickupAddress"
             >
               <template v-slot:bottom>
-                <div class="row full-width no-wrap">
-                  <CButton
-                    @click="confirmSelectedAddress()"
-                    height="48px"
-                    width="300px"
-                    class="subtitle-text col-6"
-                    label="Заберу здесь"
-                  />
-                </div>
+                <CButton
+                  @click="confirmSelectedAddress()"
+                  height="48px"
+                  width="300px"
+                  class="subtitle-text col-6"
+                  label="Заберу здесь"
+                />
               </template>
             </PickupAddressesTab>
+            <template v-if="currentTab === CartType.BOOKING">
+              <BookingAddressesTab
+                v-if="bookingMode === 'bookingList'"
+                @select="selectedSalesPoint = $event"
+                :current-point="selectedSalesPoint"
+              >
+                <template v-slot:bottom>
+                  <CButton
+                    @click="bookingMode = 'bookingInfo'"
+                    height="48px"
+                    :disabled="!selectedSalesPoint"
+                    width="300px"
+                    class="subtitle-text col-6"
+                    label="Выбрать"
+                  />
+                </template>
+              </BookingAddressesTab>
+              <BookingInfo
+                v-if="bookingMode != 'bookingList'"
+                :sales-point="selectedSalesPoint"
+                :current-mode="bookingMode"
+                @change-booking-mode="bookingMode = $event"
+                @close="$emit('update:modelValue', false)"
+              />
+            </template>
           </div>
         </div>
-        <PickupAddressesOnMap
-          v-if="currentTab === CartType.PICKUP"
+        <SalesPointsOnMap
+          v-if="
+            currentTab === CartType.PICKUP ||
+            (currentTab === CartType.BOOKING && bookingMode === 'bookingList')
+          "
           :selected-point="selectedPickupAddress"
+          :addresses="currentSalesPoints || []"
         />
       </div>
     </template>
     <CreateDeliveryAddress
       v-else
       :back-callback="() => (newAddressMode = false)"
+      @updated="deliveryAddressCreateHandler()"
+      :address="deliveryAddressToEdit || undefined"
     />
   </CDialog>
 </template>
@@ -102,7 +141,10 @@ import ServiceModalHeader from './ServiceModalHeader.vue'
 import CreateDeliveryAddress from './CreateDeliveryAddress.vue'
 import CButton from '../template/buttons/CButton.vue'
 import PickupAddressesTab from './PickupAddressesTab.vue'
-import PickupAddressesOnMap from './PickupAddressesOnMap.vue'
+import BookingAddressesTab from './BookingAddressesTab.vue'
+import SalesPointsOnMap from './SalesPointsOnMap.vue'
+import BookingInfo from './BookingInfo.vue'
+import CIcon from '../template/helpers/CIcon.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -111,6 +153,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
+
+export type BookingModes =
+  | 'bookingList'
+  | 'bookingInfo'
+  | 'tablePicker'
+  | 'tableDetail'
+  | 'successBooked'
 
 const currentTab = ref<CartType | null>(null)
 
@@ -121,6 +170,10 @@ const selectedDeliveryAddress = ref<DeliveryAddress | null>(null)
 const selectedPickupAddress = ref<SalesPoint | null>(null)
 
 const selectedSalesPoint = ref<SalesPoint | null>(null)
+
+const bookingMode = ref<BookingModes>('bookingList')
+
+const deliveryAddressToEdit = ref<DeliveryAddress | null>(null)
 
 watch(
   () => props.modelValue,
@@ -135,6 +188,34 @@ watch(
     }
   }
 )
+
+const modalWidth = computed(() => {
+  return newAddressMode.value
+    ? '1094px'
+    : currentTab.value === CartType.PICKUP ||
+      (currentTab.value === CartType.BOOKING &&
+        bookingMode.value === 'bookingList')
+    ? '1300px'
+    : '649px'
+})
+
+const currentSalesPoints = computed(() => {
+  return currentTab.value === CartType.PICKUP
+    ? availablePickupAddresses.value
+    : availableBookingAddresses.value
+})
+
+const availablePickupAddresses = computed(() => {
+  return companyRepo.cartCompany?.salesPoints?.filter(
+    (v) => v.settings.pickup_enabled
+  )
+})
+
+const availableBookingAddresses = computed(() => {
+  return companyRepo.cartCompany?.salesPoints?.filter(
+    (v) => v.settings.booking_enabled
+  )
+})
 
 const availableCartTypes = computed(() => {
   const result = []
@@ -170,7 +251,7 @@ const availableCartTypes = computed(() => {
     authentication.user
   ) {
     result.push({
-      label: 'Бронирование',
+      label: 'Бронь',
       type: CartType.BOOKING,
       icon: 'fa-light fa-calendar-day',
       color: 'booking-button-color',
@@ -179,6 +260,22 @@ const availableCartTypes = computed(() => {
   }
   return result
 })
+
+const editAddressHandler = (v: DeliveryAddress) => {
+  newAddressMode.value = true
+  deliveryAddressToEdit.value = v
+}
+
+const deliveryAddressCreateHandler = () => {
+  newAddressMode.value = false
+  void deliveryAddressRepo.list()
+}
+
+const navigationButtonClickHandler = () => {
+  if (bookingMode.value === 'tablePicker') bookingMode.value = 'bookingInfo'
+  if (bookingMode.value === 'tableDetail') bookingMode.value = 'tablePicker'
+  if (bookingMode.value === 'successBooked') bookingMode.value = 'bookingList'
+}
 
 const selectCurrentAddress = () => {
   if (cartRepo.item) {

@@ -24,6 +24,7 @@ export class Store {
   offersTab = 'Акции'
   externalID = 'HooDoo'
   menuItemModal = false
+  newsModal = false
   images = {
     empty: 'https://mtraktor.ru/images/no-image.png',
   }

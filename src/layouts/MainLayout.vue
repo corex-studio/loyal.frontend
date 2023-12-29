@@ -65,6 +65,10 @@
       @select="companySelected($event)"
     />
     <MenuItemModal v-model="$store.menuItemModal" />
+    <NewsModal
+      :model-value="$store.newsModal"
+      @update:model-value="closeNewsModal()"
+    />
   </template>
 </template>
 
@@ -100,6 +104,7 @@ import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
 import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
 import TopHeader from './header/TopHeader.vue'
 import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
+import NewsModal from 'src/pages/news/NewsModal.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -238,6 +243,12 @@ const companySelected = (v: Company | null) => {
   companyRepo.cartCompany = v
   store.selectCompanyModal = false
   store.serviceSettingsModal = true
+}
+
+const closeNewsModal = () => {
+  newsRepo.item = null
+  promotionsRepo.item = null
+  store.newsModal = false
 }
 </script>
 

@@ -18,8 +18,9 @@
         </div>
         <!-- <div style="width: 24px; height: "></div> -->
         <RoundedSelector
-          height="24px"
-          width="24px"
+          check
+          height="26px"
+          width="26px"
           :model-value="selectedPaymentType?.type === el.type"
         />
       </div>

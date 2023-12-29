@@ -38,7 +38,7 @@
     >
       <template v-slot:item="{ item }">
         <div
-          style="overflow: hidden; height: 300px"
+          style="overflow: hidden; height: 360px"
           @click="goToItem(item)"
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mb-20 mt-15"
         >
@@ -120,13 +120,12 @@ import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
 import { computed } from 'vue'
 import { Promotions } from 'src/models/promotion/promotions'
 import { News } from 'src/models/news/news'
-import { useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { useQuasar } from 'quasar'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
-
-const router = useRouter()
+import { newsRepo } from 'src/models/news/newsRepo'
+import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
 
 const q = useQuasar()
 
@@ -165,7 +164,9 @@ const tabs = computed(() => {
 })
 
 const slidesPerView = computed(() => {
-  return q.screen.xs
+  return store.offersTab === 'Акции'
+    ? 1
+    : q.screen.xs
     ? 1
     : companyGroupRepo.item?.externalId === 'corex_demo'
     ? 1
@@ -188,12 +189,17 @@ const getImage = (link: string) => {
 
 const goToItem = (item: News | Promotions) => {
   if ('shortDescription' in item) {
-    void router.push({ name: 'newsPage', params: { newsId: item.id } })
-  } else
-    void router.push({
-      name: 'promotionPage',
-      params: { promotionId: item.id },
-    })
+    void newsRepo.retrieve(item.id)
+    store.newsModal = true
+    // void router.push({ name: 'newsPage', params: { newsId: item.id } })
+  } else {
+    promotionsRepo.retrieve(item.id)
+    store.newsModal = true
+  }
+  // void router.push({
+  //   name: 'promotionPage',
+  //   params: { promotionId: item.id },
+  // })
 }
 </script>
 

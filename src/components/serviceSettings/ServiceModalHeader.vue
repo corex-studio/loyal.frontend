@@ -1,5 +1,8 @@
 <template>
-  <div class="row">
+  <div class="row gap-5 items-center">
+    <template v-if="$slots.action">
+      <slot name="action"></slot>
+    </template>
     <div class="header2 bold">{{ getTitle() }}</div>
   </div>
 </template>
