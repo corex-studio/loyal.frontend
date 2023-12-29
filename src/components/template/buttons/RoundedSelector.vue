@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="modelValue ? 'radio-selected' : 'radio'"
+    :class="modelValue ? (check ? 'bg-primary' : 'radio-selected') : 'radio'"
     style="border-radius: 50%"
     class="row items-center justify-center"
     :style="[
@@ -12,10 +12,16 @@
     ]"
   >
     <div
-      v-if="modelValue"
+      v-if="modelValue && !check"
       class="bg-primary"
       style="height: 10px; width: 10px; border-radius: 50%"
     ></div>
+    <CIcon
+      v-if="modelValue && check"
+      color="on-primary"
+      name="fa-solid fa-check"
+      size="16px"
+    />
     <!-- <CIcon
       :style="`visibility: ${modelValue ? 'visible' : 'hidden'}`"
       name="fa-solid fa-check"
@@ -25,10 +31,13 @@
   </div>
 </template>
 <script lang="ts" setup>
+import CIcon from '../helpers/CIcon.vue'
+
 defineProps<{
   modelValue: boolean
   height?: string
   width?: string
+  check?: boolean
 }>()
 </script>
 

@@ -4,9 +4,9 @@
       class="column no-wrap full-width gap-8 pb-10"
       style="overflow: scroll; height: 374px !important"
     >
-      <template v-if="$deliveryAddress.items.length">
+      <template v-if="availablePickupAddresses?.length">
         <div
-          v-for="(el, index) in $deliveryAddress.items"
+          v-for="(el, index) in availablePickupAddresses"
           :key="index"
           class="row items-center pa-10 justify-between cursor-pointer border-radius"
           @click="$emit('select', el)"
@@ -16,48 +16,52 @@
             <RoundedSelector
               height="24px"
               width="24px"
-              :model-value="el.id === currentAddress?.id"
+              :model-value="el.id === currentPoint?.id"
             />
             <div class="subtitle-text">{{ el.address }}</div>
           </div>
-          <CIcon
-            @click="$emit('edit', el)"
-            class="cursor-pointer"
-            hover-color="primary"
-            size="22px"
-            name="fa-light fa-pen"
-            color="secondary-button-color"
-          />
+          <!-- <CIcon
+          class="cursor-pointer"
+          hover-color="primary"
+          size="22px"
+          name="fa-light fa-pen"
+          color="secondary-button-color"
+        /> -->
         </div>
       </template>
-      <div v-else class="subtitle-text">У вас нет адресов доставки</div>
+      <div v-else class="subtitle-text">Адреса заведения не указаны</div>
     </div>
-    <div
-      v-if="$slots.bottom"
-      class="row bg-background-color full-width border-radius"
-    >
+    <div v-if="$slots.bottom" class="row bg-background-color border-radius">
       <slot name="bottom"></slot>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import RoundedSelector from '../template/buttons/RoundedSelector.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { lightColor } from 'src/models/store'
-import CIcon from '../template/helpers/CIcon.vue'
+import { computed } from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
+import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 
 const props = defineProps<{
-  currentAddress: DeliveryAddress | null
+  currentPoint: SalesPoint | null
 }>()
 
 defineEmits<{
-  (evt: 'select', val: DeliveryAddress): void
-  (evt: 'edit', val: DeliveryAddress): void
+  (evt: 'select', val: SalesPoint): void
+  (evt: 'confirm'): void
+  (evt: 'addAddress'): void
 }>()
 
-const getBorderColor = (el: DeliveryAddress) => {
-  return props.currentAddress?.id === el.id
+const availablePickupAddresses = computed(() => {
+  return companyRepo.cartCompany?.salesPoints?.filter(
+    (v) => v.settings.pickup_enabled
+  )
+})
+
+const getBorderColor = (el: SalesPoint) => {
+  return props.currentPoint?.id === el.id
     ? '#' + uiSettingsRepo.item?.primaryColor.color
     : lightColor(uiSettingsRepo.item?.backgroundColor.on_color || '000', '20')
 }

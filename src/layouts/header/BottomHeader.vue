@@ -14,7 +14,7 @@
             : 'bg-secondary-button-color text-on-secondary-button-color',
         ]"
         :style="$cart.item || categories?.length ? 'height: 62px' : ''"
-        class="row border-radius no-wrap subtitle-text items-center gap-10 content-row px-5 relative-position"
+        class="row border-radius no-wrap body items-center gap-10 content-row px-5 relative-position"
       >
         <div
           v-if="!$q.screen.xs || $store.tableMode"
@@ -28,7 +28,7 @@
           <div
             v-if="replacementAvailable"
             @click="$store.selectCompanyModal = true"
-            class="row no-wrap gap-4 items-center cursor-pointer subtitle-text"
+            class="row no-wrap gap-4 items-center cursor-pointer body"
             style="position: absolute"
           >
             <q-img
@@ -73,7 +73,7 @@
                   ? categories.length > 6
                   : categories.length > 8 && !$q.screen.xs
               "
-              class="row mt-2 no-wrap gap-4 cursor-pointer"
+              class="row mb-1 body no-wrap gap-4 cursor-pointer"
               :class="
                 isSticky
                   ? 'text-on-background-color'
@@ -125,7 +125,7 @@
         <CButton
           v-if="authentication.user && $cart.item"
           height="48px"
-          class="subtitle-text"
+          class="body"
           color="primary"
           text-color="on-primary"
           @click="$store.cartDrawer = !$store.cartDrawer"

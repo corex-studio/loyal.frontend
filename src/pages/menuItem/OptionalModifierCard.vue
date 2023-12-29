@@ -63,12 +63,12 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { sum } from 'lodash'
 import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
 import {
   MenuModifierGroup,
   MenuModifierGroupItem,
 } from 'src/models/menu/menuModifierGroup/menuModifierGroup'
-import _ from 'lodash'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -78,7 +78,7 @@ const props = defineProps<{
 
 const isGroupLimitReached = computed(() => {
   return props.group.restrictions
-    ? _.sum(props.group.items.map((v) => v.quantity)) >=
+    ? sum(props.group.items.map((v) => v.quantity)) >=
         props.group.restrictions?.max_quantity
     : false
 })

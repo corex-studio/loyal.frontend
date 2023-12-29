@@ -1,53 +1,91 @@
 <template>
-  <div class="column items-center text-on-background-color pb-10">
-    <div v-if="newAddress" class="column px-1 full-width gap-10">
-      <CInput
-        height="42px"
-        external-label="Название адреса"
-        v-model="newAddress.name"
-      />
-      <AddressSearch
-        @update="selectAddress($event)"
-        :address="newAddress.address"
-        label="Адрес"
-      />
-      <div class="row gap-5 no-wrap">
+  <div style="height: 600px" class="row no-wrap full-width">
+    <div
+      v-if="newAddress"
+      style="overflow-y: auto"
+      class="column no-wrap justify-between col text-on-background-color pa-15"
+    >
+      <div class="column full-width gap-8">
+        <div class="row items-center gap-5 mb-12">
+          <CIcon
+            v-if="backCallback"
+            @click="backCallback()"
+            size="22px"
+            color="on-background-color"
+            hover-color="primary"
+            class="cursor-pointer"
+            name="fa-solid fa-angle-left"
+          />
+          <div class="header2 bold">
+            {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
+          </div>
+        </div>
         <CInput
           height="42px"
-          class="col"
-          external-label="Подъезд"
-          v-model="newAddress.entrance"
+          external-label="Название адреса"
+          v-model="newAddress.name"
         />
+        <AddressSearch
+          @update="selectAddress($event)"
+          :address="newAddress.address"
+          label="Укажите адрес"
+          placeholder="Город, улица, дом"
+        />
+        <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
+          <CInput
+            height="42px"
+            class="col"
+            external-label="Подъезд"
+            v-model="newAddress.entrance"
+          />
+          <CInput
+            height="42px"
+            class="col"
+            external-label="Этаж"
+            v-model="newAddress.floor"
+          />
+          <CInput
+            height="42px"
+            class="col"
+            external-label="Код двери"
+            v-model="newAddress.intercom"
+          />
+        </div>
         <CInput
-          height="42px"
-          class="col"
-          external-label="Этаж"
-          v-model="newAddress.floor"
+          placeholder="Комментарий"
+          input-style="border-radius: 15px !important"
+          v-model="newAddress.description"
+          auto-grow
+          height="fit-content"
         />
       </div>
-      <div class="row gap-5 no-wrap">
-        <CInput
-          height="42px"
-          class="col"
-          external-label="Код двери"
-          v-model="newAddress.intercom"
+      <div class="mt-15 column full-width gap-12">
+        <q-checkbox
+          @click="privateHouseClickHandler()"
+          :model-value="isPrivateHouse"
+          dense
+          size="50px"
+          class="body"
+          label="У меня частный дом"
+        />
+        <CButton
+          @click="createAddress()"
+          :disabled="!isSaveAvailable"
+          height="48px"
+          width="280px"
+          label="Сохранить"
         />
       </div>
-      <CInput
-        placeholder="Комментарий"
-        input-style="border-radius: 15px !important"
-        v-model="newAddress.description"
-        text-area
-      />
     </div>
-    <CButton
-      @click="createAddress()"
-      height="50px"
-      :disabled="!isSaveAvailable"
-      class="mt-15"
-      width="280px"
-      label="Сохранить"
-    />
+
+    <div style="width: 600px; height: 600px">
+      <div
+        id="map"
+        style="width: 100%; height: 600px; z-index: 9"
+        :style="`border-radius: ${getBorderRadius}`"
+        class="map"
+      ></div>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
@@ -59,21 +97,95 @@ import { ref, onMounted, computed } from 'vue'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import { Notify } from 'quasar'
 import { Address } from 'src/models/types'
+import CIcon from '../template/helpers/CIcon.vue'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import L from 'leaflet'
+import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
+import { Layer } from 'leaflet'
 
 const props = defineProps<{
   address?: DeliveryAddress
+  backCallback?: () => void
 }>()
+
+const emit = defineEmits(['updated'])
+
+const drawnItems = new L.FeatureGroup()
 
 const newAddress = ref<DeliveryAddress | null>(null)
 
+const isPrivateHouse = ref(false)
+
+let map: CorexLeafletMap
+
 const isSaveAvailable = computed(() => {
   return (
-    !!newAddress.value?.name?.length &&
-    !!newAddress.value.address.length &&
-    !!newAddress.value.floor?.length &&
-    !!newAddress.value.entrance?.length
+    !!newAddress.value?.name?.length && !!newAddress.value.address.length
+    // &&
+    // !!newAddress.value.floor?.length &&
+    // !!newAddress.value.entrance?.length
   )
 })
+
+const getBorderRadius = computed(() => {
+  return `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
+})
+
+const privateHouseClickHandler = () => {
+  if (!newAddress.value) return
+  newAddress.value.entrance = null
+  newAddress.value.floor = null
+  newAddress.value.intercom = null
+  isPrivateHouse.value = !isPrivateHouse.value
+}
+
+const drawPoint = () => {
+  drawnItems.clearLayers()
+  const values: {
+    id: number | string | undefined
+    coords: {
+      latitude: number | null
+      longitude: number | null
+    }
+  }[] = []
+  if (newAddress.value?.coords.length)
+    values.push({
+      id: newAddress.value.id,
+      coords: {
+        latitude: newAddress.value.coords[0],
+        longitude: newAddress.value.coords[1],
+      },
+    })
+
+  const collection = map.pointCollection(values)
+  const layer = map.pointLayer(
+    collection,
+    null,
+    `#${uiSettingsRepo.item?.primaryColor.color}`,
+    'store'
+  )
+
+  map.lmap.addLayer(layer)
+  if (values.length) map.lmap.fitBounds(layer.getBounds(), { maxZoom: 12 })
+}
+
+const initDraw = () => {
+  return new map.L.Control.Draw({
+    edit: {
+      featureGroup: drawnItems,
+      edit: false,
+      remove: false,
+    },
+    draw: {
+      marker: false,
+      circlemarker: false,
+      polyline: false,
+      circle: false,
+      rectangle: false,
+      polygon: false,
+    },
+  })
+}
 
 onMounted(() => {
   newAddress.value = new DeliveryAddress({
@@ -84,15 +196,19 @@ onMounted(() => {
     city: props.address?.city || '',
     street: props.address?.street || '',
     house: props.address?.house || '',
-    flat: props.address?.flat || '',
-    floor: props.address?.floor || '',
-    entrance: props.address?.entrance || '',
-    intercom: props.address?.intercom || '',
+    flat: props.address?.flat || null,
+    floor: props.address?.floor || null,
+    entrance: props.address?.entrance || null,
+    intercom: props.address?.intercom || null,
     description: props.address?.description || '',
   })
-})
+  map = new CorexLeafletMap()
+  if (!map) return
+  map.lmap.addLayer(drawnItems)
 
-const emit = defineEmits(['back', 'create'])
+  drawPoint()
+  map.lmap.addControl(initDraw())
+})
 
 const createAddress = async () => {
   try {
@@ -112,8 +228,8 @@ const createAddress = async () => {
       Notify.create({
         message: 'Адрес успешно создан',
       })
-      emit('create')
     }
+    emit('updated')
   } catch {
     if (props.address) {
       Notify.create({
@@ -139,5 +255,11 @@ const selectAddress = (v: Address) => {
   newAddress.value.flat = v.flat
   newAddress.value.street = v.street
   newAddress.value.house = v.house
+
+  map.lmap.eachLayer((layer: Layer) => {
+    if (layer instanceof map.L.Marker) layer.remove()
+  })
+  drawPoint()
+  map.lmap.addControl(initDraw())
 }
 </script>

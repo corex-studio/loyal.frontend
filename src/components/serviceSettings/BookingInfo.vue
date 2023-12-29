@@ -1,58 +1,49 @@
 <template>
   <div>
     <q-tab-panels
-      style="height: 505px !important"
+      style="height: 423px !important"
       animated
-      :model-value="bookingMode"
-      @update:model-value="$emit('changeBookingMode', $event)"
+      :model-value="currentMode"
       class="bg-background-color full-height"
     >
       <q-tab-panel
         v-if="currentBooking"
         name="bookingInfo"
-        class="pa-10 column no-wrap"
+        class="column full-width justify-between no-wrap pa-0"
       >
-        <div class="body text-on-background-color">
-          После оформления заявки, с вами свяжется администратор для
-          подтверждения брони.
-        </div>
-        <div
-          class="mt-10 bg-backing-color border-radius row no-wrap gap-5 py-8 px-5"
-        >
-          <CIcon size="20px" name="fa-light fa-info-circle" color="primary" />
-          <div class="body text-on-backing-color">
-            Данная заявка, до подтверждения сотрудником, не является гарантией
-            брони
-          </div>
-        </div>
-        <div class="column gap-10 full-width mt-15">
-          <div class="header3 text-on-background-color">
-            Укажите время бронирования
-          </div>
-          <div class="row gap-5 no-wrap">
-            <CInput :model-value="date" class="col" external-label="Дата">
-              <q-menu><q-date v-model="date" mask="DD.MM.YYYY" /></q-menu>
-            </CInput>
-            <CInput :model-value="time" class="col" external-label="Время">
+        <div class="column gap-10 full-width">
+          <div class="row gap-10 no-wrap">
+            <CInput
+              height="44px"
+              placeholder="Время"
+              :model-value="time"
+              class="col"
+            >
               <q-menu><q-time v-model="time" /></q-menu>
             </CInput>
+            <CInput
+              height="44px"
+              placeholder="Дата"
+              :model-value="date"
+              class="col"
+            >
+              <q-menu><q-date v-model="date" mask="DD.MM.YYYY" /></q-menu>
+            </CInput>
           </div>
-        </div>
-        <div class="column full-width gap-10 mt-15">
-          <div class="header3 text-on-background-color">Дополнительно</div>
-          <div class="row items-end full-width gap-5 no-wrap">
+          <div class="row full-width gap-10 items-end">
             <CSelect
               external-label="Количество гостей"
               :items="guestsCountVariables"
-              height="35px"
+              height="44px"
+              class="col"
               v-model="currentBooking.guestsCount"
-              style="width: 48.7%"
             />
             <CButton
-              @click="changeBookingMode('tablePicker')"
+              v-if="$section.items.length"
+              @click="$emit('changeBookingMode', 'tablePicker')"
               style="width: 48.7%"
               :disabled="!$section.items.length"
-              height="40px"
+              height="44px"
               >{{
                 selectedTables.length
                   ? selectedTables.length === 1
@@ -64,20 +55,33 @@
           </div>
           <CInput
             v-model="currentBooking.comment"
-            text-area
-            placeholder="Комментарий"
+            auto-grow
+            height="fit-content"
+            placeholder="Оставьте пожелания к бронированию"
           />
         </div>
-        <div class="row full-width justify-center mt-15 pb-10">
+
+        <div class="row full-width justify-center gap-6 mt-10">
+          <CButton
+            @click="$emit('changeBookingMode', 'bookingList')"
+            width="280px"
+            height="48px"
+            color="secondary-button-color"
+            text-color="on-secondary-button-color"
+            class="subtitle-text"
+            label="Изменить адрес"
+          ></CButton>
           <CButton
             @click="createBooking()"
             :disabled="!isContinueAvailable"
             width="280px"
-            >Далее</CButton
-          >
+            height="48px"
+            class="subtitle-text"
+            label="Выбрать"
+          ></CButton>
         </div>
       </q-tab-panel>
-      <q-tab-panel name="tablePicker" class="pa-0 column no-wrap">
+      <q-tab-panel name="tablePicker" class="pa-0 column full-width no-wrap">
         <BookingTableSelector
           :selected-tables="selectedTables"
           @open-table-detail="tableDetailMode($event)"
@@ -98,7 +102,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import CIcon from '../template/helpers/CIcon.vue'
 import CInput from '../template/inputs/CInput.vue'
 import { ref, onMounted, computed } from 'vue'
 import CSelect from '../template/inputs/CSelect.vue'
@@ -112,20 +115,21 @@ import {
   BookingStatus,
 } from 'src/models/bookingRequest/bookingRequest'
 import { bookingRequestRepo } from 'src/models/bookingRequest/bookingRequestRepo'
-
 import TableDetail from './TableDetail.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { Notify } from 'quasar'
+import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 
 export type BookingModes =
+  | 'bookingList'
   | 'bookingInfo'
   | 'tablePicker'
   | 'tableDetail'
   | 'successBooked'
 
 const props = defineProps<{
-  bookingMode: BookingModes
-  salesPoint: string
+  salesPoint: SalesPoint | null
+  currentMode: BookingModes
 }>()
 
 const emit = defineEmits<{
@@ -134,6 +138,8 @@ const emit = defineEmits<{
 }>()
 
 const currentBooking = ref<BookingRequest | null>(null)
+
+// const bookingMode = ref<BookingModes>('bookingInfo')
 
 const date = ref<string | null>(null)
 const time = ref<string | null>(null)
@@ -183,17 +189,13 @@ onMounted(() => {
     customer: authentication.user?.id || null,
     customer_name: authentication.user?.fullName || null,
     customer_phone: String(authentication.user?.phone) || null,
-    sales_point: props.salesPoint,
+    sales_point: props.salesPoint?.id || null,
     tables: [],
   })
   void sectionRepo.list({
-    sales_point: props.salesPoint,
+    sales_point: props.salesPoint?.id,
   })
 })
-
-const changeBookingMode = (mode: BookingModes) => {
-  emit('changeBookingMode', mode)
-}
 
 const createBooking = async () => {
   if (!currentBooking.value) return
@@ -203,11 +205,6 @@ const createBooking = async () => {
     bookingRequestRepo.item = await bookingRequestRepo.create(
       currentBooking.value
     )
-    // await cartRepo.setParams({
-    //   sales_point: props.salesPoint,
-    //   type: 'booking',
-    // })
-    // await store.loadCatalog(props.salesPoint)
 
     emit('changeBookingMode', 'successBooked')
   } catch {

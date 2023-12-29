@@ -59,7 +59,7 @@ export class DeliveryAddress implements BaseModel {
       flat: this.flat,
       floor: this.floor,
       entrance: this.entrance,
-      intercom: this.intercom?.length ? this.intercom : undefined,
+      intercom: this.intercom?.length ? this.intercom : null,
       description: this.description?.length ? this.description : undefined,
     }
   }

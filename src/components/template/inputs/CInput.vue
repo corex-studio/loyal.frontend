@@ -46,11 +46,7 @@
       :fill-mask="fillMask"
       :clearable="clearable"
       :borderless="changeAmount || borderless"
-      :filled="
-        changeAmount || filled !== undefined
-          ? filled
-          : $uiSettings.item?.inputType === 'filled'
-      "
+      :filled="changeAmount ? false : $uiSettings.item?.inputType === 'filled'"
       :loading="loading"
       :outlined="
         changeAmount
@@ -71,6 +67,7 @@
         'label-top': _labelTop,
         'no-icon': _noIcon,
         'default-input': !changeAmount,
+        circlized: $uiSettings.item?.inputType !== 'filled',
       }"
       :unmasked-value="unmaskedValue"
       :square="square ? true : false"
@@ -209,7 +206,7 @@ const _blurInput = () => {
 
 const _color = computed(() => {
   if (props.color) return props.color
-  else return 'input-color'
+  else return 'primary'
 })
 
 const _rounded = computed(() => {
@@ -343,6 +340,10 @@ textarea + .q-field__label {
   padding-left: 8px;
 }
 
+.q-input .q-field__bottom {
+  padding: 3px 12px !important ;
+}
+
 .q-input:not(.q-file).q-field--with-bottom {
   padding-bottom: 0px !important;
 }
@@ -355,7 +356,7 @@ textarea + .q-field__label {
   display: none;
 }
 
-.default-input .q-field__control {
+.circlized .q-field__control {
   border-radius: var(--border-radius) !important;
 }
 
@@ -366,6 +367,19 @@ textarea + .q-field__label {
 .q-field--outlined .bg-black2.q-field__control:before {
   border: 1px solid $black2 !important;
 }
+
+.q-textarea .q-field__control {
+  min-height: unset !important;
+}
+
+.q-textarea .q-field__native {
+  padding-top: 10px !important;
+  padding-bottom: 10px !important;
+}
+
+// .q-input :deep(.q-field__native .q-placeholder) {
+//   padding-top: 10px !important;
+// }
 
 .q-field__native .q-placeholder {
   padding: 10px;
