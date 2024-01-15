@@ -1,26 +1,30 @@
 <template>
   <div
-    class="row justify-center border-radius cursor-pointer"
-    style="overflow: hidden; max-height: 138px"
-    :style="`border: 1px ${getBorderColor} solid`"
+    class="row items-center border-radius cursor-pointer pa-4 gap-6"
+    :style="selected ? `outline: 2px ${getBorderColor} solid` : ''"
   >
     <q-img
-      height="138px"
-      fit="contain"
+      height="54px"
+      width="54px"
+      class="border-radius"
+      fit="cover"
       :src="item.image?.thumbnail || $store.images.empty"
     >
       <template v-slot:error>
         <span>
           <q-img
-            class="user-image"
-            fit="contain"
+            class="border-radius"
+            fit="cover"
+            width="54px"
+            height="54px"
             :src="$store.images.empty"
           ></q-img>
         </span> </template
     ></q-img>
-    <!-- <div class="body bold">
-      {{ item.name }}
-    </div> -->
+    <div class="column col-grow">
+      <div class="header3 bold">{{ item.name }}</div>
+      <!-- <div class="body">{{ item }}</div> -->
+    </div>
   </div>
 </template>
 <script lang="ts" setup>

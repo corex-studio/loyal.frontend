@@ -8,7 +8,7 @@
     no-overflow
     no-padding
   >
-    <div class="row full-height no-wrap full-width gap-15">
+    <div class="row full-height no-wrap full-width">
       <q-img
         :ratio="1"
         class="col"
@@ -30,13 +30,16 @@
           </span> </template
       ></q-img>
       <div
-        style="overflow-x: auto"
-        class="column no-wrap justify-between full-height pr-15 py-15"
+        style="overflow-x: auto; width: -webkit-fill-available"
+        class="column no-wrap justify-between full-height pa-15"
       >
         <div class="column full-width">
-          <div class="header bold mb-6">{{ $menuItem.item?.name }}</div>
-          <div class="body mb-6">{{ $menuItem.item?.description }}</div>
-          <MenuItemCharacteristics :size="currentSize" />
+          <div class="huge3 bold mb-6">{{ $menuItem.item?.name }}</div>
+          <div v-if="$menuItem.item?.description?.length" class="body mb-6">
+            {{ $menuItem.item?.description }}
+          </div>
+          <MenuItemCharacteristics v-if="currentSize" :size="currentSize" />
+
           <div
             v-if="$menuItem.item && $menuItem.item.sizes.length > 1"
             class="relative-position mt-8"
@@ -69,11 +72,7 @@
           ]"
           :style="$q.screen.xs ? 'position: fixed; bottom: 0px; left: 0' : ''"
         >
-          <ChangeAmount
-            :small="$q.screen.xs"
-            background-color="white"
-            v-model="quantity"
-          />
+          <ChangeAmount background-color="white" v-model="quantity" />
           <div
             v-if="$store.tableMode && !$pad.item?.settings.orders_enabled"
             class="full-width text-danger"
@@ -83,10 +82,9 @@
           <CButton
             @click="addToCart()"
             class="col-grow subtitle-text"
-            :height="$q.screen.xs ? '42px' : '42px'"
+            height="48px"
             :loading="loading"
             :disabled="isAddToCardDisabled"
-            :icon="$q.screen.xs ? '' : 'fa-light fa-shopping-cart'"
             :label="$q.screen.xs ? 'В корзину' : 'Добавить в корзину'"
           />
         </div>
@@ -116,6 +114,7 @@ import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { Notify, useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const props = defineProps<{
   modelValue: boolean
@@ -145,6 +144,15 @@ watch(
   () => menuItemRepo.item,
   () => {
     if (props.modelValue) {
+      // if (menuItemRepo.item) {
+      //   const test = [1, 3, 4, 5, 6, 7, 8]
+      //   test.forEach((el) =>
+      //     menuItemRepo.item?.sizes.push({
+      //       ...menuItemRepo.item.sizes[0],
+      //       id: String(el),
+      //     })
+      //   )
+      // }
       currentSize.value = menuItemRepo.item?.sizes[0]
         ? menuItemRepo.item?.sizes[0]
         : null
@@ -170,20 +178,30 @@ const addToCart = async () => {
     return
   }
   if (!cartRepo.item && salesPointRepo.item) {
-    await companyRepo.retrieve(
-      typeof salesPointRepo.item.company === 'string'
-        ? salesPointRepo.item.company
-        : salesPointRepo.item.company?.id || ''
+    const foundCompany = companyGroupRepo.item?.companies.find(
+      (v) =>
+        v.id ===
+        (typeof salesPointRepo.item?.company === 'string'
+          ? salesPointRepo.item.company
+          : salesPointRepo.item?.company?.id || '')
     )
+    if (foundCompany) companyRepo.item = foundCompany
+    else
+      await companyRepo.retrieve(
+        typeof salesPointRepo.item.company === 'string'
+          ? salesPointRepo.item.company
+          : salesPointRepo.item.company?.id || ''
+      )
     store.serviceSettingsModal = true
     emit('update:modelValue', false)
   } else if (cartRepo.item && currentSize.value) {
     try {
+      cartRepo.loading = true
       loading.value = true
       await cartItemRepo.createCartItem({
         cart: cartRepo.item?.id,
         quantity: quantity.value,
-        size: currentSize.value?.id,
+        size: currentSize.value?.id || '',
         cart_item_modifiers:
           currentSize.value.modifierGroups?.flatMap((v) =>
             v.items

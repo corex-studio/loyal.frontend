@@ -86,16 +86,16 @@ const getBorderColor = computed(() => {
 const steps = computed(() => {
   return [
     {
-      icon: 'fa-solid fa-check',
+      icon: 'fa-regular fa-check',
     },
     {
-      icon: 'fa-solid fa-hat-chef',
+      icon: 'fa-regular fa-hat-chef',
     },
     {
-      icon: 'fa-solid fa-moped',
+      icon: 'fa-regular fa-moped',
     },
     {
-      icon: 'fa-solid fa-flag',
+      icon: 'fa-regular fa-flag',
     },
   ]
 })

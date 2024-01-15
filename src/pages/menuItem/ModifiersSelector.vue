@@ -29,6 +29,7 @@
         </div>
 
         <CIcon
+          v-if="group.items.some((v) => v.quantity)"
           @click="clearSelection()"
           class="cursor-pointer"
           color="on-background-color"

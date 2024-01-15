@@ -23,13 +23,16 @@ export const handleMessage = (v: MessageEvent<string>) => {
   const response = JSON.parse(v.data) as WebSocketMessage
   if (response.type === 'cart.updated') {
     cartRepo.item = new Cart(response.data as CartRaw)
-    cartRepo.loading = false
     cartRepo.item.errors.forEach((error) => {
-      Notify.create({
-        message: error.description || undefined,
-        color: 'danger',
-      })
+      if (error.title === 'Промокод') {
+        cartRepo.promocodeError = true
+      } else
+        Notify.create({
+          message: error.description || undefined,
+          color: 'danger',
+        })
     })
+    cartRepo.loading = false
   }
   if (response.type === 'user.updated') {
     authentication.user = new Customer(response.data as CustomerRaw)

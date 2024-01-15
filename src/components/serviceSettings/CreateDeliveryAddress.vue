@@ -10,44 +10,53 @@
           <CIcon
             v-if="backCallback"
             @click="backCallback()"
-            size="22px"
+            size="24px"
             color="on-background-color"
             hover-color="primary"
             class="cursor-pointer"
-            name="fa-solid fa-angle-left"
+            name="fa-regular fa-angle-left"
           />
           <div class="header2 bold">
             {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
           </div>
         </div>
         <CInput
-          height="42px"
+          height="48px"
           external-label="Название адреса"
+          placeholder="Название"
+          input-class="body"
           v-model="newAddress.name"
         />
         <AddressSearch
           @update="selectAddress($event)"
           :address="newAddress.address"
+          input-class="body"
           label="Укажите адрес"
           placeholder="Город, улица, дом"
         />
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
           <CInput
-            height="42px"
+            height="48px"
             class="col"
+            input-class="body"
             external-label="Подъезд"
+            placeholder="Номер"
             v-model="newAddress.entrance"
           />
           <CInput
-            height="42px"
+            height="48px"
             class="col"
+            input-class="body"
             external-label="Этаж"
+            placeholder="Номер"
             v-model="newAddress.floor"
           />
           <CInput
-            height="42px"
+            height="48px"
             class="col"
+            input-class="body"
             external-label="Код двери"
+            placeholder="Номер"
             v-model="newAddress.intercom"
           />
         </div>
@@ -56,22 +65,31 @@
           input-style="border-radius: 15px !important"
           v-model="newAddress.description"
           auto-grow
+          input-class="body"
           height="fit-content"
         />
       </div>
       <div class="mt-15 column full-width gap-12">
-        <q-checkbox
+        <CCheckBox
+          @click="privateHouseClickHandler()"
+          :model-value="isPrivateHouse"
+          size="50px"
+          class="body"
+          label="У меня частный дом"
+        />
+        <!-- <q-checkbox
           @click="privateHouseClickHandler()"
           :model-value="isPrivateHouse"
           dense
           size="50px"
           class="body"
           label="У меня частный дом"
-        />
+        /> -->
         <CButton
           @click="createAddress()"
           :disabled="!isSaveAvailable"
           height="48px"
+          class="body"
           width="280px"
           label="Сохранить"
         />
@@ -102,6 +120,7 @@ import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import L from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import { Layer } from 'leaflet'
+import CCheckBox from '../helpers/CCheckBox.vue'
 
 const props = defineProps<{
   address?: DeliveryAddress

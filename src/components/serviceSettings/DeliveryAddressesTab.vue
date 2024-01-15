@@ -8,17 +8,24 @@
         <div
           v-for="(el, index) in $deliveryAddress.items"
           :key="index"
-          class="row items-center pa-10 justify-between cursor-pointer border-radius"
+          class="row items-center full-width pa-10 justify-between cursor-pointer border-radius"
           @click="$emit('select', el)"
           :style="`border: 1px ${getBorderColor(el)} solid`"
         >
-          <div class="row items-center gap-6 no-wrap">
+          <div class="row col-10 items-center gap-6 no-wrap">
             <RoundedSelector
               height="24px"
               width="24px"
               :model-value="el.id === currentAddress?.id"
             />
-            <div class="subtitle-text">{{ el.address }}</div>
+            <div class="column gap-4 subtitle-text">
+              <div class="bold ellipsis-2-lines">
+                {{ el.name }}
+              </div>
+              <div class="ellipsis-2-lines">
+                {{ el.address }}
+              </div>
+            </div>
           </div>
           <CIcon
             @click="$emit('edit', el)"

@@ -42,7 +42,7 @@ export type CartParams = {
   sales_point?: string
   type?: string
   delivery_address?: string
-  delivery_time?: string
+  delivery_time?: string | null
   promo_code?: string
   applied_wallet_payments?: {
     wallet_payment: string

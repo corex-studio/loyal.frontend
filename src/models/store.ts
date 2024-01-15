@@ -7,6 +7,7 @@ import { SalesPoint } from './salesPoint/salesPoint'
 import { authentication } from './authentication/authentication'
 import { LocalStorage } from 'quasar'
 import { reactive } from 'vue'
+import moment from 'moment'
 
 export class Store {
   footerHeight = 0
@@ -16,6 +17,7 @@ export class Store {
   companyGroup = 'corex_demo'
   institution = '4a1d27e8-281e-42c5-95cc-6331a2e4cffa'
   authModal = false
+  registrationModal = false
   profileModal = false
   cartDrawer = false
   serviceSettingsModal = false
@@ -108,6 +110,42 @@ export const parseAlphaColorsFromCorrect = (str: string) => {
 export const addHash = (v: string) => {
   if (first(v) !== '#') return '#' + v
   return v
+}
+
+export const totalDayTimes = () => {
+  return Array.from({ length: 24 }, (_, i) => i).reduce((r: string[], hour) => {
+    r.push(moment({ hour, minute: 0 }).format('HH:mm'))
+    r.push(moment({ hour, minute: 15 }).format('HH:mm'))
+    r.push(moment({ hour, minute: 30 }).format('HH:mm'))
+    r.push(moment({ hour, minute: 45 }).format('HH:mm'))
+
+    return r
+  }, [])
+}
+
+export const getTimesBetween = (start: string, end: string) => {
+  const times = []
+  const startHour = moment(start, 'HH:mm').format('HH')
+  const startMinute = moment(start, 'HH:mm').format('mm')
+  const endTime = moment(end, 'HH:mm')
+
+  let startTime = moment(start, 'HH:mm')
+  if (startMinute !== '00') {
+    if (Number(startMinute) <= 15) {
+      startTime = moment(`${startHour}:15`, 'HH:mm')
+    } else if (Number(startMinute) <= 30) {
+      startTime = moment(`${startHour}:30`, 'HH:mm')
+    } else if (Number(startMinute) <= 45) {
+      startTime = moment(`${startHour}:45`, 'HH:mm')
+    } else {
+      startTime = moment(startHour, 'HH').add(1, 'hour')
+    }
+  }
+  while (startTime <= endTime) {
+    times.push(startTime.format('HH:mm'))
+    startTime.add(15, 'minutes')
+  }
+  return times
 }
 
 export const lightColor = (v: string, opacityValue: string) => {

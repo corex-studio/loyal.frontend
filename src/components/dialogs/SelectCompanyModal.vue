@@ -4,24 +4,23 @@
     @update:model-value="$emit('update:modelValue', $event)"
     width="735px"
   >
-    <template v-slot:header> Выберите заведение </template>
+    <div class="huge3 bold mb-12">Выберите заведение</div>
     <!-- {{ selectedCompany }} -->
     <div v-if="$companyGroup.item" class="row full-width">
       <GridContainer
         :items="$companyGroup.item?.companies"
-        :lg="3"
-        :xl="3"
+        :lg="2"
+        :xl="2"
         :md="2"
         :sm="2"
         :xs="2"
-        gap="18px"
+        gap="20px"
       >
         <template v-slot:item="{ item }">
           <CompanyRow
             @click="selectCompany(item)"
             :item="item"
             :selected="selectedCompany?.id === item.id"
-            class="col-4"
           />
         </template>
       </GridContainer>

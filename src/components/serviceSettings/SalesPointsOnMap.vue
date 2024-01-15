@@ -1,8 +1,8 @@
 <template>
-  <div style="width: 650px; height: 600px">
+  <div style="width: 650px; height: inherit">
     <div
       id="map"
-      style="width: 100%; height: 600px; z-index: 9"
+      style="width: 100%; height: 100%; z-index: 9"
       :style="`border-radius: ${getBorderRadius}`"
       class="map"
     ></div>

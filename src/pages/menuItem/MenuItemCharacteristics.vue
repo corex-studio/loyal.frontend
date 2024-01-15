@@ -1,42 +1,90 @@
 <template>
-  <div class="column full-width gap-6">
-    <div
-      v-for="(nutrition, index) in size?.nutritions"
-      :key="index"
-      class="row gap-6 body"
-    >
+  <div v-if="actualNutritions?.length" class="column full-width gap-6">
+    <div class="row full-width gap-6 justify-between items-center">
+      <div class="subtitle-text bold">Пищевая ценность</div>
+      <div
+        style="overflow: hidden"
+        class="row items-center bg-selector-color border-radius pa-1"
+      >
+        <div
+          v-for="(el, index) in actualNutritions"
+          :key="index"
+          @click="currentNutrition = el"
+          class="py-5 px-9 body border-radius cursor-pointer"
+          :class="
+            currentNutrition?.uuid === el.uuid
+              ? 'bold bg-selector-active-color text-on-selector-active-color box-shadow'
+              : ''
+          "
+          :style="
+            currentNutrition?.uuid === el.uuid
+              ? 'transition: background-color 0.4s ease-out'
+              : 'transition: background-color 0.3s ease-out'
+          "
+        >
+          {{ nutritionsNames[el.type] }}
+        </div>
+      </div>
+    </div>
+    <div class="row gap-6 body">
       <div class="column gap-2">
         <div style="opacity: 0.8">Калорийность</div>
-        <div>{{ nutrition.calories ? nutrition.calories + ' ккал' : '-' }}</div>
+        <div>
+          {{
+            currentNutrition?.calories
+              ? currentNutrition?.calories + ' ккал'
+              : '-'
+          }}
+        </div>
       </div>
       <div class="column gap-2">
         <div style="opacity: 0.8">Белки</div>
-        <div>{{ nutrition.proteins ? nutrition.proteins + ' г' : '-' }}</div>
+        <div>
+          {{
+            currentNutrition?.proteins ? currentNutrition?.proteins + ' г' : '-'
+          }}
+        </div>
       </div>
       <div class="column gap-2">
         <div style="opacity: 0.8">Жиры</div>
-        <div>{{ nutrition.fats ? nutrition.fats + ' г' : '-' }}</div>
+        <div>
+          {{ currentNutrition?.fats ? currentNutrition?.fats + ' г' : '-' }}
+        </div>
       </div>
       <div class="column gap-2">
         <div style="opacity: 0.8">Углеводы</div>
         <div>
-          {{ nutrition.carbohydrates ? nutrition.carbohydrates + ' г' : '-' }}
+          {{
+            currentNutrition?.carbohydrates
+              ? currentNutrition?.carbohydrates + ' г'
+              : '-'
+          }}
         </div>
       </div>
-      <!-- <div
-        v-for="(el, index) in size?.nutritions"
-        :key="index"
-        class="column gap-2"
-      >
-        {{ el }}
-      </div> -->
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { ItemSize } from 'src/models/menu/menu'
+import { ItemSize, nutritionsNames } from 'src/models/menu/menu'
+import { NotritionRaw } from 'src/models/order/order'
+import { onMounted, ref, computed } from 'vue'
 
-defineProps<{
-  size: ItemSize | null
+const props = defineProps<{
+  size: ItemSize
 }>()
+
+const currentNutrition = ref<NotritionRaw | null>(null)
+
+const actualNutritions = computed(() => {
+  return props.size?.nutritions.filter((v) => {
+    return !!v.calories || !!v.carbohydrates || !!v.fats || !!v.proteins
+  })
+})
+
+onMounted(() => {
+  setTimeout(() => {
+    if (actualNutritions.value.length)
+      currentNutrition.value = actualNutritions.value[0]
+  }, 300)
+})
 </script>

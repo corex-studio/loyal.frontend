@@ -37,7 +37,7 @@
         >
           <CIcon
             style="transform: translate(30%, 9%)"
-            name="fa-solid fa-xmark"
+            name="fa-regular fa-xmark"
             color="white"
           />
         </div>

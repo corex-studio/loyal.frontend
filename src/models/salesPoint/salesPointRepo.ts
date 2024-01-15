@@ -1,3 +1,4 @@
+import { AvailableHours } from './../carts/cart'
 import { Menu, MenuRaw } from './../menu/menu'
 import { AvailablePaymentType, PaymentSettings, SalesPoint } from './salesPoint'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
@@ -94,6 +95,19 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
     })
     this.menuLoading = false
     return new Menu(res)
+  }
+
+  async getAvailableWorkingHours(
+    date: string | null,
+    salesPointId?: string
+  ): Promise<AvailableHours> {
+    const res: AvailableHours = await this.api.send({
+      method: 'GET',
+      action: 'available_working_hours',
+      id: salesPointId,
+      params: { date },
+    })
+    return res
   }
 }
 

@@ -1,16 +1,17 @@
 <template>
   <div
-    class="row items-center no-wrap border-radius px-1"
+    class="row items-center no-wrap border-radius"
     :class="[
       { 'full-width justify-between': fullWidth },
-      backgroundClass || 'bg-secondary-button-color',
+      backgroundClass ||
+        (outlined ? 'outlined-element' : 'bg-secondary-button-color px-1'),
     ]"
     :style="`height: ${_height}`"
   >
     <CIconButton
       icon="fal fa-minus"
       icon-color="on-secondary-button-color"
-      :color="buttonsColor || 'secondary-button-color'"
+      :color="buttonsColor || (outlined ? '' : 'secondary-button-color')"
       :size="_height"
       :hover-icon-color="minValue >= modelValue ? 'secondary' : 'primary'"
       @click.capture.stop="minus"
@@ -74,7 +75,7 @@
     <CIconButton
       icon="fal fa-plus"
       icon-color="on-secondary-button-color"
-      :color="buttonsColor || 'secondary-button-color'"
+      :color="buttonsColor || (outlined ? '' : 'secondary-button-color')"
       :size="_height"
       :hover-icon-color="minValue >= modelValue ? 'secondary' : 'primary'"
       @click.capture.stop="plus"
@@ -127,6 +128,7 @@ const props = defineProps({
   disableAdding: Boolean,
   buttonsColor: String,
   backgroundClass: String,
+  outlined: Boolean,
 })
 
 const inputValue = ref(0)
@@ -151,7 +153,7 @@ const unitQuantity = computed(() => {
 })
 
 const _height = computed(() => {
-  return props.small ? '36px' : '40px'
+  return props.small ? '36px' : props.height || '40px'
 })
 
 const setInputRef = () => {
@@ -283,5 +285,9 @@ const widthInput = computed(() => {
   .q-field__control::after {
     top: 23px !important;
   }
+}
+
+.outlined-element {
+  border: 1px var(--secondary-button-color) solid;
 }
 </style>

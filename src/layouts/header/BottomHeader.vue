@@ -1,5 +1,6 @@
 <template>
   <!-- :class="{ 'box-shadow': $store.verticalScroll > 56 }" -->
+
   <div
     v-if="!$q.screen.xs || $store.tableMode"
     class="row full-width bg-background-color sticky-block"
@@ -127,6 +128,7 @@
           height="48px"
           class="body"
           color="primary"
+          :loading="$cart.loading"
           text-color="on-primary"
           @click="$store.cartDrawer = !$store.cartDrawer"
           style="position: absolute; right: 12px"
@@ -134,17 +136,13 @@
           <div class="row gap-4">
             <CIcon
               size="17px"
-              name="fa-solid fa-basket-shopping"
+              name="fa-regular fa-basket-shopping"
               color="on-button-color"
             />
             <div v-if="!$cart.item.cartItems.length">Корзина</div>
-            <div v-else>{{ $cart.item.discountedTotalSum }} ₽</div>
-            <!-- <template v-if="$cart.item.cartItems.length">
-              <div>|</div>
-              <div>
-                {{ $cart.item.cartItems.length }}
-              </div>
-            </template> -->
+            <div v-else>
+              {{ beautifyNumber($cart.item.discountedTotalSum, true) }} ₽
+            </div>
           </div></CButton
         >
       </div>
@@ -163,7 +161,7 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { useQuasar } from 'quasar'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { store } from 'src/models/store'
+import { beautifyNumber, store } from 'src/models/store'
 
 const bottomHeader = ref<Element | null>(null)
 

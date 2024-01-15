@@ -73,12 +73,7 @@
       </div> -->
     </div>
     <div class="col-grow text-on-backing-color">
-      <template
-        v-if="
-          $appSettings.linksData?.android_download_link ||
-          $appSettings.linksData?.ios_download_link
-        "
-      >
+      <template v-if="$appSettings.linksData?.app_redirect_link">
         <div class="header mb-15">Скачать мобильное приложение</div>
         <div class="row items-center gap-12 text-black3">
           <div

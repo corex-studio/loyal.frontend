@@ -7,6 +7,7 @@ import { AxiosResponse } from 'axios'
 
 import { BaseAuthenticationTokens, TokensRaw } from './baseAuthenticationTokens'
 import moment from 'moment'
+import { store } from 'src/models/store'
 
 export class BaseAuthentication {
   user: Customer | null = null
@@ -53,6 +54,9 @@ export class BaseAuthentication {
         companyRepo.item = companyGroupRepo.item.companies[0]
         companyRepo.cartCompany = companyGroupRepo.item.companies[0]
       }
+    }
+    if (!this.user.registeredAt) {
+      store.registrationModal = true
     }
     authentication.loading = false
     return this.user

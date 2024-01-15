@@ -58,7 +58,7 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) {
-      selectedPaymentType.value = props.currentType
+      if (props.currentType) selectedPaymentType.value = props.currentType
     }
   }
 )

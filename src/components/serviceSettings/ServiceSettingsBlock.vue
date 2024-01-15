@@ -15,7 +15,7 @@
   >
     <div v-if="!$cart.item" class="row no-wrap gap-4 items-center">
       <!-- <div style="background-color: #ffffff7f" class="border-radius px-4 py-3"> -->
-      <q-icon size="20px" :name="'fa-solid fa-location-dot'" />
+      <q-icon size="20px" :name="'fa-regular fa-location-dot'" />
       <!-- </div> -->
       <div>Выбрать способ получения</div>
     </div>
@@ -24,7 +24,7 @@
         <!-- style="background-color: #ffffff7f" -->
 
         <div class="border-radius px-4 py-3 bg-on-primary">
-          <q-icon color="primary" size="20px" :name="'fa-solid fa-box'" />
+          <q-icon color="primary" size="20px" :name="'fa-regular fa-box'" />
         </div>
         <div>{{ $cart.item.currentDeliveryType }}</div>
       </div>
@@ -33,7 +33,7 @@
           <q-icon
             size="20px"
             color="primary"
-            :name="'fa-solid fa-location-dot'"
+            :name="'fa-regular fa-location-dot'"
           />
         </div>
         <div>{{ $cart.item.currentAddress }}</div>

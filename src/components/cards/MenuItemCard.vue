@@ -70,7 +70,7 @@
             '27'
           )} !important`"
           text-color="primary"
-          height="42px"
+          height="40px"
           class="subtitle-text"
           :loading="loading"
           label="В корзину"
@@ -88,10 +88,11 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { authentication } from 'src/models/authentication/authentication'
-import { ref } from 'vue'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { Notify } from 'quasar'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { ref } from 'vue'
 
 const props = defineProps<{
   item: MenuItem
@@ -101,11 +102,20 @@ const loading = ref(false)
 
 const toCartClickHandler = async () => {
   if (!cartRepo.item && salesPointRepo.item) {
-    await companyRepo.retrieve(
-      typeof salesPointRepo.item.company === 'string'
-        ? salesPointRepo.item.company
-        : salesPointRepo.item.company?.id || ''
+    const foundCompany = companyGroupRepo.item?.companies.find(
+      (v) =>
+        v.id ===
+        (typeof salesPointRepo.item?.company === 'string'
+          ? salesPointRepo.item.company
+          : salesPointRepo.item?.company?.id || '')
     )
+    if (foundCompany) companyRepo.item = foundCompany
+    else
+      await companyRepo.retrieve(
+        typeof salesPointRepo.item.company === 'string'
+          ? salesPointRepo.item.company
+          : salesPointRepo.item.company?.id || ''
+      )
     store.serviceSettingsModal = true
     return
   }
@@ -135,11 +145,12 @@ const addToCart = async () => {
     store.serviceSettingsModal = true
   } else if (cartRepo.item && props.item.sizes[0]) {
     try {
+      cartRepo.loading = true
       loading.value = true
       await cartItemRepo.createCartItem({
         cart: cartRepo.item?.id,
         quantity: 1,
-        size: props.item.sizes[0].id,
+        size: props.item.sizes[0].id || '',
         cart_item_modifiers:
           props.item.sizes[0].modifierGroups?.flatMap((v) =>
             v.items
@@ -154,14 +165,14 @@ const addToCart = async () => {
               .filter((e) => e.quantity)
           ) || [],
       })
-      loading.value = false
     } catch (e) {
-      loading.value = false
-
+      cartRepo.loading = false
       Notify.create({
         message: 'Ошибка при добавлении в корзину',
         color: 'danger',
       })
+    } finally {
+      loading.value = false
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <q-breadcrumbs separator="" class="mb-sm-15 mb-xs-12 mt-sm-8 mt-xs-5">
+  <div class="mt-30">
+    <!-- <q-breadcrumbs separator="" class="mb-sm-15 mb-xs-12 mt-sm-8 mt-xs-5">
       <CHover v-slot="{ hover }">
         <q-breadcrumbs-el
           :label="'Главная'"
@@ -21,8 +21,8 @@
         class="caption-text text-on-background-color"
         :class="isProfileBreadcrumbClickable ? 'cursor-pointer ' : ''"
       />
-    </q-breadcrumbs>
-    <div
+    </q-breadcrumbs> -->
+    <!-- <div
       class="row bg-primary py-sm-15 py-xs-10 px-10 justify-between items-center border-radius"
     >
       <div class="row no-wrap items-center gap-5">
@@ -43,16 +43,9 @@
           <div class="secondary-text">{{ authentication.user?.phone }}</div>
         </div>
       </div>
-      <!-- <div
-        style="width: 40px; height: 40px"
-        class="row justify-center items-center bell-icon border-radius cursor-pointer"
-      >
-        <CIcon color="on-primary" name="fa-light fa-bell" />
-      </div> -->
-    </div>
-    <div
-      class="row no-wrap full-width mt-md-25 mt-xs-12 mt-sm-20 gap-lg-40 gap-xs-15 gap-md-25"
-    >
+
+    </div> -->
+    <div class="row no-wrap full-width gap-lg-40 gap-xs-15 gap-md-25">
       <ProfileMenu v-if="showMenu" />
       <div class="col" v-if="!menuView">
         <router-view />
@@ -72,8 +65,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import CHover from 'src/components/template/helpers/CHover.vue'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
+// import CHover from 'src/components/template/helpers/CHover.vue'
+// import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import ProfileMenu from './ProfileMenu.vue'
 import { onMounted, watch, ref, computed } from 'vue'
@@ -94,20 +87,20 @@ const menuView = computed(() => {
   return q.screen.xs && route.name === 'profilePage'
 })
 
-const isProfileBreadcrumbClickable = computed(() => {
-  return q.screen.xs && route.name !== 'profilePage'
-})
+// const isProfileBreadcrumbClickable = computed(() => {
+//   return q.screen.xs && route.name !== 'profilePage'
+// })
 
 const showMenu = computed(() => {
   return !q.screen.xs || route.name === 'profilePage'
 })
 
-const profileBreadcrumbClickHandler = () => {
-  if (!isProfileBreadcrumbClickable.value) return
-  void router.push({
-    name: 'profilePage',
-  })
-}
+// const profileBreadcrumbClickHandler = () => {
+//   if (!isProfileBreadcrumbClickable.value) return
+//   void router.push({
+//     name: 'profilePage',
+//   })
+// }
 
 onMounted(() => {
   if (q.screen.gt.xs && route.name === 'profilePage') {

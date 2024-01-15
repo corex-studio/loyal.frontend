@@ -3,9 +3,13 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     :width="modalWidth"
-    height="600px"
     no-padding
   >
+    <!-- :height="
+      currentTab === CartType.YANDEX || currentTab === CartType.DELIVERY_CLUB
+        ? undefined
+        : '600px'
+    " -->
     <template v-if="!newAddressMode">
       <div
         class="row full-width no-wrap bg-background-color text-on-background-color border-radius"
@@ -20,22 +24,22 @@
                   bookingMode === 'successBooked'
                 "
                 @click="navigationButtonClickHandler()"
-                name="fa-solid fa-angle-left"
+                name="fa-regular fa-angle-left"
                 hover-color="primary"
                 class="cursor-pointer"
-                size="22px"
+                size="24px"
               />
             </template>
           </ServiceModalHeader>
           <ServiceSettingsTabPicker
-            class="mt-12"
+            class="mt-12 mb-13"
             @update-tab="currentTab = $event"
             :tabs="availableCartTypes"
             :model-value="currentTab || undefined"
           />
-          <div class="mt-13">
+          <div>
             <DeliveryAddressesTab
-              v-if="currentTab === CartType.DELIVERY"
+              v-if="currentTab?.type === CartType.DELIVERY"
               :current-address="selectedDeliveryAddress"
               @select="selectedDeliveryAddress = $event"
               @edit="editAddressHandler($event)"
@@ -62,7 +66,7 @@
               </template>
             </DeliveryAddressesTab>
             <PickupAddressesTab
-              v-if="currentTab === CartType.PICKUP"
+              v-if="currentTab?.type === CartType.PICKUP"
               @select="selectedPickupAddress = $event"
               :current-point="selectedPickupAddress"
             >
@@ -71,12 +75,13 @@
                   @click="confirmSelectedAddress()"
                   height="48px"
                   width="300px"
+                  :loading="$cart.setParamsLoading || $store.catalogLoading"
                   class="subtitle-text col-6"
                   label="Заберу здесь"
                 />
               </template>
             </PickupAddressesTab>
-            <template v-if="currentTab === CartType.BOOKING">
+            <template v-if="currentTab?.type === CartType.BOOKING">
               <BookingAddressesTab
                 v-if="bookingMode === 'bookingList'"
                 @select="selectedSalesPoint = $event"
@@ -101,12 +106,21 @@
                 @close="$emit('update:modelValue', false)"
               />
             </template>
+            <DeliveryAggregatorTab
+              v-if="currentTab?.type === AggregatorType.DELIVERY_CLUB"
+              :tab="currentTab"
+            />
+            <YandexAggregatorTab
+              v-if="currentTab?.type === AggregatorType.YANDEX"
+              :tab="currentTab"
+            />
           </div>
         </div>
         <SalesPointsOnMap
           v-if="
-            currentTab === CartType.PICKUP ||
-            (currentTab === CartType.BOOKING && bookingMode === 'bookingList')
+            currentTab?.type === CartType.PICKUP ||
+            (currentTab?.type === CartType.BOOKING &&
+              bookingMode === 'bookingList')
           "
           :selected-point="selectedPickupAddress"
           :addresses="currentSalesPoints || []"
@@ -145,6 +159,15 @@ import BookingAddressesTab from './BookingAddressesTab.vue'
 import SalesPointsOnMap from './SalesPointsOnMap.vue'
 import BookingInfo from './BookingInfo.vue'
 import CIcon from '../template/helpers/CIcon.vue'
+import { AggregatorType } from 'src/models/company/company'
+import DeliveryAggregatorTab from './DeliveryAggregatorTab.vue'
+import YandexAggregatorTab from './YandexAggregatorTab.vue'
+
+export type TabRaw = {
+  label: string | null
+  type: string
+  link?: string | null
+}
 
 const props = defineProps<{
   modelValue: boolean
@@ -161,7 +184,7 @@ export type BookingModes =
   | 'tableDetail'
   | 'successBooked'
 
-const currentTab = ref<CartType | null>(null)
+const currentTab = ref<TabRaw | null>(null)
 
 const newAddressMode = ref(false)
 
@@ -182,7 +205,7 @@ watch(
       void deliveryAddressRepo.list().then(() => {
         selectCurrentAddress()
         if (availableCartTypes.value.length) {
-          currentTab.value = availableCartTypes.value[0].type
+          currentTab.value = availableCartTypes.value[0]
         }
       })
     }
@@ -192,15 +215,15 @@ watch(
 const modalWidth = computed(() => {
   return newAddressMode.value
     ? '1094px'
-    : currentTab.value === CartType.PICKUP ||
-      (currentTab.value === CartType.BOOKING &&
+    : currentTab.value?.type === CartType.PICKUP ||
+      (currentTab.value?.type === CartType.BOOKING &&
         bookingMode.value === 'bookingList')
     ? '1300px'
     : '649px'
 })
 
 const currentSalesPoints = computed(() => {
-  return currentTab.value === CartType.PICKUP
+  return currentTab.value?.type === CartType.PICKUP
     ? availablePickupAddresses.value
     : availableBookingAddresses.value
 })
@@ -218,7 +241,7 @@ const availableBookingAddresses = computed(() => {
 })
 
 const availableCartTypes = computed(() => {
-  const result = []
+  const result: TabRaw[] = []
 
   if (
     companyRepo.cartCompany?.salesPoints?.some(
@@ -228,9 +251,6 @@ const availableCartTypes = computed(() => {
     result.push({
       label: 'Доставка',
       type: CartType.DELIVERY,
-      icon: 'fa-light fa-home',
-      color: 'delivery-button-color',
-      class: 'text-on-delivery-button-color',
     })
   }
   if (
@@ -239,9 +259,6 @@ const availableCartTypes = computed(() => {
     result.push({
       label: 'Самовывоз',
       type: CartType.PICKUP,
-      icon: 'fa-light fa-store',
-      color: 'pickup-button-color',
-      class: 'text-on-pickup-button-color',
     })
   }
   if (
@@ -253,11 +270,16 @@ const availableCartTypes = computed(() => {
     result.push({
       label: 'Бронь',
       type: CartType.BOOKING,
-      icon: 'fa-light fa-calendar-day',
-      color: 'booking-button-color',
-      class: 'text-on-booking-button-color',
     })
   }
+  if (companyRepo.item)
+    companyRepo.item?.deliveryAggregators.forEach((el) => {
+      result.push({
+        label: el.type === AggregatorType.YANDEX ? 'Яндекс еда' : 'Деливери',
+        type: el.type,
+        link: el.link,
+      })
+    })
   return result
 })
 
@@ -294,7 +316,10 @@ const selectCurrentAddress = () => {
 }
 
 const confirmSelectedAddress = async () => {
-  if (selectedDeliveryAddress.value && currentTab.value === CartType.DELIVERY) {
+  if (
+    selectedDeliveryAddress.value &&
+    currentTab.value?.type === CartType.DELIVERY
+  ) {
     const res = await deliveryAreaRepo.byCoords(
       selectedDeliveryAddress.value?.coords
     )
@@ -316,7 +341,7 @@ const confirmSelectedAddress = async () => {
 
     emit('update:modelValue', false)
   } else if (
-    currentTab.value === CartType.PICKUP &&
+    currentTab.value?.type === CartType.PICKUP &&
     selectedPickupAddress.value
   ) {
     if (authentication.user)
@@ -327,9 +352,7 @@ const confirmSelectedAddress = async () => {
     await store.loadCatalog(selectedPickupAddress.value)
 
     emit('update:modelValue', false)
-  } else if (currentTab.value === CartType.BOOKING) {
-    //TODO: lol kek sosi
-    // mode.value = 'bookingInfo'
+  } else if (currentTab.value?.type === CartType.BOOKING) {
   }
   menuGroupRepo.elementsInViewport = []
 }

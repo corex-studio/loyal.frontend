@@ -8,7 +8,7 @@
     v-model="currentAddress"
     :loading-color="loadingColor"
     :icon="inputIcon"
-    height="42px"
+    height="48px"
     :icon-color="iconColor"
     :icon-class="iconClass"
     @icon-click="$emit('iconClick')"

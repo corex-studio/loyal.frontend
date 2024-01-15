@@ -19,15 +19,9 @@
     <CIcon
       v-if="modelValue && check"
       color="on-primary"
-      name="fa-solid fa-check"
-      size="16px"
-    />
-    <!-- <CIcon
-      :style="`visibility: ${modelValue ? 'visible' : 'hidden'}`"
-      name="fa-solid fa-check"
-      color="background-color"
+      name="fa-regular fa-check"
       size="17px"
-    /> -->
+    />
   </div>
 </template>
 <script lang="ts" setup>

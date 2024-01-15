@@ -1,7 +1,7 @@
 <template>
   <div v-if="$cart.item" class="row pt-20 text-on-background-color">
     <div class="col column gap-15">
-      <div class="column gap-12">
+      <div class="column gap-12 full-width">
         <div class="header2 bold">
           Заказ на
           {{ isDelivery ? 'доставку' : 'самовывоз' }}
@@ -42,6 +42,7 @@
                   ? 'border: 1px #ededed solid'
                   : ''
               "
+              :class="{ 'selected-element': !$cart.item.deliveryTime }"
               style="min-height: 48px"
               @click="selectClosestTime()"
               class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
@@ -49,11 +50,71 @@
               <div>Ближайшая</div>
               <CIcon
                 class="cursor-pointer"
-                name="fa-solid fa-clock"
+                name="fa-regular fa-clock"
                 color="secondary-button-color"
                 size="20px"
               />
             </div>
+            <div
+              v-if="
+                availableHours?.today.length || availableHours?.tomorrow.length
+              "
+              :style="
+                $uiSettings.item?.inputType === 'outlined'
+                  ? 'border: 1px #ededed solid'
+                  : ''
+              "
+              style="min-height: 48px"
+              :class="{ 'selected-element': $cart.item.deliveryTime }"
+              class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+            >
+              <div>{{ $cart.item.deliveryTime || 'Ко времени' }}</div>
+              <CIcon
+                class="cursor-pointer"
+                name="fa-regular fa-calendar-clock"
+                color="secondary-button-color"
+                size="20px"
+              />
+
+              <q-menu
+                v-model="menu"
+                fit
+                class="pa-6"
+                style="overflow-y: hidden"
+              >
+                <TabPicker
+                  :model-value="currentDay"
+                  @update-tab="currentDay = $event"
+                  :tabs="['Сегодня', 'Завтра']"
+                />
+                <div
+                  ref="menuRef"
+                  class="column no-wrap full-width"
+                  style="overflow-y: scroll; max-height: 450px; height: 100%"
+                >
+                  <div
+                    v-for="(el, index) in totalDayTimes()"
+                    :class="[
+                      el,
+                      {
+                        'bold ': el === $cart.item.deliveryTime?.slice(11, 16),
+                      },
+                    ]"
+                    :key="index"
+                    @click="setDeliveryTime(el)"
+                    :style="
+                      !availableTimes?.includes(el)
+                        ? 'opacity: 0.5; cursor: not-allowed !important'
+                        : ''
+                    "
+                    class="full-width body cursor-pointer pa-6 time-row"
+                  >
+                    {{ el }}
+                  </div>
+                </div>
+              </q-menu>
+            </div>
+
             <!-- <CInput
               v-if="
                 availableHours?.today.length || availableHours?.tomorrow.length
@@ -74,23 +135,6 @@
                 />
               </template>
             </CInput> -->
-
-            <TimePicker
-              v-if="!$store.tableMode"
-              :options="options"
-              @update-time="setDeliveryTime($event)"
-              height="48px"
-              class="col"
-              :day="currentDay"
-              :date="$cart.item.deliveryTime"
-            >
-              <TabPicker
-                class="px-5 pt-5"
-                small
-                @update-tab="currentDay = $event"
-                :tabs="['Сегодня', 'Завтра']"
-                :model-value="currentDay"
-            /></TimePicker>
           </div>
         </div>
         <div class="row body full-width gap-5">
@@ -209,15 +253,41 @@
                 <div style="opacity: 0.6">{{ item.quantity }} шт</div>
               </div>
             </div>
-            <div class="col-2 row justify-end" style="white-space: no-wrap">
-              {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
+            <div
+              class="col-2 column items-end no-wrap"
+              style="white-space: no-wrap"
+            >
+              <div
+                v-if="item.totalSum !== item.discountedTotalSum"
+                style="opacity: 0.5"
+                class="text-strike"
+              >
+                {{ beautifyNumber(item.totalSum, true) }} ₽
+              </div>
+              <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
             </div>
           </div>
         </template>
         <q-separator color="divider-color" />
         <div class="row full-width justify-between">
-          <div class="body">Итого</div>
-          <div class="header2 bold">
+          <div class="body bold">Сумма заказа</div>
+
+          <div class="body bold">
+            {{ beautifyNumber($cart.item?.totalSum, true) }} ₽
+          </div>
+        </div>
+        <div
+          v-if="$cart.item?.appliedBonuses"
+          class="row full-width justify-between text-primary"
+        >
+          <div class="body bold">Списано бонусов</div>
+          <div class="body bold">
+            -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
+          </div>
+        </div>
+        <div class="row full-width justify-between">
+          <div class="body bold">К оплате</div>
+          <div class="body bold">
             {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
           </div>
         </div>
@@ -239,16 +309,19 @@
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
-import TimePicker from 'src/components/inputs/TimePicker.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { PaymentType, PaymentObjectType } from 'src/models/order/order'
-import { beautifyNumber, store } from 'src/models/store'
-import { ref, computed, onMounted } from 'vue'
+import {
+  beautifyNumber,
+  getTimesBetween,
+  store,
+  totalDayTimes,
+} from 'src/models/store'
+import { ref, computed, onMounted, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import PromocodeModal from './PromocodeModal.vue'
 import { PromoCodeMode } from 'src/models/salesPoint/salesPoint'
@@ -261,6 +334,7 @@ import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddr
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
+import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 
 const currentDay = ref('Сегодня')
 
@@ -280,29 +354,43 @@ const router = useRouter()
 
 const deliveryAddressesModal = ref(false)
 
+const menu = ref(false)
+
+const menuRef = ref<HTMLDivElement | null>(null)
+
 const isArrangeAvailable = computed(() => {
-  return !!selectedPaymentType.value && !!cartRepo.item?.deliveryTime?.length
+  return !!selectedPaymentType.value
 })
 
 const isDelivery = computed(() => {
   return cartRepo.item?.type === CartType.DELIVERY
 })
 
-const options = computed(() => {
+const availableTimes = computed(() => {
   return currentDay.value === 'Сегодня'
-    ? availableHours.value?.today.map((v) => {
-        return {
-          start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-          end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-        }
+    ? availableHours.value?.today.flatMap((v) => {
+        return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
       })
-    : availableHours.value?.tomorrow.map((v) => {
-        return {
-          start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-          end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-        }
+    : availableHours.value?.tomorrow.flatMap((v) => {
+        return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
       })
 })
+
+// const options = computed(() => {
+//   return currentDay.value === 'Сегодня'
+//     ? availableHours.value?.today.map((v) => {
+//         return {
+//           start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
+//           end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
+//         }
+//       })
+//     : availableHours.value?.tomorrow.map((v) => {
+//         return {
+//           start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
+//           end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
+//         }
+//       })
+// })
 
 const paymentTypes = computed(() => {
   const result: PaymentObjectType[] = []
@@ -347,33 +435,50 @@ const paymentTypes = computed(() => {
   return result
 })
 
+watch(
+  () => menu.value,
+  (v) => {
+    if (v) {
+      setTimeout(() => {
+        if (!availableTimes.value || !menuRef.value) return
+        const foundTimeElement = menuRef.value.getElementsByClassName(
+          availableTimes.value[0]
+        )
+        if (foundTimeElement) {
+          foundTimeElement[0].scrollIntoView()
+        }
+      }, 0)
+    }
+  }
+)
+
 const selectClosestTime = () => {
   if (!cartRepo.item) return
-  if (availableHours.value?.today.length) {
-    cartRepo.item.deliveryTime = moment(
-      availableHours.value.today[0].start
-    ).format('DD.MM.YYYY HH:mm')
-  } else {
-    cartRepo.item.deliveryTime =
-      moment(availableHours.value?.tomorrow[0].start).format(
-        'DD.MM.YYYY HH:mm'
-      ) || null
-  }
+  cartRepo.item.deliveryTime = null
+  // if (availableHours.value?.today.length) {
+  //   cartRepo.item.deliveryTime = moment(
+  //     availableHours.value.today[0].start
+  //   ).format('DD.MM.YYYY HH:mm')
+  // } else {
+  //   cartRepo.item.deliveryTime =
+  //     moment(availableHours.value?.tomorrow[0].start).format(
+  //       'DD.MM.YYYY HH:mm'
+  //     ) || null
+  // }
 }
 
 const setDeliveryTime = (v: string | null) => {
   if (!cartRepo.item) return
+  if (v && !availableTimes.value?.includes(v)) return
   const today = moment().format('DD.MM.YYYY')
   const tomorrow = moment().add(1, 'day').format('DD.MM.YYYY')
-  if (v === 'error') {
-    cartRepo.item.deliveryTime = null
+
+  if (currentDay.value === 'Сегодня') {
+    cartRepo.item.deliveryTime = [today, v].join(' ')
   } else {
-    if (currentDay.value === 'Сегодня') {
-      cartRepo.item.deliveryTime = [today, v].join(' ')
-    } else {
-      cartRepo.item.deliveryTime = [tomorrow, v].join(' ')
-    }
+    cartRepo.item.deliveryTime = [tomorrow, v].join(' ')
   }
+  menu.value = false
 }
 
 const makeAnOrder = async () => {
@@ -387,11 +492,13 @@ const makeAnOrder = async () => {
       })
       return
     }
+
     await cartRepo.setParams({
-      delivery_time:
-        moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-          .utc()
-          .format('YYYY-MM-DD HH:mm:ss') || undefined,
+      delivery_time: cartRepo.item?.deliveryTime
+        ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
+            .utc()
+            .format('YYYY-MM-DD HH:mm:ss')
+        : null,
       comment: cartRepo.item?.comment || undefined,
     })
     const order = await cartRepo.arrange({
@@ -478,11 +585,21 @@ onMounted(() => {
     availableHours.value = res
   })
   void deliveryAddressRepo.list()
+  const foundOnlinePaymentType = paymentTypes.value.find(
+    (v) => v.type === PaymentType.ONLINE
+  )
+  if (foundOnlinePaymentType) {
+    selectedPaymentType.value = foundOnlinePaymentType
+  }
 })
 </script>
 
 <style lang="scss" scoped>
 .input :deep(.q-field--standout.q-field--readonly .q-field__control:before) {
   border: unset;
+}
+
+.selected-element {
+  outline: 2px var(--primary) solid !important;
 }
 </style>
