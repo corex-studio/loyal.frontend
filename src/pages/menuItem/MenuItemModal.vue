@@ -2,20 +2,25 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    width="1150px"
-    height="600px"
+    :width="$q.screen.gt.md ? '1150px' : '450px'"
+    :height="$q.screen.gt.md ? '600px' : '500px'"
     height-percent="100%"
-    no-overflow
+    :no-overflow="$q.screen.gt.md"
     no-padding
   >
-    <div class="row full-height no-wrap full-width">
+    <div
+      :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
+      class="no-wrap full-width"
+    >
       <q-img
         :ratio="1"
         class="col"
-        :style="`border-radius: ${getBorderRadius}`"
+        :style="`border-radius: ${getBorderRadius}; max-width: ${
+          $q.screen.gt.md ? '600px' : '500px'
+        }; min-width: ${$q.screen.gt.md ? '600px' : '500px'}`"
         fit="cover"
-        height="100%"
-        style="max-width: 600px; width: 100%; min-width: 600px"
+        :height="$q.screen.lt.lg ? '450px' : '100%'"
+        style="width: 100%"
         :src="$menuItem.item?.image?.thumbnail || $store.images.empty"
       >
         <template v-slot:error>

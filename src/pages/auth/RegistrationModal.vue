@@ -13,7 +13,6 @@
       <div class="mt-4 body">Пожалуйста заполните следующие поля</div>
       <CInput
         external-label="Ваше имя"
-        input-class="body"
         height="48px"
         v-model="data.firstName"
       />
@@ -33,7 +32,6 @@
       /> -->
       <CInput
         external-label="Ваш email"
-        input-class="body"
         height="48px"
         :rules="[rules.email]"
         v-model="data.email"
@@ -51,7 +49,6 @@
           external-label="Дата рождения"
           height="48px"
           class="col-grow"
-          input-class="body"
           :model-value="data.birthday"
         >
           <q-menu

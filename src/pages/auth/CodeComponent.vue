@@ -6,8 +6,16 @@
       mask="#"
       height="50px"
       class="input firstInput"
-      :input-class="`${error ? 'text-danger' : ''} subtitle-text bold`"
-      :class="{ 'error-input ': error }"
+      :input-class="`${
+        error ? 'text-danger' : 'text-on-input-color'
+      } subtitle-text bold `"
+      :class="
+        error
+          ? $uiSettings.item?.inputType === 'filled'
+            ? 'error-input-filled'
+            : 'error-input-outlined'
+          : ''
+      "
       outlined
       width="50px"
       @update:model-value="updateFirstDigit"
@@ -18,9 +26,17 @@
       mask="#"
       height="50px"
       class="input secondInput"
-      :class="{ 'error-input': error }"
+      :class="
+        error
+          ? $uiSettings.item?.inputType === 'filled'
+            ? 'error-input-filled'
+            : 'error-input-outlined'
+          : ''
+      "
       outlined
-      :input-class="`${error ? 'text-danger' : ''} subtitle-text bold`"
+      :input-class="`${
+        error ? 'text-danger' : 'text-on-input-color'
+      } subtitle-text bold`"
       width="50px"
       @update:model-value="updateSecondDigit"
     />
@@ -30,9 +46,17 @@
       mask="#"
       height="50px"
       class="input thirdInput"
-      :class="{ 'error-input': error }"
+      :class="
+        error
+          ? $uiSettings.item?.inputType === 'filled'
+            ? 'error-input-filled'
+            : 'error-input-outlined'
+          : ''
+      "
       outlined
-      :input-class="`${error ? 'text-danger' : ''} subtitle-text bold`"
+      :input-class="`${
+        error ? 'text-danger' : 'text-on-input-color'
+      } subtitle-text bold`"
       width="50px"
       @update:model-value="updateThirdDigit"
     />
@@ -42,9 +66,17 @@
       mask="#"
       height="50px"
       class="input fourthInput"
-      :class="{ 'error-input': error }"
+      :class="
+        error
+          ? $uiSettings.item?.inputType === 'filled'
+            ? 'error-input-filled'
+            : 'error-input-outlined'
+          : ''
+      "
       outlined
-      :input-class="`${error ? 'text-danger' : ''} subtitle-text bold`"
+      :input-class="`${
+        error ? 'text-danger' : 'text-on-input-color'
+      } subtitle-text bold`"
       width="50px"
       @update:model-value="updateFourthDigit"
     />
@@ -149,7 +181,6 @@ const updateThirdDigit = (v: string | null) => {
 
 const updateFourthDigit = (v: string | null) => {
   emit('update', { ...props.code, fourth: v })
-  console.log(Object.values(props.code))
   setTimeout(() => {
     if (Object.values(props.code).every((v) => !!v?.length)) {
       emit('logIn', true)
@@ -168,7 +199,11 @@ onMounted(() => {
   text-align: center;
 }
 
-.error-input :deep(.q-field--outlined .q-field__control:before) {
-  border: 1px $danger solid;
+.error-input-outlined :deep(.q-field--outlined .q-field__control:before) {
+  border: 2px $danger solid !important;
+}
+
+.error-input-filled :deep(.q-field__control) {
+  outline: 2px $danger solid !important;
 }
 </style>

@@ -17,12 +17,7 @@
                 : ''
             "
             style="min-height: 48px"
-            :class="
-              $uiSettings.item?.inputType === 'outlined'
-                ? 'border-radius'
-                : 'filled-input'
-            "
-            class="bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+            class="bg-input-color border-radius text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
           >
             <div>{{ $cart.item?.currentAddress }}</div>
             <CButton
@@ -124,7 +119,6 @@
             auto-grow
             height="fit-content"
             class="col"
-            input-class="body"
             placeholder="Напишите ваши пожелания"
             v-model="$cart.item.comment"
           />
@@ -138,12 +132,7 @@
                 : ''
             "
             style="min-height: 48px"
-            :class="
-              $uiSettings.item?.inputType === 'outlined'
-                ? 'border-radius'
-                : 'filled-input'
-            "
-            class="body bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+            class="body border-radius bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
           >
             <div class="gap-4 row items-center no-wrap">
               <q-icon size="20px" :name="selectedPaymentType?.icon" />
@@ -576,6 +565,8 @@ onMounted(() => {
   )
   if (foundOnlinePaymentType) {
     selectedPaymentType.value = foundOnlinePaymentType
+  } else {
+    selectedPaymentType.value = paymentTypes.value[0]
   }
 })
 </script>
@@ -587,9 +578,5 @@ onMounted(() => {
 
 .selected-element {
   outline: 2px var(--primary) solid !important;
-}
-
-.filled-input {
-  border-radius: 4px 4px 0 0;
 }
 </style>

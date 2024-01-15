@@ -9,21 +9,18 @@
       <CInput
         external-label="Ваше имя"
         external-label-class="body mb-2"
-        input-class="body"
         height="48px"
         v-model="item.firstName"
       />
       <CInput
         external-label-class="body mb-2"
         external-label="Ваша фамилия"
-        input-class="body"
         height="48px"
         v-model="item.lastName"
       />
       <CInput
         external-label-class="body mb-2"
         external-label="Номер телефона"
-        input-class="body"
         v-model="item.phone"
         height="48px"
         mask="+# (###) ###-##-##"
@@ -33,7 +30,6 @@
       <CInput
         external-label-class="body mb-2"
         external-label="Email"
-        input-class="body"
         :rules="[rules.email]"
         height="48px"
         v-model="item.email"
@@ -52,7 +48,6 @@
           external-label="Дата рождения"
           height="48px"
           class="col-grow"
-          input-class="body"
           :model-value="item.birthday"
         >
           <q-menu

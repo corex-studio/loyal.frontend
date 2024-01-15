@@ -27,7 +27,7 @@
           "
         >
           <div
-            v-if="replacementAvailable"
+            v-if="replacementAvailable && $q.screen.gt.md"
             @click="$store.selectCompanyModal = true"
             class="row no-wrap gap-4 items-center cursor-pointer body"
             style="position: absolute"
@@ -51,18 +51,16 @@
           </div>
           <div
             v-if="categories && !$salesPoint.menuLoading"
-            class="gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar row"
-            :style="replacementAvailable ? 'padding-left: 255px' : ''"
+            class="gap-lg-14 gap-xs-8 no-wrap items-center no-scrollbar row"
+            :style="
+              replacementAvailable
+                ? `padding-left: ${$q.screen.gt.md ? '255' : '0'}px`
+                : ''
+            "
             style="transition: 0.25s all ease"
           >
             <div
-              v-for="(el, index) in $q.screen.xs
-                ? categories
-                : categories.filter((_, ind) =>
-                    $q.screen.sm
-                      ? ind < 5
-                      : ind < (replacementAvailable ? 6 : 8)
-                  )"
+              v-for="(el, index) in previewCategories"
               :key="index"
               ref="groupButtons"
             >
@@ -74,12 +72,13 @@
                   ? categories.length > 6
                   : categories.length > 8 && !$q.screen.xs
               "
-              class="row mb-1 body no-wrap gap-4 cursor-pointer"
-              :class="
+              class="row body no-wrap gap-4 cursor-pointer"
+              :class="[
                 isSticky
                   ? 'text-on-background-color'
-                  : 'text-on-secondary-button-color'
-              "
+                  : 'text-on-secondary-button-color',
+                { 'mt-1': $q.screen.lt.lg },
+              ]"
             >
               Еще
               <CIcon
@@ -96,13 +95,7 @@
                 class="border-radius bg-background-color pa-5 column gap-2"
               >
                 <div
-                  v-for="(el, index) in categories.filter((_, ind) =>
-                    $q.screen.sm
-                      ? ind >= 5
-                      : replacementAvailable
-                      ? ind >= 6
-                      : ind >= 8
-                  )"
+                  v-for="(el, index) in additionalCategories"
                   :key="index"
                   class="row items-center cursor-pointer"
                 >
@@ -216,6 +209,28 @@ watch(
     }
   }
 )
+
+const previewCategories = computed(() => {
+  return q.screen.xs
+    ? categories.value
+    : categories.value?.filter((_, ind) =>
+        q.screen.sm
+          ? ind < 5
+          : q.screen.md
+          ? ind < 5
+          : ind < (replacementAvailable.value ? 6 : 8)
+      )
+})
+
+const additionalCategories = computed(() => {
+  return categories.value?.filter((_, ind) =>
+    q.screen.sm || q.screen.md
+      ? ind >= 5
+      : replacementAvailable.value
+      ? ind >= 6
+      : ind >= 8
+  )
+})
 
 onMounted(() => {
   const observer = new IntersectionObserver(

@@ -8,10 +8,11 @@
           ? 'transition: background-color 0.4s ease-out'
           : 'transition: background-color 0.3s ease-out'
         : '',
+      `max-width: ${additional ? '200' : $q.screen.gt.md ? '160' : '87'}px;`,
     ]"
-    style="max-width: 160px; height: 45px"
+    style="height: 45px"
     :class="[
-      additional ? 'px-3' : 'px-6 ',
+      additional ? 'px-3' : 'px-lg-6 px-xs-4',
       item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional
         ? 'bg-secondary-button-color text-on-secondary-button-color'
         : isSticky

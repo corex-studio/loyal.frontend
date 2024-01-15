@@ -262,8 +262,7 @@ const clickHandler = () => {
 }
 
 .c-btn:disabled:not(.block):not(.bg-secondary2) {
-  background-color: $secondary !important;
-  opacity: 1 !important;
+  filter: contrast(70%);
 }
 
 .c-btn.outlined {

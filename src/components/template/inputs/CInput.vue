@@ -55,7 +55,7 @@
       "
       :dense="dense"
       :input-style="inputStyle"
-      :input-class="inputClass ? inputClass : 'text-on-input-color'"
+      :input-class="inputClass ? inputClass : 'text-on-input-color body'"
       :placeholder="placeholder"
       :rounded="_rounded"
       :bg-color="_bgColor"
@@ -63,11 +63,11 @@
       :disabled="_disabled"
       :disable="_disabled"
       :style="`width:${width || 'unset'}; height:${_height};`"
+      class="circlized"
       :class="{
         'label-top': _labelTop,
         'no-icon': _noIcon,
         'default-input': !changeAmount,
-        circlized: $uiSettings.item?.inputType !== 'filled',
       }"
       :unmasked-value="unmaskedValue"
       :square="square ? true : false"
@@ -396,5 +396,13 @@ textarea + .q-field__label {
 
 .rounded-text-area .q-field__control {
   border-radius: 15px !important;
+}
+
+.q-field--filled .q-field__control:after {
+  display: none;
+}
+
+.q-field--filled .q-field__control:before {
+  display: none;
 }
 </style>
