@@ -17,7 +17,12 @@
                 : ''
             "
             style="min-height: 48px"
-            class="border-radius bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+            :class="
+              $uiSettings.item?.inputType === 'outlined'
+                ? 'border-radius'
+                : 'filled-input'
+            "
+            class="bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
           >
             <div>{{ $cart.item?.currentAddress }}</div>
             <CButton
@@ -34,15 +39,12 @@
           <div class="col-4">Время доставки</div>
           <div class="row gap-8 col text-on-input-color">
             <div
-              v-if="
-                availableHours?.today.length || availableHours?.tomorrow.length
-              "
               :style="
                 $uiSettings.item?.inputType === 'outlined'
                   ? 'border: 1px #ededed solid'
                   : ''
               "
-              :class="{ 'selected-element': !$cart.item.deliveryTime }"
+              :class="[{ 'selected-element': !$cart.item.deliveryTime }]"
               style="min-height: 48px"
               @click="selectClosestTime()"
               class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
@@ -114,27 +116,6 @@
                 </div>
               </q-menu>
             </div>
-
-            <!-- <CInput
-              v-if="
-                availableHours?.today.length || availableHours?.tomorrow.length
-              "
-              @click="selectClosestTime()"
-              class="input cursor-pointer col"
-              input-class="body"
-              height="48px"
-              readonly
-              :model-value="'Ближайшая'"
-            >
-              <template v-slot:append>
-                <CIcon
-                  class="cursor-pointer"
-                  name="fa-solid fa-clock"
-                  color="secondary-button-color"
-                  size="20px"
-                />
-              </template>
-            </CInput> -->
           </div>
         </div>
         <div class="row body full-width gap-5">
@@ -157,7 +138,12 @@
                 : ''
             "
             style="min-height: 48px"
-            class="border-radius body bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+            :class="
+              $uiSettings.item?.inputType === 'outlined'
+                ? 'border-radius'
+                : 'filled-input'
+            "
+            class="body bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
           >
             <div class="gap-4 row items-center no-wrap">
               <q-icon size="20px" :name="selectedPaymentType?.icon" />
@@ -601,5 +587,9 @@ onMounted(() => {
 
 .selected-element {
   outline: 2px var(--primary) solid !important;
+}
+
+.filled-input {
+  border-radius: 4px 4px 0 0;
 }
 </style>

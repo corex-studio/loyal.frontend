@@ -5,8 +5,8 @@
   >
     <div class="row gap-13 items-center no-wrap">
       <q-img
-        width="54px"
-        height="54px"
+        width="58px"
+        height="58px"
         style="border-radius: 50%"
         fit="cover"
         :src="authentication.user.image?.thumbnail || $store.images.empty"
@@ -36,6 +36,7 @@
       <CIcon
         @click="$emit('editProfile', true)"
         size="20px"
+        hover-color="primary"
         class="cursor-pointer"
         name="fa-regular fa-pen"
         color="secondary-button-color"
@@ -47,6 +48,7 @@
           })
         "
         size="20px"
+        hover-color="primary"
         class="cursor-pointer"
         name="fa-regular fa-trash"
         color="secondary-button-color"
@@ -65,6 +67,7 @@ defineEmits<{
 
 <style lang="scss" scoped>
 .card-element {
-  background: linear-gradient(90deg, var(--accent) 50%, var(--primary) 100%);
+  // background: linear-gradient(90deg, var(--accent) 50%, var(--primary) 100%);
+  outline: 2px var(--primary) solid;
 }
 </style>

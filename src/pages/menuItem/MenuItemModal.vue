@@ -72,7 +72,11 @@
           ]"
           :style="$q.screen.xs ? 'position: fixed; bottom: 0px; left: 0' : ''"
         >
-          <ChangeAmount background-color="white" v-model="quantity" />
+          <ChangeAmount
+            height="48px"
+            background-color="white"
+            v-model="quantity"
+          />
           <div
             v-if="$store.tableMode && !$pad.item?.settings.orders_enabled"
             class="full-width text-danger"
