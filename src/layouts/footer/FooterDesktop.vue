@@ -46,6 +46,18 @@
                   {{ item.value }}
                 </div>
               </template>
+              <template
+                v-for="(item, index) in $company.item?.guestContacts.socials"
+                :key="index"
+              >
+                <div
+                  @click="openLink(item.link)"
+                  style="opacity: 0.8"
+                  class="body cursor-pointer"
+                >
+                  {{ item.value }}
+                </div>
+              </template>
             </div>
           </div>
         </div>
