@@ -101,6 +101,10 @@ const props = defineProps<{
 const loading = ref(false)
 
 const toCartClickHandler = async () => {
+  if (!authentication.user) {
+    store.authModal = true
+    return
+  }
   if (!cartRepo.item && salesPointRepo.item) {
     const foundCompany = companyGroupRepo.item?.companies.find(
       (v) =>
