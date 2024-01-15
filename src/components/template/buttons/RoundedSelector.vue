@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="modelValue ? (check ? 'bg-primary' : 'radio-selected') : 'radio'"
+    :class="modelValue ? (check ? 'bg-primary' : 'radio-selected') : ''"
     style="border-radius: 50%"
     class="row items-center justify-center"
     :style="[
@@ -9,6 +9,12 @@
       }; min-width: ${width || '29px'}; max-height:${
         height || '29px'
       }; min-height:${height || '29px'}`,
+      modelValue
+        ? ''
+        : `border: 1px ${lightColor(
+            $uiSettings.item?.backgroundColor.on_color || '000',
+            '25'
+          )} solid`,
     ]"
   >
     <div
@@ -25,6 +31,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { lightColor } from 'src/models/store'
 import CIcon from '../helpers/CIcon.vue'
 
 defineProps<{
@@ -38,8 +45,5 @@ defineProps<{
 <style scoped lang="scss">
 .radio-selected {
   border: 1px var(--primary) solid;
-}
-.radio {
-  border: 1px var(--secondary-button-color) solid;
 }
 </style>
