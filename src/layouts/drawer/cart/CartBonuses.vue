@@ -1,7 +1,20 @@
 <template>
   <div class="full-width">
-    <div class="full-width header2 bold mb-8">Баллы</div>
-    <div
+    <div class="full-width header3 bold mb-5">Баллы</div>
+    <div class="row full-width items-center gap-5s justify-between">
+      <div class="row items-center gap-7 no-wrap">
+        <q-img src="~assets/rubleIcon.png" height="44px" width="44px"></q-img>
+        <div class="subtitle-text">Списать {{ maxSum }} бонусов</div>
+      </div>
+      <q-toggle
+        @update:model-value="toggleClickHandler"
+        :model-value="currentChoice === 2"
+        dense
+        size="50px"
+        color="primary"
+      ></q-toggle>
+    </div>
+    <!-- <div
       class="row bg-selector-color text-on-selector-color no-wrap full-width border-radius pa-1 body"
     >
       <div
@@ -24,7 +37,7 @@
       >
         Списать {{ maxSum }}
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script lang="ts" setup>
@@ -40,6 +53,14 @@ const maxSum = computed(() => {
     ? cartRepo.item.walletPayments[0].max_sum
     : cartRepo.item.walletPayments[0].wallet.balance
 })
+
+const toggleClickHandler = (v: boolean) => {
+  if (v) {
+    applyClickHandler()
+  } else {
+    discard()
+  }
+}
 
 const applyClickHandler = () => {
   if (!cartRepo.item) return

@@ -121,7 +121,7 @@ export class Customer implements BaseModel {
   user: number
   phone: number | null
   lastAuthorization: string | null
-  registeredAt: string
+  registeredAt: string | null
   description: string | null
   technicalInformation: string | null
   image: ImageRaw | null
@@ -153,7 +153,7 @@ export class Customer implements BaseModel {
       : '-'
     this.registeredAt = raw.registered_at
       ? moment.utc(raw.registered_at).local().format('DD.MM.YYYY HH:mm')
-      : '-'
+      : null
     this.description = raw.description
     this.technicalInformation = raw.technical_information
     this.image = raw.image || null

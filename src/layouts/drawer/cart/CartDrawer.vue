@@ -32,7 +32,8 @@
             <div class="bold">{{ $cart.item?.sum }}₽</div>
           </div>
           <CButton
-            @click="clearCart()"
+            v-if="$cart.item?.cartItems.length"
+            @click="acceptModal = true"
             label="Очистить"
             class="subtitle-text"
             text-button
@@ -92,8 +93,12 @@
                 background-color: rgba(0, 0, 0, 0.1);
               "
               class="subtitle-text py-4 px-5"
-              >{{ $cart.item?.discountedTotalSum.toFixed(2) }} ₽</q-badge
-            >
+              >{{
+                $cart.item?.discountedTotalSum
+                  ? beautifyNumber($cart.item?.discountedTotalSum, true) + ' ₽'
+                  : '-'
+              }}
+            </q-badge>
           </template>
         </div>
       </div>
@@ -103,13 +108,15 @@
     :model-value="acceptModal"
     @update:model-value="acceptModal = false"
     @accept="clearCart()"
-  />
+    text="Вы точно хотите очистить корзину"
+  >
+  </AcceptModal>
 </template>
 <script lang="ts" setup>
 import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
-import { store } from 'src/models/store'
+import { beautifyNumber, store } from 'src/models/store'
 import { ref, watch } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { Notify } from 'quasar'

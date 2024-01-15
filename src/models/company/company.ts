@@ -11,6 +11,19 @@ export enum LinkType {
   OK = 'ok',
 }
 
+export enum AggregatorType {
+  YANDEX = 'yandex',
+  DELIVERY_CLUB = 'delivery_club',
+}
+
+export type DeliveryAggregatorRaw = {
+  active: boolean
+  company: string | null
+  link: string | null
+  name: string | null
+  type: AggregatorType
+}
+
 export type GuestContactRaw = {
   active: boolean
   messages: {
@@ -67,6 +80,7 @@ export type CompanyRaw = {
   } | null
   guest_contacts: GuestContactRaw | null
   description?: string | null
+  delivery_aggregators: DeliveryAggregatorRaw[]
   created_at: string
   updated_at: string
 }
@@ -175,7 +189,7 @@ export class Company implements BaseModel {
   description: string
   createdAt: string
   updatedAt: string
-
+  deliveryAggregators: DeliveryAggregatorRaw[]
   guestContacts: GuestContact
 
   constructor(raw: CompanyRaw) {
@@ -219,6 +233,7 @@ export class Company implements BaseModel {
         socials: [],
       }
     )
+    this.deliveryAggregators = raw.delivery_aggregators
   }
 
   toJson(): Record<string, any> {

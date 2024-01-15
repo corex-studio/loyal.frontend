@@ -1,5 +1,6 @@
 <template>
   <div
+    @click="$emit('select', item)"
     class="row full-width items-center justify-between cursor-pointer body pr-5 py-3"
   >
     <div class="column gap-2">
@@ -11,15 +12,16 @@
         +{{ item.price }} ₽
       </div>
     </div>
-    <q-checkbox
+
+    <c-check-box
       @click="$emit('select', item)"
-      size="50px"
-      dense
       :model-value="!!item.quantity"
+      size="48px"
     />
   </div>
 </template>
 <script lang="ts" setup>
+import CCheckBox from 'src/components/helpers/CCheckBox.vue'
 import { MenuModifierGroupItem } from 'src/models/menu/menuModifierGroup/menuModifierGroup'
 
 defineProps<{

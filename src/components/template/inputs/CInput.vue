@@ -11,8 +11,8 @@
         externalLabelClass
           ? externalLabelClass
           : _rounded
-          ? 'mb-4 helper-text ml-6'
-          : 'mb-4 helper-text',
+          ? 'mb-2 helper-text ml-6'
+          : 'mb-2 helper-text',
         { 'readonly-label': readonly },
       ]"
       class="bold"
@@ -342,6 +342,7 @@ textarea + .q-field__label {
 
 .q-input .q-field__bottom {
   padding: 3px 12px !important ;
+  font-size: 14px;
 }
 
 .q-input:not(.q-file).q-field--with-bottom {

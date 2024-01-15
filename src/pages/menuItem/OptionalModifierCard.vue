@@ -13,7 +13,7 @@
   >
     <div v-if="modifier.quantity" class="check-block">
       <q-icon
-        name="fa-solid fa-check"
+        name="fa-regular fa-check"
         size="13px"
         color="backing-color"
         style="transform: translate(35%, 0%)"

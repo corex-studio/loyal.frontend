@@ -54,7 +54,7 @@
                   </span> </template
               ></q-img> -->
                 <div class="body">Изменить заведение</div>
-                <CIcon size="20px" name="fa-solid fa-angle-right" />
+                <CIcon size="21px" name="fa-regular fa-angle-right" />
               </div>
             </CButton>
           </div>
@@ -68,7 +68,7 @@
               @click="profileButtonClickHandler()"
               height="48px"
               width="160px"
-              icon="fa-solid fa-user"
+              icon="fa-regular fa-user"
               class="body"
               color="secondary-button-color"
               text-color="on-secondary-button-color"

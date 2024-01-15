@@ -1,5 +1,5 @@
 <template>
-  <div class="row gap-10">
+  <div class="row gap-10 full-width">
     <div
       style="height: fit-content; overflow: hidden"
       class="body bg-selector-color border-radius row full-width no-wrap pa-1"
@@ -9,12 +9,12 @@
         :key="tab.type"
         @click="selectTabHandler(tab)"
         :style="
-          selectedTab === tab.type
+          selectedTab?.type === tab.type
             ? 'transition: background-color 0.4s ease-out'
             : 'transition: background-color 0.3s ease-out'
         "
         :class="[
-          selectedTab === tab.type
+          selectedTab?.type === tab.type
             ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
             : 'text-on-selector-color',
         ]"
@@ -28,20 +28,12 @@
 </template>
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue'
-import { CartType } from 'src/models/carts/cart'
-
-type TabRaw = {
-  label: string | null
-  type: CartType
-  icon: string | null
-  color: string | null
-  class: string | null
-}
+import { TabRaw } from './ServiceSettingsModal.vue'
 
 const props = withDefaults(
   defineProps<{
     tabs: TabRaw[]
-    modelValue?: CartType
+    modelValue?: TabRaw
     routerMethod?: 'replace' | 'push'
   }>(),
   {
@@ -50,13 +42,13 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (evt: 'updateTab', value: CartType): void
+  (evt: 'updateTab', value: TabRaw): void
 }>()
 
-const selectedTab = ref<CartType | null>(null)
+const selectedTab = ref<TabRaw | null>(null)
 
 const selectTabHandler = (v: TabRaw) => {
-  selectedTab.value = v.type
+  selectedTab.value = v
   emit('updateTab', selectedTab.value)
 }
 

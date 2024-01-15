@@ -12,52 +12,62 @@
         class="column full-width justify-between no-wrap pa-0"
       >
         <div class="column gap-10 full-width">
-          <div class="row gap-10 no-wrap">
-            <CInput
-              height="44px"
-              placeholder="Время"
-              :model-value="time"
-              class="col"
-            >
-              <q-menu><q-time v-model="time" /></q-menu>
-            </CInput>
-            <CInput
-              height="44px"
-              placeholder="Дата"
-              :model-value="date"
-              class="col"
-            >
-              <q-menu><q-date v-model="date" mask="DD.MM.YYYY" /></q-menu>
-            </CInput>
+          <div class="column full-width gap-10 no-wrap">
+            <div class="subtitle-text">Количество гостей и выбор стола</div>
+            <div class="row full-width gap-8">
+              <ChangeAmount
+                outlined
+                height="48px"
+                :model-value="Number(currentBooking.guestsCount)"
+                @update:model-value="
+                  currentBooking.guestsCount = String($event)
+                "
+              />
+              <div class="col-6">
+                <CButton
+                  v-if="$section.items.length"
+                  @click="$emit('changeBookingMode', 'tablePicker')"
+                  :disabled="!$section.items.length"
+                  class="body ellipsis"
+                  width="100%"
+                  text-color="primary"
+                  :style="`background-color: ${lightColor(
+                    $uiSettings.item?.primaryColor.color || '000',
+                    '27'
+                  )} !important`"
+                  height="48px"
+                >
+                  <div>
+                    {{
+                      selectedTables.length
+                        ? selectedTables.length === 1
+                          ? `Стол: ${selectedTables[0].number}`
+                          : `Столы: ${selectedTables
+                              .map((v) => v.number)
+                              .join(',')}`
+                        : 'Выбор стола'
+                    }}
+                  </div>
+                </CButton>
+              </div>
+            </div>
           </div>
-          <div class="row full-width gap-10 items-end">
-            <CSelect
-              external-label="Количество гостей"
-              :items="guestsCountVariables"
-              height="44px"
-              class="col"
-              v-model="currentBooking.guestsCount"
-            />
-            <CButton
-              v-if="$section.items.length"
-              @click="$emit('changeBookingMode', 'tablePicker')"
-              style="width: 48.7%"
-              :disabled="!$section.items.length"
-              height="44px"
-              >{{
-                selectedTables.length
-                  ? selectedTables.length === 1
-                    ? `Стол: ${selectedTables[0].number}`
-                    : `Столы: ${selectedTables.map((v) => v.number).join(',')}`
-                  : 'Выбрать стол'
-              }}
-            </CButton>
-          </div>
+          <q-separator color="divider-color" class="my-2" />
+          <BookingDateSelector :date="date" @updated="date = $event" />
+          <BookingTimeSelector
+            v-if="availableHours?.today.length"
+            @updated="time = $event"
+            :available-hours="availableHours"
+            :time="time"
+          />
+
+          <q-separator class="my-2" color="divider-color" />
           <CInput
             v-model="currentBooking.comment"
             auto-grow
             height="fit-content"
             placeholder="Оставьте пожелания к бронированию"
+            input-class="body"
           />
         </div>
 
@@ -103,8 +113,7 @@
 </template>
 <script lang="ts" setup>
 import CInput from '../template/inputs/CInput.vue'
-import { ref, onMounted, computed } from 'vue'
-import CSelect from '../template/inputs/CSelect.vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import CButton from '../template/buttons/CButton.vue'
 import { sectionRepo } from 'src/models/sections/sectionRepo'
 import BookingTableSelector from './BookingTableSelector.vue'
@@ -119,6 +128,12 @@ import TableDetail from './TableDetail.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { Notify } from 'quasar'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
+import ChangeAmount from '../inputs/ChangeAmount.vue'
+import { lightColor } from 'src/models/store'
+import BookingDateSelector from './BookingDateSelector.vue'
+import BookingTimeSelector from './BookingTimeSelector.vue'
+import { AvailableHours } from 'src/models/carts/cart'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 
 export type BookingModes =
   | 'bookingList'
@@ -137,32 +152,31 @@ const emit = defineEmits<{
   (evt: 'close'): void
 }>()
 
+const availableHours = ref<AvailableHours | null>(null)
+
 const currentBooking = ref<BookingRequest | null>(null)
 
-// const bookingMode = ref<BookingModes>('bookingInfo')
-
 const date = ref<string | null>(null)
+
 const time = ref<string | null>(null)
 
 const tableToOpen = ref<TableRaw | null>(null)
 
 const selectedTables = ref<TableRaw[]>([])
 
-const guestsCountVariables = [
-  '1',
-  '2',
-  '3',
-  '4',
-  '5',
-  '6',
-  '7',
-  '8',
-  '9',
-  '10 или больше',
-]
+watch(
+  () => date.value,
+  (v) => {
+    void salesPointRepo
+      .getAvailableWorkingHours(v, props.salesPoint?.id)
+      .then((res) => {
+        availableHours.value = res
+      })
+  }
+)
 
 const isContinueAvailable = computed(() => {
-  return currentBooking.value?.guestsCount?.length && date.value && time.value
+  return !!currentBooking.value?.guestsCount?.length && date.value && time.value
 })
 
 const tableDetailMode = (v: TableRaw) => {
@@ -202,6 +216,7 @@ const createBooking = async () => {
   try {
     currentBooking.value.tables = selectedTables.value.map((v) => new Table(v))
     currentBooking.value.date = `${date.value} ${time.value}`
+
     bookingRequestRepo.item = await bookingRequestRepo.create(
       currentBooking.value
     )
@@ -215,3 +230,20 @@ const createBooking = async () => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.time-row:hover {
+  background-color: var(--secondary-button-color);
+  color: var(--on-secondary-button-color);
+  transition: background-color 0.4s ease-out;
+}
+
+.time-row {
+  transition: background-color 0.4s ease-out;
+}
+
+.time-picker
+  :deep(.q-field--outlined.q-field--readonly .q-field__control:before) {
+  border-style: solid;
+}
+</style>

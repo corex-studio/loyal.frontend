@@ -3,20 +3,27 @@
     <template v-if="$slots.action">
       <slot name="action"></slot>
     </template>
-    <div class="header2 bold">{{ getTitle() }}</div>
+    <div class="huge3 bold">{{ getTitle() }}</div>
   </div>
 </template>
 <script lang="ts" setup>
 import { CartType } from 'src/models/carts/cart'
+import { AggregatorType } from 'src/models/company/company'
+import { TabRaw } from './ServiceSettingsModal.vue'
 
 const props = defineProps<{
-  tab: CartType | null
+  tab: TabRaw | null
 }>()
 
 const getTitle = () => {
   if (!props.tab) return 'Тип доставки'
-  if (props.tab === CartType.DELIVERY) return 'Адреса доставки'
-  if (props.tab === CartType.PICKUP) return 'Адреса заведения'
-  if (props.tab === CartType.BOOKING) return 'Забронировать'
+  if (props.tab.type === CartType.DELIVERY) return 'Адреса доставки'
+  if (props.tab.type === CartType.PICKUP) return 'Адреса заведения'
+  if (props.tab.type === CartType.BOOKING) return 'Забронировать'
+  if (
+    props.tab.type === AggregatorType.YANDEX ||
+    props.tab.type === AggregatorType.DELIVERY_CLUB
+  )
+    return props.tab.label
 }
 </script>

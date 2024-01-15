@@ -102,7 +102,7 @@ export class BookingRequest implements BaseModel {
     return {
       sales_point: this.salesPoint,
       date: this.date
-        ? moment(this.date, 'DD.MM.YYYY HH:mm')
+        ? moment(this.date, 'YYYY-MM-DD HH:mm')
             .utc()
             .format('YYYY-MM-DD HH:mm:ss')
         : undefined,

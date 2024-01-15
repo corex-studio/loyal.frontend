@@ -10,6 +10,7 @@ export class CartRepo extends BaseRepo<Cart> {
   loading = false
   setParamsLoading = false
   arrangeLoading = false
+  promocodeError = false
 
   async setParams(data: CartParams) {
     this.setParamsLoading = true

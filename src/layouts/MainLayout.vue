@@ -27,7 +27,6 @@
           v-else-if="$pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'"
         />
       </div>
-
       <q-page-container
         :style="
           $q.screen.lt.md
@@ -69,6 +68,8 @@
       :model-value="$store.newsModal"
       @update:model-value="closeNewsModal()"
     />
+
+    <RegistrationModal v-model="$store.registrationModal" />
   </template>
 </template>
 
@@ -105,6 +106,7 @@ import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
 import TopHeader from './header/TopHeader.vue'
 import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
 import NewsModal from 'src/pages/news/NewsModal.vue'
+import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 

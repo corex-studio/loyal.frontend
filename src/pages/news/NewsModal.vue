@@ -41,7 +41,7 @@
           </div>
           <div v-else v-html="$news.item?.fullDescription"></div>
         </div>
-        <div class="">
+        <!-- <div>
           <CButton
             class="body"
             height="48px"
@@ -49,13 +49,13 @@
             label="К покупкам"
             @click="$emit('update:modelValue', false)"
           />
-        </div>
+        </div> -->
       </div>
     </div>
   </CDialog>
 </template>
 <script lang="ts" setup>
-import CButton from 'src/components/template/buttons/CButton.vue'
+// import CButton from 'src/components/template/buttons/CButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'

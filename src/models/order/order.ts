@@ -160,6 +160,7 @@ export type OrderItemRaw = {
   price: number
   sum: number
   total_sum: number
+  discounted_total_sum?: number | null
   size: ItemSize
   modifiers: ModifiersRaw[]
   created_at: string

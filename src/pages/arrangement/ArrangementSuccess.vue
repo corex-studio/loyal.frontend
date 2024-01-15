@@ -2,7 +2,7 @@
   <div v-if="$order.item" class="pt-25 text-on-background-color">
     <div class="huge3 bold mb-8">Спасибо за заказ!</div>
     <div class="row full-width">
-      <div class="pr-22 col-4 column">
+      <div style="max-width: 550px; width: 100%" class="column">
         <div class="row gap-6 items-center">
           <img
             v-if="$company.item?.image?.thumbnail"
@@ -15,38 +15,48 @@
             Вы оформили заказ из «{{ $order.item.salesPoint.name }}»
           </div>
         </div>
-        <div class="pa-10 column full-width box-shadow border-radius mt-15">
+        <div
+          :style="`border: 1px ${lightColor(
+            $uiSettings.item?.backgroundColor.on_color || '000',
+            '10'
+          )} solid`"
+          class="pa-10 column full-width box-shadow border-radius mt-15"
+        >
           <div class="body mb-2" style="opacity: 0.7">
             Заказ № {{ $order.item.number || '-' }}
           </div>
           <div class="header2 bold mb-8">
             Приготовим к {{ $order.item?.deliveryTime || '-' }}
           </div>
-          <OrderStepper />
-          <div
-            class="mt-10 bg-backing-color text-on-backing-color border-radius pa-10 row no-wrap gap-3"
-          >
-            <CIcon
-              name="fa-solid fa-location-dot"
-              color="primary"
-              size="22px"
-            />
-            <div class="column gap-2">
-              <div class="header2 bold">Адрес заведения</div>
-              <div class="body">{{ $order.item.salesPoint.address }}</div>
-            </div>
-          </div>
+          <OrderStepper style="max-width: 432px; width: 100%" />
         </div>
       </div>
-      <div class="ml-22 col border-radius box-shadow pa-10 column">
+    </div>
+    <div class="column full-width mt-12 mb-20 no-wrap gap-4">
+      <div class="body" style="opacity: 0.7">
+        {{ $order.item.type === CartType.PICKUP ? 'Самовывоз' : 'Доставка' }} из
+        ресторана
+      </div>
+      <div class="row gap-3 no-wrap">
+        <CIcon name="fa-regular fa-location-dot" color="primary" size="22px" />
+        <div class="header3 bold">
+          {{ $order.item.salesPoint.customAddress }}
+        </div>
+      </div>
+    </div>
+    <div class="full-width" style="max-width: 550px">
+      <div
+        :style="`border: 1px ${lightColor(
+          $uiSettings.item?.backgroundColor.on_color || '000',
+          '10'
+        )} solid`"
+        class="col border-radius box-shadow pa-10 column"
+        style="height: fit-content"
+      >
         <div class="row full-width justify-between items-center mb-6">
-          <div class="subtitle-text" style="opacity: 0.8">Состав заказа</div>
-          <!-- <CButton
-            :label="`Отменить заказ`"
-            text-button
-            text-color="primary"
-            class="body"
-          /> -->
+          <div style="opacity: 0.8" class="subtitle-text bold">
+            Состав заказа
+          </div>
         </div>
         <div class="column full-width gap-5">
           <div
@@ -64,7 +74,6 @@
                 <template v-slot:error>
                   <span>
                     <q-img
-                      class="user-image"
                       fit="cover"
                       width="65px"
                       height="65px"
@@ -77,14 +86,32 @@
                 <div style="opacity: 0.5">{{ el.quantity }} шт</div>
               </div>
             </div>
-            <div>{{ el.price }}₽</div>
+            <div class="column items-end">
+              <div
+                v-if="el.price !== el.discounted_total_sum"
+                style="opacity: 0.5"
+                class="text-strike"
+              >
+                {{ el.price }}₽
+              </div>
+              <div>{{ el.discounted_total_sum }}</div>
+            </div>
           </div>
           <q-separator color="divider-color" />
-          <div class="row full-width justify-between items-center gap-6">
-            <div class="body">Итого</div>
-            <div class="header2 bold">
-              {{ $order.item.discountedTotalSum }} ₽
-            </div>
+          <div class="row full-width justify-between items-center gap-6 body">
+            <div class="bold">Сумма заказа</div>
+            <div class="bold">{{ $order.item.totalSum }} ₽</div>
+          </div>
+          <div
+            v-if="$order.item.appliedBonuses"
+            class="row full-width justify-between items-center gap-6 body text-primary"
+          >
+            <div class="bold">Списано баллов</div>
+            <div class="bold">-{{ $order.item.appliedBonuses }} ₽</div>
+          </div>
+          <div class="row full-width justify-between items-center gap-6 body">
+            <div class="bold">К оплате</div>
+            <div class="bold">{{ $order.item.discountedTotalSum }} ₽</div>
           </div>
         </div>
       </div>
@@ -112,6 +139,8 @@ import { useRoute } from 'vue-router'
 import OrderStepper from './OrderStepper.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
+import { CartType } from 'src/models/carts/cart'
+import { lightColor } from 'src/models/store'
 
 const route = useRoute()
 
@@ -121,3 +150,5 @@ onMounted(() => {
   }
 })
 </script>
+
+<style lang="scss" scoped></style>

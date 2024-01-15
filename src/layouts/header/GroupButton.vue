@@ -1,6 +1,6 @@
 <template>
   <div
-    class="cursor-pointer border-radius"
+    class="cursor-pointer border-radius row items-center"
     @click="clickHandler(item)"
     :style="[
       isHomePage
@@ -19,11 +19,7 @@
         : 'text-on-secondary-button-color',
     ]"
   >
-    <div
-      class="ellipsis"
-      :class="{ 'text-on-background-color': additional }"
-      style="transform: translate(0, 53%)"
-    >
+    <div class="ellipsis" :class="{ 'text-on-background-color': additional }">
       {{ item.name }}
     </div>
   </div>

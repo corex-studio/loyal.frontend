@@ -30,11 +30,11 @@ const routes: RouteRecordRaw[] = [
             component: () =>
               import('src/pages/profile/ProfileOrdersHistory.vue'),
           },
-          {
-            path: 'cards',
-            name: 'profileCards',
-            component: () => import('src/pages/profile/ProfileMyCards.vue'),
-          },
+          // {
+          //   path: 'cards',
+          //   name: 'profileCards',
+          //   component: () => import('src/pages/profile/ProfileMyCards.vue'),
+          // },
           {
             path: 'addresses',
             name: 'profileAddresses',
