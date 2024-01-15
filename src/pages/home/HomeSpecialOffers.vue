@@ -1,18 +1,10 @@
 <template>
   <div id="offers">
-    <!-- <div class="header mb-12 c-container">Спец предложения</div> -->
-    <!-- <TabPicker
-      class="c-container"
-      @update-tab="$store.offersTab = $event"
-      :tabs="tabs"
-      :width="$q.screen.xs ? '100%' : undefined"
-      :model-value="$store.offersTab"
-    /> -->
     <div class="row c-container gap-6 items-center text-on-background-color">
       <div
         v-for="(el, index) in tabs"
         :key="index"
-        class="row gap-6 items-center huge2 bold"
+        class="row gap-6 items-center huge3 bold"
       >
         <div
           v-if="index"
@@ -38,7 +30,9 @@
     >
       <template v-slot:item="{ item }">
         <div
-          style="overflow: hidden; height: 360px"
+          :style="`overflow: hidden; height: ${
+            $q.screen.gt.md ? '360px' : '300px'
+          } `"
           @click="goToItem(item)"
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mb-20 mt-15"
         >
@@ -170,7 +164,7 @@ const slidesPerView = computed(() => {
     ? 1
     : companyGroupRepo.item?.externalId === 'corex_demo'
     ? 1
-    : q.screen.sm
+    : q.screen.lt.lg
     ? 2
     : 3
 })

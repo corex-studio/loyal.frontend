@@ -67,7 +67,6 @@
             auto-grow
             height="fit-content"
             placeholder="Оставьте пожелания к бронированию"
-            input-class="body"
           />
         </div>
 

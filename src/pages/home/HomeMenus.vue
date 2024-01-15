@@ -89,9 +89,10 @@
             :items="el.items"
             :lg="4"
             :xl="4"
-            :md="4"
+            :md="3"
             :sm="3"
             :xs="2"
+            :gap="$q.screen.gt.md ? '30px' : '16px'"
           >
             <template v-slot:item="{ item }">
               <MenuItemCard :item="(item as MenuItem)" />

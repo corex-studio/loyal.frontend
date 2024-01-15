@@ -1,145 +1,101 @@
 <template>
-  <div id="footer" class="row full-width">
-    <div class="column col-8 justify-between">
-      <div class="row gap-14">
-        <div
-          v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
-          class="column text-on-backing-color"
-          style="width: 186px"
-        >
-          <div class="bold header3 mb-10">Информация</div>
-          <div class="row gap-25">
-            <div class="column gap-8">
-              <div v-for="(item, index) in infoBlocks" :key="index">
-                <CButton
-                  @click="item.click()"
-                  text-button
-                  class="body"
-                  style="opacity: 0.8"
-                  :label="item.label"
-                  text-color="on-backing-color"
-                />
+  <div id="footer" class="full-width">
+    <div class="row full-width no-wrap justify-between">
+      <div class="column col justify-between">
+        <div class="row gap-14">
+          <div
+            v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
+            class="column text-on-backing-color"
+            style="width: 186px"
+          >
+            <div class="bold header3 mb-10">Информация</div>
+            <div class="row gap-25">
+              <div class="column gap-8">
+                <div v-for="(item, index) in infoBlocks" :key="index">
+                  <CButton
+                    @click="item.click()"
+                    text-button
+                    class="body"
+                    style="opacity: 0.8"
+                    :label="item.label"
+                    text-color="on-backing-color"
+                  />
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div v-if="showContacts" class="text-on-backing-color">
-          <div class="bold header3 mb-10 text-on-backing-color">Контакты</div>
-          <div class="column gap-8">
-            <template
-              v-for="(item, index) in $company.item?.guestContacts.emails"
-              :key="index"
-            >
-              <div style="opacity: 0.8" class="body">
-                {{ item.value }}
-              </div>
-            </template>
-            <template
-              v-for="(item, index) in $company.item?.guestContacts.phones"
-              :key="index"
-            >
-              <div style="opacity: 0.8" class="body">
-                {{ item.value }}
-              </div>
-            </template>
-            <!-- <div class="row no-wrap gap-7">
-              <div
-                v-for="(el, index) in $company.item?.guestContacts.socials"
+          <div v-if="showContacts" class="text-on-backing-color">
+            <div class="bold header3 mb-10 text-on-backing-color">Контакты</div>
+            <div class="column gap-8">
+              <template
+                v-for="(item, index) in $company.item?.guestContacts.emails"
                 :key="index"
-                @click="openLink(el.link)"
-                class="cursor-pointer"
               >
-                <q-img width="24px" fit="contain" :src="getImage(el.link_type)">
-                  <q-tooltip>{{ el.name }}</q-tooltip>
-                </q-img>
-              </div>
-            </div> -->
+                <div style="opacity: 0.8" class="body">
+                  {{ item.value }}
+                </div>
+              </template>
+              <template
+                v-for="(item, index) in $company.item?.guestContacts.phones"
+                :key="index"
+              >
+                <div style="opacity: 0.8" class="body">
+                  {{ item.value }}
+                </div>
+              </template>
+            </div>
           </div>
         </div>
       </div>
-      <!-- <div class="column gap-8 text-on-backing-color mt-20">
-        © Все права защищены 2023
-
-        <div>
-          Если вы тоже хотите стать обладателем системы лояльности, переходите
-          <a
-            href="https://corex.studio/loyal"
-            target="_blank"
-            class="text-primary"
-            >сюда</a
-          >
-        </div>
-      </div> -->
-    </div>
-    <div class="col-grow text-on-backing-color">
-      <template v-if="$appSettings.linksData?.app_redirect_link">
-        <div class="header mb-15">Скачать мобильное приложение</div>
-        <div class="row items-center gap-12 text-black3">
-          <div
-            v-if="qrCode"
-            class="border-radius"
-            style="width: 90px; height: 90px; overflow: hidden"
-          >
-            <img width="90" height="90" :src="qrCode" alt="QR Code" />
+      <div class="col-grow text-on-backing-color">
+        <template v-if="$appSettings.linksData?.app_redirect_link">
+          <div class="header2 bold mb-lg-15 mb-xs-10">
+            Скачать мобильное приложение
           </div>
-          <img
-            style="
-              height: 46px;
-              background-color: #2e2e2e;
-              object-fit: contain;
-              border-radius: 7px;
+          <div
+            :class="
+              $q.screen.lt.lg ? 'row reverse justify-end' : 'row items-center'
             "
-            src="~assets/Apple.svg"
-          />
-
-          <img
-            style="
-              height: 46px;
-              background-color: #2e2e2e;
-              object-fit: contain;
-              border-radius: 7px;
-            "
-            src="~assets/Google.svg"
-          />
-        </div>
-      </template>
-      <!-- <div v-if="showContacts" class="column gap-8">
-        <div class="bold">Контакты</div>
-        <div class="column full-width gap-3">
-          <div
-            v-for="(el, index) in $company.item?.guestContacts.phones"
-            :key="index"
+            class="gap-lg-12 gap-xs-8 text-black3"
           >
-            {{ el.value }}
+            <div
+              v-if="qrCode"
+              class="border-radius"
+              style="width: 82px; height: 82px; overflow: hidden"
+            >
+              <img width="82" height="82" :src="qrCode" alt="QR Code" />
+            </div>
+            <div
+              :class="$q.screen.gt.md ? 'row' : 'column'"
+              class="gap-lg-12 gap-xs-8"
+            >
+              <img
+                style="
+                  height: 46px;
+                  background-color: #2e2e2e;
+                  object-fit: contain;
+                  border-radius: 7px;
+                "
+                src="~assets/Apple.svg"
+              />
+              <img
+                style="
+                  height: 46px;
+                  background-color: #2e2e2e;
+                  object-fit: contain;
+                  border-radius: 7px;
+                "
+                src="~assets/Google.svg"
+              />
+            </div>
           </div>
-        </div>
-
-        <div class="column full-width gap-3">
-          <div
-            v-for="(el, index) in $company.item?.guestContacts.emails"
-            :key="index"
-          >
-            {{ el.value }}
-          </div>
-        </div>
-        <div class="row no-wrap gap-7">
-          <div
-            v-for="(el, index) in $company.item?.guestContacts.socials"
-            :key="index"
-            @click="openLink(el.link)"
-            class="cursor-pointer"
-          >
-            <q-img width="24px" fit="contain" :src="getImage(el.link_type)">
-              <q-tooltip>{{ el.name }}</q-tooltip>
-            </q-img>
-          </div>
-        </div>
-      </div> -->
+        </template>
+      </div>
     </div>
-    <q-separator color="divider-color" class="full-width my-20" />
+    <q-separator color="divider-color" class="full-width my-lg-20 my-xs-13" />
     <div class="row full-width body text-on-backing-color justify-between">
-      <div class="column gap-10">
+      <div :class="$q.screen.lt.lg ? 'reverse' : ''" class="column gap-10">
         <div class="row gap-7">
           <div
             v-for="(el, index) in developersLinks"
@@ -193,10 +149,6 @@
             >
           </div>
         </div>
-        <!-- <div>
-          Если вы тоже хотите стать обладателем системы лояльности, переходите
-          <a href="https://corex.studio/loyal" target="_blank">сюда</a>
-        </div> -->
       </div>
     </div>
   </div>
@@ -204,9 +156,7 @@
 
 <script setup lang="ts">
 import CButton from 'src/components/template/buttons/CButton.vue'
-// import { LinkType } from 'src/models/company/company'
 import { store } from 'src/models/store'
-// import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { computed, onMounted } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { useRoute, useRouter } from 'vue-router'

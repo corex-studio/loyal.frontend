@@ -24,13 +24,11 @@
           height="48px"
           external-label="Название адреса"
           placeholder="Название"
-          input-class="body"
           v-model="newAddress.name"
         />
         <AddressSearch
           @update="selectAddress($event)"
           :address="newAddress.address"
-          input-class="body"
           label="Укажите адрес"
           placeholder="Город, улица, дом"
         />
@@ -38,7 +36,6 @@
           <CInput
             height="48px"
             class="col"
-            input-class="body"
             external-label="Подъезд"
             placeholder="Номер"
             v-model="newAddress.entrance"
@@ -46,7 +43,6 @@
           <CInput
             height="48px"
             class="col"
-            input-class="body"
             external-label="Этаж"
             placeholder="Номер"
             v-model="newAddress.floor"
@@ -54,7 +50,6 @@
           <CInput
             height="48px"
             class="col"
-            input-class="body"
             external-label="Код двери"
             placeholder="Номер"
             v-model="newAddress.intercom"
@@ -65,7 +60,6 @@
           input-style="border-radius: 15px !important"
           v-model="newAddress.description"
           auto-grow
-          input-class="body"
           height="fit-content"
         />
       </div>

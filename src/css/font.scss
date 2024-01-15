@@ -118,7 +118,7 @@
 .caption-text {
   font-weight: 400;
   font-size: 12px;
-  line-height: 14.63px;
+  line-height: 14px;
   .q-field__label,
   &.q-btn div {
     @extend .caption-text;
@@ -164,20 +164,44 @@ body.screen--md {
     line-height: 50px;
   }
 
+  .huge3 {
+    font-size: 30px;
+    line-height: 33px;
+  }
+
+  .header2 {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 26px;
+  }
+
+  .header3 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 25px;
+  }
+
   .subtitle-text {
     font-weight: 500;
-    font-size: 13px;
-    line-height: 18.2px;
+    font-size: 18px;
+    line-height: 25px;
   }
+
   .body {
     font-weight: 400;
-    font-size: 13px;
-    line-height: 15.6px;
+    font-size: 16px;
+    line-height: 22px;
   }
+
   .secondary-text {
     font-weight: 400;
+    font-size: 14px;
+    line-height: 19.6px;
+  }
+
+  .caption-text {
     font-size: 12px;
-    line-height: 14.63px;
+    line-height: 14.4px;
   }
 }
 

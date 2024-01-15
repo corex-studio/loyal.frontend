@@ -5,15 +5,17 @@
       class="text-on-background-color transition bg-background-color"
     >
       <div class="c-container full-height column">
-        <div class="row no-wrap justify-between items-center pt-10">
+        <div
+          class="row no-wrap justify-between items-center pt-10 gap-xs-8 gap-lg-14"
+        >
           <div
-            class="no-wrap row cursor-pointer items-center gap-14 items-center"
+            class="no-wrap row cursor-pointer items-center gap-xs-8 gap-lg-14 items-center"
             @click="$router.push({ name: 'home' })"
           >
             <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
               <img
                 v-if="$company.item?.image?.thumbnail"
-                height="48"
+                :height="$q.screen.gt.md ? '48' : '44'"
                 class="border-radius"
                 style="object-fit: contain"
                 :src="$company.item?.image?.thumbnail"
@@ -21,7 +23,7 @@
             </template>
             <img
               v-else
-              height="48"
+              :height="$q.screen.gt.md ? '48' : '44'"
               class="border-radius"
               style="object-fit: contain"
               src="~assets/tochkaLogo.png"
@@ -33,32 +35,22 @@
                 !$store.tableMode
               "
               @click="$store.selectCompanyModal = true"
-              height="48px"
+              :height="$q.screen.gt.md ? '48px' : '44px'"
+              :width="$q.screen.gt.md ? undefined : '44px'"
               color="secondary-button-color"
               text-color="on-secondary-button-color"
             >
-              <div class="row no-wrap gap-3 items-end">
-                <!-- <q-img
-                height="34px"
-                width="34px"
-                class="border-radius"
-                :src="$company.item?.image?.thumbnail"
+              <div
+                v-if="$q.screen.gt.md"
+                class="row no-wrap gap-3 items-center"
               >
-                <template v-slot:error>
-                  <span>
-                    <q-img
-                      class="border-radius"
-                      style="height: 34px; width: 34px"
-                      :src="$store.images.empty"
-                    ></q-img>
-                  </span> </template
-              ></q-img> -->
                 <div class="body">Изменить заведение</div>
                 <CIcon size="21px" name="fa-regular fa-angle-right" />
               </div>
+              <CIcon v-else name="fa-regular fa-angle-down" size="20px" />
             </CButton>
           </div>
-          <div class="row gap-12 no-wrap">
+          <div class="row gap-xs-8 gap-lg-14 no-wrap">
             <div class="body">
               <ServiceSettingsBlock v-if="authentication.user" />
               <ServiceSettingsSkeleton v-if="authentication.loading" />
@@ -66,29 +58,28 @@
             <CButton
               v-if="!authentication.loading && !$store.tableMode"
               @click="profileButtonClickHandler()"
-              height="48px"
-              width="160px"
-              icon="fa-regular fa-user"
-              class="body"
+              :height="$q.screen.gt.md ? '48px' : '44px'"
+              :width="$q.screen.gt.md ? '160px' : '44px'"
               color="secondary-button-color"
               text-color="on-secondary-button-color"
-              :label="authentication.user ? 'Профиль' : 'Войти'"
-            />
+            >
+              <div
+                v-if="$q.screen.gt.md"
+                class="row items-center gap-3 no-wrap"
+              >
+                <CIcon size="19px" name="fa-regular fa-user" />
+                <div class="body">
+                  {{ authentication.user ? 'Профиль' : 'Войти' }}
+                </div>
+              </div>
+              <CIcon v-else name="fa-regular fa-user" size="19px" />
+            </CButton>
           </div>
         </div>
       </div>
     </q-header>
     <ArrangementHeader v-else />
   </div>
-  <!-- <SelectCompanyModal
-    :model-value="selectCompanyModal"
-    @update:model-value="selectCompanyModal = false"
-    @select="selectCompany($event)"
-  />
-  <ServiceSettingsModal
-    :model-value="serviceModal"
-    @update:model-value="serviceModal = false"
-  /> -->
 </template>
 
 <script setup lang="ts">

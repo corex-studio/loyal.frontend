@@ -92,9 +92,9 @@
                 style="opacity: 0.5"
                 class="text-strike"
               >
-                {{ el.price }}₽
+                {{ el.price }} ₽
               </div>
-              <div>{{ el.discounted_total_sum }}</div>
+              <div>{{ el.discounted_total_sum }} ₽</div>
             </div>
           </div>
           <q-separator color="divider-color" />
