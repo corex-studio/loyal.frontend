@@ -5,7 +5,7 @@
         <div class="row gap-14">
           <div
             v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
-            class="column text-on-backing-color"
+            class="column text-on-bottom-menu-color"
             style="width: 186px"
           >
             <div class="bold header3 mb-10">Информация</div>
@@ -18,15 +18,17 @@
                     class="body"
                     style="opacity: 0.8"
                     :label="item.label"
-                    text-color="on-backing-color"
+                    text-color="on-bottom-menu-color"
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <div v-if="showContacts" class="text-on-backing-color">
-            <div class="bold header3 mb-10 text-on-backing-color">Контакты</div>
+          <div v-if="showContacts" class="text-on-bottom-menu-color">
+            <div class="bold header3 mb-10 text-on-bottom-menu-color">
+              Контакты
+            </div>
             <div class="column gap-8">
               <template
                 v-for="(item, index) in $company.item?.guestContacts.emails"
@@ -48,7 +50,7 @@
           </div>
         </div>
       </div>
-      <div class="col-grow text-on-backing-color">
+      <div class="col-grow text-on-bottom-menu-color">
         <template v-if="$appSettings.linksData?.app_redirect_link">
           <div class="header2 bold mb-lg-15 mb-xs-10">
             Скачать мобильное приложение
@@ -94,7 +96,7 @@
       </div>
     </div>
     <q-separator color="divider-color" class="full-width my-lg-20 my-xs-13" />
-    <div class="row full-width body text-on-backing-color justify-between">
+    <div class="row full-width body text-on-bottom-menu-color justify-between">
       <div :class="$q.screen.lt.lg ? 'reverse' : ''" class="column gap-10">
         <div class="row gap-7">
           <div
@@ -110,7 +112,7 @@
         <div class="row gap-8 items-baseline">
           <div>© 2023 все права защищены</div>
           <CButton
-            text-color="on-backing-color"
+            text-color="on-bottom-menu-color"
             text-button
             style="opacity: 0.8"
             class="body"
@@ -132,7 +134,7 @@
               )
             "
             class="body"
-            text-color="on-backing-color"
+            text-color="on-bottom-menu-color"
             text-button
             style="opacity: 0.8"
             label="Пользовательское соглашение"
@@ -142,7 +144,7 @@
             <q-img style="width: 30px" src="~assets/loyalHeart.svg" />
             <a
               style="opacity: 0.8"
-              class="text-on-backing-color"
+              class="text-on-bottom-menu-color"
               href="https://corex.studio/loyal"
             >
               Loyalhub</a
