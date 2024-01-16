@@ -1,79 +1,5 @@
 <template>
   <div>
-    <!-- <div
-      v-if="
-        $companyGroup.item &&
-        $companyGroup.item.companies.length > 1 &&
-        !$store.tableMode
-      "
-      class="row border-radius gap-md-20 gap-sm-10 gap-xs-5 items-center mt-sm-20 mt-md-25 mt-xs-15"
-    >
-      <div class="row no-wrap items-center gap-8 pr-10">
-        <q-img
-          class="border-radius"
-          fit="contain"
-          style="width: 75px; height: 75px"
-          :src="
-            typeof $salesPoint.item?.company === 'string'
-              ? $menu.item?.company.image?.thumbnail || $store.images.empty
-              : $salesPoint.item?.company?.image?.thumbnail ||
-                $store.images.empty
-          "
-        >
-          <template v-slot:error>
-            <span>
-              <q-img
-                class="user-image"
-                fit="contain"
-                :src="$store.images.empty"
-              ></q-img>
-            </span> </template
-        ></q-img>
-        <div class="header">
-          <template v-if="!$salesPoint.menuLoading">
-            {{
-              typeof $salesPoint.item?.company === 'string'
-                ? $menu.item?.company.name
-                : $salesPoint.item?.company?.name
-            }}
-          </template>
-          <q-skeleton v-else width="150px" height="30px" />
-        </div>
-      </div>
-
-      <CButton @click="changeCompany()" label="Выбрать другое заведение" />
-    </div> -->
-    <!-- <div v-else class="header" :class="$store.tableMode ? 'mt-5' : 'mt-18'">
-      {{ $menu.item?.name }}
-    </div> -->
-    <!-- <div class="row full-width mt-10 gap-10">
-      <div
-        @click="selectCompany(el)"
-        v-for="(el, index) in $companyGroup.item?.companies"
-        :key="index"
-        :class="
-          currentCompany?.id === el.id ? 'active-company' : 'inactive-company'
-        "
-        style="width: 130px"
-        class="pa-5 border-radius column items-center gap-5 no-wrap cursor-pointer"
-      >
-        <q-avatar size="80px">
-          <q-img style="height: 100%" :src="el.image?.thumbnail" fit="cover">
-            <template v-slot:error>
-              <span style="width: 100%; height: 100%">
-                <q-img
-                  class="user-image"
-                  fit="contain"
-                  :src="$store.images.empty"
-                ></q-img>
-              </span> </template
-          ></q-img>
-        </q-avatar>
-        <div class="bold body">
-          {{ el.name }}
-        </div>
-      </div>
-    </div> -->
     <template v-if="!$salesPoint.menuLoading && $menu.item?.groups">
       <div
         v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
@@ -81,7 +7,7 @@
         class="full-width pt-sm-20 pt-xs-12"
         :id="el.id"
       >
-        <div class="huge2 bold mb-12">
+        <div class="huge3 bold mb-12">
           {{ el.name }}
         </div>
         <div v-if="el.items.length" class="row full-width">

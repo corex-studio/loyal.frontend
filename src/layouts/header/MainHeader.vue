@@ -6,10 +6,10 @@
     >
       <div class="c-container full-height column">
         <div
-          class="row no-wrap justify-between items-center pt-10 gap-xs-8 gap-lg-14"
+          class="row no-wrap justify-between items-center pt-10 gap-xs-6 gap-lg-14"
         >
           <div
-            class="no-wrap row cursor-pointer items-center gap-xs-8 gap-lg-14 items-center"
+            class="no-wrap row cursor-pointer items-center gap-xs-6 gap-lg-14 items-center"
             @click="$router.push({ name: 'home' })"
           >
             <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
@@ -56,7 +56,7 @@
               <CIcon v-else name="fa-regular fa-angle-down" size="20px" />
             </CButton>
           </div>
-          <div class="row gap-xs-8 gap-lg-14 no-wrap">
+          <div class="row gap-xs-6 gap-lg-14 no-wrap">
             <div class="body">
               <ServiceSettingsBlock v-if="authentication.user" />
               <ServiceSettingsSkeleton v-if="authentication.loading" />

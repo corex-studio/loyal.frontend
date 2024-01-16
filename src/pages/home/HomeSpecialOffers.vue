@@ -22,11 +22,10 @@
     </div>
 
     <SwiperContainer
-      v-if="$companyGroup.item?.externalId !== 'corex_demo'"
       class="swiper"
       :initial-slide="1"
       :slides-per-view="slidesPerView"
-      :items="$store.offersTab === 'Новости' ? $news.items : $promotion.items"
+      :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
     >
       <template v-slot:item="{ item }">
         <div
@@ -54,7 +53,7 @@
           </q-img>
         </div> </template
     ></SwiperContainer>
-    <SwiperContainer
+    <!-- <SwiperContainer
       v-else
       class="swiper"
       :initial-slide="1"
@@ -91,64 +90,59 @@
           </div>
         </div></template
       >
-    </SwiperContainer>
+    </SwiperContainer> -->
     <div
-      v-if="$store.offersTab === 'Новости' && !$news.items.length"
+      v-if="$store.offersTab === 'Новости' && !$news.news.length"
       class="header3 pl-6 my-20 c-container"
     >
       У вас нет новостей
     </div>
     <div
-      v-if="$store.offersTab === 'Акции' && !$promotion.items.length"
+      v-if="$store.offersTab === 'Акции' && !$news.promotions.length"
       class="header3 pl-6 my-20 c-container"
     >
       У вас нет акций
     </div>
-
-    <!-- <div class="row no-wrap full-width gap-10 c-container"></div> -->
   </div>
 </template>
 
 <script setup lang="ts">
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
 import { computed } from 'vue'
-import { Promotions } from 'src/models/promotion/promotions'
 import { News } from 'src/models/news/news'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { useQuasar } from 'quasar'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
 import { newsRepo } from 'src/models/news/newsRepo'
-import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
 
 const q = useQuasar()
 
-const banners = [
-  {
-    image: 'baner1.jpg',
-    text: 'Натуральные лимонады Starbar Craft',
-  },
-  {
-    image: 'baner2.jpg',
-    text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
-  },
-  {
-    image: 'baner1.jpg',
-    text: 'Натуральные лимонады Starbar Craft',
-  },
-  {
-    image: 'baner2.jpg',
-    text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
-  },
-  {
-    image: 'baner1.jpg',
-    text: 'Натуральные лимонады Starbar Craft',
-  },
-  {
-    image: 'baner2.jpg',
-    text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
-  },
-]
+// const banners = [
+//   {
+//     image: 'baner1.jpg',
+//     text: 'Натуральные лимонады Starbar Craft',
+//   },
+//   {
+//     image: 'baner2.jpg',
+//     text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
+//   },
+//   {
+//     image: 'baner1.jpg',
+//     text: 'Натуральные лимонады Starbar Craft',
+//   },
+//   {
+//     image: 'baner2.jpg',
+//     text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
+//   },
+//   {
+//     image: 'baner1.jpg',
+//     text: 'Натуральные лимонады Starbar Craft',
+//   },
+//   {
+//     image: 'baner2.jpg',
+//     text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
+//   },
+// ]
 
 const tabs = computed(() => {
   const result = []
@@ -162,8 +156,6 @@ const slidesPerView = computed(() => {
     ? 1
     : q.screen.xs
     ? 1
-    : companyGroupRepo.item?.externalId === 'corex_demo'
-    ? 1
     : q.screen.lt.lg
     ? 2
     : 3
@@ -173,27 +165,17 @@ const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 })
 
-const getImage = (link: string) => {
-  try {
-    return require('assets/' + link) as string
-  } catch {
-    return store.images.empty
-  }
-}
+// const getImage = (link: string) => {
+//   try {
+//     return require('assets/' + link) as string
+//   } catch {
+//     return store.images.empty
+//   }
+// }
 
-const goToItem = (item: News | Promotions) => {
-  if ('shortDescription' in item) {
-    void newsRepo.retrieve(item.id)
-    store.newsModal = true
-    // void router.push({ name: 'newsPage', params: { newsId: item.id } })
-  } else {
-    promotionsRepo.retrieve(item.id)
-    store.newsModal = true
-  }
-  // void router.push({
-  //   name: 'promotionPage',
-  //   params: { promotionId: item.id },
-  // })
+const goToItem = (item: News) => {
+  void newsRepo.retrieve(item.id)
+  store.newsModal = true
 }
 </script>
 

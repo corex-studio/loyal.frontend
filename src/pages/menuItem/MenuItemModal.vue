@@ -2,10 +2,11 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    :width="$q.screen.gt.md ? '1150px' : '450px'"
-    :height="$q.screen.gt.md ? '600px' : '500px'"
+    :width="$q.screen.gt.md ? '1150px' : '500px'"
+    :height="$q.screen.gt.md ? '600px' : undefined"
     height-percent="100%"
     :no-overflow="$q.screen.gt.md"
+    dialog-class="no-scrollbar"
     no-padding
   >
     <div
@@ -36,7 +37,7 @@
       ></q-img>
       <div
         style="overflow-x: auto; width: -webkit-fill-available"
-        class="column no-wrap justify-between full-height pa-15"
+        class="column no-wrap justify-between full-height px-15 pt-15 relative-position"
       >
         <div class="column full-width">
           <div class="huge3 bold mb-6">{{ $menuItem.item?.name }}</div>
@@ -67,15 +68,14 @@
         </div>
 
         <div
-          class="row items-center gap-sm-15 gap-xs-5 pr-5"
+          class="row items-center gap-sm-15 gap-xs-5 bg-background-color py-12 bottom-block"
           :class="[
             { 'mt-15': currentSize?.modifierGroups?.length },
             {
-              'no-wrap full-width box-shadow pa-5 bg-backing-color':
-                $q.screen.xs,
+              'no-wrap  box-shadow pa-5 bg-backing-color': $q.screen.xs,
             },
           ]"
-          :style="$q.screen.xs ? 'position: fixed; bottom: 0px; left: 0' : ''"
+          style="position: sticky; bottom: 0px; left: 0px"
         >
           <ChangeAmount
             height="48px"
@@ -88,13 +88,18 @@
           >
             Оформление заказов временно недоступно
           </div>
+
           <CButton
             @click="addToCart()"
             class="col-grow subtitle-text"
             height="48px"
             :loading="loading"
             :disabled="isAddToCardDisabled"
-            :label="$q.screen.xs ? 'В корзину' : 'Добавить в корзину'"
+            :label="
+              $q.screen.lt.lg
+                ? 'Добавить'
+                : `Добавить за ${beautifyNumber(currentPrice, true)} ₽`
+            "
           />
         </div>
       </div>
@@ -124,6 +129,7 @@ import { Notify, useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { beautifyNumber } from 'src/models/store'
 
 const props = defineProps<{
   modelValue: boolean
@@ -146,13 +152,28 @@ const route = useRoute()
 const router = useRouter()
 
 const getBorderRadius = computed(() => {
-  return `${uiSettingsRepo.item?.borderRadius}px 0 0 ${uiSettingsRepo.item?.borderRadius}px`
+  return `${uiSettingsRepo.item?.borderRadius}px ${
+    q.screen.lt.lg ? uiSettingsRepo.item?.borderRadius : '0'
+  }px  0 ${q.screen.gt.md ? uiSettingsRepo.item?.borderRadius : '0'}px`
+})
+
+const currentPrice = computed(() => {
+  return (
+    ((currentSize.value?.price || 0) +
+      sum(
+        currentSize.value?.modifierGroups?.flatMap((v) =>
+          v.items.map((el) => el.quantity * (el.price || 0))
+        )
+      )) *
+    quantity.value
+  )
 })
 
 watch(
   () => menuItemRepo.item,
   () => {
     if (props.modelValue) {
+      quantity.value = 1
       // if (menuItemRepo.item) {
       //   const test = [1, 3, 4, 5, 6, 7, 8]
       //   test.forEach((el) =>
@@ -245,3 +266,9 @@ const addToCart = async () => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.bottom-block {
+  border-top: 1px var(--divider-color) solid;
+}
+</style>

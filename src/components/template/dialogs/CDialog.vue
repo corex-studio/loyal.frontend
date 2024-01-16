@@ -29,11 +29,12 @@
           !noPadding ? 'pb-15 px-15' : dialogClass,
           noPadding ? '' : $slots.header ? 'pt-10' : 'pt-15',
         ]"
-        :style="`overflow:${noOverflow ? 'hidden' : 'auto'};
+        :style="`overflow-y:${noOverflow ? 'hidden' : 'auto'};
           width: 100%;
           height: 100%;
           max-height: inherit;
-          border-radius: 0;`"
+          overflow-x: hidden
+          `"
       >
         <div style="position: absolute; top: -20px; right: -25px; z-index: 1">
           <CIcon
