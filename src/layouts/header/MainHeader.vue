@@ -14,11 +14,17 @@
           >
             <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
               <img
-                v-if="$company.item?.image?.thumbnail"
+                v-if="
+                  $company.item?.logo?.thumbnail ||
+                  $company.item?.image?.thumbnail
+                "
                 :height="$q.screen.gt.md ? '48' : '44'"
                 class="border-radius"
                 style="object-fit: contain"
-                :src="$company.item?.image?.thumbnail"
+                :src="
+                  $company.item?.logo?.thumbnail ||
+                  $company.item?.image?.thumbnail
+                "
               />
             </template>
             <img
