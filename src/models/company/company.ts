@@ -61,6 +61,7 @@ export type CompanyRaw = {
   sales_points?: SalesPointRaw[]
   visible: boolean
   image: ImageRaw | null
+  logo?: ImageRaw | null
   images?: ImageRaw[]
   settings: {
     uuid: string
@@ -168,6 +169,7 @@ export class Company implements BaseModel {
   salesPoints?: SalesPoint[]
   visible: boolean
   image: Image | null
+  logo: Image | null
   images: Image[]
   settings: {
     uuid: string
@@ -201,6 +203,7 @@ export class Company implements BaseModel {
     this.salesPoints = raw.sales_points?.map((v) => new SalesPoint(v)) || []
     this.visible = raw.visible
     this.image = raw.image ? new Image(raw.image) : null
+    this.logo = raw.logo ? new Image(raw.logo) : null
     this.images = raw.images ? raw.images.map((el) => new Image(el)) : []
     this.settings = raw.settings || {
       auto_upload_menu: false,
