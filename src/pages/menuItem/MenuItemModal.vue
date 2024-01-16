@@ -22,7 +22,7 @@
         fit="cover"
         :height="$q.screen.lt.lg ? '450px' : '100%'"
         style="width: 100%"
-        :src="$menuItem.item?.image?.thumbnail || $store.images.empty"
+        :src="$menuItem.item?.image?.image || $store.images.empty"
       >
         <template v-slot:error>
           <span>

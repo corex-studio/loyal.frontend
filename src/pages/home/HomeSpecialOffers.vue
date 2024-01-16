@@ -36,7 +36,7 @@
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mb-20 mt-15"
         >
           <q-img
-            :src="item.image?.thumbnail || $store.images.empty"
+            :src="item.image?.image || $store.images.empty"
             :style="`border-radius:${getBorderRadius}`"
             height="100%"
             fit="cover"
