@@ -20,7 +20,7 @@
     <div class="column full-width no-wrap">
       <div
         v-if="group.restrictions && group.restrictions.max_quantity > 1"
-        class="row justify-between mb-10 pr-5"
+        class="row justify-between mb-10"
       >
         <div style="opacity: 0.5" class="bold">
           Добавлено: {{ sum(group.items.map((v) => v.quantity)) }} /{{

@@ -64,7 +64,7 @@ const tabs = ref([
   // },
 
   {
-    label: 'О завденеии',
+    label: 'О заведении',
     routeName: 'aboutUs',
   },
   {

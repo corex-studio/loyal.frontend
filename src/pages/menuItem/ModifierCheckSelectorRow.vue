@@ -1,7 +1,7 @@
 <template>
   <div
     @click="$emit('select', item)"
-    class="row full-width items-center justify-between cursor-pointer body pr-5 py-3"
+    class="row full-width no-wrap items-center justify-between cursor-pointer body py-3"
   >
     <div class="column gap-2">
       <div>{{ item.name }}</div>

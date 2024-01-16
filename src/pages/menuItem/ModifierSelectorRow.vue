@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/no-mutating-props -->
 <template>
-  <div class="py-3 row full-width item-center justify-between pr-5">
+  <div class="py-3 row full-width item-center justify-between">
     <div class="column gap-2 body">
       <div>{{ item.name }}</div>
       <div

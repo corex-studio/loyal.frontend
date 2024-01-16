@@ -1,7 +1,7 @@
 <template>
   <div
     @click="$emit('select', item)"
-    class="row full-width items-center justify-between cursor-pointer body pr-5 py-7"
+    class="row full-width items-center justify-between cursor-pointer body py-7"
   >
     <div class="row no-wrap items-center gap-5">
       <RoundedSelector

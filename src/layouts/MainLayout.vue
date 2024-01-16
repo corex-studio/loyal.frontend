@@ -107,6 +107,7 @@ import TopHeader from './header/TopHeader.vue'
 import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
 import NewsModal from 'src/pages/news/NewsModal.vue'
 import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
+import { NewsType } from 'src/models/news/news'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -195,16 +196,33 @@ onMounted(async () => {
       ready.value = true
     }
 
-    if (!newsRepo.items.length)
-      void newsRepo.list({
-        company_group: companyGroupRepo.item?.id,
-        active: true,
-      })
-    if (!promotionsRepo.items.length)
-      void promotionsRepo.list({
-        company_group: companyGroupRepo.item?.id,
-        active: true,
-      })
+    if (!newsRepo.news.length) {
+      void newsRepo
+        .list({
+          company_group: companyGroupRepo.item?.id,
+          active: true,
+          type: NewsType.DEFAULT,
+        })
+        .then((res) => {
+          newsRepo.news = res.items
+        })
+    }
+    if (!newsRepo.promotions.length) {
+      void newsRepo
+        .list({
+          company_group: companyGroupRepo.item?.id,
+          active: true,
+          type: NewsType.PROMOTION,
+        })
+        .then((res) => {
+          newsRepo.promotions = res.items
+        })
+    }
+    // if (!promotionsRepo.items.length)
+    //   void promotionsRepo.list({
+    //     company_group: companyGroupRepo.item?.id,
+    //     active: true,
+    //   })
 
     void store.loadCatalog(
       cartRepo.item

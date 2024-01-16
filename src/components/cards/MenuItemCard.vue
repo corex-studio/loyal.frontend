@@ -47,13 +47,9 @@
           <div class="header3 bold ellipsis-2-lines">
             {{ item.name }}
           </div>
-          <!-- <div style="opacity: 0.7" class="body">
-          {{ item.sizes[0].characteristics.weight }}г
-        </div> -->
         </div>
-        <!-- style="height: 42px" -->
 
-        <div style="opacity: 0.6" class="mt-5 subtitle-text ellipsis-2-lines">
+        <div style="opacity: 0.6" class="mt-5 body ellipsis-2-lines">
           {{ item.description }}
         </div>
       </div>
@@ -71,7 +67,7 @@
           )} !important`"
           text-color="primary"
           height="40px"
-          class="subtitle-text"
+          class="body"
           :loading="loading"
           label="В корзину"
         />
