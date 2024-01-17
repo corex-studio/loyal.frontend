@@ -3,7 +3,7 @@
     <div
       v-if="newAddress"
       style="overflow-y: auto"
-      class="column no-wrap justify-between col text-on-background-color pa-15"
+      class="column no-wrap justify-between col-6 text-on-background-color pa-15"
     >
       <div class="column full-width gap-8">
         <div class="row items-center gap-5 mb-12">
@@ -90,7 +90,7 @@
       </div>
     </div>
 
-    <div style="width: 600px; height: 600px">
+    <div class="col-6" style="height: 600px">
       <div
         id="map"
         style="width: 100%; height: 600px; z-index: 9"

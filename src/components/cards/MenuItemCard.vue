@@ -39,22 +39,32 @@
     </q-img>
     <!-- text-on-product-tile-color -->
     <div
-      style="height: 208px"
+      :style="`height: ${$q.screen.lt.md ? '165' : '208'}px`"
       class="px-8 py-8 column no-wrap justify-between col-grow text-on-backgroun-color"
     >
-      <div class="column no-wrap mb-14">
+      <div class="column no-wrap mb-md-14 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
           <div class="header3 bold ellipsis-2-lines">
+            {{ item.name }}
+            {{ item.name }}
+            {{ item.name }}
             {{ item.name }}
           </div>
         </div>
 
-        <div style="opacity: 0.6" class="mt-5 body ellipsis-2-lines">
+        <div
+          style="opacity: 0.6"
+          :class="$q.screen.lt.md ? 'ellipsis' : 'ellipsis-2-lines'"
+          class="mt-5 body"
+        >
           {{ item.description }}
         </div>
       </div>
       <div class="row no-wrap full-width justify-between items-center">
-        <div class="header3 bold text-on-backgroun-color">
+        <div
+          v-if="$q.screen.gt.sm"
+          class="subtitle-text bold text-on-backgroun-color"
+        >
           {{ item.sizes[0].price }}
           ₽
         </div>
@@ -69,8 +79,12 @@
           height="40px"
           class="body"
           :loading="loading"
-          label="В корзину"
-        />
+          :width="$q.screen.lt.md ? '100%' : undefined"
+        >
+          <div :class="{ bold: $q.screen.lt.md }">
+            {{ $q.screen.lt.md ? `От ${item.sizes[0].price} ₽` : 'В корзину' }}
+          </div>
+        </CButton>
       </div>
     </div>
   </div>

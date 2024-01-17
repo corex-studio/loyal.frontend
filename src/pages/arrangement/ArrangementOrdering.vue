@@ -1,271 +1,300 @@
 <template>
-  <div v-if="$cart.item" class="row pt-20 text-on-background-color">
-    <div class="col column gap-15">
-      <div class="column gap-12 full-width">
-        <div class="header2 bold">
-          Заказ на
-          {{ isDelivery ? 'доставку' : 'самовывоз' }}
-        </div>
-        <div class="row body full-width gap-5 items-center">
-          <div class="col-4">
-            Адрес {{ isDelivery ? 'доставки' : 'самовывоза' }}
+  <div v-if="$cart.item">
+    <div class="row pt-20 text-on-background-color">
+      <div class="col-lg col-xs-12 column gap-15">
+        <div class="column gap-12 full-width">
+          <div class="header2 bold">
+            Заказ на
+            {{ isDelivery ? 'доставку' : 'самовывоз' }}
           </div>
-          <div
-            :style="
-              $uiSettings.item?.inputType === 'outlined'
-                ? 'border: 1px #ededed solid'
-                : ''
-            "
-            style="min-height: 48px"
-            class="bg-input-color border-radius text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
-          >
-            <div>{{ $cart.item?.currentAddress }}</div>
-            <CButton
-              v-if="isDelivery"
-              @click="deliveryAddressesModal = true"
-              text-button
-              label="Изменить"
-              class="body pr-5"
-              text-color="primary"
-            />
-          </div>
-        </div>
-        <div class="row body full-width gap-5 items-center">
-          <div class="col-4">Время доставки</div>
-          <div class="row gap-8 col text-on-input-color">
-            <div
-              :style="
-                $uiSettings.item?.inputType === 'outlined'
-                  ? 'border: 1px #ededed solid'
-                  : ''
-              "
-              :class="[{ 'selected-element': !$cart.item.deliveryTime }]"
-              style="min-height: 48px"
-              @click="selectClosestTime()"
-              class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
-            >
-              <div>Ближайшая</div>
-              <CIcon
-                class="cursor-pointer"
-                name="fa-regular fa-clock"
-                color="secondary-button-color"
-                size="20px"
-              />
+          <div class="row body full-width gap-5 items-center">
+            <div class="col-4">
+              Адрес {{ isDelivery ? 'доставки' : 'самовывоза' }}
             </div>
             <div
-              v-if="
-                availableHours?.today.length || availableHours?.tomorrow.length
-              "
               :style="
                 $uiSettings.item?.inputType === 'outlined'
                   ? 'border: 1px #ededed solid'
                   : ''
               "
               style="min-height: 48px"
-              :class="{ 'selected-element': $cart.item.deliveryTime }"
-              class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+              class="bg-input-color border-radius text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
             >
-              <div>{{ $cart.item.deliveryTime || 'Ко времени' }}</div>
-              <CIcon
-                class="cursor-pointer"
-                name="fa-regular fa-calendar-clock"
-                color="secondary-button-color"
-                size="20px"
+              <div>{{ $cart.item?.currentAddress }}</div>
+              <CButton
+                v-if="isDelivery"
+                @click="deliveryAddressesModal = true"
+                text-button
+                label="Изменить"
+                class="body pr-5"
+                text-color="primary"
               />
-
-              <q-menu
-                v-model="menu"
-                fit
-                class="pa-6"
-                style="overflow-y: hidden"
+            </div>
+          </div>
+          <div class="row body full-width gap-5 items-center">
+            <div class="col-4">Время доставки</div>
+            <div class="row gap-8 col text-on-input-color">
+              <div
+                :style="
+                  $uiSettings.item?.inputType === 'outlined'
+                    ? 'border: 1px #ededed solid'
+                    : ''
+                "
+                :class="[{ 'selected-element': !$cart.item.deliveryTime }]"
+                style="min-height: 48px"
+                @click="selectClosestTime()"
+                class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
               >
-                <TabPicker
-                  :model-value="currentDay"
-                  @update-tab="currentDay = $event"
-                  :tabs="['Сегодня', 'Завтра']"
+                <div>Ближайшая</div>
+                <CIcon
+                  class="cursor-pointer"
+                  name="fa-regular fa-clock"
+                  color="secondary-button-color"
+                  size="20px"
                 />
-                <div
-                  ref="menuRef"
-                  class="column no-wrap full-width"
-                  style="overflow-y: scroll; max-height: 450px; height: 100%"
+              </div>
+              <div
+                v-if="
+                  availableHours?.today.length ||
+                  availableHours?.tomorrow.length
+                "
+                :style="
+                  $uiSettings.item?.inputType === 'outlined'
+                    ? 'border: 1px #ededed solid'
+                    : ''
+                "
+                style="min-height: 48px"
+                :class="{ 'selected-element': $cart.item.deliveryTime }"
+                class="border-radius cursor-pointer bg-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+              >
+                <div>{{ $cart.item.deliveryTime || 'Ко времени' }}</div>
+                <CIcon
+                  class="cursor-pointer"
+                  name="fa-regular fa-calendar-clock"
+                  color="secondary-button-color"
+                  size="20px"
+                />
+
+                <q-menu
+                  v-model="menu"
+                  fit
+                  class="pa-6"
+                  style="overflow-y: hidden"
                 >
+                  <TabPicker
+                    :model-value="currentDay"
+                    @update-tab="currentDay = $event"
+                    :tabs="['Сегодня', 'Завтра']"
+                  />
                   <div
-                    v-for="(el, index) in totalDayTimes()"
-                    :class="[
-                      el,
-                      {
-                        'bold ': el === $cart.item.deliveryTime?.slice(11, 16),
-                      },
-                    ]"
-                    :key="index"
-                    @click="setDeliveryTime(el)"
-                    :style="
-                      !availableTimes?.includes(el)
-                        ? 'opacity: 0.5; cursor: not-allowed !important'
-                        : ''
-                    "
-                    class="full-width body cursor-pointer pa-6 time-row"
+                    ref="menuRef"
+                    class="column no-wrap full-width"
+                    style="overflow-y: scroll; max-height: 450px; height: 100%"
                   >
-                    {{ el }}
+                    <div
+                      v-for="(el, index) in totalDayTimes()"
+                      :class="[
+                        el,
+                        {
+                          'bold ':
+                            el === $cart.item.deliveryTime?.slice(11, 16),
+                        },
+                      ]"
+                      :key="index"
+                      @click="setDeliveryTime(el)"
+                      :style="
+                        !availableTimes?.includes(el)
+                          ? 'opacity: 0.5; cursor: not-allowed !important'
+                          : ''
+                      "
+                      class="full-width body cursor-pointer pa-6 time-row"
+                    >
+                      {{ el }}
+                    </div>
                   </div>
-                </div>
-              </q-menu>
+                </q-menu>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="row body full-width gap-5">
-          <div class="col-4 mt-8">Комментарий</div>
-          <CInput
-            auto-grow
-            height="fit-content"
-            class="col"
-            placeholder="Напишите ваши пожелания"
-            v-model="$cart.item.comment"
-          />
-        </div>
-        <div class="row body full-width items-center gap-5">
-          <div class="col-4">Способ оплаты</div>
-          <div
-            :style="
-              $uiSettings.item?.inputType === 'outlined'
-                ? 'border: 1px #ededed solid'
-                : ''
-            "
-            style="min-height: 48px"
-            class="body border-radius bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
-          >
-            <div class="gap-4 row items-center no-wrap">
-              <q-icon size="20px" :name="selectedPaymentType?.icon" />
-              {{ selectedPaymentType?.label }}
-            </div>
-            <CButton
-              @click="selectedPaymentTypeModal = true"
-              text-button
-              label="Изменить"
-              class="body pr-5"
-              text-color="primary"
+          <div class="row body full-width gap-5">
+            <div class="col-4 mt-8">Комментарий</div>
+            <CInput
+              auto-grow
+              height="fit-content"
+              class="col"
+              placeholder="Напишите ваши пожелания"
+              v-model="$cart.item.comment"
             />
           </div>
-        </div>
+          <div class="row body full-width items-center gap-5">
+            <div class="col-4">Способ оплаты</div>
+            <div
+              :style="
+                $uiSettings.item?.inputType === 'outlined'
+                  ? 'border: 1px #ededed solid'
+                  : ''
+              "
+              style="min-height: 48px"
+              class="body border-radius bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+            >
+              <div class="gap-4 row items-center no-wrap">
+                <q-icon size="20px" :name="selectedPaymentType?.icon" />
+                {{ selectedPaymentType?.label }}
+              </div>
+              <CButton
+                @click="selectedPaymentTypeModal = true"
+                text-button
+                label="Изменить"
+                class="body pr-5"
+                text-color="primary"
+              />
+            </div>
+          </div>
 
-        <div
-          v-if="
-            $salesPoint.item?.settings.promo_codes !== PromoCodeMode.DISABLED
-          "
-          class="row full-width justify-center"
-        >
+          <!-- <div
+            v-if="
+              $salesPoint.item?.settings.promo_codes !== PromoCodeMode.DISABLED
+            "
+            class="row full-width justify-center"
+          >
+            <CButton
+              @click="promocodeModal = true"
+              text-button
+              label="У меня есть промокод"
+              class="body"
+              style="opacity: 0.9"
+              text-color="on-background-color"
+            />
+          </div> -->
+        </div>
+        <div v-if="$q.screen.gt.md" class="row full-width gap-10 mt-10">
           <CButton
-            @click="promocodeModal = true"
-            text-button
-            label="У меня есть промокод"
-            class="body"
-            style="opacity: 0.9"
-            text-color="on-background-color"
+            @click="
+              $router.push({
+                name: 'home',
+              })
+            "
+            label="Назад"
+            height="48px"
+            class="col body"
+            color="secondary-button-color"
+            text-color="on-secondary-button-color"
+          />
+          <CButton
+            @click="makeAnOrder()"
+            :loading="loading"
+            :disabled="!isArrangeAvailable"
+            label="Оплатить"
+            height="48px"
+            class="col body"
           />
         </div>
       </div>
-      <div class="row full-width gap-10 mt-10">
-        <CButton
-          @click="
-            $router.push({
-              name: 'home',
-            })
+      <div
+        class="pl-lg-30 col-lg-5 col-xs-12 mt-xs-20 mt-lg-0 pb-xs-20 pb-lg-0"
+      >
+        <div
+          :style="
+            $companyGroup.item?.externalId === 'corex_demo'
+              ? 'border: 1px #f5f5f5 solid'
+              : ''
           "
-          label="Назад"
-          height="48px"
-          class="col body"
-          color="secondary-button-color"
-          text-color="on-secondary-button-color"
-        />
+          :class="{ 'box-shadow': $q.screen.gt.md }"
+          class="column full-width border-radius gap-6 pa-8"
+        >
+          <div style="opacity: 0.8" class="subtitle-text mb-2">
+            Состав заказа
+          </div>
+          <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
+            <div class="row body full-width no-wrap py-3">
+              <div class="row no-wrap gap-6 col-10 items-center">
+                <q-img
+                  :src="item.size.image?.thumbnail || $store.images.empty"
+                  height="65px"
+                  width="65px"
+                  style="min-height: 65px; min-width: 65px"
+                  fit="contain"
+                >
+                  <template v-slot:error>
+                    <span>
+                      <q-img
+                        class="user-image"
+                        fit="cover"
+                        style="min-height: 65px; min-width: 65px"
+                        width="65px"
+                        height="65px"
+                        :src="$store.images.empty"
+                      ></q-img>
+                    </span>
+                  </template>
+                </q-img>
+                <div class="column gap-1">
+                  <div class="ellipsis-2-lines">
+                    {{ item.size.name }}
+                  </div>
+
+                  <div style="opacity: 0.6">{{ item.quantity }} шт</div>
+                </div>
+              </div>
+              <div
+                class="col-2 column items-end no-wrap"
+                style="white-space: no-wrap"
+              >
+                <div
+                  v-if="item.totalSum !== item.discountedTotalSum"
+                  style="opacity: 0.5"
+                  class="text-strike"
+                >
+                  {{ beautifyNumber(item.totalSum, true) }} ₽
+                </div>
+                <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
+              </div>
+            </div>
+          </template>
+          <q-separator color="divider-color" />
+          <div class="row full-width justify-between">
+            <div class="body bold">Сумма заказа</div>
+
+            <div class="body bold">
+              {{ beautifyNumber($cart.item?.totalSum, true) }} ₽
+            </div>
+          </div>
+          <div
+            v-if="$cart.item?.appliedBonuses"
+            class="row full-width justify-between text-primary"
+          >
+            <div class="body bold">Списано бонусов</div>
+            <div class="body bold">
+              -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
+            </div>
+          </div>
+          <div class="row full-width justify-between">
+            <div class="body bold">К оплате</div>
+            <div class="body bold">
+              {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      v-if="$q.screen.lt.lg"
+      class="full-width bg-background-color"
+      style="position: sticky; bottom: 0; left: 0"
+    >
+      <q-separator color="divider-color" class="full-width" />
+      <div class="row full-width gap-10 no-wrap py-15 items-center">
+        <div class="header3 bold px-20">
+          Сумма {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
+        </div>
         <CButton
+          label="Оплатить"
+          height="48px"
+          class="col-grow body"
           @click="makeAnOrder()"
           :loading="loading"
           :disabled="!isArrangeAvailable"
-          label="Оплатить"
-          height="48px"
-          class="col body"
         />
-      </div>
-    </div>
-    <div class="pl-30 col-5">
-      <div
-        :style="
-          $companyGroup.item?.externalId === 'corex_demo'
-            ? 'border: 1px #f5f5f5 solid'
-            : ''
-        "
-        class="column full-width border-radius box-shadow gap-6 pa-8"
-      >
-        <div style="opacity: 0.8" class="subtitle-text mb-2">Состав заказа</div>
-        <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
-          <div class="row body full-width no-wrap py-3">
-            <div class="row no-wrap gap-6 col-10 items-center">
-              <q-img
-                :src="item.size.image?.thumbnail || $store.images.empty"
-                height="65px"
-                width="65px"
-                style="min-height: 65px; min-width: 65px"
-                fit="contain"
-              >
-                <template v-slot:error>
-                  <span>
-                    <q-img
-                      class="user-image"
-                      fit="cover"
-                      style="min-height: 65px; min-width: 65px"
-                      width="65px"
-                      height="65px"
-                      :src="$store.images.empty"
-                    ></q-img>
-                  </span>
-                </template>
-              </q-img>
-              <div class="column gap-1">
-                <div class="ellipsis-2-lines">
-                  {{ item.size.name }}
-                </div>
-
-                <div style="opacity: 0.6">{{ item.quantity }} шт</div>
-              </div>
-            </div>
-            <div
-              class="col-2 column items-end no-wrap"
-              style="white-space: no-wrap"
-            >
-              <div
-                v-if="item.totalSum !== item.discountedTotalSum"
-                style="opacity: 0.5"
-                class="text-strike"
-              >
-                {{ beautifyNumber(item.totalSum, true) }} ₽
-              </div>
-              <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
-            </div>
-          </div>
-        </template>
-        <q-separator color="divider-color" />
-        <div class="row full-width justify-between">
-          <div class="body bold">Сумма заказа</div>
-
-          <div class="body bold">
-            {{ beautifyNumber($cart.item?.totalSum, true) }} ₽
-          </div>
-        </div>
-        <div
-          v-if="$cart.item?.appliedBonuses"
-          class="row full-width justify-between text-primary"
-        >
-          <div class="body bold">Списано бонусов</div>
-          <div class="body bold">
-            -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
-          </div>
-        </div>
-        <div class="row full-width justify-between">
-          <div class="body bold">К оплате</div>
-          <div class="body bold">
-            {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
-          </div>
-        </div>
       </div>
     </div>
   </div>
@@ -276,7 +305,6 @@
     :current-type="selectedPaymentType"
     @select="selectedPaymentType = $event"
   />
-  <PromocodeModal v-model="promocodeModal" />
   <DeliveryAddressesModal
     @address-selected="changeDeliveryAddress($event)"
     v-model="deliveryAddressesModal"
@@ -298,8 +326,6 @@ import {
 } from 'src/models/store'
 import { ref, computed, onMounted, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
-import PromocodeModal from './PromocodeModal.vue'
-import { PromoCodeMode } from 'src/models/salesPoint/salesPoint'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
 import { padRepo } from 'src/models/pads/padRepo'
@@ -320,8 +346,6 @@ const availableHours = ref<AvailableHours | null>(null)
 const selectedPaymentType = ref<PaymentObjectType | null>(null)
 
 const selectedPaymentTypeModal = ref(false)
-
-const promocodeModal = ref(false)
 
 const loading = ref(false)
 

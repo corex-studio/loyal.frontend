@@ -6,6 +6,7 @@
     :square="square"
     :modelValue="modelValue"
     @update:modelValue="$emit('update:modelValue')"
+    :class="{ 'maximize-modal': maximize }"
   >
     <q-card
       :style="`max-width: ${width}; min-height: ${height}; max-height: ${height}; height: ${heightPercent}`"
@@ -92,6 +93,7 @@ defineProps({
   noOverflow: Boolean,
   heightPercent: String,
   withOverflow: Boolean,
+  maximize: Boolean,
 })
 defineEmits(['update:modelValue'])
 </script>

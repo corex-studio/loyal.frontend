@@ -2,7 +2,12 @@
   <div v-if="$order.item" class="pt-25 text-on-background-color">
     <div class="huge3 bold mb-8">Спасибо за заказ!</div>
     <div class="row full-width">
-      <div style="max-width: 550px; width: 100%" class="column">
+      <div
+        :style="`max-width: ${
+          $q.screen.lt.lg ? 'unset' : '550px'
+        } ; width: 100%`"
+        class="column"
+      >
         <div class="row gap-6 items-center">
           <img
             v-if="$company.item?.image?.thumbnail"
@@ -28,11 +33,21 @@
           <div class="header2 bold mb-8">
             Приготовим к {{ $order.item?.deliveryTime || '-' }}
           </div>
-          <OrderStepper style="max-width: 432px; width: 100%" />
+          <OrderStepper
+            :style="`max-width: ${
+              $q.screen.lt.lg ? 'unset' : '432px'
+            }; width: 100%`"
+          />
         </div>
       </div>
     </div>
-    <div class="column full-width mt-12 mb-20 no-wrap gap-4">
+    <div
+      :style="`border: 1px ${lightColor(
+        $uiSettings.item?.backgroundColor.on_color || '000',
+        '10'
+      )} solid; max-width: ${$q.screen.gt.md ? '550px' : ''} `"
+      class="column full-width mt-12 mb-lg-20 mb-xs-12 no-wrap gap-4 pa-10 border-radius box-shadow"
+    >
       <div class="body" style="opacity: 0.7">
         {{ $order.item.type === CartType.PICKUP ? 'Самовывоз' : 'Доставка' }} из
         ресторана
@@ -44,7 +59,7 @@
         </div>
       </div>
     </div>
-    <div class="full-width" style="max-width: 550px">
+    <div class="full-width" :style="$q.screen.lt.lg ? '' : 'max-width: 550px'">
       <div
         :style="`border: 1px ${lightColor(
           $uiSettings.item?.backgroundColor.on_color || '000',
@@ -127,8 +142,8 @@
       color="secondary-button-color"
       text-color="on-secondary-button-color"
       width="100%"
-      class="body mt-40"
-      style="max-width: 305px"
+      class="body mt-lg-40 mt-xs-20"
+      :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
   </div>
 </template>

@@ -13,12 +13,11 @@
     </div>
 
     <q-separator color="divider-color" class="my-2" />
-    <div
-      v-if="$cart.item"
-      class="header3 bold row justify-between items-center"
-    >
-      <div>Итого</div>
-      <div>{{ beautifyNumber($cart.item.discountedTotalSum, true) }} ₽</div>
+    <div v-if="$cart.item" class="header3 row justify-between items-center">
+      <div class="bold">Итого</div>
+      <div class="bold">
+        {{ beautifyNumber($cart.item.discountedTotalSum, true) }} ₽
+      </div>
     </div>
   </div>
 </template>

@@ -93,6 +93,12 @@
   z-index: 50 !important;
 }
 
+.maximize-modal {
+  .q-dialog__inner--minimized {
+    padding: 0px !important;
+  }
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

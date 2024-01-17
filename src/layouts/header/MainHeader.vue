@@ -6,34 +6,28 @@
     >
       <div class="c-container full-height column">
         <div
+          v-if="$q.screen.gt.sm"
           class="row no-wrap justify-between items-center pt-10 gap-xs-6 gap-lg-14"
         >
           <div
             class="no-wrap row cursor-pointer items-center gap-xs-6 gap-lg-14 items-center"
             @click="$router.push({ name: 'home' })"
           >
-            <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
-              <img
-                v-if="
-                  $company.item?.logo?.thumbnail ||
-                  $company.item?.image?.thumbnail
-                "
-                :height="$q.screen.gt.md ? '48' : '44'"
-                class="border-radius"
-                style="object-fit: contain"
-                :src="
-                  $company.item?.logo?.thumbnail ||
-                  $company.item?.image?.thumbnail
-                "
-              />
-            </template>
             <img
-              v-else
+              v-if="
+                $q.screen.gt.sm &&
+                ($company.item?.logo?.thumbnail ||
+                  $company.item?.image?.thumbnail)
+              "
               :height="$q.screen.gt.md ? '48' : '44'"
               class="border-radius"
               style="object-fit: contain"
-              src="~assets/tochkaLogo.png"
+              :src="
+                $company.item?.logo?.thumbnail ||
+                $company.item?.image?.thumbnail
+              "
             />
+
             <CButton
               v-if="
                 $companyGroup.item &&
@@ -47,7 +41,7 @@
               text-color="on-secondary-button-color"
             >
               <div
-                v-if="$q.screen.gt.md"
+                v-if="$q.screen.gt.lg"
                 class="row no-wrap gap-3 items-center"
               >
                 <div class="body">Изменить заведение</div>
@@ -82,6 +76,7 @@
             </CButton>
           </div>
         </div>
+        <MainHeaderMobile v-else />
       </div>
     </q-header>
     <ArrangementHeader v-else />
@@ -99,6 +94,7 @@ import { ref } from 'vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { computed, onMounted } from 'vue'
 import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
+import MainHeaderMobile from './MainHeaderMobile.vue'
 
 const router = useRouter()
 

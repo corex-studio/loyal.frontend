@@ -10,7 +10,7 @@
         @update:model-value="toggleClickHandler"
         :model-value="currentChoice === 2"
         dense
-        size="50px"
+        size="52px"
         color="primary"
       ></q-toggle>
     </div>

@@ -56,12 +56,7 @@ const blocks = computed(() => {
         })
       },
     },
-    // {
-    //   label: 'Вакансии',
-    //   click: () => {
-    //     return
-    //   },
-    // },
+
     {
       label: 'Разработчик',
       click: () => {

@@ -1,30 +1,29 @@
 <template>
   <template v-if="ready">
     <PrepareUiSettings />
-    <q-layout
-      view="lHh Lpr lFf"
-      class="bg-background-color pb-sm-0"
-      :class="
+    <q-layout view="lHh Lpr lFf" class="bg-background-color">
+      <!-- :class="
         $store.tableMode
           ? $cart.item?.cartItems.length
             ? 'pb-xs-40'
             : 'pb-xs-27'
           : 'pb-xs-27'
-      "
-    >
+      " -->
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
-      <TopHeader v-if="!isArrangementPage" />
+      <TopHeader v-if="!isArrangementPage && $q.screen.gt.sm" />
 
-      <template v-if="!$q.screen.xs">
-        <MainHeader />
-      </template>
+      <MainHeader />
 
-      <div v-if="$q.screen.lt.sm" class="full-width">
-        <MobileMenu
+      <div v-if="$q.screen.lt.md" class="full-width">
+        <!-- <MobileMenu
           v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
-        />
+        /> -->
         <QRMobileMenu
-          v-else-if="$pad.item?.isEnabled && $route.name !== 'qrMenuItemPage'"
+          v-if="
+            $store.tableMode &&
+            $pad.item?.isEnabled &&
+            $route.name !== 'qrMenuItemPage'
+          "
         />
       </div>
       <q-page-container
@@ -42,8 +41,10 @@
             ),
         }"
       >
+        <!-- {{ $q.screen.name }} -->
         <router-view />
         <CartDrawer />
+        <CartOverlayButton />
       </q-page-container>
 
       <q-footer v-if="!$store.tableMode">
@@ -90,7 +91,7 @@ import { newsRepo } from 'src/models/news/newsRepo'
 import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
-import MobileMenu from './MobileMenu.vue'
+// import MobileMenu from './MobileMenu.vue'
 import CartDrawer from './drawer/cart/CartDrawer.vue'
 import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
@@ -108,6 +109,7 @@ import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
 import NewsModal from 'src/pages/news/NewsModal.vue'
 import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
 import { NewsType } from 'src/models/news/news'
+import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 

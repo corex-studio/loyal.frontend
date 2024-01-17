@@ -5,7 +5,7 @@
       class="body bg-selector-color border-radius row full-width no-wrap pa-1"
     >
       <div
-        v-for="tab in tabs"
+        v-for="tab in previewTabs"
         :key="tab.type"
         @click="selectTabHandler(tab)"
         :style="
@@ -18,17 +18,50 @@
             ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
             : 'text-on-selector-color',
         ]"
-        class="cursor-pointer border-radius col row justify-center rounded-10 body relative-position py-4"
+        class="cursor-pointer border-radius col row items-center justify-center rounded-10 body relative-position py-4"
       >
         {{ tab.label }}
         <slot name="append"></slot>
+      </div>
+      <div
+        v-if="additionalTabs.length"
+        class="py-4 col pl-5 row justify-center row gap-3 cursor-pointer border-radius items-center"
+        :class="[
+          isAdditionalTabSelected
+            ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
+            : 'text-on-selector-color',
+        ]"
+      >
+        <div>Еще</div>
+
+        <CIcon
+          :color="
+            isAdditionalTabSelected
+              ? 'on-selector-active-color'
+              : 'on-selector-color'
+          "
+          size="20px"
+          name="fa-regular fa-angle-down"
+        />
+        <q-menu fit auto-close class="pa-6 column gap-5">
+          <div
+            v-for="tab in additionalTabs"
+            :key="tab.type"
+            @click="selectTabHandler(tab)"
+            class="row full-width body cursor-pointer"
+          >
+            {{ tab.label }}
+          </div>
+        </q-menu>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import { TabRaw } from './ServiceSettingsModal.vue'
+import CIcon from '../template/helpers/CIcon.vue'
+import { useQuasar } from 'quasar'
 
 const props = withDefaults(
   defineProps<{
@@ -46,6 +79,23 @@ const emit = defineEmits<{
 }>()
 
 const selectedTab = ref<TabRaw | null>(null)
+
+const q = useQuasar()
+
+const previewTabs = computed(() => {
+  return q.screen.gt.md ? props.tabs.slice(0, 3) : props.tabs.slice(0, 2)
+})
+
+const additionalTabs = computed(() => {
+  return q.screen.gt.md ? props.tabs.slice(3) : props.tabs.slice(2)
+})
+
+const isAdditionalTabSelected = computed(() => {
+  if (!selectedTab.value) return
+  return additionalTabs.value
+    .map((v) => v.type)
+    .includes(selectedTab.value.type)
+})
 
 const selectTabHandler = (v: TabRaw) => {
   selectedTab.value = v

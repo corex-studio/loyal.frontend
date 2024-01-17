@@ -1,12 +1,12 @@
 <template>
   <template v-if="cartItem">
-    <div class="row full-width items-start no-wrap justify-between gap-5">
-      <div class="row gap-6 items-center no-wrap">
+    <div class="row full-width items-end no-wrap justify-between gap-5">
+      <div class="row gap-6 no-wrap">
         <q-img
           class="rounded-5"
           :src="cartItem.size.image?.thumbnail || $store.images.empty"
-          :width="$q.screen.xs ? '60px' : '90px'"
-          :height="$q.screen.xs ? '60px' : '90px'"
+          :width="$q.screen.lt.md ? '64px' : '90px'"
+          :height="$q.screen.lt.md ? '64px' : '90px'"
           fit="cover"
         >
           <template v-slot:error>
@@ -14,8 +14,8 @@
               <q-img
                 class="user-image"
                 fit="cover"
-                :width="$q.screen.xs ? '60px' : '90px'"
-                :height="$q.screen.xs ? '60px' : '90px'"
+                :width="$q.screen.lt.md ? '64px' : '90px'"
+                :height="$q.screen.lt.md ? '64px' : '90px'"
                 :src="$store.images.empty"
               ></q-img>
             </span>
@@ -23,7 +23,10 @@
         </q-img>
         <div class="column col gap-sm-4 gap-xs-2 subtitle-text">
           <div>{{ cartItem.size.name }}</div>
-          <div class="caption-text text-on-background-color">
+          <div
+            v-if="cartItem.cartItemModifiers.length"
+            class="secondary-text text-on-background-color"
+          >
             {{
               cartItem.cartItemModifiers
                 .map(

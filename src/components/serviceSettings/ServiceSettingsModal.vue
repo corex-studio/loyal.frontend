@@ -4,6 +4,7 @@
     @update:model-value="$emit('update:modelValue', $event)"
     :width="modalWidth"
     no-padding
+    :maximize="$q.screen.lt.lg"
   >
     <!-- :height="
       currentTab === CartType.YANDEX || currentTab === CartType.DELIVERY_CLUB
@@ -14,7 +15,16 @@
       <div
         class="row full-width no-wrap bg-background-color text-on-background-color border-radius"
       >
-        <div class="col-grow column py-15 px-15">
+        <div
+          :class="
+            currentTab?.type === CartType.PICKUP ||
+            (currentTab?.type === CartType.BOOKING &&
+              bookingMode === 'bookingList')
+              ? 'col-6'
+              : 'col-12'
+          "
+          class="column py-15 px-15"
+        >
           <ServiceModalHeader :tab="currentTab">
             <template v-slot:action>
               <CIcon

@@ -2,26 +2,26 @@
   <!-- :class="{ 'box-shadow': $store.verticalScroll > 56 }" -->
 
   <div
-    v-if="!$q.screen.xs || $store.tableMode"
     class="row full-width bg-background-color sticky-block"
     ref="bottomHeader"
   >
     <div class="row no-wrap items-center c-container">
       <div
         :class="[
-          $q.screen.xs ? ' full-width' : 'justify-between full-width',
+          $q.screen.lt.md ? 'full-width' : 'justify-between full-width px-5',
           isSticky
+            ? ''
+            : $q.screen.lt.md
             ? ''
             : 'bg-secondary-button-color text-on-secondary-button-color',
         ]"
         :style="$cart.item || categories?.length ? 'height: 62px' : ''"
-        class="row border-radius no-wrap body items-center gap-10 content-row px-5 relative-position"
+        class="row border-radius no-wrap body items-center gap-10 content-row relative-position"
       >
         <div
-          v-if="!$q.screen.xs || $store.tableMode"
           class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
           :style="
-            $q.screen.xs
+            $q.screen.lt.md
               ? 'overflow-x: scroll; scroll-behavior: smooth;'
               : undefined
           "
@@ -51,7 +51,7 @@
           </div>
           <div
             v-if="categories && !$salesPoint.menuLoading"
-            class="gap-lg-14 gap-xs-8 no-wrap items-center no-scrollbar row"
+            class="gap-lg-14 gap-xs-6 gap-md-8 no-wrap items-center no-scrollbar row"
             :style="
               replacementAvailable
                 ? `padding-left: ${$q.screen.gt.md ? '255' : '0'}px`
@@ -68,9 +68,11 @@
             </div>
             <div
               v-if="
-                replacementAvailable
+                $q.screen.gt.sm &&
+                (replacementAvailable
                   ? categories.length > 6
-                  : categories.length > 8 && !$q.screen.xs
+                  : categories.length > ($q.screen.lt.lg ? 6 : 8) &&
+                    !$q.screen.xs)
               "
               class="row body no-wrap gap-4 cursor-pointer"
               :class="[
@@ -117,7 +119,7 @@
         </div>
 
         <CButton
-          v-if="authentication.user && $cart.item"
+          v-if="authentication.user && $cart.item && $q.screen.gt.sm"
           height="48px"
           class="body"
           color="primary"
@@ -193,7 +195,7 @@ watch(
       return
     }
 
-    if (menuGroupRepo.scrollingToGroup || !q.screen.xs) return
+    if (menuGroupRepo.scrollingToGroup || !q.screen.lt.md) return
     const foundElementIndex = categories.value?.findIndex((el) => el.id === v)
     if (foundElementIndex !== undefined && foundElementIndex > -1) {
       groupButtons.value[foundElementIndex].scrollIntoView()
@@ -211,24 +213,16 @@ watch(
 )
 
 const previewCategories = computed(() => {
-  return q.screen.xs
+  return q.screen.lt.md
     ? categories.value
     : categories.value?.filter((_, ind) =>
-        q.screen.sm
-          ? ind < 5
-          : q.screen.md
-          ? ind < 5
-          : ind < (replacementAvailable.value ? 6 : 8)
+        q.screen.md ? ind < 5 : ind < (replacementAvailable.value ? 6 : 8)
       )
 })
 
 const additionalCategories = computed(() => {
   return categories.value?.filter((_, ind) =>
-    q.screen.sm || q.screen.md
-      ? ind >= 5
-      : replacementAvailable.value
-      ? ind >= 6
-      : ind >= 8
+    q.screen.md ? ind >= 5 : replacementAvailable.value ? ind >= 6 : ind >= 8
   )
 })
 
