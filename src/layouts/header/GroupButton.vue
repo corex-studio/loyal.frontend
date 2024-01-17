@@ -5,16 +5,26 @@
     :style="[
       isHomePage
         ? item.id === $menuGroup.elementsInViewport[0]
-          ? 'transition: background-color 0.4s ease-out'
+          ? `transition: background-color 0.4s ease-out; ${
+              $q.screen.lt.md
+                ? `background-color:${lightColor(
+                    $uiSettings.item?.primaryColor.color || '000',
+                    '27'
+                  )} !important`
+                : ''
+            }`
           : 'transition: background-color 0.3s ease-out'
         : '',
-      `max-width: ${additional ? '200' : $q.screen.gt.md ? '160' : '87'}px;`,
+      `max-width: ${
+        additional ? '200' : $q.screen.gt.md ? '160px' : 'unset'
+      }; height: ${$q.screen.lt.md ? '40' : '45'}px`,
     ]"
-    style="height: 45px"
     :class="[
-      additional ? 'px-3' : 'px-lg-6 px-xs-4',
+      additional ? 'px-3' : 'px-lg-6 px-xs-6',
       item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional
-        ? 'bg-secondary-button-color text-on-secondary-button-color'
+        ? $q.screen.lt.md
+          ? 'text-primary'
+          : 'bg-secondary-button-color text-on-secondary-button-color'
         : isSticky
         ? 'text-on-background-color'
         : 'text-on-secondary-button-color',
@@ -31,7 +41,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIntersectionObserver } from '@vueuse/core'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import { store } from 'src/models/store'
+import { lightColor, store } from 'src/models/store'
 
 const groupElement = ref()
 

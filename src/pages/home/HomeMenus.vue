@@ -4,10 +4,10 @@
       <div
         v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
         :key="index"
-        class="full-width pt-sm-20 pt-xs-12"
+        class="full-width pt-md-20 pt-xs-10"
         :id="el.id"
       >
-        <div class="huge3 bold mb-12">
+        <div class="huge3 bold mb-lg-20 mb-md-15 mb-xs-8">
           {{ el.name }}
         </div>
         <div v-if="el.items.length" class="row full-width">
@@ -16,9 +16,9 @@
             :lg="4"
             :xl="4"
             :md="3"
-            :sm="3"
+            :sm="2"
             :xs="2"
-            :gap="$q.screen.gt.md ? '30px' : '16px'"
+            :gap="$q.screen.gt.md ? '30px' : $q.screen.md ? '16px' : '8px'"
           >
             <template v-slot:item="{ item }">
               <MenuItemCard :item="(item as MenuItem)" />

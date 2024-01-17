@@ -18,7 +18,7 @@
               width="24px"
               :model-value="el.id === currentAddress?.id"
             />
-            <div class="column gap-4 subtitle-text">
+            <div class="column gap-4 body">
               <div class="bold ellipsis-2-lines">
                 {{ el.name }}
               </div>

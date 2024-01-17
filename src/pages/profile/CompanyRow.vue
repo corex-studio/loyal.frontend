@@ -1,11 +1,12 @@
 <template>
   <div
-    class="row items-center border-radius cursor-pointer pa-4 gap-6"
+    class="row items-center no-wrap border-radius cursor-pointer pa-4 gap-6"
     :style="selected ? `outline: 2px ${getBorderColor} solid` : ''"
   >
     <q-img
       height="54px"
       width="54px"
+      style="min-height: 54px; min-width: 54px"
       class="border-radius"
       fit="cover"
       :src="item.image?.thumbnail || $store.images.empty"
@@ -21,10 +22,10 @@
           ></q-img>
         </span> </template
     ></q-img>
-    <div class="column col-grow">
-      <div class="header3 bold">{{ item.name }}</div>
-      <!-- <div class="body">{{ item }}</div> -->
-    </div>
+    <!-- <div class="column col-grow"> -->
+    <div class="header3 bold">{{ item.name }}</div>
+    <!-- <div class="body">{{ item }}</div> -->
+    <!-- </div> -->
   </div>
 </template>
 <script lang="ts" setup>

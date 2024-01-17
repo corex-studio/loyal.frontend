@@ -108,7 +108,7 @@ const props = defineProps<{
   modelValue: boolean
 }>()
 
-const delay = ref(10)
+const delay = ref(30)
 let interval: NodeJS.Timeout | null = null
 
 const route = useRoute()
@@ -219,7 +219,7 @@ const sendSms = async () => {
     Notify.create({
       message: 'Сообщение с кодом успешно отправлено',
     })
-    delay.value = 10
+    delay.value = 30
     if (interval) {
       clearInterval(interval)
     }

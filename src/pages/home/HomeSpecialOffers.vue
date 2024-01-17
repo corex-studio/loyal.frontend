@@ -24,16 +24,17 @@
     <SwiperContainer
       class="swiper"
       :initial-slide="1"
+      no-navigation
       :slides-per-view="slidesPerView"
       :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
     >
       <template v-slot:item="{ item }">
         <div
           :style="`overflow: hidden; height: ${
-            $q.screen.gt.md ? '360px' : '300px'
+            $q.screen.gt.md ? '360px' : $q.screen.lt.md ? '150px' : '300px'
           } `"
           @click="goToItem(item)"
-          class="cursor-pointer body border-radius column no-wrap bg-backing-color mb-20 mt-15"
+          class="cursor-pointer body border-radius column no-wrap bg-backing-color mb-md-20 mb-xs-12 mt-15"
         >
           <q-img
             :src="item.image?.image || $store.images.empty"
@@ -154,8 +155,8 @@ const tabs = computed(() => {
 const slidesPerView = computed(() => {
   return store.offersTab === 'Акции'
     ? 1
-    : q.screen.xs
-    ? 1
+    : q.screen.lt.md
+    ? 1.2
     : q.screen.lt.lg
     ? 2
     : 3

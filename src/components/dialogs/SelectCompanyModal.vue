@@ -3,9 +3,9 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="735px"
+    :maximize="$q.screen.lt.lg"
   >
     <div class="huge3 bold mb-12">Выберите заведение</div>
-    <!-- {{ selectedCompany }} -->
     <div v-if="$companyGroup.item" class="row full-width">
       <GridContainer
         :items="$companyGroup.item?.companies"
@@ -31,7 +31,7 @@
       :disabled="!selectedCompany"
       height="48px"
       width="100%"
-      style="max-width: 288px"
+      :style="$q.screen.gt.md ? 'max-width: 288px' : ''"
       class="body mt-15"
     />
   </CDialog>

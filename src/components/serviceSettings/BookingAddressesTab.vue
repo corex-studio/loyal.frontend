@@ -18,7 +18,7 @@
               width="24px"
               :model-value="el.id === currentPoint?.id"
             />
-            <div class="subtitle-text">{{ el.address }}</div>
+            <div class="body ellipsis-2-lines">{{ el.address }}</div>
           </div>
           <!-- <CIcon
           class="cursor-pointer"

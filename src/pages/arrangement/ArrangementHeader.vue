@@ -9,30 +9,21 @@
             name: 'home',
           })
         "
-        class="cursor-pointer"
+        class="cursor-pointer col-lg-7 col-xs-5"
       >
-        <template v-if="$companyGroup.item?.externalId !== 'corex_demo'">
-          <img
-            v-if="
-              $company.item?.image?.thumbnail || $company.item?.logo?.thumbnail
-            "
-            height="48"
-            class="border-radius"
-            style="object-fit: contain"
-            :src="
-              $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
-            "
-          />
-        </template>
         <img
-          v-else
-          height="48"
+          v-if="
+            $company.item?.image?.thumbnail || $company.item?.logo?.thumbnail
+          "
+          :height="$q.screen.lt.lg ? '44' : '48'"
           class="border-radius"
           style="object-fit: contain"
-          src="~assets/tochkaLogo.png"
+          :src="
+            $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
+          "
         />
       </div>
-      <ArrangementStepper class="col-5" />
+      <ArrangementStepper class="col-lg-5 col-xs-7" />
     </div>
     <q-separator color="divider-color" />
   </div>
