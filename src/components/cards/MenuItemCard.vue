@@ -46,9 +46,6 @@
         <div class="row full-width no-wrap gap-6">
           <div class="header3 bold ellipsis-2-lines">
             {{ item.name }}
-            {{ item.name }}
-            {{ item.name }}
-            {{ item.name }}
           </div>
         </div>
 
