@@ -11,7 +11,7 @@
   <div
     :style="`background: url(${getImage()}); width: ${
       width || '22px'
-    }; height: ${height || '22px'}`"
+    }; min-width: ${width || '22px'};  height: ${height || '22px'}`"
   ></div>
 </template>
 <script lang="ts" setup>
