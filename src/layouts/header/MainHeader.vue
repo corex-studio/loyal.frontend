@@ -82,7 +82,6 @@
                 color="background-color"
               >
                 <div class="row gap-4 no-wrap body text-on-background-color">
-                  <!-- <CIcon size="18px" name="fa-light fa-building" /> -->
                   <CustomIcon width="22px" height="22px" name="city.svg" />
 
                   <div class="mt-1 bold">Калининград</div>

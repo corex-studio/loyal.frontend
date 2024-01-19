@@ -18,11 +18,17 @@
       underline: underline,
       'underline-fixed': underlined,
       'text-button': textButton,
-      outlined: outlined,
     }"
     :style="`width:${_width}; height:${_height};font-size:${textSize}; padding:${
       textButton || noPadding ? '0px;' : '4px 16px;'
-    } ${absolute ? 'position: absolute !important;' : ''}`"
+    } ${absolute ? 'position: absolute !important;' : ''}; ${
+      outlined
+        ? `border: 1px solid ${lightColor(
+            $uiSettings.item?.backgroundColor.on_color || '000',
+            '30'
+          )}`
+        : ''
+    }`"
   >
     <slot name="append"></slot>
     <div
@@ -77,6 +83,7 @@
 </template>
 
 <script lang="ts" setup>
+import { lightColor } from 'src/models/store'
 import { computed, ref } from 'vue'
 
 const emit = defineEmits(['click'])
@@ -265,9 +272,9 @@ const clickHandler = () => {
   filter: contrast(70%);
 }
 
-.c-btn.outlined {
-  border: 1px var(--secondary-button-color) solid;
-}
+// .c-btn.outlined {
+//   border: 1px var(--secondary-button-color) solid;
+// }
 
 .c-btn.underline:after {
   content: '';
