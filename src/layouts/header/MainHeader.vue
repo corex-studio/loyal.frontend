@@ -278,7 +278,7 @@ const isArrangementPage = computed(() => {
 })
 
 const previewBalance = computed(() => {
-  if (!authentication.user) return
+  if (!authentication.user || !authentication.user.wallets.length) return
   return authentication.user.wallets[0].balance > 999
     ? '999+'
     : authentication.user.wallets[0].balance
