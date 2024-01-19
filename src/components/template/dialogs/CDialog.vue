@@ -37,14 +37,14 @@
           overflow-x: hidden
           `"
       >
-        <div style="position: absolute; top: -20px; right: -25px; z-index: 1">
+        <div style="position: absolute; top: -24px; right: -29px; z-index: 1">
           <CIcon
             v-if="!noClose"
             class="cursor-pointer"
             hoverColor="primary"
             color="white"
             name="fa-light fa-xmark"
-            size="26px"
+            size="32px"
             v-close-popup
           />
         </div>

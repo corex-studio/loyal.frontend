@@ -42,7 +42,7 @@
     <CIcon
       v-if="$q.screen.gt.md"
       size="22px"
-      color="secondary-button-color"
+      color="on-background-color"
       name="fa-regular fa-angle-right"
     />
   </div>

@@ -17,7 +17,7 @@
       label="Оформить в Яндекс еда"
       class="subtitle-text mt-18"
       height="48px"
-      width="288px"
+      width="100%"
     />
   </div>
 </template>
