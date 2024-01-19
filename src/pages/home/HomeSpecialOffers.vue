@@ -38,8 +38,9 @@
         >
           <q-img
             :src="item.image?.thumbnail || $store.images.empty"
-            :style="`border-radius:${getBorderRadius}`"
+            :style="`border-radius:${getBorderRadius}; object-position: left 50%;`"
             height="100%"
+            position="left"
             fit="cover"
           >
             <template v-slot:error>

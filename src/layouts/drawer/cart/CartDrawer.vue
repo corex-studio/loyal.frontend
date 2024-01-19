@@ -70,8 +70,9 @@
           class="mb-15"
           color="divider-color"
         />
+
         <div class="column full-width px-md-15 px-xs-8">
-          <CartDeliveryInfo class="mb-md-15 mb-xs-10" />
+          <CartDeliveryInfo v-if="$cart.item" class="mb-md-15 mb-xs-10" />
           <template v-if="$cart.item?.cartItems.length">
             <div class="column">
               <template

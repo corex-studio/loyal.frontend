@@ -12,35 +12,32 @@
       style="overflow: hidden"
     >
       <div v-if="!$cart.item" class="row no-wrap gap-4 items-center">
-        <!-- <q-icon size="22px" :name="'fa-regular fa-location-dot'" /> -->
         <CustomIcon width="28px" height="28px" name="bagOnTime.svg" />
-
         <div style="line-height: 15px" class="bold">
           Выберите способ получения
         </div>
       </div>
       <template v-else>
         <div class="row no-wrap gap-md-4 gap-xs-2 items-center">
-          <!-- <q-icon
-            color="on-background-color"
-            size="22px"
-            :name="'fa-regular fa-box'"
-          /> -->
           <CustomIcon width="28px" height="28px" name="bagOnTime.svg" />
 
           <div class="bold text-primary">
             {{ $cart.item.currentDeliveryType }}
           </div>
         </div>
-
-        <div v-if="$q.screen.gt.md" class="row no-wrap gap-4 items-center">
+        <div
+          v-if="$q.screen.gt.md"
+          class="row no-wrap gap-4 items-center"
+          style="overflow: inherit !important"
+        >
           <div class="rounded-separator"></div>
-          <div class="ellipsis-2-lines">{{ $cart.item.currentAddress }}</div>
+          <div class="kek">
+            {{ $cart.item.currentAddress }}
+          </div>
         </div>
       </template>
     </div>
     <CIcon
-      v-if="$q.screen.gt.md"
       size="22px"
       color="on-background-color"
       name="fa-regular fa-angle-right"
@@ -83,5 +80,11 @@ const openDialog = () => {
   max-width: 4px;
   background-color: var(--secondary-button-color);
   border-radius: 50%;
+}
+
+.kek {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

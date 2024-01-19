@@ -57,7 +57,13 @@
               </div>
               <CIcon v-else name="fa-regular fa-angle-down" size="20px" />
             </CButton>
-            <div ref="multipleCompaniesSpot" class="ml-25 full-width"></div>
+            <div
+              v-if="
+                $companyGroup.item && $companyGroup.item.companies.length < 2
+              "
+              ref="multipleCompaniesSpot"
+              class="ml-25 full-width"
+            ></div>
           </div>
           <teleport
             :disabled="
@@ -126,6 +132,7 @@
               <div class="bold">Корзина</div>
             </div>
             <div
+              @click="inDevelopmentModal = true"
               class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
             >
               <q-badge
@@ -168,7 +175,7 @@
             Войти
           </div>
         </div>
-        <q-separator />
+        <q-separator color="divider-color" style="z-index: 10" />
         <BottomHeader />
       </div>
       <!-- <div class="c-container full-height column">
@@ -247,6 +254,7 @@
       </div> -->
     </q-header>
     <ArrangementHeader v-else />
+    <BonusesInDevModal v-model="inDevelopmentModal" />
   </div>
 </template>
 
@@ -264,6 +272,7 @@ import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
 // import MainHeaderMobile from './MainHeaderMobile.vue'
 import BottomHeader from './BottomHeader.vue'
 import CustomIcon from 'src/components/template/helpers/CustomIcon.vue'
+import BonusesInDevModal from 'src/components/template/dialogs/BonusesInDevModal.vue'
 
 // const router = useRouter()
 
@@ -272,6 +281,8 @@ const route = useRoute()
 const header = ref<HTMLDivElement>()
 
 const multipleCompaniesSpot = ref<HTMLDivElement>()
+
+const inDevelopmentModal = ref(false)
 
 const isArrangementPage = computed(() => {
   return route.path.includes('arrangement')
