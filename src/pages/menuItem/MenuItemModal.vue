@@ -60,8 +60,18 @@
         }`"
       >
         <div class="column full-width">
-          <div class="huge3 bold mb-6">{{ $menuItem.item?.name }}</div>
-          <div v-if="$menuItem.item?.description?.length" class="body mb-6">
+          <div class="huge3 bold mb-2">{{ $menuItem.item?.name }}</div>
+          <div
+            v-if="currentSize?.characteristics.weight"
+            style="opacity: 0.5"
+            class="body"
+          >
+            {{ currentSize?.characteristics.weight }}г
+          </div>
+          <div
+            v-if="$menuItem.item?.description?.length"
+            class="body mb-8 mt-2"
+          >
             {{ $menuItem.item?.description }}
           </div>
           <MenuItemCharacteristics v-if="currentSize" :size="currentSize" />

@@ -33,7 +33,8 @@
             hover-color="primary"
             size="22px"
             name="fa-light fa-pen"
-            color="secondary-button-color"
+            color="on-background-color"
+            style="opacity: 0.2"
           />
         </div>
       </template>

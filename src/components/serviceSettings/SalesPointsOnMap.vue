@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 650px; height: inherit">
+  <div style="width: 700px; height: inherit">
     <div
       id="map"
       style="width: 100%; height: 100%; z-index: 9"

@@ -20,8 +20,15 @@
             currentTab?.type === CartType.PICKUP ||
             (currentTab?.type === CartType.BOOKING &&
               bookingMode === 'bookingList')
-              ? 'col-6'
+              ? ''
               : 'col-12'
+          "
+          :style="
+            currentTab?.type === CartType.PICKUP ||
+            (currentTab?.type === CartType.BOOKING &&
+              bookingMode === 'bookingList')
+              ? 'width: 47%'
+              : ''
           "
           class="column py-15 px-15"
         >
@@ -84,7 +91,7 @@
                 <CButton
                   @click="confirmSelectedAddress()"
                   height="48px"
-                  width="300px"
+                  width="100%"
                   :loading="$cart.setParamsLoading || $store.catalogLoading"
                   class="subtitle-text col-6"
                   label="Заберу здесь"
@@ -102,7 +109,7 @@
                     @click="bookingMode = 'bookingInfo'"
                     height="48px"
                     :disabled="!selectedSalesPoint"
-                    width="300px"
+                    width="100%"
                     class="subtitle-text col-6"
                     label="Выбрать"
                   />

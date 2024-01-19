@@ -28,7 +28,7 @@
     </div>
     <div class="row gap-6 body">
       <div class="column gap-2">
-        <div style="opacity: 0.8">Калорийность</div>
+        <div style="opacity: 0.5">Калорийность</div>
         <div>
           {{
             currentNutrition?.calories
@@ -38,7 +38,7 @@
         </div>
       </div>
       <div class="column gap-2">
-        <div style="opacity: 0.8">Белки</div>
+        <div style="opacity: 0.5">Белки</div>
         <div>
           {{
             currentNutrition?.proteins ? currentNutrition?.proteins + ' г' : '-'
@@ -46,13 +46,13 @@
         </div>
       </div>
       <div class="column gap-2">
-        <div style="opacity: 0.8">Жиры</div>
+        <div style="opacity: 0.5">Жиры</div>
         <div>
           {{ currentNutrition?.fats ? currentNutrition?.fats + ' г' : '-' }}
         </div>
       </div>
       <div class="column gap-2">
-        <div style="opacity: 0.8">Углеводы</div>
+        <div style="opacity: 0.5">Углеводы</div>
         <div>
           {{
             currentNutrition?.carbohydrates

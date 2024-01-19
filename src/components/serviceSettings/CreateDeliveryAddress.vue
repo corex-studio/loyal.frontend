@@ -2,8 +2,8 @@
   <div style="height: 600px" class="row no-wrap full-width">
     <div
       v-if="newAddress"
-      style="overflow-y: auto"
-      class="column no-wrap justify-between col-6 text-on-background-color pa-15"
+      style="overflow-y: auto; width: 47%"
+      class="column no-wrap justify-between text-on-background-color pa-15"
     >
       <div class="column full-width gap-8">
         <div class="row items-center no-wrap gap-5 mb-12">
@@ -84,13 +84,13 @@
           :disabled="!isSaveAvailable"
           height="48px"
           class="body"
-          width="280px"
+          width="100%"
           label="Сохранить"
         />
       </div>
     </div>
 
-    <div class="col-6" style="height: 600px">
+    <div style="height: 600px; width: 600px">
       <div
         id="map"
         style="width: 100%; height: 600px; z-index: 9"
