@@ -3,20 +3,27 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="735px"
-    :maximize="$q.screen.lt.lg"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
   >
-    <div class="huge3 bold mb-12">Выберите заведение</div>
+    <div class="huge3 bold mb-md-12 mb-xs-10">Выберите заведение</div>
     <div v-if="$companyGroup.item" class="row full-width">
       <GridContainer
         :items="$companyGroup.item?.companies"
         :lg="2"
         :xl="2"
         :md="2"
-        :sm="2"
-        :xs="2"
-        gap="20px"
+        :sm="1"
+        :xs="1"
+        :gap="$q.screen.lt.md ? '12px' : '20px'"
       >
         <template v-slot:item="{ item }">
+          <q-separator
+            v-if="
+              $q.screen.lt.md && item.id !== $companyGroup.item.companies[0].id
+            "
+            class="mb-6"
+          />
           <CompanyRow
             @click="selectCompany(item)"
             :item="item"
@@ -27,9 +34,9 @@
     </div>
     <CButton
       @click="$emit('select', selectedCompany)"
-      label="Выбрать заведение"
+      :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"
       :disabled="!selectedCompany"
-      height="48px"
+      :height="$q.screen.lt.md ? '40px' : '48px'"
       width="100%"
       :style="$q.screen.gt.md ? 'max-width: 288px' : ''"
       class="body mt-15"

@@ -1,10 +1,178 @@
 <template>
-  <div ref="header">
+  <div ref="header" style="position: sticky; top: 0; z-index: 10">
     <q-header
       v-if="!isArrangementPage"
       class="text-on-background-color transition bg-background-color"
+      :class="{ 'box-shadow': $store.verticalScroll > 45 }"
     >
-      <div class="c-container full-height column">
+      <div class="column c-container">
+        <div
+          style="height: 72px"
+          class="row justify-between gap-4 items-center no-wrap full-width"
+        >
+          <div
+            :style="
+              $companyGroup.item && $companyGroup.item.companies.length > 1
+                ? ''
+                : 'width: inherit'
+            "
+            class="row gap-4 no-wrap items-center"
+          >
+            <img
+              v-if="
+                $q.screen.gt.sm &&
+                ($company.item?.logo?.thumbnail ||
+                  $company.item?.image?.thumbnail)
+              "
+              @click="
+                $router.push({
+                  name: 'home',
+                })
+              "
+              :height="$q.screen.gt.md ? '52' : '48'"
+              class="border-radius cursor-pointer"
+              style="object-fit: contain"
+              :src="
+                $company.item?.logo?.thumbnail ||
+                $company.item?.image?.thumbnail
+              "
+            />
+            <CButton
+              v-if="
+                $companyGroup.item &&
+                $companyGroup.item.companies.length > 1 &&
+                !$store.tableMode
+              "
+              @click="$store.selectCompanyModal = true"
+              text-button
+              text-color="on-secondary-button-color"
+            >
+              <div
+                v-if="$q.screen.gt.lg"
+                class="row no-wrap gap-2 items-center"
+              >
+                <CIcon size="21px" name="fa-regular fa-angle-left" />
+
+                <div class="body bold mt-1">Все заведения</div>
+              </div>
+              <CIcon v-else name="fa-regular fa-angle-down" size="20px" />
+            </CButton>
+            <div ref="multipleCompaniesSpot" class="ml-25 full-width"></div>
+          </div>
+          <teleport
+            :disabled="
+              !multipleCompaniesSpot ||
+              ($companyGroup.item && $companyGroup.item.companies.length > 1) ||
+              false
+            "
+            :to="multipleCompaniesSpot"
+          >
+            <div
+              style="width: inherit"
+              :class="{
+                'justify-center':
+                  $companyGroup.item && $companyGroup.item.companies.length > 1,
+              }"
+              class="row no-wrap items-center gap-10"
+            >
+              <CButton
+                style="border-radius: 100px !important"
+                height="44px"
+                outlined
+                color="background-color"
+              >
+                <div class="row gap-4 no-wrap body text-on-background-color">
+                  <!-- <CIcon size="18px" name="fa-light fa-building" /> -->
+                  <CustomIcon width="22px" height="22px" name="city.svg" />
+
+                  <div class="mt-1 bold">Калининград</div>
+                </div>
+              </CButton>
+              <ServiceSettingsBlock />
+            </div>
+          </teleport>
+
+          <div
+            v-if="authentication.user"
+            class="row no-wrap items-center gap-8 mt-2 secondary-text"
+            style="height: 48px"
+          >
+            <div
+              @click="
+                $cart.loading
+                  ? void 0
+                  : ($store.cartDrawer = !$store.cartDrawer)
+              "
+              class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
+            >
+              <template v-if="!$cart.loading">
+                <q-badge
+                  v-if="$cart.item?.cartItems.length"
+                  color="primary"
+                  class="cart-badge row justify-center"
+                  >{{ $cart.item?.cartItems.length }}</q-badge
+                >
+                <!-- <CIcon
+                  size="23px"
+                  color="on-background-color"
+                  name="fa-regular fa-basket-shopping"
+                /> -->
+                <CustomIcon
+                  width="28px"
+                  height="28px"
+                  name="shoppingBasket.svg"
+                />
+              </template>
+              <q-spinner v-else color="on-background-color" size="23px" />
+              <div class="bold">Корзина</div>
+            </div>
+            <div
+              class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
+            >
+              <q-badge
+                v-if="previewBalance"
+                color="primary"
+                class="balance-badge row justify-center"
+                >{{ previewBalance }}</q-badge
+              >
+              <!-- <CIcon
+                color="on-background-color"
+                size="23px"
+                name="fa-regular fa-gift"
+              /> -->
+              <CustomIcon width="28px" height="28px" name="gift.svg" />
+              <div class="bold">Бонусы</div>
+            </div>
+            <div
+              @click="
+                $router.push({
+                  name: 'profilePage',
+                })
+              "
+              class="column full-height justify-between cursor-pointer items-center no-wrap"
+            >
+              <!-- <CIcon
+                color="on-background-color"
+                size="23px"
+                name="fa-regular fa-face-smile"
+              /> -->
+              <CustomIcon width="28px" height="28px" name="squareFace.svg" />
+
+              <div class="bold">Профиль</div>
+            </div>
+          </div>
+          <div
+            v-else
+            @click="$store.authModal = true"
+            class="auth-button cursor-pointer text-primary body bold row items-center px-15"
+          >
+            Войти
+          </div>
+        </div>
+        <q-separator />
+        <BottomHeader />
+      </div>
+      <!-- <div class="c-container full-height column">
         <div
           v-if="$q.screen.gt.sm"
           class="row no-wrap justify-between items-center pt-10 gap-xs-6 gap-lg-14"
@@ -77,7 +245,7 @@
           </div>
         </div>
         <MainHeaderMobile v-else />
-      </div>
+      </div> -->
     </q-header>
     <ArrangementHeader v-else />
   </div>
@@ -88,31 +256,42 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue'
 import { store } from 'src/models/store'
-import { useRoute, useRouter } from 'vue-router'
-import ServiceSettingsSkeleton from 'src/components/serviceSettings/ServiceSettingsSkeleton.vue'
+import { useRoute } from 'vue-router'
+// import ServiceSettingsSkeleton from 'src/components/serviceSettings/ServiceSettingsSkeleton.vue'
 import { ref } from 'vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { computed, onMounted } from 'vue'
 import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
-import MainHeaderMobile from './MainHeaderMobile.vue'
+// import MainHeaderMobile from './MainHeaderMobile.vue'
+import BottomHeader from './BottomHeader.vue'
+import CustomIcon from 'src/components/template/helpers/CustomIcon.vue'
 
-const router = useRouter()
+// const router = useRouter()
 
 const route = useRoute()
 
 const header = ref<HTMLDivElement>()
 
+const multipleCompaniesSpot = ref<HTMLDivElement>()
+
 const isArrangementPage = computed(() => {
   return route.path.includes('arrangement')
 })
 
-const profileButtonClickHandler = () => {
-  if (authentication.user) {
-    void router.push({ name: 'profilePage' })
-  } else {
-    store.authModal = true
-  }
-}
+const previewBalance = computed(() => {
+  if (!authentication.user) return
+  return authentication.user.wallets[0].balance > 999
+    ? '999+'
+    : authentication.user.wallets[0].balance
+})
+
+// const profileButtonClickHandler = () => {
+//   if (authentication.user) {
+//     void router.push({ name: 'profilePage' })
+//   } else {
+//     store.authModal = true
+//   }
+// }
 
 // const selectCompany = async (v: Company) => {
 //   selectCompanyModal.value = false
@@ -134,5 +313,32 @@ onMounted(() => {
 <style scoped lang="scss">
 .q-header {
   position: relative;
+}
+.auth-button {
+  border: 2px solid var(--primary);
+  border-radius: 100px;
+  height: 44px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -10px;
+  right: 5px;
+  border-radius: 100px;
+  font-size: 12px;
+  height: 18px;
+  min-width: 18px;
+  z-index: 1;
+}
+
+.balance-badge {
+  position: absolute;
+  top: -10px;
+  left: 31px;
+  border-radius: 100px;
+  font-size: 12px;
+  height: 18px;
+  min-width: 18px;
+  z-index: 1;
 }
 </style>

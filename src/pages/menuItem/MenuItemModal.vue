@@ -8,17 +8,34 @@
     :no-overflow="$q.screen.gt.md"
     dialog-class="no-scrollbar"
     no-padding
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
   >
     <div
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
-      class="no-wrap full-width"
+      class="no-wrap full-width relative-position"
     >
+      <div
+        v-if="$q.screen.lt.md"
+        @click="$store.menuItemModal = false"
+        class="close-button row box-shadow items-center justify-center cursor-pointer"
+      >
+        <CIcon
+          color="on-background-color"
+          hover-color="primary"
+          class="mt-1"
+          name="fa-regular fa-angle-down"
+          size="24px"
+        />
+      </div>
       <q-img
         :ratio="1"
         class="col"
         :style="`border-radius: ${getImageBorderRadius}; max-width: ${
-          $q.screen.gt.md ? '600px' : '500px'
-        }; min-width: ${$q.screen.gt.md ? '600px' : '500px'}`"
+          $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
+        }; min-width: ${
+          $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
+        }; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}`"
         fit="cover"
         :height="$q.screen.lt.lg ? '450px' : '100%'"
         style="width: 100%"
@@ -37,7 +54,10 @@
       ></q-img>
       <div
         style="overflow-x: auto; width: -webkit-fill-available"
-        class="column no-wrap justify-between full-height px-15 pt-15 pb-xs-50 pb-lg-0 relative-position"
+        class="column no-wrap justify-between full-height px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0 relative-position bg-background-color"
+        :style="`border-radius: ${
+          $q.screen.lt.md ? getImageBorderRadius : 'unset'
+        }`"
       >
         <div class="column full-width">
           <div class="huge3 bold mb-6">{{ $menuItem.item?.name }}</div>
@@ -57,10 +77,7 @@
             />
           </div>
           <div class="mt-10">
-            <div
-              v-for="(el, index) in currentSize?.modifierGroups"
-              :key="index"
-            >
+            <div v-for="(el, index) in currentModifierGroups" :key="index">
               <q-separator v-if="index" color="divider-color" class="my-8" />
               <ModifiersSelector :group="el" />
             </div>
@@ -72,12 +89,14 @@
             :class="[
               { 'mt-lg-15': currentSize?.modifierGroups?.length },
               {
-                'px-15 full-width': $q.screen.lt.lg,
+                'px-md-15 px-xs-8 full-width': $q.screen.lt.lg,
               },
             ]"
             :style="`position: ${
               $q.screen.lt.lg ? 'absolute' : 'sticky'
-            }; bottom: 0px; left: 0px; border-radius:${getBottomBlockBorderRadius}`"
+            }; bottom: 0px; left: 0px; border-radius:${
+              $q.screen.lt.md ? 'unset' : getBottomBlockBorderRadius
+            }`"
           >
             <ChangeAmount
               :height="$q.screen.lt.lg ? '40px' : '48px'"
@@ -100,7 +119,11 @@
               :label="
                 $q.screen.lt.lg
                   ? 'Добавить'
-                  : `Добавить за ${beautifyNumber(currentPrice, true)} ₽`
+                  : `Добавить ${
+                      currentPrice
+                        ? `за ${beautifyNumber(currentPrice, true)} ₽`
+                        : ''
+                    }`
               "
             />
           </div>
@@ -134,6 +157,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { beautifyNumber } from 'src/models/store'
+import CIcon from 'src/components/template/helpers/CIcon.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -167,6 +191,13 @@ const getBottomBlockBorderRadius = computed(() => {
   return q.screen.lt.lg
     ? `0 0 ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px`
     : 'unset'
+})
+
+const currentModifierGroups = computed(() => {
+  return currentSize.value?.modifierGroups?.filter(
+    (v) =>
+      !v.isHidden && !!v.items.length && v.items.some((el) => !el.is_hidden)
+  )
 })
 
 const currentPrice = computed(() => {
@@ -235,6 +266,7 @@ const addToCart = async () => {
           : salesPointRepo.item.company?.id || ''
       )
     store.serviceSettingsModal = true
+    store.storedMenuItem = menuItemRepo.item?.id || null
     emit('update:modelValue', false)
   } else if (cartRepo.item && currentSize.value) {
     try {
@@ -282,5 +314,17 @@ const addToCart = async () => {
 <style lang="scss" scoped>
 .bottom-block {
   border-top: 1px var(--divider-color) solid;
+}
+
+.close-button {
+  position: sticky;
+  margin-bottom: -40px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  border-radius: 50%;
+  background-color: var(--background-color);
+  left: 10px;
 }
 </style>

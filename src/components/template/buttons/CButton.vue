@@ -266,7 +266,7 @@ const clickHandler = () => {
 }
 
 .c-btn.outlined {
-  border: 2px var(--primary) solid;
+  border: 1px var(--secondary-button-color) solid;
 }
 
 .c-btn.underline:after {

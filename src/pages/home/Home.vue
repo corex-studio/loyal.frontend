@@ -8,8 +8,9 @@
         v-if="authentication.user && showBonuses"
         class="mb-20 mb-xs-10 mb-sm-15 c-container"
       /> -->
+      <!-- <BottomHeader /> -->
+
       <HomeSpecialOffers />
-      <BottomHeader />
       <HomeMenus class="c-container" />
     </div>
   </div>
@@ -23,7 +24,7 @@ import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 // import { authentication } from 'src/models/authentication/authentication'
 // import HomeProfile from './HomeProfile.vue'
 // import HomeQrCard from './HomeQrCard.vue'
-import BottomHeader from 'src/layouts/header/BottomHeader.vue'
+// import BottomHeader from 'src/layouts/header/BottomHeader.vue'
 // import HomeHugeSlider from './HomeHugeSlider.vue'
 
 // const showBonuses = computed(() => {

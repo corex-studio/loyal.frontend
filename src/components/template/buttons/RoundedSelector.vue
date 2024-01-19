@@ -26,7 +26,7 @@
       v-if="modelValue && check"
       color="on-primary"
       name="fa-regular fa-check"
-      size="17px"
+      :size="iconSize || '17px'"
     />
   </div>
 </template>
@@ -39,6 +39,7 @@ defineProps<{
   height?: string
   width?: string
   check?: boolean
+  iconSize?: string
 }>()
 </script>
 

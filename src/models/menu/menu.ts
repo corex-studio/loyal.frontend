@@ -133,6 +133,7 @@ export class Menu implements BaseModel {
   updated_at?: string
   groups?: MenuGroup[]
   description?: string
+  gro: any
 
   constructor(raw: MenuRaw) {
     this.id = raw.uuid || ''
@@ -145,6 +146,10 @@ export class Menu implements BaseModel {
     this.updated_at = raw.updated_at || ''
     this.groups = raw.groups ? raw.groups.map((v) => new MenuGroup(v)) : []
     this.description = raw.description
+  }
+
+  get allMenuItems() {
+    return this.groups?.flatMap((v) => v.items.map((el) => el))
   }
 
   toJson(): Record<string, any> {

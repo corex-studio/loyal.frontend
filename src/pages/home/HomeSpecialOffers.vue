@@ -1,5 +1,5 @@
 <template>
-  <div id="offers">
+  <div id="offers" class="mb-5">
     <div class="row c-container gap-6 items-center text-on-background-color">
       <div
         v-for="(el, index) in tabs"
@@ -31,13 +31,13 @@
       <template v-slot:item="{ item }">
         <div
           :style="`overflow: hidden; height: ${
-            $q.screen.gt.md ? '360px' : $q.screen.lt.md ? '150px' : '300px'
+            $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'
           } `"
           @click="goToItem(item)"
-          class="cursor-pointer body border-radius column no-wrap bg-backing-color mb-md-20 mb-xs-12 mt-15"
+          class="cursor-pointer body border-radius column no-wrap bg-backing-color mt-15"
         >
           <q-img
-            :src="item.image?.image || $store.images.empty"
+            :src="item.image?.thumbnail || $store.images.empty"
             :style="`border-radius:${getBorderRadius}`"
             height="100%"
             fit="cover"
@@ -153,13 +153,11 @@ const tabs = computed(() => {
 })
 
 const slidesPerView = computed(() => {
-  return store.offersTab === 'Акции'
-    ? 1
-    : q.screen.lt.md
-    ? 1.2
-    : q.screen.lt.lg
-    ? 2
-    : 3
+  return q.screen.lt.md ? 1.2 : q.screen.lt.lg ? 2 : 4
+
+  // store.offersTab === 'Акции'
+  //   ? 1
+  //   :
 })
 
 const getBorderRadius = computed(() => {
@@ -192,13 +190,13 @@ const goToItem = (item: News) => {
 body.screen--xl {
   .swiper :deep(.swiper.swiper-initialized.swiper-horizontal) {
     @media (max-width: 1560px) {
-      padding-left: 160px;
-      padding-right: 160px;
+      padding-left: calc((100vw - (1170px)) / 2);
+      padding-right: calc((100vw - (1170px)) / 2);
     }
 
     @media (min-width: 1560px) {
-      padding-left: calc((100vw - (1420px)) / 2);
-      padding-right: calc((100vw - (1420px)) / 2);
+      padding-left: calc((100vw - (1290px)) / 2);
+      padding-right: calc((100vw - (1290px)) / 2);
     }
   }
 }
@@ -207,8 +205,8 @@ body.screen--lg {
   .swiper :deep(.swiper.swiper-initialized.swiper-horizontal) {
     width: 100%;
     margin: 0 auto;
-    padding-left: calc((100vw - (1344px)) / 2);
-    padding-right: calc((100vw - (1344px)) / 2);
+    padding-left: 40px;
+    padding-right: 40px;
   }
 }
 

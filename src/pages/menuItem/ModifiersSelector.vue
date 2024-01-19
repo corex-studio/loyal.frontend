@@ -40,7 +40,7 @@
       <div class="column">
         <template v-if="modifierViewType === 'radio'">
           <ModifierRadioSelectorRow
-            v-for="(el, index) in group.items"
+            v-for="(el, index) in currentModifiers"
             :key="index"
             @select="radioClickHandler($event)"
             :item="el"
@@ -49,7 +49,7 @@
 
         <template v-if="modifierViewType === 'check'">
           <ModifierCheckSelectorRow
-            v-for="(el, index) in group.items"
+            v-for="(el, index) in currentModifiers"
             :key="index"
             @select="checkboxClickHandler($event)"
             :item="el"
@@ -57,7 +57,7 @@
         </template>
         <template v-if="modifierViewType === 'row'">
           <ModifierSelectorRow
-            v-for="(el, index) in group.items"
+            v-for="(el, index) in currentModifiers"
             :key="index"
             :item="el"
             :group="group"
@@ -66,7 +66,7 @@
 
         <div v-if="modifierViewType === 'card'" class="row full-width">
           <GridContainer
-            :items="group.items"
+            :items="currentModifiers"
             :lg="3"
             :xl="3"
             :md="3"
@@ -100,6 +100,10 @@ import { sum } from 'lodash'
 const props = defineProps<{
   group: MenuModifierGroup
 }>()
+
+const currentModifiers = computed(() => {
+  return props.group.items.filter((v) => !v.is_hidden)
+})
 
 const modifierViewType = computed(() => {
   if (props.group.restrictions) {

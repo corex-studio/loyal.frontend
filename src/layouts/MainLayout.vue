@@ -10,7 +10,7 @@
           : 'pb-xs-27'
       " -->
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
-      <TopHeader v-if="!isArrangementPage && $q.screen.gt.sm" />
+      <!-- <TopHeader v-if="!isArrangementPage && $q.screen.gt.sm" /> -->
 
       <MainHeader />
 
@@ -41,7 +41,9 @@
             ),
         }"
       >
-        <!-- {{ $q.screen.name }} -->
+        <!-- {{ $cart.loading }} -->
+        <!-- {{ $q.screen.width }}
+        {{ $q.screen.name }} -->
         <router-view />
         <CartDrawer />
         <CartOverlayButton />
@@ -104,7 +106,6 @@ import { waiterCallRepo } from 'src/models/customer/waiterCall/waiterCallRepo'
 import { orderRepo } from 'src/models/order/orderRepo'
 import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
 import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
-import TopHeader from './header/TopHeader.vue'
 import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
 import NewsModal from 'src/pages/news/NewsModal.vue'
 import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
@@ -162,14 +163,26 @@ const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : '0'
 })
 
-const isArrangementPage = computed(() => {
-  return route.path.includes('arrangement')
-})
+// const isArrangementPage = computed(() => {
+//   return route.path.includes('arrangement')
+// })
 
 const setBodyScrollClass = () => {
   if (q.platform.is.win) {
     const body = document.getElementsByTagName('body')
     if (body.length) body[0].classList.add('custom-scroll-bar')
+  }
+}
+
+const getCurrentCompanyGroup = async () => {
+  try {
+    await companyGroupRepo.current()
+  } catch {
+    authentication.tokens = new authentication.tokensClass(null, null)
+    authentication.setApiHeader()
+    localStorage.setItem('access', '')
+    localStorage.setItem('refresh', '')
+    window.location.reload()
   }
 }
 
@@ -182,13 +195,11 @@ onMounted(async () => {
   }
   salesPointRepo.menuLoading = true
   setBodyScrollClass()
-
   if (!store.tableMode) {
     store.getCompanyGroup(String(route.params.companyGroup))
-    await companyGroupRepo.current()
+    await getCurrentCompanyGroup()
     await uiSettingsRepo.fetchSettings()
     await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
-
     try {
       await authentication.validateTokens()
       await authentication.me()
@@ -196,8 +207,8 @@ onMounted(async () => {
     } catch {
       authentication.loading = false
       ready.value = true
+      cartRepo.loading = false
     }
-
     if (!newsRepo.news.length) {
       void newsRepo
         .list({
@@ -220,12 +231,6 @@ onMounted(async () => {
           newsRepo.promotions = res.items
         })
     }
-    // if (!promotionsRepo.items.length)
-    //   void promotionsRepo.list({
-    //     company_group: companyGroupRepo.item?.id,
-    //     active: true,
-    //   })
-
     void store.loadCatalog(
       cartRepo.item
         ? cartRepo.item?.salesPoint
@@ -241,7 +246,6 @@ onMounted(async () => {
       ['Company-Group']: route.params.companyGroup,
     })
     void uiSettingsRepo.fetchSettings()
-
     await padRepo.retrieve(String(route.params.padId))
     if (!padRepo.item?.companyGroup) return
     await companyGroupRepo.retrieve(padRepo.item.companyGroup)

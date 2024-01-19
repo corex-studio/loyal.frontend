@@ -1,72 +1,28 @@
 <template>
-  <!-- :class="{ 'box-shadow': $store.verticalScroll > 56 }" -->
-
-  <div
-    class="row full-width bg-background-color sticky-block"
-    ref="bottomHeader"
-  >
-    <div class="row no-wrap items-center c-container">
+  <div class="row full-width bg-background-color" ref="bottomHeader">
+    <div class="row no-wrap items-center full-width">
       <div
-        :class="[
-          $q.screen.lt.md ? 'full-width' : 'justify-between full-width px-5',
-          isSticky
-            ? ''
-            : $q.screen.lt.md
-            ? ''
-            : 'bg-secondary-button-color text-on-secondary-button-color',
-        ]"
-        :style="$cart.item || categories?.length ? 'height: 62px' : ''"
-        class="row border-radius no-wrap body items-center gap-10 content-row relative-position"
+        :style="$cart.item || categories?.length ? 'height: 54px' : ''"
+        class="row full-width border-radius no-wrap body items-center gap-10 content-row relative-position"
       >
         <div
           class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
-          :style="
-            $q.screen.lt.md
-              ? 'overflow-x: scroll; scroll-behavior: smooth;'
-              : undefined
-          "
+          style="overflow-x: scroll; scroll-behavior: smooth"
+          ref="scrollArea"
         >
-          <div
-            v-if="replacementAvailable && $q.screen.gt.md"
-            @click="$store.selectCompanyModal = true"
-            class="row no-wrap gap-4 items-center cursor-pointer body"
-            style="position: absolute"
-          >
-            <q-img
-              height="40px"
-              width="40px"
-              class="border-radius"
-              :src="$company.item?.image?.thumbnail"
-            >
-              <template v-slot:error>
-                <span>
-                  <q-img
-                    class="border-radius"
-                    style="height: 40px; width: 40px"
-                    :src="$store.images.empty"
-                  ></q-img>
-                </span> </template
-            ></q-img>
-            <div class="text-primary">Изменить заведение</div>
-          </div>
           <div
             v-if="categories && !$salesPoint.menuLoading"
             class="gap-lg-14 gap-xs-6 gap-md-8 no-wrap items-center no-scrollbar row"
-            :style="
-              replacementAvailable
-                ? `padding-left: ${$q.screen.gt.md ? '255' : '0'}px`
-                : ''
-            "
             style="transition: 0.25s all ease"
           >
             <div
-              v-for="(el, index) in previewCategories"
+              v-for="(el, index) in categories"
               :key="index"
               ref="groupButtons"
             >
-              <GroupButton :is-sticky="isSticky" :key="key" :item="el" />
+              <GroupButton :key="key" :item="el" />
             </div>
-            <div
+            <!-- <div
               v-if="
                 $q.screen.gt.sm &&
                 (replacementAvailable
@@ -74,19 +30,12 @@
                   : categories.length > ($q.screen.lt.lg ? 6 : 8) &&
                     !$q.screen.xs)
               "
-              class="row body no-wrap gap-4 cursor-pointer"
-              :class="[
-                isSticky
-                  ? 'text-on-background-color'
-                  : 'text-on-secondary-button-color',
-                { 'mt-1': $q.screen.lt.lg },
-              ]"
+              class="row body no-wrap gap-4 cursor-pointer text-on-background-color"
+              :class="[{ 'mt-1': $q.screen.lt.lg }]"
             >
               Еще
               <CIcon
-                :color="
-                  isSticky ? 'on-background-color' : 'on-secondary-button-color'
-                "
+                color="on-background-color"
                 name="fa-regular fa-angle-down"
                 style="transition: transform 0.25s ease"
                 :style="moreCategoriesMenu ? 'transform:rotate(180deg)' : ''"
@@ -104,7 +53,7 @@
                   <GroupButton additional :key="key" :item="el" />
                 </div>
               </q-menu>
-            </div>
+            </div> -->
           </div>
           <template v-if="$salesPoint.menuLoading">
             <q-skeleton
@@ -118,7 +67,7 @@
           </template>
         </div>
 
-        <CButton
+        <!-- <CButton
           v-if="authentication.user && $cart.item && $q.screen.gt.sm"
           height="48px"
           class="body"
@@ -139,53 +88,47 @@
               {{ beautifyNumber($cart.item.discountedTotalSum, true) }} ₽
             </div>
           </div></CButton
-        >
+        > -->
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import CIcon from 'src/components/template/helpers/CIcon.vue'
-import CButton from 'src/components/template/buttons/CButton.vue'
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watch, computed } from 'vue'
 import GroupButton from './GroupButton.vue'
 import { useRoute } from 'vue-router'
-import { authentication } from 'src/models/authentication/authentication'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import { useQuasar } from 'quasar'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { beautifyNumber, store } from 'src/models/store'
+// import { useQuasar } from 'quasar'
+// import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+// import { store } from 'src/models/store'
 
 const bottomHeader = ref<Element | null>(null)
 
 const key = ref(0)
 
-const moreCategoriesMenu = ref(false)
-
-const q = useQuasar()
+// const q = useQuasar()
 
 const route = useRoute()
 
-const groupButtons = ref<Element[]>([])
+const groupButtons = ref<HTMLDivElement[]>([])
 
 const initWatcher = ref(false)
 
-const isSticky = ref(false)
+const scrollArea = ref<HTMLDivElement>()
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
 })
 
-const replacementAvailable = computed(() => {
-  return (
-    isSticky.value &&
-    companyGroupRepo.item &&
-    companyGroupRepo.item.companies.length > 1 &&
-    !store.tableMode
-  )
-})
+// const replacementAvailable = computed(() => {
+//   return (
+//     companyGroupRepo.item &&
+//     companyGroupRepo.item.companies.length > 1 &&
+//     !store.tableMode
+//   )
+// })
 
 watch(
   () => menuGroupRepo.elementsInViewport[0],
@@ -194,12 +137,24 @@ watch(
       initWatcher.value = true
       return
     }
-
-    if (menuGroupRepo.scrollingToGroup || !q.screen.lt.md) return
     const foundElementIndex = categories.value?.findIndex((el) => el.id === v)
-    if (foundElementIndex !== undefined && foundElementIndex > -1) {
-      groupButtons.value[foundElementIndex].scrollIntoView()
+
+    if (
+      foundElementIndex !== undefined &&
+      foundElementIndex > -1 &&
+      scrollArea.value
+    ) {
+      scrollArea.value.scrollLeft =
+        groupButtons.value[foundElementIndex].offsetLeft
     }
+
+    // if (menuGroupRepo.scrollingToGroup) return
+    // const foundElementIndex = categories.value?.findIndex((el) => el.id === v)
+    // if (foundElementIndex !== undefined && foundElementIndex > -1) {
+    //   groupButtons.value[foundElementIndex].scrollIntoView({
+    //     block: 'start',
+    //   })
+    // }
   }
 )
 
@@ -212,45 +167,39 @@ watch(
   }
 )
 
-const previewCategories = computed(() => {
-  return q.screen.lt.md
-    ? categories.value
-    : categories.value?.filter((_, ind) =>
-        q.screen.md ? ind < 5 : ind < (replacementAvailable.value ? 6 : 8)
-      )
-})
+// const previewCategories = computed(() => {
+//   return q.screen.lt.md
+//     ? categories.value
+//     : categories.value?.filter((_, ind) =>
+//         q.screen.md ? ind < 5 : ind < (replacementAvailable.value ? 6 : 8)
+//       )
+// })
 
-const additionalCategories = computed(() => {
-  return categories.value?.filter((_, ind) =>
-    q.screen.md ? ind >= 5 : replacementAvailable.value ? ind >= 6 : ind >= 8
-  )
-})
-
-onMounted(() => {
-  const observer = new IntersectionObserver(
-    ([e]) => {
-      if (e.boundingClientRect.top < 200) {
-        e.target.classList.toggle('isSticky', e.intersectionRatio < 1)
-        isSticky.value = e.target.classList.contains('isSticky')
-      }
-    },
-    { rootMargin: '-1px 0px 0px 0px', threshold: [1] }
-  )
-  if (bottomHeader.value) observer.observe(bottomHeader.value)
-})
+// onMounted(() => {
+// const observer = new IntersectionObserver(
+//   ([e]) => {
+// if (e.boundingClientRect.top < 200) {
+//   e.target.classList.toggle('isSticky', e.intersectionRatio < 1)
+//   isSticky.value = e.target.classList.contains('isSticky')
+// }
+//   },
+//   { rootMargin: '-1px 0px 0px 0px', threshold: [1] }
+// )
+// if (bottomHeader.value) observer.observe(bottomHeader.value)
+// })
 </script>
 
 <style lang="scss" scoped>
-.content-row {
-  transition: background-color 0.3s ease;
-}
-.sticky-block {
-  position: sticky;
-  top: 0;
-  z-index: 1;
-  transition: 0.3s ease;
-}
-.sticky-block.isSticky {
-  box-shadow: var(--box-shadow);
-}
+// .content-row {
+//   transition: background-color 0.3s ease;
+// }
+// .sticky-block {
+//   position: sticky;
+//   top: 0;
+//   z-index: 2;
+//   transition: 0.3s ease;
+// }
+// .sticky-block.isSticky {
+//   box-shadow: var(--box-shadow);
+// }
 </style>
