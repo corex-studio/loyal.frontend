@@ -24,13 +24,13 @@ export class Store {
   selectCompanyModal = false
   verticalScroll = 0
   offersTab = 'Акции'
-  externalID = 'HooDoo'
   menuItemModal = false
   newsModal = false
   images = {
     empty: 'https://mtraktor.ru/images/no-image.png',
   }
   catalogLoading = false
+  storedMenuItem: string | null = null
 
   getCompanyGroup(externalId: string) {
     // LocalStorage.getItem('Company-Group')

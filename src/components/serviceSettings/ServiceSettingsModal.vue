@@ -172,6 +172,8 @@ import CIcon from '../template/helpers/CIcon.vue'
 import { AggregatorType } from 'src/models/company/company'
 import DeliveryAggregatorTab from './DeliveryAggregatorTab.vue'
 import YandexAggregatorTab from './YandexAggregatorTab.vue'
+import { menuRepo } from 'src/models/menu/menuRepo'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 
 export type TabRaw = {
   label: string | null
@@ -325,6 +327,17 @@ const selectCurrentAddress = () => {
   }
 }
 
+const openPreviousMenuItem = () => {
+  if (!store.storedMenuItem) return
+  if (
+    menuRepo.item?.allMenuItems?.map((v) => v.id).includes(store.storedMenuItem)
+  ) {
+    void menuItemRepo.retrieve(store.storedMenuItem)
+    store.menuItemModal = true
+    store.storedMenuItem = null
+  }
+}
+
 const confirmSelectedAddress = async () => {
   if (
     selectedDeliveryAddress.value &&
@@ -346,9 +359,8 @@ const confirmSelectedAddress = async () => {
         type: 'delivery',
         delivery_address: selectedDeliveryAddress.value?.id,
       })
-
     await store.loadCatalog(res[0].salesPoint)
-
+    void openPreviousMenuItem()
     emit('update:modelValue', false)
   } else if (
     currentTab.value?.type === CartType.PICKUP &&
@@ -360,9 +372,8 @@ const confirmSelectedAddress = async () => {
         type: 'pickup',
       })
     await store.loadCatalog(selectedPickupAddress.value)
-
+    void openPreviousMenuItem()
     emit('update:modelValue', false)
-  } else if (currentTab.value?.type === CartType.BOOKING) {
   }
   menuGroupRepo.elementsInViewport = []
 }

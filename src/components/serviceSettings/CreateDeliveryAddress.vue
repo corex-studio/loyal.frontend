@@ -6,7 +6,7 @@
       class="column no-wrap justify-between col-6 text-on-background-color pa-15"
     >
       <div class="column full-width gap-8">
-        <div class="row items-center gap-5 mb-12">
+        <div class="row items-center no-wrap gap-5 mb-12">
           <CIcon
             v-if="backCallback"
             @click="backCallback()"

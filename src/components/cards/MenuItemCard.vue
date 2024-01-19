@@ -90,7 +90,6 @@
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 import { lightColor, store } from 'src/models/store'
 import CButton from '../template/buttons/CButton.vue'
-import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
@@ -100,6 +99,7 @@ import { Notify } from 'quasar'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { ref } from 'vue'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 
 const props = defineProps<{
   item: MenuItem
@@ -127,6 +127,7 @@ const toCartClickHandler = async () => {
           ? salesPointRepo.item.company
           : salesPointRepo.item.company?.id || ''
       )
+    store.storedMenuItem = props.item.id || null
     store.serviceSettingsModal = true
     return
   }
@@ -153,6 +154,7 @@ const addToCart = async () => {
         ? salesPointRepo.item.company
         : salesPointRepo.item.company?.id || ''
     )
+
     store.serviceSettingsModal = true
   } else if (cartRepo.item && props.item.sizes[0]) {
     try {

@@ -72,7 +72,7 @@ export class MenuModifierGroupItem implements BaseModel {
     this.price = raw.price
     this.restrictions = raw.restrictions
     this.nutritions = raw.nutritions
-    this.quantity = 0
+    this.quantity = raw.restrictions.default_amount
     this.image = raw.image ? new Image(raw.image) : null
   }
 

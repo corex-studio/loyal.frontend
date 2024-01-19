@@ -1,6 +1,6 @@
 <template>
   <div class="column full-width">
-    <div class="row justify-center pt-4 pb-6">
+    <div class="row justify-center items-center gap-5 pt-4 pb-6">
       <img
         v-if="$company.item?.logo?.thumbnail || $company.item?.image?.thumbnail"
         @click="$router.push({ name: 'home' })"
@@ -8,6 +8,15 @@
         class="border-radius cursor-pointer"
         style="object-fit: contain"
         :src="$company.item?.logo?.thumbnail || $company.item?.image?.thumbnail"
+      />
+      <CIconButton
+        @click="$store.selectCompanyModal = true"
+        icon="fa-regular fa-angle-down"
+        icon-color="on-secondary-button-color"
+        hover-icon-color="primary"
+        size="38px"
+        color="secondary-button-color"
+        icon-size="22px"
       />
     </div>
     <q-separator color="divider-color" />
@@ -32,7 +41,7 @@
           />
         </q-menu>
       </CIcon>
-      <ServiceSettingsBlock />
+      <ServiceSettingsBlock v-if="authentication.user" />
     </div>
   </div>
 </template>
@@ -44,6 +53,7 @@ import { authentication } from 'src/models/authentication/authentication'
 import { store } from 'src/models/store'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue'
+import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 
 const route = useRoute()
 

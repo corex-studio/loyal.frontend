@@ -5,43 +5,41 @@
     width="650px"
     height="600px"
     no-padding
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
   >
-    <div
-      style="height: 600px; overflow-y: auto"
-      class="column no-wrap border-radius full-width"
+    <q-img
+      :src="
+        $promotion.item
+          ? $promotion.item.image?.image || $store.images.empty
+          : $news.item?.image?.image || $store.images.empty
+      "
+      height="300px"
+      style="min-height: 300px"
+      fit="cover"
     >
-      <q-img
-        :src="
-          $promotion.item
-            ? $promotion.item.image?.thumbnail || $store.images.empty
-            : $news.item?.image?.thumbnail || $store.images.empty
-        "
-        height="300px"
-        style="min-height: 300px"
-        fit="cover"
-      >
-        <template v-slot:error>
-          <q-img
-            :style="`border-radius: ${getBorderRadius}`"
-            :src="$store.images.empty"
-            fit="cover"
-            height="300px"
-          />
-        </template>
-      </q-img>
-      <div
-        class="column no-wrap col-grow justify-between gap-6 full-width bg-background-color text-on-background-color pa-15 relative-position"
-      >
-        <div class="column full-width gap-6 pb-15">
-          <div class="header2 bold">
-            {{ $promotion.item ? $promotion.item.name : $news.item?.title }}
-          </div>
-          <div v-if="$promotion.item" class="body">
-            {{ $promotion.item.description }}
-          </div>
-          <div v-else v-html="$news.item?.fullDescription"></div>
+      <template v-slot:error>
+        <q-img
+          :style="`border-radius: ${getBorderRadius}`"
+          :src="$store.images.empty"
+          fit="cover"
+          height="300px"
+        />
+      </template>
+    </q-img>
+    <div
+      class="column no-wrap col-grow justify-between gap-6 full-width bg-background-color text-on-background-color pa-15 relative-position"
+    >
+      <div class="column full-width gap-6 pb-15">
+        <div class="header2 bold">
+          {{ $promotion.item ? $promotion.item.name : $news.item?.title }}
         </div>
-        <!-- <div>
+        <div v-if="$promotion.item" class="body">
+          {{ $promotion.item.description }}
+        </div>
+        <div v-else v-html="$news.item?.fullDescription"></div>
+      </div>
+      <!-- <div>
           <CButton
             class="body"
             height="48px"
@@ -50,7 +48,6 @@
             @click="$emit('update:modelValue', false)"
           />
         </div> -->
-      </div>
     </div>
   </CDialog>
 </template>

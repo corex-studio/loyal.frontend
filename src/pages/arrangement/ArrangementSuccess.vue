@@ -107,15 +107,19 @@
                 style="opacity: 0.5"
                 class="text-strike"
               >
-                {{ el.price }} ₽
+                {{ beautifyNumber(el.price, true) }} ₽
               </div>
-              <div>{{ el.discounted_total_sum }} ₽</div>
+              <div>
+                {{ beautifyNumber(el.discounted_total_sum || 0, true) }} ₽
+              </div>
             </div>
           </div>
           <q-separator color="divider-color" />
           <div class="row full-width justify-between items-center gap-6 body">
             <div class="bold">Сумма заказа</div>
-            <div class="bold">{{ $order.item.totalSum }} ₽</div>
+            <div class="bold">
+              {{ beautifyNumber($order.item.totalSum, true) }} ₽
+            </div>
           </div>
           <div
             v-if="$order.item.appliedBonuses"
@@ -126,7 +130,9 @@
           </div>
           <div class="row full-width justify-between items-center gap-6 body">
             <div class="bold">К оплате</div>
-            <div class="bold">{{ $order.item.discountedTotalSum }} ₽</div>
+            <div class="bold">
+              {{ beautifyNumber($order.item.discountedTotalSum, true) }} ₽
+            </div>
           </div>
         </div>
       </div>
@@ -155,7 +161,7 @@ import OrderStepper from './OrderStepper.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { CartType } from 'src/models/carts/cart'
-import { lightColor } from 'src/models/store'
+import { beautifyNumber, lightColor } from 'src/models/store'
 
 const route = useRoute()
 

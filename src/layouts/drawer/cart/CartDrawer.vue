@@ -144,7 +144,7 @@
                 backdrop-filter: blur(5px);
                 background-color: rgba(0, 0, 0, 0.1);
               "
-              class="subtitle-text py-4 px-5"
+              class="subtitle-text py-3 px-5"
               >{{
                 $cart.item?.discountedTotalSum
                   ? beautifyNumber($cart.item?.discountedTotalSum, true) + ' ₽'

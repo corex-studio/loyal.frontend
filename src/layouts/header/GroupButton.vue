@@ -1,36 +1,29 @@
 <template>
   <div
-    class="cursor-pointer border-radius row items-center"
+    @mouseover="hover = true"
+    @mouseleave="hover = false"
+    class="cursor-pointer border-radius row items-center body"
     @click="clickHandler(item)"
     :style="[
       isHomePage
-        ? item.id === $menuGroup.elementsInViewport[0]
-          ? `transition: background-color 0.4s ease-out; ${
-              $q.screen.lt.md
-                ? `background-color:${lightColor(
-                    $uiSettings.item?.primaryColor.color || '000',
-                    '27'
-                  )} !important`
-                : ''
-            }`
-          : 'transition: background-color 0.3s ease-out'
+        ? item.id === $menuGroup.elementsInViewport[0] || hover
+          ? `transition: color 0.25s ease-out;`
+          : 'transition: color 0.25s ease-out'
         : '',
-      `max-width: ${
-        additional ? '200' : $q.screen.gt.md ? '160px' : 'unset'
-      }; height: ${$q.screen.lt.md ? '40' : '45'}px`,
     ]"
     :class="[
-      additional ? 'px-3' : 'px-lg-6 px-xs-6',
-      item.id === $menuGroup.elementsInViewport[0] && isHomePage && !additional
-        ? $q.screen.lt.md
-          ? 'text-primary'
-          : 'bg-secondary-button-color text-on-secondary-button-color'
-        : isSticky
-        ? 'text-on-background-color'
+      (item.id === $menuGroup.elementsInViewport[0] &&
+        isHomePage &&
+        !additional) ||
+      hover
+        ? 'text-primary'
         : 'text-on-secondary-button-color',
     ]"
   >
-    <div class="ellipsis" :class="{ 'text-on-background-color': additional }">
+    <div
+      class="ellipsis bold text-uppercase"
+      :class="{ 'text-on-background-color': additional }"
+    >
       {{ item.name }}
     </div>
   </div>
@@ -41,7 +34,7 @@ import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useIntersectionObserver } from '@vueuse/core'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import { lightColor, store } from 'src/models/store'
+import { store } from 'src/models/store'
 
 const groupElement = ref()
 
@@ -49,12 +42,13 @@ const route = useRoute()
 
 const router = useRouter()
 
+const hover = ref(false)
+
 let timeout: NodeJS.Timeout | null = null
 
 const props = defineProps<{
   item: MenuGroup
   additional?: boolean
-  isSticky?: boolean
 }>()
 
 watch(

@@ -88,6 +88,7 @@
         class="subtitle-text mt-15"
         color="primary"
         text-color="on-primary"
+        :loading="loading"
       />
     </div>
   </CDialog>
@@ -114,6 +115,8 @@ let interval: NodeJS.Timeout | null = null
 const route = useRoute()
 
 const codeError = ref(false)
+
+const loading = ref(false)
 
 const data = ref<{
   phone: string
@@ -180,14 +183,17 @@ watch(
 )
 
 const nextStepHandler = async () => {
+  loading.value = true
   if (currentStep.value === 1) {
     const res = await sendSms()
     if (res) {
       currentStep.value = 2
     }
+    loading.value = false
   } else {
     await auth()
     await cartRepo.current()
+    loading.value = false
   }
 }
 
@@ -198,16 +204,11 @@ const auth = async () => {
       code: `${data.value.sms.first}${data.value.sms.second}${data.value.sms.third}${data.value.sms.fourth}`,
     })
     await authentication.me()
-
     currentStep.value = 1
-
     emit('update:modelValue', false)
   } catch {
     codeError.value = true
-    // Notify.create({
-    //   message: 'Ошибка при авторизации',
-    //   color: 'danger',
-    // })
+  } finally {
   }
 }
 
