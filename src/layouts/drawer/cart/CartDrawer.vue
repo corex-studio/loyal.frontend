@@ -126,9 +126,16 @@
         <CartTotalInfo />
         <div
           @click="arrange"
-          class="border-radius bg-button-color row items-center cursor-pointer px-10 subtitle-text text-on-button-color mt-10"
-          :style="`height: ${$q.screen.lt.md ? '40' : '52'}px; width: 100%`"
-          :class="$q.screen.gt.sm ? 'justify-between' : 'justify-center'"
+          class="border-radius row items-center px-10 subtitle-text mt-10"
+          :style="`height: ${$q.screen.lt.md ? '40' : '52'}px; width: 100%; ${
+            isAddToCardDisabled ? 'cursor: not-allowed' : ''
+          }`"
+          :class="[
+            $q.screen.gt.sm ? 'justify-between' : 'justify-center',
+            isAddToCardDisabled
+              ? 'bg-secondary-button-color text-on-secondary-button-color'
+              : 'bg-button-color text-on-button-color cursor-pointer',
+          ]"
         >
           <div
             class="row justify-center full-width"
@@ -137,6 +144,9 @@
             <q-spinner size="28px" />
           </div>
           <template v-else>
+            <CTooltip v-if="isAddToCardDisabled"
+              >Имеются недоступные позиции</CTooltip
+            >
             <div>Оформить заказ</div>
             <q-badge
               v-if="$q.screen.gt.sm"
@@ -146,6 +156,9 @@
                 background-color: rgba(0, 0, 0, 0.1);
               "
               class="subtitle-text py-3 px-5"
+              :class="{
+                'text-on-secondary-button-color': isAddToCardDisabled,
+              }"
               >{{
                 $cart.item?.discountedTotalSum
                   ? beautifyNumber($cart.item?.discountedTotalSum, true) + ' ₽'
@@ -171,7 +184,7 @@ import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { beautifyNumber, lightColor, store } from 'src/models/store'
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { Notify } from 'quasar'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
@@ -183,6 +196,7 @@ import { useRouter } from 'vue-router'
 import CartBonuses from './CartBonuses.vue'
 import { PromoCodeMode } from 'src/models/salesPoint/salesPoint'
 import PromocodeModal from 'src/pages/arrangement/PromocodeModal.vue'
+import CTooltip from 'src/components/helpers/CTooltip.vue'
 
 const selectPaymentType = ref(false)
 
@@ -202,6 +216,14 @@ watch(
     }
   }
 )
+
+const isAddToCardDisabled = computed(() => {
+  return cartRepo.item?.cartItems.some(
+    (v) =>
+      v.availableQuantity !== null &&
+      (v.availableQuantity <= 0 || v.availableQuantity < v.quantity)
+  )
+})
 
 const clearCart = async () => {
   try {
@@ -253,6 +275,7 @@ const applyBonuses = () => {
 }
 
 const arrange = () => {
+  if (isAddToCardDisabled.value) return
   applyBonuses()
   void router.push({
     name: 'arrangementPage',

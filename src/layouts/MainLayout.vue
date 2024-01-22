@@ -42,8 +42,7 @@
         }"
       >
         <!-- {{ $cart.loading }} -->
-        <!-- {{ $q.screen.width }}
-        {{ $q.screen.name }} -->
+        <!-- {{ $q.screen.name }} -->
         <router-view />
         <CartDrawer />
         <CartOverlayButton />

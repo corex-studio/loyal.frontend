@@ -70,7 +70,8 @@ const openDialog = () => {
   border-radius: 100px !important;
   height: 44px;
   max-width: 490px;
-  width: 100% !important;
+  // width: inherit;
+  // width: 100% !important;
 }
 
 .rounded-separator {
@@ -85,6 +86,8 @@ const openDialog = () => {
 .kek {
   white-space: nowrap;
   overflow: hidden;
+  width: fit-content;
   text-overflow: ellipsis;
+  // text-size-adjust: 10%;
 }
 </style>

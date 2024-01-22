@@ -3,10 +3,11 @@
     <div class="row full-width items-center no-wrap justify-between gap-5">
       <div class="row gap-6 no-wrap">
         <q-img
-          class="rounded-5"
+          class="border-radius"
           :src="cartItem.size.image?.thumbnail || $store.images.empty"
           :width="$q.screen.lt.md ? '64px' : '90px'"
           :height="$q.screen.lt.md ? '64px' : '90px'"
+          :class="{ dimmed: cartItem.isDead }"
           fit="cover"
         >
           <template v-slot:error>
@@ -95,6 +96,12 @@ const props = defineProps<{
 
 const emit = defineEmits(['delete'])
 
+// const isItemDead = computed(() => {
+//   return props.item.availableQuantity
+//     ? props.item.availableQuantity <= 0
+//     : false
+// })
+
 onMounted(() => {
   cartItem.value = props.item
 })
@@ -125,3 +132,9 @@ const updateQuantity = async (v: number) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.dimmed {
+  filter: grayscale(90%);
+}
+</style>

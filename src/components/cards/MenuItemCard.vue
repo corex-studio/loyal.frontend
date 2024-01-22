@@ -9,7 +9,7 @@
           )} solid`
         : ''
     "
-    class="border-radius box-shadow column no-wrap cursor-pointer relative-position"
+    class="border-radius box-shadow column no-wrap cursor-pointer relative-position bg-background-color"
     @click="openMenuItem()"
   >
     <q-chip
@@ -19,11 +19,13 @@
       text-color="white"
       >Новинка</q-chip
     >
+
     <q-img
       height="100%"
       :src="item.image?.thumbnail || $store.images.empty"
       fit="cover"
       class="border-radius"
+      :class="{ dimmed: item.isDead }"
       :ratio="1"
     >
       <template v-slot:error>
@@ -40,7 +42,7 @@
     <!-- text-on-product-tile-color -->
     <div
       :style="`height: ${$q.screen.lt.md ? '165' : '208'}px`"
-      class="px-8 py-8 column no-wrap justify-between col-grow text-on-backgroun-color"
+      class="px-8 py-8 column no-wrap justify-between col-grow text-on-background-color"
     >
       <div class="column no-wrap mb-md-14 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
@@ -65,23 +67,28 @@
           {{ item.sizes[0].price }}
           ₽
         </div>
-        <CButton
-          @click.capture.stop="toCartClickHandler()"
-          color="background-color"
-          :style="`background-color: ${lightColor(
-            $uiSettings.item?.primaryColor.color || '000',
-            '27'
-          )} !important`"
-          text-color="primary"
-          height="40px"
-          class="body"
-          :loading="loading"
-          :width="$q.screen.lt.md ? '100%' : undefined"
-        >
-          <div :class="{ bold: $q.screen.lt.md }">
-            {{ $q.screen.lt.md ? `От ${item.sizes[0].price} ₽` : 'В корзину' }}
-          </div>
-        </CButton>
+        <div>
+          <CButton
+            @click.capture.stop="toCartClickHandler()"
+            color="background-color"
+            :style="`background-color: ${lightColor(
+              buttonColor || '000',
+              '27'
+            )} !important; ${item.isDead ? 'cursor: not-allowed' : ''}`"
+            :text-color="item.isDead ? 'on-background-color' : 'primary'"
+            height="40px"
+            class="body"
+            :loading="loading"
+            :width="$q.screen.lt.md ? '100%' : undefined"
+          >
+            <div :class="{ bold: $q.screen.lt.md }">
+              {{
+                $q.screen.lt.md ? `От ${item.sizes[0].price} ₽` : 'В корзину'
+              }}
+            </div>
+          </CButton>
+          <CTooltip v-if="item.isDead">Товар недоступен</CTooltip>
+        </div>
       </div>
     </div>
   </div>
@@ -98,8 +105,10 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { Notify } from 'quasar'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import CTooltip from '../helpers/CTooltip.vue'
 
 const props = defineProps<{
   item: MenuItem
@@ -107,7 +116,14 @@ const props = defineProps<{
 
 const loading = ref(false)
 
+const buttonColor = computed(() => {
+  return props.item.isDead
+    ? uiSettingsRepo.item?.backgroundColor.on_color
+    : uiSettingsRepo.item?.primaryColor.color
+})
+
 const toCartClickHandler = async () => {
+  if (props.item.isDead) return
   if (!authentication.user) {
     store.authModal = true
     return
@@ -140,7 +156,9 @@ const toCartClickHandler = async () => {
 
 const openMenuItem = async () => {
   store.menuItemModal = true
-  await menuItemRepo.retrieve(props.item.id)
+  await menuItemRepo.retrieve(props.item.id, {
+    sales_point: salesPointRepo.item?.id,
+  })
 }
 
 const addToCart = async () => {
@@ -198,5 +216,9 @@ const addToCart = async () => {
   top: 8px;
   right: 8px;
   z-index: 9;
+}
+
+.dimmed {
+  filter: grayscale(90%);
 }
 </style>

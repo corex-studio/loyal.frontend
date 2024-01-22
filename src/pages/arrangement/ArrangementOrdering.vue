@@ -213,7 +213,9 @@
                   height="65px"
                   width="65px"
                   style="min-height: 65px; min-width: 65px"
-                  fit="contain"
+                  fit="cover"
+                  class="border-radius"
+                  :class="{ dimmed: item.isDead }"
                 >
                   <template v-slot:error>
                     <span>
@@ -358,7 +360,14 @@ const menu = ref(false)
 const menuRef = ref<HTMLDivElement | null>(null)
 
 const isArrangeAvailable = computed(() => {
-  return !!selectedPaymentType.value
+  return (
+    !!selectedPaymentType.value &&
+    cartRepo.item?.cartItems.every(
+      (v) =>
+        !v.isDead &&
+        (v.availableQuantity ? v.quantity <= v.availableQuantity : true)
+    )
+  )
 })
 
 const isDelivery = computed(() => {
@@ -602,5 +611,9 @@ onMounted(() => {
 
 .selected-element {
   outline: 2px var(--primary) solid !important;
+}
+
+.dimmed {
+  filter: grayscale(90%);
 }
 </style>

@@ -20,6 +20,7 @@ export type MenuModifierGroupItemRaw = {
   }
   nutritions: NotritionRaw
   image?: ImageRaw | null
+  reserve?: number | null
 }
 
 export type MenuModifierGroupRaw = {
@@ -60,6 +61,7 @@ export class MenuModifierGroupItem implements BaseModel {
   nutritions: NotritionRaw
   quantity: number
   image: Image | null
+  reserve: number | null
 
   constructor(raw: MenuModifierGroupItemRaw) {
     this.id = raw.uuid
@@ -74,6 +76,8 @@ export class MenuModifierGroupItem implements BaseModel {
     this.nutritions = raw.nutritions
     this.quantity = raw.restrictions.default_amount
     this.image = raw.image ? new Image(raw.image) : null
+    this.reserve =
+      raw.reserve === undefined || raw.reserve === null ? null : raw.reserve
   }
 
   toJson(): Record<string, any> {

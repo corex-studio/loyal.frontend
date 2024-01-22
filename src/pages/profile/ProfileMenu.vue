@@ -30,7 +30,7 @@
             :name="el.icon"
           />
         </div> -->
-        <div class="subtitle-text bold">
+        <div class="body bold">
           {{ el.label }}
         </div>
       </div>

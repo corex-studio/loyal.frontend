@@ -15,12 +15,7 @@
       small
       :model-value="item.quantity"
       @update:model-value="item.quantity = $event"
-      :disable-adding="
-        (group.restrictions &&
-          sum(group.items.map((v) => v.quantity)) >=
-            group.restrictions.max_quantity) ||
-        item.quantity >= item.restrictions.max_quantity
-      "
+      :disable-adding="disableAdding"
     />
   </div>
 </template>
@@ -31,9 +26,22 @@ import {
   MenuModifierGroupItem,
   MenuModifierGroup,
 } from 'src/models/menu/menuModifierGroup/menuModifierGroup'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   group: MenuModifierGroup
   item: MenuModifierGroupItem
 }>()
+
+const disableAdding = computed(() => {
+  return (
+    (props.group.restrictions &&
+      sum(props.group.items.map((v) => v.quantity)) >=
+        props.group.restrictions.max_quantity) ||
+    props.item.quantity >= props.item.restrictions.max_quantity ||
+    (props.item.reserve !== null
+      ? props.item.quantity >= props.item.reserve
+      : false)
+  )
+})
 </script>

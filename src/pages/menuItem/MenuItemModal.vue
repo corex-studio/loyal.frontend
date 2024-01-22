@@ -30,6 +30,7 @@
       </div>
       <q-img
         :ratio="1"
+        :class="{ dimmed: $menuItem.item?.isDead }"
         class="col"
         :style="`border-radius: ${getImageBorderRadius}; max-width: ${
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
@@ -119,23 +120,24 @@
             >
               Оформление заказов временно недоступно
             </div>
-
-            <CButton
-              @click="addToCart()"
-              class="col-grow subtitle-text"
-              :height="$q.screen.lt.lg ? '40px' : '48px'"
-              :loading="loading"
-              :disabled="isAddToCardDisabled"
-              :label="
-                $q.screen.lt.lg
-                  ? 'Добавить'
-                  : `Добавить ${
-                      currentPrice
-                        ? `за ${beautifyNumber(currentPrice, true)} ₽`
-                        : ''
-                    }`
-              "
-            />
+            <div class="col-grow">
+              <CButton
+                @click="addToCart()"
+                class="full-width subtitle-text"
+                :height="$q.screen.lt.lg ? '40px' : '48px'"
+                :loading="loading"
+                :disabled="isAddToCardDisabled"
+                :label="`Добавить ${
+                  currentPrice
+                    ? `за ${beautifyNumber(currentPrice, true)} ₽`
+                    : ''
+                }`"
+              >
+              </CButton>
+              <CTooltip v-if="$menuItem.item?.isDead"
+                >Товар недоступен</CTooltip
+              >
+            </div>
           </div>
         </teleport>
       </div>
@@ -168,6 +170,7 @@ import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { beautifyNumber } from 'src/models/store'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
+import CTooltip from 'src/components/helpers/CTooltip.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -244,6 +247,7 @@ watch(
 )
 
 const isAddToCardDisabled = computed(() => {
+  if (menuItemRepo.item?.isDead) return true
   return (
     (store.tableMode && !padRepo.item?.settings.orders_enabled) ||
     currentSize.value?.modifierGroups?.some(
@@ -336,5 +340,9 @@ const addToCart = async () => {
   border-radius: 50%;
   background-color: var(--background-color);
   left: 10px;
+}
+
+.dimmed {
+  filter: grayscale(90%);
 }
 </style>
