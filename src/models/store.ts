@@ -149,10 +149,14 @@ export const getTimesBetween = (start: string, end: string) => {
 }
 
 export const lightColor = (v: string, opacityValue: string) => {
-  if (v.length === 6) {
-    return `#${v}${opacityValue}`
+  let value = v
+  if (v.startsWith('#')) {
+    value = v.substring(1)
+  }
+  if (value.length === 6) {
+    return `#${value}${opacityValue}`
   } else {
-    return `#${v.slice(0, 6)}${opacityValue}`
+    return `#${value.slice(0, 6)}${opacityValue}`
   }
 }
 

@@ -1,5 +1,6 @@
 <template>
-  <div class="full-width">
+  <div style="max-width: 628px" class="column full-width">
+    <div class="huge3 bold mb-15">История заказов</div>
     <div class="row items-center gap-4 body">
       <div
         v-for="(el, index) in orderTypes"
@@ -7,18 +8,15 @@
         @click="changeOrdersFilterType(el.val)"
         :class="
           el.val === currentType
-            ? 'bg-primary text-on-primary border-radius'
-            : 'text-on-background-color'
+            ? 'bg-secondary-button-color text-on-secondary-button-color '
+            : 'text-on-background-color bordered'
         "
-        class="cursor-pointer px-6 py-3"
+        class="cursor-pointer px-10 body py-6 border-radius"
       >
         {{ el.label }}
       </div>
     </div>
-    <div
-      class="column mt-15 gap-10"
-      :style="$q.screen.xs ? '' : 'max-width: 550px'"
-    >
+    <div class="column mt-15 gap-10 full-width">
       <template v-if="$order.items.length">
         <ProfileOrderRow
           v-for="(order, index) in $order.items"
@@ -120,3 +118,9 @@ const orderTypes = ref<
   },
 ])
 </script>
+
+<style lang="scss" scoped>
+.bordered {
+  outline: 1px var(--secondary-button-color) solid;
+}
+</style>

@@ -1,27 +1,20 @@
 <template>
   <div
     v-if="$deliveryAddress.items.length"
-    :style="$q.screen.xs ? '' : 'max-width: 416px;'"
+    :style="$q.screen.xs ? '' : 'max-width: 515px;'"
     style="width: 100%; height: fit-content"
-    class="column px-5 bg-backing-color border-radius text-on-backing-color"
+    class="column gap-15 border-radius bg-background-color text-on-background-color"
   >
-    <template v-for="(el, index) in $deliveryAddress.items" :key="index">
-      <q-separator v-if="index" />
-      <div class="row full-width items-center no-wrap my-7 justify-between">
-        <div class="column gap-6 col-6">
-          <div class="bold body">{{ el.name }}</div>
-          <div class="ellipsis-2-lines secondary-text">{{ el.address }}</div>
-        </div>
-        <CIcon
-          @click="selectAddressToEdit(el)"
-          size="19px"
-          class="cursor-pointer"
-          hover-color="primary"
-          color="on-backing-color"
-          name="fa-light fa-pen-to-square"
-        />
-      </div>
-    </template>
+    <div class="huge3 bold">Мои адреса</div>
+    <div class="column full-width gap-10 no-wrap">
+      <ProfileDeliveryAddressRow
+        v-for="(el, index) in $deliveryAddress.items"
+        :key="index"
+        :item="el"
+        @edit="selectAddressToEdit($event)"
+        @delete="openDeleteAddressModal($event)"
+      />
+    </div>
   </div>
   <div
     v-else
@@ -40,19 +33,18 @@
       </div>
     </div>
   </div>
-  <div class="row full-width mt-15">
-    <div
-      :style="$q.screen.xs ? '' : 'max-width: 416px;'"
-      style="width: 100%"
-      class="row justify-center"
-    >
-      <CButton
-        width="280px"
-        height="50px"
-        label="Добавить адрес"
-        @click="deliveryAddressModal = true"
-      />
-    </div>
+  <div
+    style="width: fit-content"
+    @click="deliveryAddressModal = true"
+    class="row cursor-pointer items-center gap-6 no-wrap mt-10"
+  >
+    <CIconButton
+      color="secondary-button-color"
+      icon-color="on-secondary-button-color"
+      icon-size="20px"
+      icon="fa-regular fa-plus"
+    />
+    <div class="body">Добавить новый адрес</div>
   </div>
   <Pagination
     :loading="$deliveryAddress.loadings.list"
@@ -68,6 +60,11 @@
     @update:model-value="deliveryAddressModalCloseHandler()"
     @create="deliveryAddressCreated()"
   />
+  <AcceptModal
+    @accept="deleteAddress()"
+    v-model="deleteModal"
+    text="Вы точно хотите удалить выбранный адрес?"
+  />
 </template>
 <script lang="ts" setup>
 import Pagination from 'src/components/inputs/Pagination.vue'
@@ -76,12 +73,19 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import { onMounted, ref } from 'vue'
-import CButton from 'src/components/template/buttons/CButton.vue'
 import { authentication } from 'src/models/authentication/authentication'
+import ProfileDeliveryAddressRow from './ProfileDeliveryAddressRow.vue'
+import CIconButton from 'src/components/template/buttons/CIconButton.vue'
+import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
+import { Notify } from 'quasar'
 
 const deliveryAddressModal = ref(false)
 
 const addressToEdit = ref<DeliveryAddress | null>(null)
+
+const addressToDelete = ref<DeliveryAddress | null>(null)
+
+const deleteModal = ref(false)
 
 const deliveryAddressCreated = async () => {
   deliveryAddressModal.value = false
@@ -93,6 +97,11 @@ const deliveryAddressModalCloseHandler = () => {
   deliveryAddressModal.value = false
 }
 
+const openDeleteAddressModal = (v: DeliveryAddress) => {
+  addressToDelete.value = v
+  deleteModal.value = true
+}
+
 const selectAddressToEdit = (v: DeliveryAddress) => {
   addressToEdit.value = v
   deliveryAddressModal.value = true
@@ -100,6 +109,30 @@ const selectAddressToEdit = (v: DeliveryAddress) => {
 
 const setPage = async (page = 1, appendItems = false) => {
   await loadAddresses(page, appendItems)
+}
+
+const deleteAddress = async () => {
+  try {
+    if (!addressToDelete.value)
+      throw new Error('Адрес для удаления не может быть пустым')
+    deleteModal.value = false
+    await deliveryAddressRepo.delete(addressToDelete.value)
+    const foundAddressIndex = deliveryAddressRepo.items.findIndex(
+      (el) => el.id === addressToDelete.value?.id
+    )
+    if (foundAddressIndex > -1) {
+      deliveryAddressRepo.items.splice(foundAddressIndex, 1)
+    }
+    addressToDelete.value = null
+    Notify.create({
+      message: 'Адрес успешно удален',
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при удалении адреса',
+      color: 'danger',
+    })
+  }
 }
 
 const loadAddresses = async (page = 1, appendItems = false) => {
