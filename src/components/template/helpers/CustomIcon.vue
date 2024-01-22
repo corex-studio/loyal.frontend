@@ -8,6 +8,8 @@
     class="icon"
     type="image/svg+xml"
   ></object> -->
+  <!-- <rect width="100" height="100" fill="#f06"></rect> -->
+
   <div
     :style="`background: url(${getImage()}); width: ${
       width || '22px'
@@ -16,15 +18,12 @@
 </template>
 <script lang="ts" setup>
 import { store } from 'src/models/store'
-// import { ref } from 'vue'
 
 const props = defineProps<{
   name: string
   width?: string
   height?: string
 }>()
-
-// const hover = ref(false)
 
 const getImage = () => {
   try {

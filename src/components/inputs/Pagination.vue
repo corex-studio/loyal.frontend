@@ -10,8 +10,9 @@
           :loading="loading"
           v-if="page !== lastPage"
           @click="$emit('appendItems', page + 1)"
-          width="120px"
-          height="35px"
+          width="155px"
+          height="44px"
+          class="body"
           >{{ 'Показать еще' }}</CButton
         >
       </div>
@@ -44,6 +45,7 @@
           color="secondary"
           active-color="primary"
           class="ml-13 pagination"
+          size="16px"
           flat
           :modelValue="page"
           @update:modelValue="$emit('update:modelValue', $event)"
@@ -58,17 +60,18 @@
             v-if="page !== 1"
             @click="$emit('update:modelValue', 1)"
             size="30px"
-            icon="fa-light fa-angles-left"
+            icon="fa-regular fa-angles-left"
             no-padding
-            icon-size="10px"
+            icon-size="16px"
             icon-color="secondary"
           />
           <div class="row" style="gap: 18px">
             <CButton
               v-if="page !== 1"
-              icon="fa-light fa-angle-left"
-              icon-size="10px"
+              icon="fa-regular fa-angle-left"
+              icon-size="16px"
               :label="'Назад'"
+              class="body"
               text-button
               no-padding
               text-color="secondary"
@@ -77,9 +80,10 @@
             />
             <CButton
               v-if="page !== lastPage"
-              icon-right="fa-light fa-angle-right"
-              icon-size="10px"
+              icon-right="fa-regular fa-angle-right"
+              icon-size="18px"
               :label="'Вперед'"
+              class="body"
               text-button
               no-padding
               text-color="secondary"
@@ -93,9 +97,9 @@
             v-if="page !== lastPage"
             @click="$emit('update:modelValue', lastPage)"
             size="30px"
-            icon="fa-light fa-angles-right"
+            icon="fa-regular fa-angles-right"
             no-padding
-            icon-size="10px"
+            icon-size="16px"
             icon-color="secondary"
           />
         </div>
@@ -140,5 +144,9 @@ defineProps({
 <style lang="scss" scoped>
 .pagination :deep(.q-btn--actionable.q-btn--standard:before) {
   box-shadow: none;
+}
+
+.pagination :deep(.q-btn--rectangle) {
+  border-radius: 8px !important;
 }
 </style>

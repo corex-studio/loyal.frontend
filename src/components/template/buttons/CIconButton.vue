@@ -198,18 +198,18 @@ const _iconSize = computed(() => {
 .q-btn .q-icon {
   margin-right: 0 !important;
 }
-.borderedButton:hover {
-  color: $accent4 !important;
-}
+// .borderedButton:hover {
+//   //color: $accent4 !important;
+// }
 
-.borderedButton:hover:before {
-  border: 1px solid $accent4;
-  transition: 0.3s;
-}
+// .borderedButton:hover:before {
+//   // border: 1px solid $accent4;
+//   transition: 0.3s;
+// }
 
-.q-btn--outline:before {
-  border: 1px solid $secondary;
-}
+// .q-btn--outline:before {
+//   // border: 1px solid $secondary;
+// }
 
 body.screen--sm {
   .q-badge {

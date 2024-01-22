@@ -319,21 +319,16 @@ export class Order implements BaseModel {
 
   get orderStatus() {
     const status = this.status
-    if (status === 'created')
-      return { name: 'Создан', color: 'gray', textColor: 'black' }
+    if (status === 'created') return { name: 'Создан', color: '#1ac30b' }
     else if (status === 'validated')
-      return { name: 'Проверен', color: 'gray', textColor: 'green' }
-    else if (status === 'accepted')
-      return { name: 'Принят', color: 'gray', textColor: 'orange' }
-    else if (status === 'declined')
-      return { name: 'Отменен', color: 'red', textColor: 'white' }
-    else if (status === 'closed')
-      return { name: 'Завершен', color: 'green', textColor: 'white' }
-    else if (status === 'on_way')
-      return { name: 'В пути', color: 'orange', textColor: 'white' }
+      return { name: 'Проверен', color: '#929292' }
+    else if (status === 'accepted') return { name: 'Принят', color: '#929292' }
+    else if (status === 'declined') return { name: 'Отменен', color: '#dc1818' }
+    else if (status === 'closed') return { name: 'Завершен', color: '#1ac30b' }
+    else if (status === 'on_way') return { name: 'В пути', color: '#f5841c' }
     else if (status === 'cooking')
-      return { name: 'Готовится', color: 'yellow', textColor: 'black' }
-    else return { name: 'Готово', color: 'primary', textColor: 'white' }
+      return { name: 'Готовится', color: '#e7f51c' }
+    else return { name: 'Готов', color: '#5a39ac' }
   }
 
   get deliveryType() {
