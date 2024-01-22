@@ -98,13 +98,7 @@
                   <div class="mt-1 bold">Калининград</div>
                 </div>
               </CButton>
-              <ServiceSettingsBlock
-                :class="
-                  $companyGroup.item && $companyGroup.item.companies.length < 2
-                    ? 'col'
-                    : 'col-shrink'
-                "
-              />
+              <ServiceSettingsBlock />
             </div>
           </teleport>
 

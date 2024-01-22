@@ -1,7 +1,7 @@
 <template>
   <div
     @click="openDialog()"
-    class="row no-wrap justify-between items-center cursor-pointer button px-8"
+    class="row no-wrap justify-between items-center cursor-pointer button px-8 col"
     :style="`border: 1px solid ${lightColor(
       $uiSettings.item?.backgroundColor.on_color || '000',
       '30'
@@ -11,9 +11,13 @@
       class="row no-wrap gap-4 body items-center text-on-background-color"
       style="overflow: hidden"
     >
-      <div v-if="!$cart.item" class="row no-wrap gap-4 items-center">
+      <div
+        v-if="!$cart.item"
+        class="row no-wrap gap-4 items-center"
+        style="overflow: inherit"
+      >
         <CustomIcon width="28px" height="28px" name="bagOnTime.svg" />
-        <div style="line-height: 15px" class="bold">
+        <div style="line-height: 15px" class="bold nowrap-content">
           Выберите способ получения
         </div>
       </div>
@@ -31,7 +35,7 @@
           style="overflow: inherit !important"
         >
           <div class="rounded-separator"></div>
-          <div class="kek">
+          <div class="nowrap-content">
             {{ $cart.item.currentAddress }}
           </div>
         </div>
@@ -83,7 +87,7 @@ const openDialog = () => {
   border-radius: 50%;
 }
 
-.kek {
+.nowrap-content {
   white-space: nowrap;
   overflow: hidden;
   width: fit-content;
