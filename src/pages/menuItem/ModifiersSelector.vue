@@ -102,7 +102,9 @@ const props = defineProps<{
 }>()
 
 const currentModifiers = computed(() => {
-  return props.group.items.filter((v) => !v.is_hidden)
+  return props.group.items.filter(
+    (v) => !v.is_hidden && (v.reserve === null || v.reserve > 0)
+  )
 })
 
 const modifierViewType = computed(() => {

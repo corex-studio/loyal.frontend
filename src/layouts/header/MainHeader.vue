@@ -8,15 +8,19 @@
       <div class="column c-container">
         <div
           style="height: 72px"
-          class="row justify-between gap-4 items-center no-wrap full-width"
+          class="row justify-between gap-8 items-center no-wrap full-width"
         >
           <div
             :style="
               $companyGroup.item && $companyGroup.item.companies.length > 1
                 ? ''
-                : 'width: inherit'
+                : ''
             "
             class="row gap-4 no-wrap items-center"
+            :class="{
+              col:
+                $companyGroup.item && $companyGroup.item.companies.length < 2,
+            }"
           >
             <img
               v-if="
@@ -31,7 +35,7 @@
               "
               :height="$q.screen.gt.md ? '52' : '48'"
               class="border-radius cursor-pointer"
-              style="object-fit: contain"
+              style="object-fit: contain; max-width: 230px"
               :src="
                 $company.item?.logo?.thumbnail ||
                 $company.item?.image?.thumbnail
@@ -62,7 +66,7 @@
                 $companyGroup.item && $companyGroup.item.companies.length < 2
               "
               ref="multipleCompaniesSpot"
-              class="ml-25 full-width"
+              class="ml-xl-25 ml-lg-15 ml-xs-0 ml-md-10 col-shrink"
             ></div>
           </div>
           <teleport
@@ -79,9 +83,10 @@
                 'justify-center':
                   $companyGroup.item && $companyGroup.item.companies.length > 1,
               }"
-              class="row no-wrap items-center gap-10"
+              class="row no-wrap items-center col gap-10"
             >
               <CButton
+                v-if="$q.screen.gt.md"
                 style="border-radius: 100px !important"
                 height="44px"
                 outlined
@@ -93,14 +98,20 @@
                   <div class="mt-1 bold">Калининград</div>
                 </div>
               </CButton>
-              <ServiceSettingsBlock />
+              <ServiceSettingsBlock
+                :class="
+                  $companyGroup.item && $companyGroup.item.companies.length < 2
+                    ? 'col'
+                    : 'col-shrink'
+                "
+              />
             </div>
           </teleport>
 
           <div
             v-if="authentication.user"
             class="row no-wrap items-center gap-8 mt-2 secondary-text"
-            style="height: 48px"
+            style="height: 48px; width: fit-content"
           >
             <div
               @click="

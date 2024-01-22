@@ -44,6 +44,7 @@ export type CartItemRaw = {
   total_sum: number
   cart_item_modifiers: CartItemFullModifier[]
   free_item: string | number | null
+  available_quantity: number | null
 }
 
 export class CartItem implements BaseModel {
@@ -57,6 +58,7 @@ export class CartItem implements BaseModel {
   totalSum: number
   cartItemModifiers: CartItemFullModifier[]
   freeItem: string | number | null
+  availableQuantity: number | null
 
   constructor(raw: CartItemRaw) {
     this.id = raw.uuid
@@ -69,6 +71,11 @@ export class CartItem implements BaseModel {
     this.totalSum = raw.total_sum
     this.cartItemModifiers = raw.cart_item_modifiers
     this.freeItem = raw.free_item
+    this.availableQuantity = raw.available_quantity
+  }
+
+  get isDead() {
+    return this.availableQuantity ? this.availableQuantity <= 0 : false
   }
 
   toJson(): Record<string, any> {

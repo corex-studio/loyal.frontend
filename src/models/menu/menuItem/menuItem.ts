@@ -17,6 +17,7 @@ export type MenuItemRaw = {
   sizes: ItemSizeRaw[] | null
   active?: boolean
   allow_instant_addition?: boolean
+  reserve?: number | null
 }
 
 export class MenuItem implements BaseModel {
@@ -33,6 +34,7 @@ export class MenuItem implements BaseModel {
   sizes: ItemSize[]
   allowInstantAddition: boolean
   active?: boolean
+  reserve: number | null
 
   constructor(raw: MenuItemRaw) {
     this.id = raw.uuid
@@ -52,6 +54,12 @@ export class MenuItem implements BaseModel {
     this.group = raw.group
     this.sizes = raw.sizes ? raw.sizes.map((v) => new ItemSize(v)) : []
     this.allowInstantAddition = raw.allow_instant_addition || false
+    this.reserve =
+      raw.reserve === null || raw.reserve === undefined ? null : raw.reserve
+  }
+
+  get isDead() {
+    return this.reserve === null ? false : this.reserve <= 0
   }
 
   toJson(): Record<string, any> {

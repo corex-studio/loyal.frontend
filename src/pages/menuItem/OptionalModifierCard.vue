@@ -57,7 +57,10 @@
       @update:model-value="updateQuantity"
       :disable-adding="
         (group.restrictions && isGroupLimitReached) ||
-        modifier.quantity >= modifier.restrictions.max_quantity
+        modifier.quantity >= modifier.restrictions.max_quantity ||
+        modifier.reserve !== null
+          ? modifier.reserve! <= modifier.quantity
+          : false
       "
     />
   </div>
