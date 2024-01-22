@@ -66,7 +66,7 @@
                 $companyGroup.item && $companyGroup.item.companies.length < 2
               "
               ref="multipleCompaniesSpot"
-              class="ml-xl-25 ml-lg-15 ml-xs-0 ml-md-10 col-shrink"
+              class="ml-xl-25 ml-lg-15 ml-xs-0 ml-md-10 col"
             ></div>
           </div>
           <teleport
