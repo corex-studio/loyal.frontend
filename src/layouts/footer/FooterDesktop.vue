@@ -107,7 +107,11 @@
         </template>
       </div>
     </div>
-    <q-separator color="divider-color" class="full-width my-lg-20 my-xs-13" />
+    <q-separator
+      style="opacity: 0.5"
+      color="divider-color"
+      class="full-width my-lg-20 my-xs-13"
+    />
     <div class="row full-width body text-on-bottom-menu-color justify-between">
       <div :class="$q.screen.lt.lg ? 'reverse' : ''" class="column gap-10">
         <div class="row gap-7">

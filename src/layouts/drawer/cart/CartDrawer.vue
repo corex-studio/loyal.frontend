@@ -97,10 +97,10 @@
 
       <div
         v-if="$cart.item?.cartItems.length || $cart.arrangeLoading"
-        class="row full-width justify-center bg-background-color px-15 pb-13"
+        class="row full-width justify-center bg-background-color px-15 py-13"
         style="position: sticky; bottom: 0"
       >
-        <q-separator color="divider-color" class="mb-12 full-width" />
+        <!-- <q-separator color="divider-color" class="mb-12 full-width" /> -->
         <CartBonuses
           v-if="$cart.item?.walletPayments.length"
           class="mb-md-12 mb-xs-8"
