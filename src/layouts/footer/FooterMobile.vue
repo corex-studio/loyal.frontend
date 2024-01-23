@@ -145,7 +145,6 @@
 // import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { store } from 'src/models/store'
@@ -192,26 +191,26 @@ const showContacts = computed(() => {
   )
 })
 
-const developersLinks = [
-  {
-    icon: 'fa-solid fa-paper-plane',
-    click: () => {
-      void 0
-    },
-  },
-  {
-    icon: 'fa-solid fa-envelope',
-    click: () => {
-      void 0
-    },
-  },
-  {
-    icon: 'fa-brands fa-youtube',
-    click: () => {
-      void 0
-    },
-  },
-]
+// const developersLinks = [
+//   {
+//     icon: 'fa-solid fa-paper-plane',
+//     click: () => {
+//       void 0
+//     },
+//   },
+//   {
+//     icon: 'fa-solid fa-envelope',
+//     click: () => {
+//       void 0
+//     },
+//   },
+//   {
+//     icon: 'fa-brands fa-youtube',
+//     click: () => {
+//       void 0
+//     },
+//   },
+// ]
 
 // const navigation = computed(() => {
 //   return [

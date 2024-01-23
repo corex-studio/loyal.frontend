@@ -32,10 +32,12 @@
       <q-skeleton type="text" width="210px" height="45px" class="mb-10 mt-18" />
       <GridContainer
         :items="[1, 2, 3, 4, 5, 6, 7, 8]"
-        :lg="6"
-        :xl="6"
-        :md="5"
-        :sm="4"
+        :lg="4"
+        :xl="4"
+        :md="3"
+        :sm="2"
+        :xs="2"
+        :gap="$q.screen.gt.md ? '30px' : $q.screen.md ? '16px' : '8px'"
       >
         <template v-slot:item="{ item }">
           <MenuItemSkeleton :id="item" />
