@@ -24,7 +24,6 @@
 </template>
 <script lang="ts" setup>
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { LinkType } from 'src/models/company/company'
 import { store } from 'src/models/store'
 
