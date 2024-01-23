@@ -1,9 +1,10 @@
 <template>
   <div>
+    <div class="huge3 bold mb-15">Адреса заведения</div>
     <div
       id="map"
-      style="width: 100%; height: 400px; z-index: 9"
-      class="mt-15 border-radius col-12 map"
+      style="width: 100%; height: 421px; z-index: 9"
+      class="border-radius col-12 map"
     ></div>
   </div>
 </template>
@@ -40,7 +41,11 @@ onMounted(() => {
 })
 
 const drawPoints = () => {
-  if (!companyRepo.item || !companyRepo.item.salesPoints) return
+  if (
+    !companyRepo.companyForProfile ||
+    !companyRepo.companyForProfile.salesPoints
+  )
+    return
   drawnItems.clearLayers()
   const values: {
     id: number | string | undefined
@@ -49,7 +54,7 @@ const drawPoints = () => {
       longitude: number | null
     }
   }[] = []
-  for (const el of companyRepo.item.salesPoints) {
+  for (const el of companyRepo.companyForProfile.salesPoints) {
     if (el.coords && el.active) values.push({ id: el.id, coords: el.coords })
   }
 
@@ -58,11 +63,11 @@ const drawPoints = () => {
     collection,
     null,
     `#${uiSettingsRepo.item?.primaryColor.color}`,
-    'store'
+    'circle'
   )
 
   map.lmap.addLayer(layer)
-  if (companyRepo.item.salesPoints.length)
+  if (companyRepo.companyForProfile.salesPoints.length)
     map.lmap.fitBounds(layer.getBounds(), { maxZoom: 11 })
 }
 </script>
