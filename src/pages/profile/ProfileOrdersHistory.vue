@@ -25,17 +25,17 @@
         />
       </template>
       <div
-        v-else
+        v-else-if="!$order.loadings.list"
         :style="$q.screen.xs ? '' : 'width: 416px'"
-        style="min-height: 200px"
-        class="bg-backing-color text-on-backing-color border-radius box-shadow column justify-center items-center gap-10"
+        style="min-height: 180px"
+        class="text-on-background-color border-radius bordered column justify-center items-center gap-5"
       >
         <CIcon
-          color="on-backing-color"
-          name="fa-thin fa-money-check"
-          size="75px"
+          color="on-on-background-color"
+          name="fa-light fa-money-check"
+          size="60px"
         />
-        <div class="header3">У вас нет ни одного заказа</div>
+        <div class="header2">У вас нет ни одного заказа</div>
       </div>
     </div>
     <Pagination

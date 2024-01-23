@@ -59,9 +59,8 @@
             <q-skeleton
               v-for="(el, index) in [1, 2, 3, 4, 5, 6, 7]"
               :key="index"
-              width="130px"
-              class="mt-2"
-              style="margin-bottom: 13px"
+              class="mt-5"
+              style="margin-bottom: 13px; width: 180px"
             >
             </q-skeleton>
           </template>

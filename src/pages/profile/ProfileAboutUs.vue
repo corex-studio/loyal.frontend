@@ -1,116 +1,47 @@
 <template>
-  <div v-if="company" class="column">
-    <q-breadcrumbs
-      v-if="$companyGroup.item && $companyGroup.item?.companies.length > 1"
-      separator=""
-      class="mb-15"
-    >
-      <CHover v-slot="{ hover }">
-        <q-breadcrumbs-el
-          :label="'Все заведения'"
+  <div v-if="company" class="column gap-20 full-width text-on-background-color">
+    <div class="column full-width">
+      <div class="row gap-4 no-wrap items-center mb-9">
+        <CIcon
+          v-if="$companyGroup.item && $companyGroup.item?.companies.length > 1"
+          @click="companyRepo.companyForProfile = null"
           class="cursor-pointer"
-          :class="hover ? 'text-primary' : 'text-on-background-color'"
-          @click="$company.companyForProfile = null"
+          name="fa-regular fa-angle-left"
+          color="on-background-color"
+          hover-color="primary"
+          size="26px"
         />
-      </CHover>
-      <q-icon
-        class="px-3 text-on-background-color"
-        name="fal fa-chevron-right"
-        style="font-size: 10px !important"
-      />
-      <q-breadcrumbs-el
-        :label="$company.companyForProfile?.name || ''"
-        class="text-on-background-color"
-        style="opacity: 0.5"
-      />
-    </q-breadcrumbs>
-    <div
-      class="bg-accent border-radius pa-15 row items-center full-width gap-sm-25 gap-xs-20"
-      :class="$q.screen.lt.md ? '' : 'no-wrap'"
+        <div class="huge3 bold">О нашем заведении</div>
+      </div>
+      <div class="subtitle-text">{{ company.description }}</div>
+    </div>
+    <SwiperContainer
+      class="full-width"
+      :slides-per-view="1"
+      :items="company.images"
     >
-      <div class="column items-center gap-8 col-xs-12 col-md-4">
-        <q-img
-          class="border-radius"
-          width="183px"
-          height="183px"
-          fit="contain"
-          :src="company.image?.thumbnail"
-        >
-          <template v-slot:error>
-            <span>
-              <q-img
-                fit="contain"
-                width="183px"
-                height="183px"
-                :src="$store.images.empty"
-              ></q-img>
-            </span>
-          </template>
-        </q-img>
-        <div class="header2 text-on-accent">{{ company.name }}</div>
-        <div class="row full-width justify-center gap-5">
-          <div
-            v-for="(el, index) in availableOrderMethods"
-            :key="index"
-            class="py-3 px-4 bg-white-opacity items-center gap-3 row border-radius"
+      <template v-slot:item="{ item }">
+        <div style="height: 530px; overflow: hidden">
+          <q-img
+            height="530px"
+            class="border-radius"
+            style="min-height: 530px"
+            :src="item.image || $store.images.empty"
+            fit="cover"
           >
-            <CIcon :name="el.icon" />
-            {{ el.label }}
-          </div>
-        </div>
-      </div>
-
-      <SwiperContainer
-        no-navigation
-        class="swiper col mt-md-20"
-        use-bullets
-        :slides-per-view="slidesPerView"
-        :items="company.images"
-      >
-        <template v-slot:item="{ item }">
-          <div style="height: 140px; overflow: hidden">
-            <!-- :style="`border-radius:${getBorderRadius}`" -->
-            <q-img
-              height="140px"
-              class="border-radius"
-              style="min-height: 140px"
-              :src="item.thumbnail || $store.images.empty"
-              fit="cover"
-            >
-              <template v-slot:error>
-                <span>
-                  <q-img
-                    class="border-radius"
-                    fit="cover"
-                    height="140px"
-                    :src="$store.images.empty"
-                  ></q-img>
-                </span>
-              </template>
-            </q-img>
-          </div> </template
-      ></SwiperContainer>
-    </div>
-    <div class="subtitle-text text-on-background-color mt-15">
-      {{ company.description }}
-    </div>
-    <div class="mt-15 row gap-10">
-      <div
-        v-for="(el, index) in contacts"
-        :key="index"
-        @click="openContactsModal(el.field, el.label)"
-        style="width: 130px; height: 140px"
-        class="column items-center justify-between bg-backing-color text-primary border-radius py-11 body cursor-pointer"
-      >
-        <div style="text-align: center; font-weight: 500">{{ el.label }}</div>
-        <div
-          style="width: fit-content"
-          class="bg-white-opacity box-shadow border-radius px-6 py-5"
-        >
-          <CIcon size="18px" :name="el.icon" color="primary" />
-        </div>
-      </div>
-    </div>
+            <template v-slot:error>
+              <span>
+                <q-img
+                  class="border-radius"
+                  fit="cover"
+                  height="530px"
+                  :src="$store.images.empty"
+                ></q-img>
+              </span>
+            </template>
+          </q-img>
+        </div> </template
+    ></SwiperContainer>
     <q-img
       v-if="
         $uiSettings.item?.socialButtonImage &&
@@ -118,11 +49,58 @@
       "
       fit="cover"
       @click="socialsModal = true"
-      class="border-radius mt-15 cursor-pointer"
-      style="max-height: 230px; max-width: 400px"
-      :src="$uiSettings.item?.socialButtonImage?.thumbnail"
+      class="border-radius cursor-pointer"
+      :src="$uiSettings.item?.socialButtonImage?.image"
     >
     </q-img>
+    <div v-if="contacts.length" class="column full-width">
+      <div class="huge3 bold mb-10">Наши контакты</div>
+      <GridContainer
+        :items="contacts"
+        :lg="3"
+        :xl="3"
+        :md="3"
+        :sm="2"
+        :xs="2"
+        :gap="$q.screen.gt.md ? '16px' : $q.screen.md ? '12px' : '8px'"
+      >
+        <template v-slot:item="{ item }">
+          <div class="contact-block border-radius pa-8 column">
+            <div class="header3 bold mb-5">{{ item.label }}</div>
+            <div class="row full-width no-wrap">
+              <div class="column col gap-2">
+                <CButton
+                  v-for="(el, index) in item.values"
+                  :key="index"
+                  @click="openLink(el.link)"
+                  class="body"
+                  text-button
+                  :label="el.value"
+                  text-color="on-background-color"
+                  style="width: fit-content"
+                />
+              </div>
+              <div
+                style="
+                  height: 44px;
+                  width: 44px;
+                  min-width: 44px;
+                  align-self: flex-end;
+                "
+                class="bg-secondary-button-color border-radius row items-center justify-center"
+              >
+                <CIcon
+                  color="on-secondary-button-color"
+                  size="20px"
+                  :name="item.icon"
+                />
+              </div>
+            </div>
+          </div>
+        </template>
+      </GridContainer>
+    </div>
+
     <CButton
       v-if="
         company.guestContacts.socials.length &&
@@ -153,13 +131,10 @@ import SocialsModal from './SocialsModal.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import ProfileAddressesOnMap from './ProfileAddressesOnMap.vue'
 import SelectCompany from './SelectCompany.vue'
-import CHover from 'src/components/template/helpers/CHover.vue'
 import ContactsModal from './ContactsModal.vue'
-import { useQuasar } from 'quasar'
+import GridContainer from 'src/components/containers/GridContainer.vue'
 
 const socialsModal = ref(false)
-
-const q = useQuasar()
 
 const concatsModal = ref(false)
 
@@ -172,105 +147,84 @@ type ContactType = {
   label: string
   icon: string
   field: 'phones' | 'emails' | 'messages'
+  values?: any[]
 }
-
-const slidesPerView = computed(() => {
-  return q.screen.xs ? 1.2 : q.screen.sm ? 2 : 3.2
-})
 
 const contacts = computed(() => {
   const result: ContactType[] = []
   if (company.value?.guestContacts.phones.length) {
     result.push({
-      label: 'Позвонить',
-      icon: 'fa-light fa-phone',
+      label: 'Позвонить нам',
+      icon: 'fa-regular fa-phone',
       field: 'phones',
-      // click: () => {
-      //   company.value?.guestContacts.phones.forEach((v) => {
-      //     Notify.create({
-      //       message: `${v.name || 'Телефон'}: ${v.value}`,
-      //       timeout: 20000,
-      //     })
-      //   })
-      // },
+      values: company.value?.guestContacts.phones,
     })
   }
   if (company.value?.guestContacts.messages.length) {
     result.push({
       label: 'Написать',
-      icon: 'fa-light fa-message',
+      icon: 'fa-regular fa-message',
       field: 'messages',
-      // click: () => {
-      //   company.value?.guestContacts.messages.forEach((v) => {
-      //     Notify.create({
-      //       message: `${v.name}: ${v.value}`,
-      //       timeout: 20000,
-      //     })
-      //   })
-      //   void 0
-      // },
+      values: company.value?.guestContacts.messages,
     })
   }
   company.value?.guestContacts.emails.forEach((v) => {
     result.push({
       label: v.name || '-',
-      icon: 'fa-light fa-message',
+      icon: 'fa-regular fa-envelope',
       field: 'emails',
-      // click: () => {
-      //   company.value?.guestContacts.emails.forEach((v) => {
-      //     Notify.create({
-      //       message: `${v.name}: ${v.value}`,
-      //       timeout: 20000,
-      //     })
-      //   })
-      // },
+      values: company.value?.guestContacts.emails,
     })
   })
 
   return result
 })
 
-const availableOrderMethods = computed(() => {
-  const result = []
-  if (company.value?.salesPoints?.some((v) => v.settings.pickup_enabled)) {
-    result.push({
-      label: 'Заказ с собой',
-      icon: 'fa-light fa-person-walking',
-    })
-    if (company.value.salesPoints.some((v) => v.settings.delivery_enabled)) {
-      result.push({
-        label: 'Доставка',
-        icon: 'fa-light fa-house',
-      })
-    }
-    if (company.value.salesPoints.some((v) => v.settings.booking_enabled)) {
-      result.push({
-        label: 'Бронь стола',
-        icon: 'fa-light fa-calendar-day',
-      })
-    }
-  }
-  return result
-})
+// const availableOrderMethods = computed(() => {
+//   const result = []
+//   if (company.value?.salesPoints?.some((v) => v.settings.pickup_enabled)) {
+//     result.push({
+//       label: 'Заказ с собой',
+//       icon: 'fa-light fa-person-walking',
+//     })
+//     if (company.value.salesPoints.some((v) => v.settings.delivery_enabled)) {
+//       result.push({
+//         label: 'Доставка',
+//         icon: 'fa-light fa-house',
+//       })
+//     }
+//     if (company.value.salesPoints.some((v) => v.settings.booking_enabled)) {
+//       result.push({
+//         label: 'Бронь стола',
+//         icon: 'fa-light fa-calendar-day',
+//       })
+//     }
+//   }
+//   return result
+// })
 
 const company = computed(() => {
   return companyRepo.companyForProfile
 })
 
-const openContactsModal = (
-  type: 'phones' | 'emails' | 'messages',
-  label: string
-) => {
-  currentContactType.value = {
-    label,
-    type,
-  }
-  concatsModal.value = true
+const openLink = (link: string) => {
+  window.open(link || undefined, '_blank')
 }
 
-// onMounted(() => {
-//   if (!companyRepo.item) {
-//     store.selectCompanyModal = true
+// const openContactsModal = (
+//   type: 'phones' | 'emails' | 'messages',
+//   label: string
+// ) => {
+//   currentContactType.value = {
+//     label,
+//     type,
 //   }
-// })
+//   concatsModal.value = true
+// }
 </script>
+
+<style lang="scss" scoped>
+.contact-block {
+  outline: 1px var(--secondary-button-color) solid;
+}
+</style>

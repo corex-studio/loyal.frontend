@@ -19,8 +19,7 @@
 
   <CIconButton
     @click.capture.stop="menu = !menu"
-    color="white"
-    hover-color="white"
+    :color="iconOnly ? 'transparent' : 'secondary-button-color'"
     class="menuButton"
     :class="
       iconOnly ? '' : 'bg-secondary-button-color border-radius box-shadow'

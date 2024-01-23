@@ -17,18 +17,18 @@
     </div>
   </div>
   <div
-    v-else
+    v-else-if="!$deliveryAddress.loadings.list"
     :style="$q.screen.xs ? '' : 'width: 416px;'"
-    style="min-height: 200px"
-    class="bg-backing-color text-on-backing-color border-radius box-shadow column no-wrap justify-center items-center gap-10"
+    style="min-height: 180px"
+    class="bg-background-color bordered text-on-background-color border-radius column no-wrap justify-center items-center gap-5"
   >
     <CIcon
-      color="on-backing-color"
-      name="fa-thin fa-location-plus"
-      size="65px"
+      color="on-background-color"
+      name="fa-light fa-location-plus"
+      size="60px"
     />
     <div class="row full-width justify-center">
-      <div class="header3 col-9" style="text-align: center">
+      <div class="header2 col-9" style="text-align: center">
         У вас нет добавленных адресов доставки
       </div>
     </div>
@@ -151,3 +151,9 @@ onMounted(() => {
   void loadAddresses()
 })
 </script>
+
+<style lang="scss" scoped>
+.bordered {
+  outline: 1px var(--secondary-button-color) solid;
+}
+</style>
