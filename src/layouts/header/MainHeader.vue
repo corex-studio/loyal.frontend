@@ -181,7 +181,7 @@
           </div>
         </div>
         <q-separator color="divider-color" style="z-index: 10" />
-        <BottomHeader />
+        <BottomHeader v-if="$route.name === 'home'" />
       </div>
       <!-- <div class="c-container full-height column">
         <div

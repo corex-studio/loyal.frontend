@@ -2,13 +2,6 @@
   <template v-if="ready">
     <PrepareUiSettings />
     <q-layout view="lHh Lpr lFf" class="bg-background-color">
-      <!-- :class="
-        $store.tableMode
-          ? $cart.item?.cartItems.length
-            ? 'pb-xs-40'
-            : 'pb-xs-27'
-          : 'pb-xs-27'
-      " -->
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
       <!-- <TopHeader v-if="!isArrangementPage && $q.screen.gt.sm" /> -->
 
@@ -41,8 +34,6 @@
             ),
         }"
       >
-        <!-- {{ $cart.loading }} -->
-        <!-- {{ $q.screen.name }} -->
         <router-view />
         <CartDrawer />
         <CartOverlayButton />
@@ -159,7 +150,7 @@ watch(
 )
 
 const footerAndHeaderHeight = computed(() => {
-  return Screen.gt.sm ? store.headerHeight + store.footerHeight : '0'
+  return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
 
 // const isArrangementPage = computed(() => {

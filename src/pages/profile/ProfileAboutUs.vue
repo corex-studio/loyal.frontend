@@ -13,7 +13,7 @@
         />
         <div class="huge3 bold">О нашем заведении</div>
       </div>
-      <div class="subtitle-text">{{ company.description }}</div>
+      <div class="body">{{ company.description }}</div>
     </div>
     <SwiperContainer
       class="full-width"

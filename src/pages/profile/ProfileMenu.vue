@@ -1,12 +1,12 @@
 <template>
   <div
-    :style="`min-width: ${$q.screen.xs ? 'unset' : '218px'};
-      max-width: ${$q.screen.xs ? 'unset' : '218px'};
+    :style="`min-width: ${$q.screen.xs ? 'unset' : '300px'};
+      max-width: ${$q.screen.xs ? 'unset' : '300px'};
       height: fit-content;
       position: sticky;
-      top: 10px;
+      top: 80px;
       `"
-    class="column gap-5"
+    class="column gap-1"
     :class="{ 'full-width': $q.screen.xs }"
   >
     <div v-for="(el, index) in tabs" :key="index">
@@ -19,17 +19,6 @@
         "
         class="row full-width cursor-pointer items-center no-wrap gap-5 px-10 border-radius py-6"
       >
-        <!-- <div
-          style="width: 40px; height: 40px"
-          class="bg-white-opacity row justify-center box-shadow items-center border-radius"
-        >
-          <CIcon
-            :color="
-              $route.name === el.routeName ? 'primary' : 'on-background-color'
-            "
-            :name="el.icon"
-          />
-        </div> -->
         <div class="body bold">
           {{ el.label }}
         </div>
