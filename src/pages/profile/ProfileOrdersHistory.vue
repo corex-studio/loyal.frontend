@@ -8,7 +8,7 @@
         @click="changeOrdersFilterType(el.val)"
         :class="
           el.val === currentType
-            ? 'bg-secondary-button-color text-on-secondary-button-color '
+            ? 'bg-secondary-button-color text-on-secondary-button-color bold'
             : 'text-on-background-color bordered'
         "
         class="cursor-pointer px-10 body py-6 border-radius"
@@ -25,7 +25,7 @@
         />
       </template>
       <div
-        v-else-if="!$order.loadings.list"
+        v-else
         :style="$q.screen.xs ? '' : 'width: 416px'"
         style="min-height: 180px"
         class="text-on-background-color border-radius bordered column justify-center items-center gap-5"
