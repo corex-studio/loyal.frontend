@@ -1,7 +1,7 @@
 <template>
   <div v-if="company" class="column gap-20 full-width text-on-background-color">
-    <div class="column full-width">
-      <div class="row gap-4 no-wrap items-center mb-9">
+    <div class="column full-width gap-9">
+      <div class="row gap-4 no-wrap items-center">
         <CIcon
           v-if="$companyGroup.item && $companyGroup.item?.companies.length > 1"
           @click="companyRepo.companyForProfile = null"

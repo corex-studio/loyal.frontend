@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="row no-wrap column pt-md-20 pt-xs-10 text-on-background-color">
+    <div
+      class="row no-wrap column pt-lg-20 pt-md-10 pt-xs-8 text-on-background-color"
+    >
       <!-- <HomeHugeSlider v-if="$companyGroup.item?.externalId === 'corex_demo'" /> -->
       <!-- <HomeProfile v-if="$q.screen.xs" class="c-container mb-5" /> -->
       <!-- <HomeQrCard v-if="$q.screen.xs" class="c-container mb-15" /> -->

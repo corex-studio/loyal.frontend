@@ -1,68 +1,66 @@
 <template>
   <div id="footer" class="full-width">
-    <div class="row full-width no-wrap justify-between">
-      <div class="column col justify-between">
-        <div class="row gap-14">
-          <div
-            v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
-            class="column text-on-bottom-menu-color"
-            style="width: 186px"
-          >
-            <div class="bold header3 mb-10">Информация</div>
-            <div class="row gap-25">
-              <div class="column gap-8">
-                <div v-for="(item, index) in infoBlocks" :key="index">
-                  <CButton
-                    @click="item.click()"
-                    text-button
-                    class="body"
-                    style="opacity: 0.8"
-                    :label="item.label"
-                    text-color="on-bottom-menu-color"
-                  />
-                </div>
+    <div class="row full-width no-wrap justify-between gap-15">
+      <div class="row no-wrap gap-14 col-grow">
+        <div
+          v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
+          class="column text-on-bottom-menu-color"
+          style="width: 186px"
+        >
+          <div class="bold header3 mb-10">Информация</div>
+          <div class="row gap-25">
+            <div class="column gap-8">
+              <div v-for="(item, index) in infoBlocks" :key="index">
+                <CButton
+                  @click="item.click()"
+                  text-button
+                  class="body"
+                  style="opacity: 0.8"
+                  :label="item.label"
+                  text-color="on-bottom-menu-color"
+                />
               </div>
             </div>
           </div>
+        </div>
 
-          <div v-if="showContacts" class="text-on-bottom-menu-color">
-            <div class="bold header3 mb-10 text-on-bottom-menu-color">
-              Контакты
-            </div>
-            <div class="column gap-8">
-              <template
-                v-for="(item, index) in $company.item?.guestContacts.emails"
-                :key="index"
+        <div v-if="showContacts" class="text-on-bottom-menu-color">
+          <div class="bold header3 mb-10 text-on-bottom-menu-color">
+            Контакты
+          </div>
+          <div class="column gap-8">
+            <template
+              v-for="(item, index) in $company.item?.guestContacts.emails"
+              :key="index"
+            >
+              <div style="opacity: 0.8" class="body">
+                {{ item.value }}
+              </div>
+            </template>
+            <template
+              v-for="(item, index) in $company.item?.guestContacts.phones"
+              :key="index"
+            >
+              <div style="opacity: 0.8" class="body">
+                {{ item.value }}
+              </div>
+            </template>
+            <template
+              v-for="(item, index) in $company.item?.guestContacts.socials"
+              :key="index"
+            >
+              <div
+                @click="openLink(item.link)"
+                style="opacity: 0.8"
+                class="body cursor-pointer"
               >
-                <div style="opacity: 0.8" class="body">
-                  {{ item.value }}
-                </div>
-              </template>
-              <template
-                v-for="(item, index) in $company.item?.guestContacts.phones"
-                :key="index"
-              >
-                <div style="opacity: 0.8" class="body">
-                  {{ item.value }}
-                </div>
-              </template>
-              <template
-                v-for="(item, index) in $company.item?.guestContacts.socials"
-                :key="index"
-              >
-                <div
-                  @click="openLink(item.link)"
-                  style="opacity: 0.8"
-                  class="body cursor-pointer"
-                >
-                  {{ item.value }}
-                </div>
-              </template>
-            </div>
+                {{ item.value }}
+              </div>
+            </template>
           </div>
         </div>
       </div>
-      <div class="col-grow text-on-bottom-menu-color">
+      <div class="col-shrink text-on-bottom-menu-color">
         <template v-if="$appSettings.linksData?.app_redirect_link">
           <div class="header2 bold mb-lg-15 mb-xs-10">
             Скачать мобильное приложение
@@ -114,9 +112,9 @@
     />
     <div class="row full-width body text-on-bottom-menu-color justify-between">
       <div :class="$q.screen.lt.lg ? 'reverse' : ''" class="column gap-10">
-        <div class="row gap-7">
+        <!-- <div class="row gap-7">
           <div
-            v-for="(el, index) in developersLinks"
+            v-for="(el, index) in groupLinks"
             :key="index"
             @click="el.click"
             class="border-radius row justify-center items-center cursor-pointer"
@@ -124,7 +122,7 @@
           >
             <CIcon color="white" :name="el.icon" />
           </div>
-        </div>
+        </div> -->
         <div class="row gap-8 items-baseline">
           <div>© 2023 все права защищены</div>
           <CButton
@@ -187,7 +185,7 @@ const router = useRouter()
 
 let qrCode: any = null
 
-const developersLinks = [
+const groupLinks = [
   {
     icon: 'fa-solid fa-paper-plane',
     click: () => {

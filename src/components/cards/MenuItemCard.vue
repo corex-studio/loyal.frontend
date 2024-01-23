@@ -67,7 +67,7 @@
           {{ item.sizes[0].price }}
           ₽
         </div>
-        <div>
+        <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
             @click.capture.stop="toCartClickHandler()"
             color="background-color"

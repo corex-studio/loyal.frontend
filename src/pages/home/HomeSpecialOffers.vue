@@ -1,5 +1,5 @@
 <template>
-  <div id="offers" class="mb-5">
+  <div id="offers">
     <div class="row c-container gap-6 items-center text-on-background-color">
       <div
         v-for="(el, index) in tabs"
@@ -101,7 +101,7 @@
     </div>
     <div
       v-if="$store.offersTab === 'Акции' && !$news.promotions.length"
-      class="header3 pl-6 my-20 c-container"
+      class="header3 pl-6 my-lg-20 mt-xs-10 c-container"
     >
       У вас нет акций
     </div>

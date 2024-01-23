@@ -7,8 +7,8 @@
     >
       <div class="column c-container">
         <div
-          style="height: 72px"
-          class="row justify-between gap-8 items-center no-wrap full-width"
+          :style="`height: ${$q.screen.lt.md ? '66' : '72'}px`"
+          class="row justify-between gap-lg-8 gap-xs-6 items-center no-wrap full-width"
         >
           <div
             :style="
@@ -16,7 +16,7 @@
                 ? ''
                 : ''
             "
-            class="row gap-4 no-wrap items-center"
+            class="row gap-6 no-wrap items-center"
             :class="{
               col:
                 $companyGroup.item && $companyGroup.item.companies.length < 2,
@@ -24,9 +24,8 @@
           >
             <img
               v-if="
-                $q.screen.gt.sm &&
-                ($company.item?.logo?.thumbnail ||
-                  $company.item?.image?.thumbnail)
+                $company.item?.logo?.thumbnail ||
+                $company.item?.image?.thumbnail
               "
               @click="
                 $router.push({
@@ -37,8 +36,10 @@
               class="border-radius cursor-pointer"
               style="object-fit: contain; max-width: 230px"
               :src="
-                $company.item?.logo?.thumbnail ||
-                $company.item?.image?.thumbnail
+                $q.screen.lt.lg
+                  ? $company.item?.image?.thumbnail
+                  : $company.item?.logo?.thumbnail ||
+                    $company.item?.image?.thumbnail
               "
             />
             <CButton
@@ -59,14 +60,14 @@
 
                 <div class="body bold mt-1">Все заведения</div>
               </div>
-              <CIcon v-else name="fa-regular fa-angle-down" size="20px" />
+              <CIcon v-else name="fa-regular fa-angle-down" size="24px" />
             </CButton>
             <div
               v-if="
                 $companyGroup.item && $companyGroup.item.companies.length < 2
               "
               ref="multipleCompaniesSpot"
-              class="ml-xl-25 ml-lg-15 ml-xs-0 ml-md-10 col"
+              class="ml-xl-25 ml-lg-10 ml-xs-0 ml-md-5 col"
             ></div>
           </div>
           <teleport
@@ -83,10 +84,10 @@
                 'justify-center':
                   $companyGroup.item && $companyGroup.item.companies.length > 1,
               }"
-              class="row no-wrap items-center col gap-10"
+              class="row no-wrap items-center col gap-lg-10 gap-xs-6"
             >
               <CButton
-                v-if="$q.screen.gt.md"
+                v-if="$q.screen.gt.sm"
                 style="border-radius: 100px !important"
                 height="44px"
                 outlined
@@ -104,56 +105,58 @@
 
           <div
             v-if="authentication.user"
-            class="row no-wrap items-center gap-8 mt-2 secondary-text"
+            class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-4 secondary-text"
             style="height: 48px; width: fit-content"
           >
-            <div
-              @click="
-                $cart.loading
-                  ? void 0
-                  : ($store.cartDrawer = !$store.cartDrawer)
-              "
-              class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
-            >
-              <template v-if="!$cart.loading">
-                <q-badge
-                  v-if="$cart.item?.cartItems.length"
-                  color="primary"
-                  class="cart-badge row justify-center"
-                  >{{ $cart.item?.cartItems.length }}</q-badge
-                >
-                <!-- <CIcon
+            <template v-if="$q.screen.gt.sm">
+              <div
+                @click="
+                  $cart.loading
+                    ? void 0
+                    : ($store.cartDrawer = !$store.cartDrawer)
+                "
+                class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
+              >
+                <template v-if="!$cart.loading">
+                  <q-badge
+                    v-if="$cart.item?.cartItems.length"
+                    color="primary"
+                    class="cart-badge row justify-center"
+                    >{{ $cart.item?.cartItems.length }}</q-badge
+                  >
+                  <!-- <CIcon
                   size="23px"
                   color="on-background-color"
                   name="fa-regular fa-basket-shopping"
                 /> -->
-                <CustomIcon
-                  width="28px"
-                  height="28px"
-                  name="shoppingBasket.svg"
-                />
-              </template>
-              <q-spinner v-else color="on-background-color" size="23px" />
-              <div class="bold">Корзина</div>
-            </div>
-            <div
-              @click="inDevelopmentModal = true"
-              class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
-            >
-              <q-badge
-                v-if="previewBalance"
-                color="primary"
-                class="balance-badge row justify-center"
-                >{{ previewBalance }}</q-badge
+                  <CustomIcon
+                    width="28px"
+                    height="28px"
+                    name="shoppingBasket.svg"
+                  />
+                </template>
+                <q-spinner v-else color="on-background-color" size="23px" />
+                <div class="bold">Корзина</div>
+              </div>
+              <div
+                @click="inDevelopmentModal = true"
+                class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
               >
-              <!-- <CIcon
+                <q-badge
+                  v-if="previewBalance"
+                  color="primary"
+                  class="balance-badge row justify-center"
+                  >{{ previewBalance }}</q-badge
+                >
+                <!-- <CIcon
                 color="on-background-color"
                 size="23px"
                 name="fa-regular fa-gift"
               /> -->
-              <CustomIcon width="28px" height="28px" name="gift.svg" />
-              <div class="bold">Бонусы</div>
-            </div>
+                <CustomIcon width="28px" height="28px" name="gift.svg" />
+                <div class="bold">Бонусы</div>
+              </div>
+            </template>
             <div
               @click="
                 $router.push({
@@ -167,14 +170,19 @@
                 size="23px"
                 name="fa-regular fa-face-smile"
               /> -->
-              <CustomIcon width="28px" height="28px" name="squareFace.svg" />
+              <CustomIcon
+                :width="$q.screen.gt.sm ? '28px' : '40px'"
+                :height="$q.screen.gt.sm ? '28px' : '40px'"
+                name="squareFace.svg"
+              />
 
-              <div class="bold">Профиль</div>
+              <div v-if="$q.screen.gt.sm" class="bold">Профиль</div>
             </div>
           </div>
           <div
             v-else
             @click="$store.authModal = true"
+            :style="`height: ${$q.screen.gt.sm ? '44' : '40'}px`"
             class="auth-button cursor-pointer text-primary body bold row items-center px-15"
           >
             Войти
@@ -332,7 +340,6 @@ onMounted(() => {
 .auth-button {
   border: 2px solid var(--primary);
   border-radius: 100px;
-  height: 44px;
 }
 
 .cart-badge {

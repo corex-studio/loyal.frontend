@@ -2,7 +2,11 @@
   <div class="row full-width bg-background-color" ref="bottomHeader">
     <div class="row no-wrap items-center full-width">
       <div
-        :style="$cart.item || categories?.length ? 'height: 54px' : ''"
+        :style="
+          $cart.item || categories?.length
+            ? `height: ${$q.screen.gt.md ? '54' : $q.screen.md ? '48' : '42'}px`
+            : ''
+        "
         class="row full-width border-radius no-wrap body items-center gap-10 content-row relative-position"
       >
         <div
