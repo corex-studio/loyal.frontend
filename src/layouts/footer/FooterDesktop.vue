@@ -178,33 +178,32 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import { useRoute, useRouter } from 'vue-router'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
 
 let qrCode: any = null
 
-const groupLinks = [
-  {
-    icon: 'fa-solid fa-paper-plane',
-    click: () => {
-      void 0
-    },
-  },
-  {
-    icon: 'fa-solid fa-envelope',
-    click: () => {
-      void 0
-    },
-  },
-  {
-    icon: 'fa-brands fa-youtube',
-    click: () => {
-      void 0
-    },
-  },
-]
+// const groupLinks = [
+//   {
+//     icon: 'fa-solid fa-paper-plane',
+//     click: () => {
+//       void 0
+//     },
+//   },
+//   {
+//     icon: 'fa-solid fa-envelope',
+//     click: () => {
+//       void 0
+//     },
+//   },
+//   {
+//     icon: 'fa-brands fa-youtube',
+//     click: () => {
+//       void 0
+//     },
+//   },
+// ]
 
 const infoBlocks = computed(() => {
   return [

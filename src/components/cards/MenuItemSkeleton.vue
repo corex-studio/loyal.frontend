@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-card style="height: 320px" class="no-box-shadow border-radius" bordered>
+    <q-card style="height: 460px" class="no-box-shadow border-radius" bordered>
       <q-item class="justify-center pa-0">
         <q-skeleton
           :style="`border-radius: ${getBorderRadius}`"
@@ -37,8 +37,8 @@ import { Screen } from 'quasar'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 const imageSize = computed(() => {
-  if (Screen.gt.md) return '210px'
-  if (Screen.gt.sm) return '210px'
+  if (Screen.gt.md) return '250px'
+  if (Screen.gt.sm) return '250px'
   return '210px'
 })
 
