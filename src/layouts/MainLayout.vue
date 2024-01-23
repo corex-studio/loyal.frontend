@@ -34,6 +34,7 @@
             ),
         }"
       >
+        <!-- {{ $q.screen.width }} -->
         <router-view />
         <CartDrawer />
         <CartOverlayButton />
@@ -83,7 +84,6 @@ import { newsRepo } from 'src/models/news/newsRepo'
 import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
-// import MobileMenu from './MobileMenu.vue'
 import CartDrawer from './drawer/cart/CartDrawer.vue'
 import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
@@ -153,10 +153,6 @@ const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
 
-// const isArrangementPage = computed(() => {
-//   return route.path.includes('arrangement')
-// })
-
 const setBodyScrollClass = () => {
   if (q.platform.is.win) {
     const body = document.getElementsByTagName('body')
@@ -172,7 +168,7 @@ const getCurrentCompanyGroup = async () => {
     authentication.setApiHeader()
     localStorage.setItem('access', '')
     localStorage.setItem('refresh', '')
-    window.location.reload()
+    // window.location.reload()
   }
 }
 
@@ -221,13 +217,13 @@ onMounted(async () => {
           newsRepo.promotions = res.items
         })
     }
-    void store.loadCatalog(
-      cartRepo.item
-        ? cartRepo.item?.salesPoint
-        : companyGroupRepo.item?.companies[0]?.salesPoints
-        ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
-        : ''
-    )
+    const currentPoint = cartRepo.item
+      ? cartRepo.item?.salesPoint
+      : companyGroupRepo.item?.companies[0]?.salesPoints &&
+        companyGroupRepo.item?.companies[0]?.salesPoints.length
+      ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
+      : null
+    if (currentPoint) void store.loadCatalog(currentPoint)
   } else {
     Object.assign(api.defaults.headers, {
       ['User-Role']: 'pad_manager',
@@ -256,9 +252,15 @@ onMounted(async () => {
 })
 
 const companySelected = (v: Company | null) => {
-  companyRepo.cartCompany = v
-  store.selectCompanyModal = false
-  store.serviceSettingsModal = true
+  if (!authentication.user) {
+    if (!v || !v.salesPoints || !v.salesPoints.length) return
+    void store.loadCatalog(v.salesPoints[0])
+    store.selectCompanyModal = false
+  } else {
+    companyRepo.cartCompany = v
+    store.selectCompanyModal = false
+    store.serviceSettingsModal = true
+  }
 }
 
 const closeNewsModal = () => {

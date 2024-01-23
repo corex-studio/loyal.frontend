@@ -13,7 +13,9 @@
   <div
     :style="`background: url(${getImage()}); width: ${
       width || '22px'
-    }; min-width: ${width || '22px'};  height: ${height || '22px'}`"
+    }; min-width: ${width || '22px'};  height: ${
+      height || '22px'
+    }; background-repeat: no-repeat; background-size: contain;`"
   ></div>
 </template>
 <script lang="ts" setup>

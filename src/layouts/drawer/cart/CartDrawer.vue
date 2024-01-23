@@ -42,7 +42,7 @@
                 style="width: 5px; height: 5px; border-radius: 50%"
                 class="bg-primary"
               ></div>
-              <div class="bold">{{ $cart.item?.sum }}₽</div>
+              <div class="bold">{{ $cart.item?.sum || 0 }}₽</div>
             </template>
           </div>
           <template v-if="$q.screen.gt.sm">

@@ -5,7 +5,7 @@
     :style="`border: 1px solid ${lightColor(
       $uiSettings.item?.backgroundColor.on_color || '000',
       '30'
-    )}`"
+    )}; height: ${$q.screen.lt.md ? '42' : '44'}px`"
   >
     <div
       class="row no-wrap gap-4 body items-center text-on-background-color"
@@ -18,7 +18,9 @@
       >
         <CustomIcon width="28px" height="28px" name="bagOnTime.svg" />
         <div style="line-height: 15px" class="bold nowrap-content">
-          Выберите способ получения
+          {{
+            $q.screen.lt.lg ? 'Способ получения' : 'Выберите способ получения'
+          }}
         </div>
       </div>
       <template v-else>
@@ -42,6 +44,7 @@
       </template>
     </div>
     <CIcon
+      v-if="$q.screen.gt.md"
       size="22px"
       color="on-background-color"
       name="fa-regular fa-angle-right"
@@ -72,7 +75,6 @@ const openDialog = () => {
 <style lang="scss" scoped>
 .button {
   border-radius: 100px !important;
-  height: 44px;
   max-width: 490px;
   // width: inherit;
   // width: 100% !important;
