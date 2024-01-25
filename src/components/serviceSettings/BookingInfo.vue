@@ -1,8 +1,21 @@
 <template>
-  <div>
+  <div class="px-xs-8 px-md-0 py-xs-12 py-md-0">
+    <div v-if="$q.screen.lt.md" class="row full-width mb-12 gap-4 items-center">
+      <CIcon
+        @click="$emit('back')"
+        name="fa-regular fa-angle-left"
+        color="on-background-color"
+        hover-color="primary"
+        class="cursor-pointer"
+        size="22px"
+      />
+      <div class="header2 bold">Забронировать стол</div>
+    </div>
     <q-tab-panels
-      style="height: 423px !important"
       animated
+      :style="
+        $q.screen.lt.md ? 'min-height: 320px; ' : 'height: 423px !important'
+      "
       :model-value="currentMode"
       class="bg-background-color full-height"
     >
@@ -10,14 +23,15 @@
         v-if="currentBooking"
         name="bookingInfo"
         class="column full-width justify-between no-wrap pa-0"
+        style="max-height: 80vh"
       >
-        <div class="column gap-10 full-width">
-          <div class="column full-width gap-10 no-wrap">
+        <div class="column no-wrap gap-8 full-width">
+          <div class="column full-width gap-md-10 gap-xs-8 no-wrap">
             <div class="subtitle-text">Количество гостей и выбор стола</div>
-            <div class="row full-width gap-8">
+            <div class="row full-width gap-md-8 gap-xs-6">
               <ChangeAmount
                 outlined
-                height="48px"
+                :height="$q.screen.lt.md ? '40px' : '48px'"
                 :model-value="Number(currentBooking.guestsCount)"
                 @update:model-value="
                   currentBooking.guestsCount = String($event)
@@ -35,7 +49,7 @@
                     $uiSettings.item?.primaryColor.color || '000',
                     '27'
                   )} !important`"
-                  height="48px"
+                  :height="$q.screen.lt.md ? '40px' : '48px'"
                 >
                   <div>
                     {{
@@ -52,7 +66,7 @@
               </div>
             </div>
           </div>
-          <q-separator color="divider-color" class="my-2" />
+          <q-separator color="divider-color" />
           <BookingDateSelector :date="date" @updated="date = $event" />
           <BookingTimeSelector
             v-if="availableHours?.today.length"
@@ -72,20 +86,21 @@
 
         <div class="row full-width justify-center gap-6 mt-10">
           <CButton
+            v-if="$q.screen.gt.sm"
             @click="$emit('changeBookingMode', 'bookingList')"
             width="280px"
             height="48px"
             color="secondary-button-color"
             text-color="on-secondary-button-color"
-            class="subtitle-text"
+            class="body"
             label="Изменить адрес"
           ></CButton>
           <CButton
             @click="createBooking()"
             :disabled="!isContinueAvailable"
-            width="280px"
-            height="48px"
-            class="subtitle-text"
+            :width="$q.screen.gt.sm ? '280px' : '100%'"
+            :height="$q.screen.gt.sm ? '48px' : '40px'"
+            class="body"
             label="Выбрать"
           ></CButton>
         </div>
@@ -133,6 +148,7 @@ import BookingDateSelector from './BookingDateSelector.vue'
 import BookingTimeSelector from './BookingTimeSelector.vue'
 import { AvailableHours } from 'src/models/carts/cart'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import CIcon from '../template/helpers/CIcon.vue'
 
 export type BookingModes =
   | 'bookingList'
@@ -149,6 +165,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (evt: 'changeBookingMode', value: BookingModes): void
   (evt: 'close'): void
+  (evt: 'back'): void
 }>()
 
 const availableHours = ref<AvailableHours | null>(null)

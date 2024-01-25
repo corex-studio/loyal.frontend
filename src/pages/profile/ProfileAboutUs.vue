@@ -55,13 +55,14 @@
     </q-img>
     <div v-if="contacts.length" class="column full-width">
       <div class="huge3 bold mb-10">Наши контакты</div>
+
       <GridContainer
         :items="contacts"
         :lg="3"
         :xl="3"
-        :md="3"
-        :sm="2"
-        :xs="2"
+        :md="1"
+        :sm="1"
+        :xs="1"
         :gap="$q.screen.gt.md ? '16px' : $q.screen.md ? '12px' : '8px'"
       >
         <template v-slot:item="{ item }">

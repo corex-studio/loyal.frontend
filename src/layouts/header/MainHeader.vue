@@ -105,7 +105,7 @@
 
           <div
             v-if="authentication.user"
-            class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-4 secondary-text"
+            class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-5 secondary-text"
             style="height: 48px; width: fit-content"
           >
             <template v-if="$q.screen.gt.sm">
@@ -171,8 +171,8 @@
                 name="fa-regular fa-face-smile"
               /> -->
               <CustomIcon
-                :width="$q.screen.gt.sm ? '28px' : '40px'"
-                :height="$q.screen.gt.sm ? '28px' : '40px'"
+                :width="$q.screen.gt.sm ? '28px' : '38px'"
+                :height="$q.screen.gt.sm ? '28px' : '38px'"
                 name="squareFace.svg"
               />
 

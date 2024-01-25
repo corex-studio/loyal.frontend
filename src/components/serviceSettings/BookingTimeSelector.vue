@@ -2,31 +2,48 @@
   <div class="column full-width gap-8 pl-1">
     <div class="subtitle-text">Время</div>
 
-    <div class="row full-width gap-8 body">
+    <div class="row full-width gap-md-8 gap-xs-6 body">
       <div
-        v-for="(el, index) in availableTimes?.slice(0, 4)"
+        v-for="(el, index) in availableTimes?.slice(0, 3)"
         :key="index"
         @click="$emit('updated', el)"
+        :style="`height: ${$q.screen.lt.md ? '40px' : '48px'}`"
         :class="{ 'time-element-selected': el === time }"
-        class="px-9 py-6 border-radius cursor-pointer time-element"
+        class="px-9 border-radius cursor-pointer row items-center time-element"
       >
         {{ el }}
       </div>
       <div
-        class="time-element row items-center border-radius px-9 py-6 gap-3 cursor-pointer"
+        class="time-element row items-center border-radius px-9 gap-3 cursor-pointer"
+        :style="`height: ${$q.screen.lt.md ? '40px' : '48px'}`"
         :class="{
           'time-element-selected':
-            time && availableTimes?.slice(4).includes(time),
+            time && availableTimes?.slice(3).includes(time),
         }"
       >
-        Другое время
-        <CIcon size="20px" name="fa-regular fa-angle-down" />
+        <template v-if="$q.screen.gt.sm">
+          Другое время
+          <CIcon size="20px" name="fa-regular fa-angle-down" />
+        </template>
+        <CIcon
+          v-else
+          name="fa-regular fa-ellipsis"
+          color="on-background-color"
+          size="20px"
+          hover-color="primary"
+        ></CIcon>
 
-        <q-menu v-model="menu" fit>
-          <div ref="menuRef" class="column no-wrap full-width">
+        <q-menu
+          v-model="menu"
+          :fit="$q.screen.gt.sm"
+          :style="
+            $q.screen.lt.md ? 'width: 200px !important; overflow-x: hidden' : ''
+          "
+        >
+          <div ref="menuRef" class="column no-wrap full-width px-4">
             <div
               v-for="(el, index) in totalDayTimes()"
-              :class="[el, { 'bold ': el === time }]"
+              :class="[el, { 'selected-time border-radius bold': el === time }]"
               :key="index"
               @click="selectTime(el)"
               :style="
@@ -109,5 +126,9 @@ const availableTimes = computed(() => {
 
 .time-element-selected {
   outline: 2px var(--primary) solid;
+}
+
+.selected-time {
+  border: 2px var(--primary) solid;
 }
 </style>

@@ -1,12 +1,13 @@
 <template>
   <div class="column full-width gap-8 pl-1">
     <div class="subtitle-text">Дата</div>
-    <div class="row full-width gap-8 body">
+    <div class="row full-width gap-md-8 gap-xs-6 body">
       <div
         v-for="(el, index) in previewDates"
         :key="index"
         @click="$emit('updated', el)"
-        class="date-element px-8 py-6 border-radius cursor-pointer"
+        :style="`height: ${$q.screen.lt.md ? '40px' : '48px'}`"
+        class="date-element px-8 row items-center border-radius cursor-pointer"
         :class="{
           'text-on-secondary-burron-color date-element-selected': el === date,
         }"

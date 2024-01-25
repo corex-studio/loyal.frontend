@@ -2,11 +2,7 @@
   <div id="footer" class="full-width">
     <div class="row full-width no-wrap justify-between gap-15">
       <div class="row no-wrap gap-14 col-grow">
-        <div
-          v-if="$menu.item?.groups?.filter((el) => el.items.length).length"
-          class="column text-on-bottom-menu-color"
-          style="width: 186px"
-        >
+        <div class="column text-on-bottom-menu-color" style="width: 186px">
           <div class="bold header3 mb-10">Информация</div>
           <div class="row gap-25">
             <div class="column gap-8">

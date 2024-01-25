@@ -3,18 +3,31 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="466px"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
+    :no-close="$q.screen.lt.md"
   >
     <div class="text-on-background-color">
-      <div class="header2 bold">Вход на сайт</div>
+      <div
+        :style="$q.screen.lt.md ? 'text-align: center' : ''"
+        class="header2 bold"
+      >
+        Вход на сайт
+      </div>
 
       <div v-if="currentStep === 1" class="column mt-4">
         <div class="column full-width">
-          <div class="body">Введите номер телефона, чтобы войти на сайт</div>
+          <div
+            :style="$q.screen.lt.md ? 'text-align: center' : ''"
+            class="body"
+          >
+            Введите номер телефона, чтобы войти на сайт
+          </div>
         </div>
-        <div class="mt-10">
+        <div class="mt-md-10 mt-xs-8">
           <CInput
             input-class="subtitle-text text-on-input-color input "
-            height="50px"
+            :height="$q.screen.lt.md ? '44px' : '50px'"
             outlined
             mask="+7 (###) ###-##-##"
             unmasked-value
@@ -44,10 +57,14 @@
       </div>
       <div v-else class="mt-4">
         <div class="column body gap-1 full-width">
-          <div style="opacity: 0.7" class="body">
+          <div
+            :style="$q.screen.lt.md ? 'text-align: center' : ''"
+            style="opacity: 0.7"
+            class="body"
+          >
             Код отправлен сообщением на
           </div>
-          <div class="row gap-4">
+          <div :class="{ 'justify-center': $q.screen.lt.md }" class="row gap-4">
             <div>+7{{ data.phone }}</div>
             <CButton
               @click="currentStep = 1"
@@ -69,7 +86,7 @@
         </div>
         <div
           @click="delay ? void 0 : sendSms()"
-          class="row justify-center mt-4 body"
+          class="row justify-center mt-md-4 mt-xs-30 body"
           style="text-decoration: underline"
           :class="{ 'cursor-pointer': !delay }"
         >
@@ -85,7 +102,10 @@
         width="100%"
         :disabled="!data.agreement || !data.phone || data.phone.length < 10"
         :label="currentStep === 1 ? 'Выслать код' : 'Войти'"
-        class="subtitle-text mt-15"
+        class="subtitle-text"
+        :class="
+          $q.screen.lt.md ? (currentStep === 2 ? 'mt-6' : 'mt-36') : 'mt-15'
+        "
         color="primary"
         text-color="on-primary"
         :loading="loading"

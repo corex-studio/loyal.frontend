@@ -1,7 +1,10 @@
 <template>
   <div style="max-width: 628px" class="column full-width">
     <div class="huge3 bold mb-15">История заказов</div>
-    <div class="row items-center gap-4 body">
+    <div
+      class="row items-center full-width gap-4 body no-wrap pt-1 pb-2 pr-1"
+      style="overflow-x: auto"
+    >
       <div
         v-for="(el, index) in orderTypes"
         :key="index"

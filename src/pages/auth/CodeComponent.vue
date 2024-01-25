@@ -4,7 +4,8 @@
       @keydown="kek($event, 1)"
       :model-value="props.code.first"
       mask="#"
-      height="50px"
+      :height="$q.screen.lt.md ? '44px' : '50px'"
+      :width="$q.screen.lt.md ? '44px' : '50px'"
       class="input firstInput"
       :input-class="`${
         error ? 'text-danger' : 'text-on-input-color'
@@ -17,14 +18,14 @@
           : ''
       "
       outlined
-      width="50px"
       @update:model-value="updateFirstDigit"
     />
     <CInput
       @keydown="kek($event, 2)"
       :model-value="props.code.second"
       mask="#"
-      height="50px"
+      :height="$q.screen.lt.md ? '44px' : '50px'"
+      :width="$q.screen.lt.md ? '44px' : '50px'"
       class="input secondInput"
       :class="
         error
@@ -37,14 +38,14 @@
       :input-class="`${
         error ? 'text-danger' : 'text-on-input-color'
       } subtitle-text bold`"
-      width="50px"
       @update:model-value="updateSecondDigit"
     />
     <CInput
       @keydown="kek($event, 3)"
       :model-value="props.code.third"
       mask="#"
-      height="50px"
+      :height="$q.screen.lt.md ? '44px' : '50px'"
+      :width="$q.screen.lt.md ? '44px' : '50px'"
       class="input thirdInput"
       :class="
         error
@@ -57,14 +58,14 @@
       :input-class="`${
         error ? 'text-danger' : 'text-on-input-color'
       } subtitle-text bold`"
-      width="50px"
       @update:model-value="updateThirdDigit"
     />
     <CInput
       @keydown="kek($event, 4)"
       :model-value="props.code.fourth"
       mask="#"
-      height="50px"
+      :height="$q.screen.lt.md ? '44px' : '50px'"
+      :width="$q.screen.lt.md ? '44px' : '50px'"
       class="input fourthInput"
       :class="
         error
@@ -77,7 +78,6 @@
       :input-class="`${
         error ? 'text-danger' : 'text-on-input-color'
       } subtitle-text bold`"
-      width="50px"
       @update:model-value="updateFourthDigit"
     />
   </div>

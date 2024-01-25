@@ -308,6 +308,20 @@ body.screen--sm {
   .q-field {
     max-width: unset !important;
   }
+
+  .q-field {
+    textarea::placeholder {
+      font-size: 14px !important;
+    }
+  }
+}
+
+body.screen--xs {
+  .q-field {
+    textarea::placeholder {
+      font-size: 14px !important;
+    }
+  }
 }
 
 .q-input:not(.q-file).q-field--float .q-field__label {

@@ -1,16 +1,33 @@
 <template>
-  <div>
+  <div class="px-xs-8 px-md-0 py-md-0 py-xs-12">
     <div
-      class="column no-wrap full-width gap-8 pb-10"
-      style="overflow: scroll; height: 374px !important"
+      v-if="$q.screen.lt.md"
+      class="row full-width gap-4 items-center no-wrap mb-10"
+    >
+      <CIcon
+        @click="$emit('back')"
+        size="22px"
+        color="on-background-color"
+        hover-color="primary"
+        name="fa-regular fa-angle-left"
+        class="cursor-pointer"
+      />
+      <div class="header2 bold">Доставка</div>
+    </div>
+    <div
+      class="column no-wrap full-width gap-md-8 gap-xs-2 pb-md-10 pb-xs-12"
+      style="overflow: scroll"
+      :style="$q.screen.gt.sm ? 'height: 374px !important' : ''"
     >
       <template v-if="$deliveryAddress.items.length">
         <div
           v-for="(el, index) in $deliveryAddress.items"
           :key="index"
-          class="row items-center full-width pa-10 justify-between cursor-pointer border-radius"
+          class="row items-center full-width pa-md-10 py-xs-5 justify-between cursor-pointer border-radius"
           @click="$emit('select', el)"
-          :style="`border: 1px ${getBorderColor(el)} solid`"
+          :style="
+            $q.screen.lt.md ? '' : `border: 1px ${getBorderColor(el)} solid`
+          "
         >
           <div class="row col-10 items-center gap-6 no-wrap">
             <RoundedSelector
@@ -39,6 +56,17 @@
         </div>
       </template>
       <div v-else class="subtitle-text">У вас нет адресов доставки</div>
+      <div v-if="$q.screen.lt.md">
+        <CButton
+          @click="$emit('addAddress')"
+          label="Добавить новый адрес"
+          icon="fa-regular fa-plus"
+          text-button
+          text-color="primary"
+          class="body"
+          icon-size="24px"
+        />
+      </div>
     </div>
     <div
       v-if="$slots.bottom"
@@ -54,6 +82,7 @@ import RoundedSelector from '../template/buttons/RoundedSelector.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { lightColor } from 'src/models/store'
 import CIcon from '../template/helpers/CIcon.vue'
+import CButton from '../template/buttons/CButton.vue'
 
 const props = defineProps<{
   currentAddress: DeliveryAddress | null
@@ -62,6 +91,8 @@ const props = defineProps<{
 defineEmits<{
   (evt: 'select', val: DeliveryAddress): void
   (evt: 'edit', val: DeliveryAddress): void
+  (evt: 'back'): void
+  (evt: 'addAddress'): void
 }>()
 
 const getBorderColor = (el: DeliveryAddress) => {

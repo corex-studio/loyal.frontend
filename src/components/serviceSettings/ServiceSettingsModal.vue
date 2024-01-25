@@ -4,15 +4,14 @@
     @update:model-value="$emit('update:modelValue', $event)"
     :width="modalWidth"
     no-padding
+    :height="modalHeight"
     :maximize="$q.screen.lt.lg"
+    :no-close="$q.screen.lt.md"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
   >
-    <!-- :height="
-      currentTab === CartType.YANDEX || currentTab === CartType.DELIVERY_CLUB
-        ? undefined
-        : '600px'
-    " -->
     <template v-if="!newAddressMode">
       <div
+        v-if="$q.screen.gt.sm"
         class="row full-width no-wrap bg-background-color text-on-background-color border-radius"
       >
         <div
@@ -69,14 +68,14 @@
                     label="Выбрать"
                     :disabled="!selectedDeliveryAddress"
                     :loading="$cart.setParamsLoading || $store.catalogLoading"
-                    class="col subtitle-text"
+                    class="col body"
                   />
                   <CButton
-                    @click="newAddressMode = true"
+                    @click="addAddressHandler()"
                     label="Добавить адрес"
                     height="48px"
                     color="secondary-button-color"
-                    class="col subtitle-text"
+                    class="col body"
                     text-color="on-secondary-button-color"
                   />
                 </div>
@@ -93,7 +92,7 @@
                   height="48px"
                   width="100%"
                   :loading="$cart.setParamsLoading || $store.catalogLoading"
-                  class="subtitle-text col-6"
+                  class="body"
                   label="Заберу здесь"
                 />
               </template>
@@ -110,7 +109,7 @@
                     height="48px"
                     :disabled="!selectedSalesPoint"
                     width="100%"
-                    class="subtitle-text col-6"
+                    class="body"
                     label="Выбрать"
                   />
                 </template>
@@ -143,6 +142,102 @@
           :addresses="currentSalesPoints || []"
         />
       </div>
+      <div v-else>
+        <SalesPointsOnMap
+          v-if="
+            mobileViewTypeConfirmed &&
+            (currentTab?.type === CartType.PICKUP ||
+              (currentTab?.type === CartType.BOOKING &&
+                bookingMode === 'bookingList'))
+          "
+          :selected-point="selectedPickupAddress"
+          :addresses="currentSalesPoints || []"
+        />
+        <DeliveryTypeSelector
+          v-if="!mobileViewTypeConfirmed"
+          @confirm="mobileViewTypeConfirmed = true"
+          @select="currentTab = $event"
+          :types="availableCartTypes"
+          :current-tab="currentTab"
+        />
+        <template v-else>
+          <DeliveryAddressesTab
+            v-if="currentTab?.type === CartType.DELIVERY"
+            :current-address="selectedDeliveryAddress"
+            @back="mobileViewTypeConfirmed = false"
+            @select="selectedDeliveryAddress = $event"
+            @edit="editAddressHandler($event)"
+            @add-address="addAddressHandler()"
+          >
+            <template v-slot:bottom>
+              <div class="row full-width gap-6">
+                <CButton
+                  @click="confirmSelectedAddress()"
+                  :height="$q.screen.lt.md ? '40px' : '48px'"
+                  label="Выбрать"
+                  :disabled="!selectedDeliveryAddress"
+                  :loading="$cart.setParamsLoading || $store.catalogLoading"
+                  class="col body"
+                />
+              </div>
+            </template>
+          </DeliveryAddressesTab>
+          <PickupAddressesTab
+            v-if="currentTab?.type === CartType.PICKUP"
+            @select="selectedPickupAddress = $event"
+            @back="mobileViewTypeConfirmed = false"
+            :current-point="selectedPickupAddress"
+          >
+            <template v-slot:bottom>
+              <CButton
+                @click="confirmSelectedAddress()"
+                :height="$q.screen.lt.md ? '40px' : '48px'"
+                width="100%"
+                :loading="$cart.setParamsLoading || $store.catalogLoading"
+                class="subtitle-text"
+                label="Заберу здесь"
+              />
+            </template>
+          </PickupAddressesTab>
+          <template v-if="currentTab?.type === CartType.BOOKING">
+            <BookingAddressesTab
+              v-if="bookingMode === 'bookingList'"
+              @select="selectedSalesPoint = $event"
+              @back="mobileViewTypeConfirmed = false"
+              :current-point="selectedSalesPoint"
+            >
+              <template v-slot:bottom>
+                <CButton
+                  @click="bookingMode = 'bookingInfo'"
+                  :height="$q.screen.lt.md ? '40px' : '48px'"
+                  :disabled="!selectedSalesPoint"
+                  width="100%"
+                  class="subtitle-text col-6"
+                  label="Выбрать"
+                />
+              </template>
+            </BookingAddressesTab>
+            <BookingInfo
+              v-if="bookingMode != 'bookingList'"
+              :sales-point="selectedSalesPoint"
+              :current-mode="bookingMode"
+              @change-booking-mode="bookingMode = $event"
+              @close="$emit('update:modelValue', false)"
+              @back="navigationButtonClickHandler()"
+            />
+          </template>
+          <DeliveryAggregatorTab
+            v-if="currentTab?.type === AggregatorType.DELIVERY_CLUB"
+            :tab="currentTab"
+            @back="mobileViewTypeConfirmed = false"
+          />
+          <YandexAggregatorTab
+            v-if="currentTab?.type === AggregatorType.YANDEX"
+            :tab="currentTab"
+            @back="mobileViewTypeConfirmed = false"
+          />
+        </template>
+      </div>
     </template>
     <CreateDeliveryAddress
       v-else
@@ -165,7 +260,7 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
-import { Notify } from 'quasar'
+import { Notify, useQuasar } from 'quasar'
 import { store } from 'src/models/store'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import ServiceModalHeader from './ServiceModalHeader.vue'
@@ -181,6 +276,7 @@ import DeliveryAggregatorTab from './DeliveryAggregatorTab.vue'
 import YandexAggregatorTab from './YandexAggregatorTab.vue'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import DeliveryTypeSelector from './DeliveryTypeSelector.vue'
 
 export type TabRaw = {
   label: string | null
@@ -205,6 +301,8 @@ export type BookingModes =
 
 const currentTab = ref<TabRaw | null>(null)
 
+const mobileViewTypeConfirmed = ref(false)
+
 const newAddressMode = ref(false)
 
 const selectedDeliveryAddress = ref<DeliveryAddress | null>(null)
@@ -217,10 +315,13 @@ const bookingMode = ref<BookingModes>('bookingList')
 
 const deliveryAddressToEdit = ref<DeliveryAddress | null>(null)
 
+const q = useQuasar()
+
 watch(
   () => props.modelValue,
   (v) => {
     if (v) {
+      mobileViewTypeConfirmed.value = false
       void deliveryAddressRepo.list().then(() => {
         selectCurrentAddress()
         if (availableCartTypes.value.length) {
@@ -232,13 +333,24 @@ watch(
 )
 
 const modalWidth = computed(() => {
-  return newAddressMode.value
+  return q.screen.lt.md
+    ? '450px'
+    : newAddressMode.value
     ? '1094px'
     : currentTab.value?.type === CartType.PICKUP ||
       (currentTab.value?.type === CartType.BOOKING &&
         bookingMode.value === 'bookingList')
     ? '1300px'
     : '649px'
+})
+
+const modalHeight = computed(() => {
+  return q.screen.lt.md &&
+    (currentTab.value?.type === CartType.PICKUP ||
+      currentTab.value?.type === CartType.BOOKING ||
+      newAddressMode.value)
+    ? '100%'
+    : undefined
 })
 
 const currentSalesPoints = computed(() => {
@@ -302,6 +414,11 @@ const availableCartTypes = computed(() => {
   return result
 })
 
+const addAddressHandler = () => {
+  deliveryAddressToEdit.value = null
+  newAddressMode.value = true
+}
+
 const editAddressHandler = (v: DeliveryAddress) => {
   newAddressMode.value = true
   deliveryAddressToEdit.value = v
@@ -314,8 +431,13 @@ const deliveryAddressCreateHandler = () => {
 
 const navigationButtonClickHandler = () => {
   if (bookingMode.value === 'tablePicker') bookingMode.value = 'bookingInfo'
-  if (bookingMode.value === 'tableDetail') bookingMode.value = 'tablePicker'
-  if (bookingMode.value === 'successBooked') bookingMode.value = 'bookingList'
+  else if (bookingMode.value === 'tableDetail')
+    bookingMode.value = 'tablePicker'
+  else if (
+    bookingMode.value === 'successBooked' ||
+    bookingMode.value === 'bookingInfo'
+  )
+    bookingMode.value = 'bookingList'
 }
 
 const selectCurrentAddress = () => {
