@@ -1,7 +1,7 @@
 <template>
   <template v-if="ready">
     <PrepareUiSettings />
-    <q-layout view="lHh Lpr lFf" class="bg-background-color">
+    <q-layout view="lHh Lpr lFf" class="bg-background-color relative-position">
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
       <!-- <TopHeader v-if="!isArrangementPage && $q.screen.gt.sm" /> -->
 
