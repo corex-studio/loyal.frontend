@@ -74,6 +74,7 @@
             >
               <img width="82" height="82" :src="qrCode" alt="QR Code" />
             </div>
+
             <div
               :class="$q.screen.gt.md ? 'row' : 'column'"
               class="gap-lg-12 gap-xs-8"

@@ -74,7 +74,7 @@ export type SalesPointRaw = {
   payment_settings: PaymentSettings
   external_id: string
   address: string
-  custom_address: string
+  custom_address: string | null
   coords: {
     latitude: number | null
     longitude: number | null
@@ -104,7 +104,7 @@ export class SalesPoint implements BaseModel {
   paymentSettings: PaymentSettings
   externalId: string
   address: string
-  customAddress: string
+  customAddress: string | null
   coords: {
     latitude: number | null
     longitude: number | null
