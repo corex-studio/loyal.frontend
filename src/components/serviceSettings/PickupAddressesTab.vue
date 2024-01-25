@@ -38,7 +38,7 @@
               :model-value="el.id === currentPoint?.id"
             />
             <div class="body ellipsis-2-lines">
-              {{ el.customAddress.length || el.address }}
+              {{ el.customAddress || el.address }}
             </div>
           </div>
           <!-- <CIcon
