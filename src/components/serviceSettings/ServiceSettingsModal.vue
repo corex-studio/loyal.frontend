@@ -26,10 +26,10 @@
             currentTab?.type === CartType.PICKUP ||
             (currentTab?.type === CartType.BOOKING &&
               bookingMode === 'bookingList')
-              ? 'width: 47%'
+              ? `width: ${$q.screen.md ? '100%' : '47%'} `
               : ''
           "
-          class="column py-15 px-15"
+          class="column py-lg-15 py-xs-10 px-xs-10 px-lg-15"
         >
           <ServiceModalHeader :tab="currentTab">
             <template v-slot:action>
@@ -134,9 +134,10 @@
         </div>
         <SalesPointsOnMap
           v-if="
-            currentTab?.type === CartType.PICKUP ||
-            (currentTab?.type === CartType.BOOKING &&
-              bookingMode === 'bookingList')
+            $q.screen.gt.md &&
+            (currentTab?.type === CartType.PICKUP ||
+              (currentTab?.type === CartType.BOOKING &&
+                bookingMode === 'bookingList'))
           "
           :selected-point="selectedPickupAddress"
           :addresses="currentSalesPoints || []"

@@ -266,7 +266,7 @@
         <MainHeaderMobile v-else />
       </div> -->
     </q-header>
-    <ArrangementHeader v-else />
+    <ArrangementHeader v-else-if="$q.screen.gt.sm" />
     <BonusesInDevModal v-model="inDevelopmentModal" />
   </div>
 </template>

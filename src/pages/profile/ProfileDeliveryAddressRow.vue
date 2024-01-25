@@ -70,4 +70,14 @@ const structure = computed<MenuActionItems[]>(() => {
   width: 44px;
   min-width: 44px;
 }
+
+body.screen--xs,
+body.screen--sm {
+  .mark-block {
+    height: 40px;
+    min-height: 40px;
+    width: 40px;
+    min-width: 40px;
+  }
+}
 </style>

@@ -30,8 +30,8 @@
 
       <div
         :class="[
-          !noPadding ? 'pb-15 px-15' : dialogClass,
-          noPadding ? '' : $slots.header ? 'pt-10' : 'pt-15',
+          !noPadding ? 'pb-md-15 pb-xs-12 px-md-15 px-xs-8' : dialogClass,
+          noPadding ? '' : $slots.header ? 'pt-10' : 'pt-md-15 pt-xs-12',
         ]"
         :style="`overflow-y:${noOverflow ? 'hidden' : 'auto'};
           width: 100%;

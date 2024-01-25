@@ -159,7 +159,7 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { store } from 'src/models/store'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 // import * as qr from 'qr-ts'
 

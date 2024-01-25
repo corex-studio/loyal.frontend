@@ -1,5 +1,5 @@
 <template>
-  <div class="px-xs-8 px-md-0 py-md-0 py-xs-12">
+  <div :class="{ 'px-xs-8 px-md-0 py-md-0 py-xs-12': !noPadding }">
     <div
       v-if="$q.screen.lt.md"
       class="row full-width gap-4 items-center no-wrap mb-10"
@@ -45,6 +45,7 @@
             </div>
           </div>
           <CIcon
+            v-if="!selectionOnly"
             @click="$emit('edit', el)"
             class="cursor-pointer"
             hover-color="primary"
@@ -56,7 +57,7 @@
         </div>
       </template>
       <div v-else class="subtitle-text">У вас нет адресов доставки</div>
-      <div v-if="$q.screen.lt.md">
+      <div v-if="$q.screen.lt.md && !selectionOnly">
         <CButton
           @click="$emit('addAddress')"
           label="Добавить новый адрес"
@@ -86,6 +87,8 @@ import CButton from '../template/buttons/CButton.vue'
 
 const props = defineProps<{
   currentAddress: DeliveryAddress | null
+  noPadding?: boolean
+  selectionOnly?: boolean
 }>()
 
 defineEmits<{

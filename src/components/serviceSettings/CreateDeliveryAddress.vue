@@ -9,10 +9,10 @@
       style="overflow-y: auto"
       :style="$q.screen.lt.md ? '' : 'width: 47%'"
       ref="dataContainer"
-      class="column no-wrap justify-between text-on-background-color pa-md-15 py-xs-12 px-xs-8"
+      class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 py-xs-12 px-xs-8"
     >
       <div class="column full-width gap-md-8 gap-xs-6">
-        <div class="row items-center no-wrap gap-5 mb-md-12 mb-xs-4">
+        <div class="row items-center no-wrap gap-5 mb-md-7 mb-xs-4">
           <CIcon
             v-if="backCallback"
             @click="backCallback()"
@@ -94,7 +94,7 @@
       :style="
         $q.screen.lt.md
           ? `height: ${mobileViewMapHeight}px !important`
-          : 'height: 600px; width: 600px'
+          : 'height: 600px; width: 53%'
       "
     >
       <div

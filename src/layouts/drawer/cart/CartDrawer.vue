@@ -26,7 +26,7 @@
         >
           <div class="row items-center no-wrap gap-md-5 gap-xs-4 header2 bold">
             <CIcon
-              v-if="$q.screen.lt.md"
+              v-if="$q.screen.lt.lg"
               @click="$store.cartDrawer = false"
               name="fa-regular fa-angle-left"
               size="22px"

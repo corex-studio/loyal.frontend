@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="authentication.user"
-    class="row full-width border-radius pa-10 justify-between items-start card-element no-wrap"
+    class="row gap-5 full-width border-radius pa-10 justify-between items-start card-element no-wrap"
   >
     <div class="row gap-13 items-center no-wrap">
       <q-img
@@ -68,6 +68,6 @@ defineEmits<{
 <style lang="scss" scoped>
 .card-element {
   // background: linear-gradient(90deg, var(--accent) 50%, var(--primary) 100%);
-  outline: 2px var(--primary) solid;
+  border: 2px var(--primary) solid;
 }
 </style>

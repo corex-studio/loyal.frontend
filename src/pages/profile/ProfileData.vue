@@ -1,10 +1,23 @@
 <template>
   <div
-    style="max-width: 520px; width: 100%"
-    class="text-on-background-color column"
+    :style="`max-width: ${$q.screen.lt.lg ? '' : '520px'}; width: 100%`"
+    class="text-on-background-color column mb-xs-40 mb-lg-0"
   >
+    <div
+      v-if="$q.screen.lt.lg"
+      class="row full-width items-center justify-between mb-md-15 mb-xs-8"
+    >
+      <div class="huge3 bold">Мои данные</div>
+      <CButton
+        @click="acceptModal = true"
+        icon-right="fa-regular fa-arrow-right-from-bracket"
+        text-button
+        text-color="primary"
+        ><div class="body bold">Выйти</div></CButton
+      >
+    </div>
     <ProfileUserCard @edit-profile="editProfileModal = true" />
-    <div class="row full-width gap-10 mt-12">
+    <div class="row full-width gap-md-10 gap-xs-6 mt-md-12 mt-xs-10">
       <div
         style="max-width: 50%"
         class="border-radius pa-10 col column gap-6 bordered-element"
@@ -32,6 +45,7 @@
       ></CCheckBox>
     </div> -->
     <CButton
+      v-if="$q.screen.gt.md"
       style="width: 100%; max-width: 200px"
       @click="acceptModal = true"
       label="Выйти"
