@@ -3,21 +3,26 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="649px"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
   >
-    <template v-slot:header>Адреса доставки</template>
+    <template v-if="$q.screen.gt.sm" v-slot:header>Адреса доставки</template>
     <DeliveryAddressesTab
       @select="currentAddress = $event"
+      @back="$emit('update:modelValue', false)"
       :currentAddress="currentAddress"
+      no-padding
+      selection-only
     >
       <template v-slot:bottom>
         <div class="row full-width gap-6">
           <CButton
             @click="select()"
-            height="48px"
+            :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
             label="Выбрать"
             :disabled="!currentAddress"
             :loading="$cart.setParamsLoading || $store.catalogLoading"
-            class="col subtitle-text"
+            class="col body"
           />
           <!-- <CButton
             label="Добавить адрес"

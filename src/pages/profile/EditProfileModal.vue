@@ -3,8 +3,19 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="490px"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
   >
-    <div class="huge3 bold mb-15">Мои данные</div>
+    <div class="row full-width items-center gap-4 mb-15">
+      <CIcon
+        v-if="$q.screen.lt.md"
+        @click="$emit('update:modelValue', false)"
+        name="fa-regular fa-angle-left"
+        class="cursor-pointer"
+        hover-color="primary"
+        size="24px"
+      />
+      <div class="huge3 bold">Мои данные</div>
+    </div>
     <div v-if="item" class="column full-width gap-10">
       <CInput
         external-label="Ваше имя"
@@ -80,6 +91,7 @@ import { Notify } from 'quasar'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
+import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import rules from 'src/corexModels/rules'
 import { authentication } from 'src/models/authentication/authentication'

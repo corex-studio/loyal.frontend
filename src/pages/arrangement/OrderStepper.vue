@@ -7,10 +7,7 @@
     >
       <div
         class="row no-wrap full-height"
-        :class="[
-          index !== steps.length - 1 ? 'col' : '',
-          { 'mb-10': $q.screen.sm && index !== currentStep },
-        ]"
+        :class="[index !== steps.length - 1 ? 'col' : '', ,]"
       >
         <div
           class="bold header2 row justify-center items-center step"
@@ -24,10 +21,6 @@
             index <= currentStep ? '' : `border: 1px ${getBorderColor} solid`
           "
         >
-          <!-- <div v-if="index >= currentStep" style="margin-top: 1px">
-            {{ index + 1 }}
-          </div> -->
-          <!-- <CIcon v-else color="white" size="22" name="far fa-check"></CIcon> -->
           <CIcon
             size="20px"
             :name="el.icon"
@@ -40,18 +33,10 @@
           v-if="index !== steps.length - 1"
           class="devider col-grow"
           :style="`margin-top: ${
-            $q.screen.sm ? (index === currentStep ? '12' : '10') : '25'
+            $q.screen.lt.md ? '22' : '25'
           }px; background-color: ${getBorderColor}`"
         ></div>
       </div>
-      <!-- <div
-        v-if="!$q.screen.sm || index === currentStep"
-        class="mt-2 text-on-background-color"
-        style="white-space: nowrap"
-        :style="getTitleStyle(index)"
-      >
-        {{ el.title }}
-      </div> -->
     </div>
   </div>
 </template>
@@ -111,6 +96,15 @@ const steps = computed(() => {
 .devider {
   // min-width: 119px;
   height: 0.5px !important;
+}
+
+body.screen--xs,
+body.screen--sm {
+  .step {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+  }
 }
 
 // .unselected-step {

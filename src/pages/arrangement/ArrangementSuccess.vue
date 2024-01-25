@@ -1,6 +1,26 @@
 <template>
-  <div v-if="$order.item" class="pt-25 text-on-background-color">
-    <div class="huge3 bold mb-8">Спасибо за заказ!</div>
+  <div
+    v-if="$order.item"
+    class="pt-lg-25 mt-md-15 mt-xs-12 text-on-background-color"
+  >
+    <div
+      class="row full-width items-center no-wrap mb-xs-10 mb-md-5 mb-lg-8 gap-4"
+    >
+      <CIcon
+        v-if="$q.screen.lt.md"
+        name="fa-regular fa-angle-left"
+        size="24px"
+        color="on-background-color"
+        hover-color="primary"
+        class="cursor-pointer"
+        @click="
+          $router.push({
+            name: 'home',
+          })
+        "
+      />
+      <div class="huge3 bold">Спасибо за заказ!</div>
+    </div>
     <div class="row full-width">
       <div
         :style="`max-width: ${
@@ -25,12 +45,12 @@
             $uiSettings.item?.backgroundColor.on_color || '000',
             '10'
           )} solid`"
-          class="pa-10 column full-width box-shadow border-radius mt-15"
+          class="pa-10 column full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
         >
           <div class="body mb-2" style="opacity: 0.7">
             Заказ № {{ $order.item.number || '-' }}
           </div>
-          <div class="header2 bold mb-8">
+          <div class="header2 bold mb-md-8 mb-xs-6">
             Приготовим к {{ $order.item?.deliveryTime || '-' }}
           </div>
           <OrderStepper
@@ -46,7 +66,7 @@
         $uiSettings.item?.backgroundColor.on_color || '000',
         '10'
       )} solid; max-width: ${$q.screen.gt.md ? '550px' : ''} `"
-      class="column full-width mt-12 mb-lg-20 mb-xs-12 no-wrap gap-4 pa-10 border-radius box-shadow"
+      class="column full-width mt-md-12 mt-xs-8 mb-lg-20 mb-xs-8 mb-md-12 no-wrap gap-4 pa-10 border-radius box-shadow"
     >
       <div class="body" style="opacity: 0.7">
         {{ $order.item.type === CartType.PICKUP ? 'Самовывоз' : 'Доставка' }} из
@@ -65,13 +85,11 @@
           $uiSettings.item?.backgroundColor.on_color || '000',
           '10'
         )} solid`"
-        class="col border-radius box-shadow pa-10 column"
+        class="col border-radius box-shadow pa-md-10 pa-xs-8 column"
         style="height: fit-content"
       >
         <div class="row full-width justify-between items-center mb-6">
-          <div style="opacity: 0.8" class="subtitle-text bold">
-            Состав заказа
-          </div>
+          <div style="opacity: 0.8" class="subtitle-text">Состав заказа</div>
         </div>
         <div class="column full-width gap-5">
           <div

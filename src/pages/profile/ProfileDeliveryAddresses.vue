@@ -1,19 +1,24 @@
 <template>
   <div
     v-if="$deliveryAddress.items.length"
-    :style="$q.screen.xs ? '' : 'max-width: 515px;'"
+    :style="$q.screen.lt.lg ? '' : 'max-width: 515px;'"
     style="width: 100%; height: fit-content"
-    class="column gap-15 border-radius bg-background-color text-on-background-color"
+    class="column gap-md-15 gap-xs-10 border-radius bg-background-color text-on-background-color"
   >
     <div class="huge3 bold">Мои адреса</div>
-    <div class="column full-width gap-10 no-wrap">
-      <ProfileDeliveryAddressRow
-        v-for="(el, index) in $deliveryAddress.items"
-        :key="index"
-        :item="el"
-        @edit="selectAddressToEdit($event)"
-        @delete="openDeleteAddressModal($event)"
-      />
+    <div class="column full-width gap-lg-10 gap-xs-8 no-wrap">
+      <template v-for="(el, index) in $deliveryAddress.items" :key="index">
+        <ProfileDeliveryAddressRow
+          :item="el"
+          @edit="selectAddressToEdit($event)"
+          @delete="openDeleteAddressModal($event)"
+        />
+        <q-separator
+          v-if="$q.screen.lt.lg"
+          color="divider-color"
+          class="ml-27"
+        />
+      </template>
     </div>
   </div>
   <div
@@ -36,12 +41,13 @@
   <div
     style="width: fit-content"
     @click="deliveryAddressModal = true"
-    class="row cursor-pointer items-center gap-6 no-wrap mt-10"
+    class="row cursor-pointer items-center gap-6 no-wrap mt-md-10 mt-xs-8"
   >
     <CIconButton
       color="secondary-button-color"
       icon-color="on-secondary-button-color"
       icon-size="20px"
+      :size="$q.screen.gt.sm ? '44px' : '40px'"
       icon="fa-regular fa-plus"
     />
     <div class="body">Добавить новый адрес</div>

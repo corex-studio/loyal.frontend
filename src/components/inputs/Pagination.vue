@@ -11,7 +11,7 @@
           v-if="page !== lastPage"
           @click="$emit('appendItems', page + 1)"
           width="155px"
-          height="44px"
+          :height="$q.screen.lt.md ? '40px' : '44px'"
           class="body"
           >{{ 'Показать еще' }}</CButton
         >

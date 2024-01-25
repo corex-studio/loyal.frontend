@@ -1,5 +1,8 @@
 <template>
-  <div style="max-width: 628px" class="column full-width">
+  <div
+    :style="`max-width: ${$q.screen.lt.lg ? '' : '628px'}`"
+    class="column full-width"
+  >
     <div class="huge3 bold mb-15">История заказов</div>
     <div
       class="row items-center full-width gap-4 body no-wrap pt-1 pb-2 pr-1"
@@ -12,7 +15,7 @@
         :class="
           el.val === currentType
             ? 'bg-secondary-button-color text-on-secondary-button-color bold'
-            : 'text-on-background-color bordered'
+            : 'text-on-background-color bordered-type'
         "
         class="cursor-pointer px-10 body py-6 border-radius"
       >
@@ -31,7 +34,7 @@
         v-else
         :style="$q.screen.xs ? '' : 'width: 416px'"
         style="min-height: 180px"
-        class="text-on-background-color border-radius bordered column justify-center items-center gap-5"
+        class="text-on-background-color border-radius bordered-type column justify-center items-center gap-5"
       >
         <CIcon
           color="on-on-background-color"
@@ -123,7 +126,7 @@ const orderTypes = ref<
 </script>
 
 <style lang="scss" scoped>
-.bordered {
-  outline: 1px var(--secondary-button-color) solid;
+.bordered-type {
+  border: 1px var(--secondary-button-color) solid;
 }
 </style>

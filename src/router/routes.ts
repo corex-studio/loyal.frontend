@@ -18,6 +18,9 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'profile',
         name: 'profilePage',
+        redirect: {
+          name: 'profileData',
+        },
         children: [
           {
             path: 'data',

@@ -37,7 +37,7 @@
         <!-- {{ $q.screen.width }} -->
         <router-view />
         <CartDrawer />
-        <CartOverlayButton />
+        <CartOverlayButton v-if="!$route.path.includes('arrangement')" />
       </q-page-container>
 
       <q-footer v-if="!$store.tableMode">

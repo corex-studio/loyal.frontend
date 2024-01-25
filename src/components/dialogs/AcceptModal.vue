@@ -10,7 +10,7 @@
     <div class="row gap-sm-10 gap-xs-5 flex-center">
       <CButton
         label="Отменить"
-        height="48px"
+        :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
         class="body"
         @click="$emit('update:modelValue', false)"
         color="secondary-button-color"
@@ -20,7 +20,7 @@
       <CButton
         class="body"
         label="Подтвердить"
-        height="48px"
+        :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
         @click="acceptHandler"
         :width="$q.screen.xs ? '100%' : '46%'"
       />

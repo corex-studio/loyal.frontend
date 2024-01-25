@@ -1,42 +1,38 @@
 <template>
   <div
-    :style="`min-width: ${
-      $q.screen.lt.md ? '180px' : $q.screen.md ? '210px' : '300px'
-    };
-      max-width: ${
-        $q.screen.lt.md ? '180px' : $q.screen.md ? '210px' : '300px'
-      };
+    :style="`min-width: ${$q.screen.gt.md ? '300px' : 'unset'};
+      max-width: ${$q.screen.gt.md ? '300px' : 'unset'};
       height: fit-content;
-      position: sticky;
-      top: 80px;
+      position: ${$q.screen.lt.lg ? 'relative' : 'sticky'};
+      top: ${$q.screen.lt.lg ? '0px' : '80px'};
+      z-index:9; 
+      overflow-x: ${$q.screen.lt.lg ? 'auto' : 'unset'}
       `"
-    class="column gap-1"
-    :class="{ 'full-width': $q.screen.xs }"
+    class="gap-lg-1 gap-md-8 gap-xs-6 bg-background-color"
+    :class="[
+      $q.screen.lt.lg ? 'row pt-md-20 pt-xs-12 no-wrap full-width' : 'column',
+    ]"
   >
-    <div v-for="(el, index) in tabs" :key="index">
-      <div
-        @click="tabClickHandler(el.routeName)"
-        :class="
-          $route.name === el.routeName
-            ? 'bg-secondary-button-color text-on-secondary-button-color'
-            : ''
-        "
-        class="row full-width cursor-pointer items-center no-wrap gap-5 px-10 border-radius py-6"
-      >
-        <div class="body bold">
-          {{ el.label }}
-        </div>
+    <div
+      v-for="(el, index) in tabs"
+      :key="index"
+      @click="tabClickHandler(el.routeName)"
+      :class="
+        $route.name === el.routeName
+          ? 'bg-secondary-button-color text-on-secondary-button-color'
+          : $q.screen.lt.lg
+          ? 'bordered'
+          : 'full-width'
+      "
+      class="row cursor-pointer items-center no-wrap gap-5 px-10 border-radius py-6 mb-xs-2 mb-lg-0"
+    >
+      <div class="body bold ellipsis">
+        {{ el.label }}
       </div>
     </div>
   </div>
-  <!-- <AcceptModal
-    :model-value="acceptModal"
-    @update:model-value="acceptModal = false"
-    @accept="logOut()"
-  /> -->
 </template>
 <script lang="ts" setup>
-// import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -51,10 +47,6 @@ const tabs = ref([
     label: 'Мои адреса',
     routeName: 'profileAddresses',
   },
-  // {
-  //   label: 'Способы оплаты',
-  //   routeName: 'profileCards',
-  // },
 
   {
     label: 'О заведении',
@@ -64,10 +56,6 @@ const tabs = ref([
     label: 'История заказов',
     routeName: 'ordersHistory',
   },
-  // {
-  //   label: 'Выйти',
-  //   icon: 'fa-light fa-right-from-bracket',
-  // },
 ])
 
 const tabClickHandler = async (routeName?: string) => {
@@ -76,3 +64,9 @@ const tabClickHandler = async (routeName?: string) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.bordered {
+  border: 1px var(--secondary-button-color) solid;
+}
+</style>

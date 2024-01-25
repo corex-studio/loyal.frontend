@@ -4,8 +4,15 @@
     @update:model-value="$emit('update:modelValue', $event)"
     width="1094px"
     no-padding
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
+    :height="$q.screen.lt.md ? '100%' : undefined"
   >
-    <CreateDeliveryAddress :address="address" @updated="$emit('create')" />
+    <CreateDeliveryAddress
+      :back-callback="() => $emit('update:modelValue', false)"
+      :address="address"
+      @updated="$emit('create')"
+    />
   </CDialog>
 </template>
 <script lang="ts" setup>

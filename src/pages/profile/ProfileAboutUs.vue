@@ -1,6 +1,9 @@
 <template>
-  <div v-if="company" class="column gap-20 full-width text-on-background-color">
-    <div class="column full-width gap-9">
+  <div
+    v-if="company"
+    class="column gap-lg-20 gap-md-15 gap-xs-12 full-width text-on-background-color"
+  >
+    <div class="column full-width gap-md-10 gap-xs-8">
       <div class="row gap-4 no-wrap items-center">
         <CIcon
           v-if="$companyGroup.item && $companyGroup.item?.companies.length > 1"
@@ -19,13 +22,22 @@
       class="full-width"
       :slides-per-view="1"
       :items="company.images"
+      :use-bullets="$q.screen.lt.lg"
     >
       <template v-slot:item="{ item }">
-        <div style="height: 530px; overflow: hidden">
+        <div
+          :style="`overflow: hidden; height: ${
+            $q.screen.lt.lg ? ($q.screen.md ? '300' : '170') : '530'
+          }px`"
+        >
           <q-img
-            height="530px"
+            :height="
+              $q.screen.lt.lg ? ($q.screen.md ? '300px' : '170px') : '530px'
+            "
             class="border-radius"
-            style="min-height: 530px"
+            :style="`min-height: ${
+              $q.screen.lt.lg ? ($q.screen.md ? '300' : '170') : '530'
+            }px`"
             :src="item.image || $store.images.empty"
             fit="cover"
           >
@@ -55,51 +67,47 @@
     </q-img>
     <div v-if="contacts.length" class="column full-width">
       <div class="huge3 bold mb-10">Наши контакты</div>
-
-      <GridContainer
-        :items="contacts"
-        :lg="3"
-        :xl="3"
-        :md="1"
-        :sm="1"
-        :xs="1"
-        :gap="$q.screen.gt.md ? '16px' : $q.screen.md ? '12px' : '8px'"
+      <div
+        style="overflow-x: auto"
+        class="row full-width items-center no-wrap gap-xs-4 gap-md-6 gap-lg-8"
       >
-        <template v-slot:item="{ item }">
-          <div class="contact-block border-radius pa-8 column">
-            <div class="header3 bold mb-5">{{ item.label }}</div>
-            <div class="row full-width no-wrap">
-              <div class="column col gap-2">
-                <CButton
-                  v-for="(el, index) in item.values"
-                  :key="index"
-                  @click="openLink(el.link)"
-                  class="body"
-                  text-button
-                  :label="el.value"
-                  text-color="on-background-color"
-                  style="width: fit-content"
-                />
-              </div>
-              <div
-                style="
-                  height: 44px;
-                  width: 44px;
-                  min-width: 44px;
-                  align-self: flex-end;
-                "
-                class="bg-secondary-button-color border-radius row items-center justify-center"
-              >
-                <CIcon
-                  color="on-secondary-button-color"
-                  size="20px"
-                  :name="item.icon"
-                />
-              </div>
+        <div
+          v-for="(item, index) in contacts"
+          :key="index"
+          class="contact-block border-radius pa-8 column"
+        >
+          <div class="header3 bold mb-5">{{ item.label }}</div>
+          <div class="row full-width no-wrap">
+            <div class="column col gap-2">
+              <CButton
+                v-for="(el, index) in item.values"
+                :key="index"
+                @click="openLink(el.link)"
+                class="body"
+                text-button
+                :label="el.value"
+                text-color="on-background-color"
+                style="width: fit-content"
+              />
+            </div>
+            <div
+              style="
+                height: 44px;
+                width: 44px;
+                min-width: 44px;
+                align-self: flex-end;
+              "
+              class="bg-secondary-button-color border-radius row items-center justify-center"
+            >
+              <CIcon
+                color="on-secondary-button-color"
+                size="20px"
+                :name="item.icon"
+              />
             </div>
           </div>
-        </template>
-      </GridContainer>
+        </div>
+      </div>
     </div>
 
     <CButton
@@ -133,7 +141,6 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import ProfileAddressesOnMap from './ProfileAddressesOnMap.vue'
 import SelectCompany from './SelectCompany.vue'
 import ContactsModal from './ContactsModal.vue'
-import GridContainer from 'src/components/containers/GridContainer.vue'
 
 const socialsModal = ref(false)
 
@@ -226,6 +233,8 @@ const openLink = (link: string) => {
 
 <style lang="scss" scoped>
 .contact-block {
-  outline: 1px var(--secondary-button-color) solid;
+  border: 1px var(--secondary-button-color) solid;
+  min-width: 280px;
+  width: 100%;
 }
 </style>

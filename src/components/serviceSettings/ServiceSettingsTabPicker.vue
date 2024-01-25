@@ -3,6 +3,7 @@
     <div
       style="height: fit-content; overflow: hidden"
       class="body bg-selector-color border-radius row full-width no-wrap pa-1"
+      :class="$q.screen.lt.lg ? 'secondary-text' : 'body'"
     >
       <div
         v-for="tab in previewTabs"
@@ -17,15 +18,16 @@
           selectedTab?.type === tab.type
             ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
             : 'text-on-selector-color',
+          $q.screen.lt.lg ? 'secondary-text' : 'body',
         ]"
-        class="cursor-pointer border-radius col row items-center justify-center rounded-10 body relative-position py-4"
+        class="cursor-pointer border-radius col row items-center justify-center rounded-10 relative-position py-4"
       >
         {{ tab.label }}
         <slot name="append"></slot>
       </div>
       <div
         v-if="additionalTabs.length"
-        class="py-4 col pl-5 row justify-center row gap-3 cursor-pointer border-radius items-center"
+        class="py-4 col row justify-center row gap-3 cursor-pointer border-radius items-center"
         :class="[
           isAdditionalTabSelected
             ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
