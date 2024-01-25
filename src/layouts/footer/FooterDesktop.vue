@@ -57,7 +57,14 @@
         </div>
       </div>
       <div class="col-shrink text-on-bottom-menu-color">
-        <template v-if="$appSettings.linksData?.app_redirect_link">
+        <template
+          v-if="
+            $appSettings.linksData &&
+            ($appSettings.linksData.app_redirect_link ||
+              $appSettings.linksData.android_download_link ||
+              $appSettings.linksData.ios_download_link)
+          "
+        >
           <div class="header2 bold mb-lg-15 mb-xs-10">
             Скачать мобильное приложение
           </div>
@@ -68,11 +75,17 @@
             class="gap-lg-12 gap-xs-8 text-black3"
           >
             <div
-              v-if="qrCode"
+              v-if="qrCode && $appSettings.linksData?.app_redirect_link"
               class="border-radius"
               style="width: 82px; height: 82px; overflow: hidden"
             >
-              <img width="82" height="82" :src="qrCode" alt="QR Code" />
+              <img
+                width="82"
+                height="82"
+                style="min-width: 82px"
+                :src="qrCode"
+                alt="QR Code"
+              />
             </div>
 
             <div
@@ -80,6 +93,9 @@
               class="gap-lg-12 gap-xs-8"
             >
               <img
+                v-if="$appSettings.linksData.ios_download_link"
+                @click="openLink($appSettings.linksData.ios_download_link)"
+                class="cursor-pointer"
                 style="
                   height: 46px;
                   background-color: #2e2e2e;
@@ -88,7 +104,11 @@
                 "
                 src="~assets/Apple.svg"
               />
+
               <img
+                v-if="$appSettings.linksData.android_download_link"
+                @click="openLink($appSettings.linksData.android_download_link)"
+                class="cursor-pointer"
                 style="
                   height: 46px;
                   background-color: #2e2e2e;
@@ -170,7 +190,7 @@
 <script setup lang="ts">
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { store } from 'src/models/store'
-import { computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { useRoute, useRouter } from 'vue-router'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
@@ -329,17 +349,15 @@ const openLink = (link: string) => {
   window.open(link, '_blank')
 }
 
-onMounted(() => {
-  if (appSettingsRepo.linksData?.app_redirect_link) {
-    qrCode = useQRCode(appSettingsRepo.linksData?.app_redirect_link, {
-      type: 'image/png',
-      color: {
-        light: '#424242',
-        dark: '#fff',
-      },
-    })
-  }
-})
+if (appSettingsRepo.linksData?.app_redirect_link) {
+  qrCode = useQRCode(appSettingsRepo.linksData?.app_redirect_link, {
+    type: 'image/png',
+    color: {
+      light: '#424242',
+      dark: '#fff',
+    },
+  })
+}
 </script>
 
 <style lang="scss" scoped></style>

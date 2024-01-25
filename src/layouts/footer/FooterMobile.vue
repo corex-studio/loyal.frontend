@@ -51,13 +51,18 @@
       </div>
     </div>
     <div
-      v-if="$appSettings.linksData?.app_redirect_link"
+      v-if="
+        $appSettings.linksData &&
+        ($appSettings.linksData.app_redirect_link ||
+          $appSettings.linksData.android_download_link ||
+          $appSettings.linksData.ios_download_link)
+      "
       class="column mt-15 full-width gap-10 no-wrap"
     >
       <div class="header3 bold">Скачать мобильное приложение</div>
       <div class="row full-width gap-12 items-center no-wrap">
         <div
-          v-if="qrCode"
+          v-if="qrCode && $appSettings.linksData.app_redirect_link"
           class="border-radius"
           style="width: 93px; height: 93px; min-width: 93px; overflow: hidden"
         >
@@ -65,6 +70,9 @@
         </div>
         <div class="column gap-6">
           <img
+            v-if="$appSettings.linksData.ios_download_link"
+            @click="openLink($appSettings.linksData.ios_download_link)"
+            class="cursor-pointer"
             style="
               height: 40px;
               background-color: #2e2e2e;
@@ -75,6 +83,9 @@
             src="~assets/Apple.svg"
           />
           <img
+            v-if="$appSettings.linksData.android_download_link"
+            @click="openLink($appSettings.linksData.android_download_link)"
+            class="cursor-pointer"
             style="
               height: 40px;
               background-color: #2e2e2e;
@@ -330,17 +341,14 @@ const scrollToBlock = (v: string, tab?: string) => {
   }
 }
 
-onMounted(() => {
-  if (appSettingsRepo.linksData?.app_redirect_link) {
-    qrCode = useQRCode(appSettingsRepo.linksData?.app_redirect_link, {
-      type: 'image/png',
-      color: {
-        light: '#424242',
-        dark: '#fff',
-      },
-    })
-  }
-})
+if (appSettingsRepo.linksData?.app_redirect_link)
+  qrCode = useQRCode(appSettingsRepo.linksData?.app_redirect_link, {
+    type: 'image/png',
+    color: {
+      light: '#424242',
+      dark: '#fff',
+    },
+  })
 </script>
 
 <style lang="scss" scoped></style>
