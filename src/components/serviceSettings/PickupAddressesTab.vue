@@ -37,7 +37,9 @@
               :width="$q.screen.lt.md ? '22px' : '24px'"
               :model-value="el.id === currentPoint?.id"
             />
-            <div class="body ellipsis-2-lines">{{ el.customAddress }}</div>
+            <div class="body ellipsis-2-lines">
+              {{ el.customAddress.length || el.address }}
+            </div>
           </div>
           <!-- <CIcon
           class="cursor-pointer"
