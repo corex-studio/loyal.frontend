@@ -10,6 +10,7 @@
     no-padding
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
+    :no-close="$q.screen.lt.md"
   >
     <div
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"

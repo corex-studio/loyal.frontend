@@ -1,7 +1,11 @@
 <template>
   <div
-    :style="`min-width: ${$q.screen.xs ? 'unset' : '300px'};
-      max-width: ${$q.screen.xs ? 'unset' : '300px'};
+    :style="`min-width: ${
+      $q.screen.lt.md ? '180px' : $q.screen.md ? '210px' : '300px'
+    };
+      max-width: ${
+        $q.screen.lt.md ? '180px' : $q.screen.md ? '210px' : '300px'
+      };
       height: fit-content;
       position: sticky;
       top: 80px;

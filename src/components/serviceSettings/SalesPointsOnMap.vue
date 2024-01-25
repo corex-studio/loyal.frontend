@@ -1,5 +1,11 @@
 <template>
-  <div style="width: 700px; height: inherit">
+  <div
+    :style="
+      $q.screen.gt.sm
+        ? 'width: 53%; height: inherit'
+        : 'height: 40vh; width: 100%'
+    "
+  >
     <div
       id="map"
       style="width: 100%; height: 100%; z-index: 9"
@@ -16,6 +22,7 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 import { Layer } from 'leaflet'
+import { useQuasar } from 'quasar'
 
 const props = defineProps<{
   selectedPoint: SalesPoint | null
@@ -24,6 +31,7 @@ const props = defineProps<{
 
 let map: CorexLeafletMap
 const drawnItems = new L.FeatureGroup()
+const q = useQuasar()
 
 watch(
   () => props.addresses,
@@ -52,7 +60,9 @@ watch(
 )
 
 const getBorderRadius = computed(() => {
-  return `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
+  return q.screen.lt.md
+    ? 'unsert'
+    : `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
 })
 
 const drawPoints = () => {

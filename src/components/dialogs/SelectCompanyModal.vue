@@ -2,9 +2,10 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    width="735px"
+    :width="$q.screen.lt.md ? '450px' : '735px'"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
+    :no-close="$q.screen.lt.md"
   >
     <div class="huge3 bold mb-md-12 mb-xs-10">Выберите заведение</div>
     <div v-if="$companyGroup.item" class="row full-width">
@@ -38,7 +39,9 @@
       :disabled="!selectedCompany"
       :height="$q.screen.lt.md ? '40px' : '48px'"
       width="100%"
-      :style="$q.screen.gt.md ? 'max-width: 288px' : ''"
+      :style="
+        $q.screen.gt.md ? 'max-width: 288px' : 'position: sticky; bottom: 0px'
+      "
       class="body mt-15"
     />
   </CDialog>

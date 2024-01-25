@@ -1,12 +1,18 @@
 <template>
-  <div style="height: 600px" class="row no-wrap full-width">
+  <div
+    :style="$q.screen.lt.md ? '' : 'height: 600px'"
+    :class="$q.screen.lt.md ? 'column reverse' : 'row '"
+    class="full-width no-wrap"
+  >
     <div
       v-if="newAddress"
-      style="overflow-y: auto; width: 47%"
-      class="column no-wrap justify-between text-on-background-color pa-15"
+      style="overflow-y: auto"
+      :style="$q.screen.lt.md ? '' : 'width: 47%'"
+      ref="dataContainer"
+      class="column no-wrap justify-between text-on-background-color pa-md-15 py-xs-12 px-xs-8"
     >
-      <div class="column full-width gap-8">
-        <div class="row items-center no-wrap gap-5 mb-12">
+      <div class="column full-width gap-md-8 gap-xs-6">
+        <div class="row items-center no-wrap gap-5 mb-md-12 mb-xs-4">
           <CIcon
             v-if="backCallback"
             @click="backCallback()"
@@ -36,6 +42,7 @@
           <CInput
             height="48px"
             class="col"
+            :readonly="isPrivateHouse"
             external-label="Подъезд"
             placeholder="Номер"
             v-model="newAddress.entrance"
@@ -43,6 +50,7 @@
           <CInput
             height="48px"
             class="col"
+            :readonly="isPrivateHouse"
             external-label="Этаж"
             placeholder="Номер"
             v-model="newAddress.floor"
@@ -50,6 +58,7 @@
           <CInput
             height="48px"
             class="col"
+            :readonly="isPrivateHouse"
             external-label="Код двери"
             placeholder="Номер"
             v-model="newAddress.intercom"
@@ -63,7 +72,7 @@
           height="fit-content"
         />
       </div>
-      <div class="mt-15 column full-width gap-12">
+      <div class="mt-md-15 mt-xs-8 column full-width gap-12">
         <CCheckBox
           @click="privateHouseClickHandler()"
           :model-value="isPrivateHouse"
@@ -71,14 +80,6 @@
           class="body"
           label="У меня частный дом"
         />
-        <!-- <q-checkbox
-          @click="privateHouseClickHandler()"
-          :model-value="isPrivateHouse"
-          dense
-          size="50px"
-          class="body"
-          label="У меня частный дом"
-        /> -->
         <CButton
           @click="createAddress()"
           :disabled="!isSaveAvailable"
@@ -89,12 +90,21 @@
         />
       </div>
     </div>
-
-    <div style="height: 600px; width: 600px">
+    <div
+      :style="
+        $q.screen.lt.md
+          ? `height: ${mobileViewMapHeight}px !important`
+          : 'height: 600px; width: 600px'
+      "
+    >
       <div
         id="map"
-        style="width: 100%; height: 600px; z-index: 9"
-        :style="`border-radius: ${getBorderRadius}`"
+        style="z-index: 9; width: 100%"
+        :style="`border-radius: ${getBorderRadius}; ${
+          $q.screen.lt.md
+            ? `height: ${mobileViewMapHeight}px !important`
+            : 'height: 600px;'
+        }`"
         class="map"
       ></div>
     </div>
@@ -107,7 +117,7 @@ import AddressSearch from '../template/inputs/AddressSearch.vue'
 import CInput from '../template/inputs/CInput.vue'
 import { ref, onMounted, computed } from 'vue'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
-import { Notify } from 'quasar'
+import { Notify, useQuasar } from 'quasar'
 import { Address } from 'src/models/types'
 import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
@@ -129,19 +139,26 @@ const newAddress = ref<DeliveryAddress | null>(null)
 
 const isPrivateHouse = ref(false)
 
+const dataContainer = ref<HTMLDivElement>()
+
+const q = useQuasar()
+
 let map: CorexLeafletMap
 
+const mobileViewMapHeight = computed(() => {
+  return dataContainer.value
+    ? q.screen.height - dataContainer.value?.clientHeight
+    : undefined
+})
+
 const isSaveAvailable = computed(() => {
-  return (
-    !!newAddress.value?.name?.length && !!newAddress.value.address.length
-    // &&
-    // !!newAddress.value.floor?.length &&
-    // !!newAddress.value.entrance?.length
-  )
+  return !!newAddress.value?.name?.length && !!newAddress.value.address.length
 })
 
 const getBorderRadius = computed(() => {
-  return `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
+  return q.screen.lt.md
+    ? 'unset'
+    : `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
 })
 
 const privateHouseClickHandler = () => {
@@ -218,9 +235,11 @@ onMounted(() => {
   map = new CorexLeafletMap()
   if (!map) return
   map.lmap.addLayer(drawnItems)
-
-  drawPoint()
-  map.lmap.addControl(initDraw())
+  setTimeout(() => {
+    drawPoint()
+    map.lmap.addControl(initDraw())
+    map.lmap.invalidateSize()
+  }, 0)
 })
 
 const createAddress = async () => {

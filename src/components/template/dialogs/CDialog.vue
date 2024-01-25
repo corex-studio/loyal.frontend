@@ -9,13 +9,16 @@
     :class="{ 'maximize-modal': maximize }"
   >
     <q-card
-      :style="`max-width: ${width}; min-height: ${height}; max-height: ${height}; height: ${heightPercent}`"
+      :style="`max-width: ${width}; min-height: ${height}; max-height: ${height}; height: ${heightPercent}; border-radius:${
+        position === 'bottom' ? bottomBorderRadius() : ''
+      }`"
       style="
         width: 100%;
         display: flex;
         box-shadow: 0px 0px 13px rgba(65, 39, 130, 0.2) !important;
       "
-      class="relative-position no-overflow border-radius column no-wrap no-shadow bg-background-color"
+      class="relative-position no-overflow column no-wrap no-shadow bg-background-color"
+      :class="{ 'border-radius': position !== 'bottom' }"
     >
       <!-- bg-modal-header-color text-on-modal-header-color -->
       <div
@@ -62,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CIcon from '../helpers/CIcon.vue'
 
 defineProps({
@@ -96,6 +100,10 @@ defineProps({
   maximize: Boolean,
 })
 defineEmits(['update:modelValue'])
+
+const bottomBorderRadius = () => {
+  return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
+}
 </script>
 
 <style lang="scss" scoped>

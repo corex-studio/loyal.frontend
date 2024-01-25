@@ -1,21 +1,40 @@
 <template>
-  <div>
+  <div class="px-xs-8 px-md-0 py-md-0 py-xs-12">
     <div
-      class="column no-wrap full-width gap-8 pb-10"
-      style="overflow: scroll; height: 374px !important"
+      v-if="$q.screen.lt.md"
+      class="row full-width gap-4 items-center no-wrap mb-10"
+    >
+      <CIcon
+        @click="$emit('back')"
+        size="22px"
+        color="on-background-color"
+        hover-color="primary"
+        name="fa-regular fa-angle-left"
+        class="cursor-pointer"
+      />
+      <div class="header2 bold">Адреса самовывоза</div>
+    </div>
+    <div
+      class="column no-wrap full-width gap-md-8 gap-xs-2 pb-md-10 pb-xs-12"
+      style="overflow: scroll"
+      :style="`height: ${$q.screen.lt.md ? 'unset' : '374px'}; max-height:${
+        $q.screen.lt.md ? '45vh' : 'unset'
+      }`"
     >
       <template v-if="availablePickupAddresses?.length">
         <div
           v-for="(el, index) in availablePickupAddresses"
           :key="index"
-          class="row items-center pa-10 justify-between cursor-pointer border-radius"
+          class="row items-center pa-md-10 py-xs-5 justify-between cursor-pointer border-radius"
           @click="$emit('select', el)"
-          :style="`border: 1px ${getBorderColor(el)} solid`"
+          :style="
+            $q.screen.lt.md ? '' : `border: 1px ${getBorderColor(el)} solid`
+          "
         >
           <div class="row items-center gap-6 no-wrap">
             <RoundedSelector
-              height="24px"
-              width="24px"
+              :height="$q.screen.lt.md ? '22px' : '24px'"
+              :width="$q.screen.lt.md ? '22px' : '24px'"
               :model-value="el.id === currentPoint?.id"
             />
             <div class="body ellipsis-2-lines">{{ el.customAddress }}</div>
@@ -43,6 +62,7 @@ import { lightColor } from 'src/models/store'
 import { computed } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
+import CIcon from '../template/helpers/CIcon.vue'
 
 const props = defineProps<{
   currentPoint: SalesPoint | null
@@ -52,6 +72,7 @@ defineEmits<{
   (evt: 'select', val: SalesPoint): void
   (evt: 'confirm'): void
   (evt: 'addAddress'): void
+  (evt: 'back'): void
 }>()
 
 const availablePickupAddresses = computed(() => {
