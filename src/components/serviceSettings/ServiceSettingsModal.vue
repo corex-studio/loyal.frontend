@@ -322,12 +322,8 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) {
-      mobileViewTypeConfirmed.value = false
       void deliveryAddressRepo.list().then(() => {
-        selectCurrentAddress()
-        if (availableCartTypes.value.length) {
-          currentTab.value = availableCartTypes.value[0]
-        }
+        selectCurrentTab()
       })
     }
   }
@@ -374,7 +370,6 @@ const availableBookingAddresses = computed(() => {
 
 const availableCartTypes = computed(() => {
   const result: TabRaw[] = []
-
   if (
     companyRepo.cartCompany?.salesPoints?.some(
       (v) => v.settings.delivery_enabled
@@ -441,19 +436,33 @@ const navigationButtonClickHandler = () => {
     bookingMode.value = 'bookingList'
 }
 
-const selectCurrentAddress = () => {
+const selectCurrentTab = () => {
   if (cartRepo.item) {
     if (cartRepo.item.type === CartType.DELIVERY) {
       selectedDeliveryAddress.value = cartRepo.item.deliveryAddress
       selectedPickupAddress.value = null
+      selectedSalesPoint.value = null
     }
     if (cartRepo.item.type === CartType.PICKUP) {
       selectedPickupAddress.value = cartRepo.item.salesPoint || null
       selectedDeliveryAddress.value = null
+      selectedSalesPoint.value = null
+      currentTab.value =
+        availableCartTypes.value.find((el) => el.type === CartType.PICKUP) ||
+        null
     }
     if (cartRepo.item.type === CartType.BOOKING) {
       selectedSalesPoint.value = cartRepo.item.salesPoint || null
     }
+    const foundType = availableCartTypes.value.find(
+      (el) => el.type === cartRepo.item?.type
+    )
+    if (foundType) {
+      currentTab.value = foundType
+      mobileViewTypeConfirmed.value = true
+    }
+  } else if (availableCartTypes.value.length) {
+    currentTab.value = availableCartTypes.value[0]
   }
 }
 

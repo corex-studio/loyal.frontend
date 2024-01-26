@@ -56,7 +56,9 @@
           />
         </div>
       </template>
-      <div v-else class="subtitle-text">У вас нет адресов доставки</div>
+      <div v-else class="subtitle-text mb-xs-6 mb-md-0">
+        У вас нет адресов доставки
+      </div>
       <div v-if="$q.screen.lt.md && !selectionOnly">
         <CButton
           @click="$emit('addAddress')"

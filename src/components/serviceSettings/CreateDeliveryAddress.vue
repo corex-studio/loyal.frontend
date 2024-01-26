@@ -32,12 +32,38 @@
           placeholder="Название"
           v-model="newAddress.name"
         />
-        <AddressSearch
-          @update="selectAddress($event)"
-          :address="newAddress.address"
-          label="Укажите адрес"
-          placeholder="Город, улица, дом"
-        />
+        <div class="column full-width gap-md-6 gap-xs-4">
+          <AddressSearch
+            @update="selectAddress($event)"
+            :address="newAddress.address"
+            label="Укажите адрес"
+            placeholder="Город, улица, дом"
+          />
+          <CButton
+            @click="geolocate()"
+            text-button
+            style="width: fit-content"
+            icon="fa-regular fa-location-dot"
+            icon-size="24px"
+            :loading="geoloading"
+            text-color="primary"
+          >
+            <div class="body bold">Определить адрес атоматически</div>
+          </CButton>
+          <!-- <div
+            @click="geolocate()"
+            class="row cursor-pointer no-wrap items-center gap-4"
+          >
+            <CIcon
+              name="fa-regular fa-location-dot"
+              color="primary"
+              size="24px"
+            />
+            <div class="body text-primary bold">
+              Определить адрес атоматически
+            </div>
+          </div> -->
+        </div>
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
           <CInput
             height="48px"
@@ -125,6 +151,10 @@ import L from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import { Layer } from 'leaflet'
 import CCheckBox from '../helpers/CCheckBox.vue'
+import { useGeolocation } from '@vueuse/core'
+import { utilsRepo } from 'src/models/utils/utilsRepo'
+
+const { coords, resume, pause } = useGeolocation()
 
 const props = defineProps<{
   address?: DeliveryAddress
@@ -138,6 +168,8 @@ const drawnItems = new L.FeatureGroup()
 const newAddress = ref<DeliveryAddress | null>(null)
 
 const isPrivateHouse = ref(false)
+
+const geoloading = ref(false)
 
 const dataContainer = ref<HTMLDivElement>()
 
@@ -160,6 +192,31 @@ const getBorderRadius = computed(() => {
     ? 'unset'
     : `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
 })
+
+const geolocate = async () => {
+  try {
+    geoloading.value = true
+    if (!newAddress.value) throw new Error('Объект адреса не может быть пустым')
+    resume()
+    const res = await utilsRepo.geolocate(
+      coords.value.latitude,
+      coords.value.longitude
+    )
+    const addressWithCorrectCoords: Address = {
+      ...res,
+      coords: [res.coords[1], res.coords[0]],
+    }
+    selectAddress(addressWithCorrectCoords)
+  } catch {
+    Notify.create({
+      message: 'Ошибка при получении вашего положения',
+      color: 'danger',
+    })
+  } finally {
+    geoloading.value = false
+    pause()
+  }
+}
 
 const privateHouseClickHandler = () => {
   if (!newAddress.value) return
