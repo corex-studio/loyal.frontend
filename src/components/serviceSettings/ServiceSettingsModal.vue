@@ -143,7 +143,7 @@
           :addresses="currentSalesPoints || []"
         />
       </div>
-      <div v-else>
+      <div v-else class="full-height column">
         <SalesPointsOnMap
           v-if="
             mobileViewTypeConfirmed &&
@@ -240,12 +240,13 @@
         </template>
       </div>
     </template>
-    <CreateDeliveryAddress
-      v-else
-      :back-callback="() => (newAddressMode = false)"
-      @updated="deliveryAddressCreateHandler()"
-      :address="deliveryAddressToEdit || undefined"
-    />
+    <template v-else>
+      <CreateDeliveryAddress
+        :back-callback="() => (newAddressMode = false)"
+        @updated="deliveryAddressCreateHandler()"
+        :address="deliveryAddressToEdit || undefined"
+      />
+    </template>
   </CDialog>
 </template>
 <script lang="ts" setup>
@@ -343,11 +344,14 @@ const modalWidth = computed(() => {
 
 const modalHeight = computed(() => {
   return q.screen.lt.md &&
-    (currentTab.value?.type === CartType.PICKUP ||
-      currentTab.value?.type === CartType.BOOKING ||
+    ((currentTab.value?.type === CartType.PICKUP &&
+      mobileViewTypeConfirmed.value) ||
+      (currentTab.value?.type === CartType.BOOKING &&
+        mobileViewTypeConfirmed.value &&
+        bookingMode.value === 'bookingList') ||
       newAddressMode.value)
-    ? '100%'
-    : undefined
+    ? '100vh'
+    : 'unset'
 })
 
 const currentSalesPoints = computed(() => {

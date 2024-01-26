@@ -1,5 +1,8 @@
 <template>
-  <div :class="{ 'px-xs-8 px-md-0 py-md-0 py-xs-12': !noPadding }">
+  <div
+    class="full-width"
+    :class="{ 'px-xs-8 px-md-0 py-md-0 py-xs-12': !noPadding }"
+  >
     <div
       v-if="$q.screen.lt.md"
       class="row full-width gap-4 items-center no-wrap mb-10"
@@ -17,7 +20,7 @@
     <div
       class="column no-wrap full-width gap-md-8 gap-xs-2 pb-md-10 pb-xs-12"
       style="overflow: scroll"
-      :style="$q.screen.gt.sm ? 'height: 374px !important' : ''"
+      :style="$q.screen.gt.sm ? 'height: 374px !important' : `max-height: 80vh`"
     >
       <template v-if="$deliveryAddress.items.length">
         <div
