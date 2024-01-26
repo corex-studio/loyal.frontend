@@ -12,11 +12,11 @@
       />
       <q-spinner v-else color="on-primary" size="25px" />
       <q-chip
-        v-if="$cart.item?.cartItems.length"
+        v-if="$cart.item?.cartItemsQuantitySum"
         class="amount-chip text-primary"
       >
         <div class="body bold">
-          {{ $cart.item?.cartItems.length }}
+          {{ $cart.item?.cartItemsQuantitySum }}
         </div>
       </q-chip>
     </div>

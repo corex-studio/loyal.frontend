@@ -119,10 +119,10 @@
               >
                 <template v-if="!$cart.loading">
                   <q-badge
-                    v-if="$cart.item?.cartItems.length"
+                    v-if="$cart.item?.cartItemsQuantitySum"
                     color="primary"
                     class="cart-badge row justify-center"
-                    >{{ $cart.item?.cartItems.length }}</q-badge
+                    >{{ $cart.item?.cartItemsQuantitySum }}</q-badge
                   >
                   <!-- <CIcon
                   size="23px"

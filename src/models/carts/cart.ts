@@ -7,6 +7,7 @@ import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { CartItem, CartItemRaw } from './cartItem/cartItem'
 import moment from 'moment'
 import { WalletRaw } from '../customer/customer'
+import { sum } from 'lodash'
 
 export enum CartType {
   PICKUP = 'pickup',
@@ -136,6 +137,10 @@ export class Cart implements BaseModel {
     this.deliveryPrice = raw.delivery_price
     this.walletPayments = raw.wallet_payments
     this.errors = raw.errors
+  }
+
+  get cartItemsQuantitySum() {
+    return sum(this.cartItems.map((v) => v.quantity))
   }
 
   get currentAddress() {

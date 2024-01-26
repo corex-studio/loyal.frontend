@@ -3,14 +3,10 @@
     <PrepareUiSettings />
     <q-layout view="lHh Lpr lFf" class="bg-background-color relative-position">
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
-      <!-- <TopHeader v-if="!isArrangementPage && $q.screen.gt.sm" /> -->
 
       <MainHeader />
 
       <div v-if="$q.screen.lt.md" class="full-width">
-        <!-- <MobileMenu
-          v-if="!$store.tableMode && $route.name !== 'menuItemPage'"
-        /> -->
         <QRMobileMenu
           v-if="
             $store.tableMode &&
@@ -101,6 +97,7 @@ import NewsModal from 'src/pages/news/NewsModal.vue'
 import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
 import { NewsType } from 'src/models/news/news'
 import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
+import { useFavicon } from '@vueuse/core'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -115,6 +112,7 @@ const q = useQuasar()
 const route = useRoute()
 const router = useRouter()
 const ready = ref(false)
+const icon = useFavicon()
 
 watch(
   () => authentication.user?.id,
@@ -172,6 +170,11 @@ const getCurrentCompanyGroup = async () => {
   }
 }
 
+function changeFavicon(src?: string) {
+  if (!src) return
+  icon.value = src
+}
+
 onMounted(async () => {
   window.addEventListener('scroll', () => {
     store.verticalScroll = window.scrollY
@@ -184,6 +187,7 @@ onMounted(async () => {
   if (!store.tableMode) {
     store.getCompanyGroup(String(route.params.companyGroup))
     await getCurrentCompanyGroup()
+    changeFavicon(companyGroupRepo.item?.image?.thumbnail)
     await uiSettingsRepo.fetchSettings()
     await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
     try {
@@ -235,6 +239,7 @@ onMounted(async () => {
     await padRepo.retrieve(String(route.params.padId))
     if (!padRepo.item?.companyGroup) return
     await companyGroupRepo.retrieve(padRepo.item.companyGroup)
+    changeFavicon(companyGroupRepo.item?.image?.thumbnail)
     store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
     void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
     void waiterCallRepo
