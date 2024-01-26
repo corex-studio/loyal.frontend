@@ -1,5 +1,5 @@
 <template>
-  <div class="px-xs-8 px-md-0 py-xs-12 py-md-0">
+  <div class="px-xs-8 px-md-0 py-xs-12 py-md-0 full-width">
     <div v-if="$q.screen.lt.md" class="row full-width mb-12 gap-4 items-center">
       <CIcon
         @click="$emit('back')"
@@ -14,16 +14,18 @@
     <q-tab-panels
       animated
       :style="
-        $q.screen.lt.md ? 'min-height: 320px; ' : 'height: 423px !important'
+        $q.screen.lt.md
+          ? 'min-height: 320px; max-height: 80vh; height: fit-content'
+          : 'height: 423px !important'
       "
       :model-value="currentMode"
-      class="bg-background-color full-height"
+      :class="{ 'full-height': $q.screen.gt.sm }"
+      class="bg-background-color"
     >
       <q-tab-panel
         v-if="currentBooking"
         name="bookingInfo"
         class="column full-width justify-between no-wrap pa-0"
-        style="max-height: 80vh"
       >
         <div class="column no-wrap gap-8 full-width">
           <div class="column full-width gap-md-10 gap-xs-8 no-wrap">

@@ -1,10 +1,7 @@
 <template>
   <div
-    :style="
-      $q.screen.gt.sm
-        ? 'width: 53%; height: inherit'
-        : 'height: 40vh; width: 100%'
-    "
+    :class="{ col: $q.screen.lt.md }"
+    :style="$q.screen.gt.sm ? 'width: 53%; height: inherit' : 'width: 100%'"
   >
     <div
       id="map"

@@ -1,14 +1,13 @@
 <template>
   <div
     :style="$q.screen.lt.md ? '' : 'height: 600px'"
-    :class="$q.screen.lt.md ? 'column reverse' : 'row '"
+    :class="$q.screen.lt.md ? 'column reverse full-height' : 'row '"
     class="full-width no-wrap"
   >
     <div
       v-if="newAddress"
       style="overflow-y: auto"
-      :style="$q.screen.lt.md ? '' : 'width: 47%'"
-      ref="dataContainer"
+      :style="$q.screen.lt.md ? 'max-height: 65vh' : 'width: 47%'"
       class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 py-xs-12 px-xs-8"
     >
       <div class="column full-width gap-md-8 gap-xs-6">
@@ -50,19 +49,6 @@
           >
             <div class="body bold">Определить адрес атоматически</div>
           </CButton>
-          <!-- <div
-            @click="geolocate()"
-            class="row cursor-pointer no-wrap items-center gap-4"
-          >
-            <CIcon
-              name="fa-regular fa-location-dot"
-              color="primary"
-              size="24px"
-            />
-            <div class="body text-primary bold">
-              Определить адрес атоматически
-            </div>
-          </div> -->
         </div>
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
           <CInput
@@ -117,20 +103,13 @@
       </div>
     </div>
     <div
-      :style="
-        $q.screen.lt.md
-          ? `height: ${mobileViewMapHeight}px !important`
-          : 'height: 600px; width: 53%'
-      "
+      class="col"
+      :style="$q.screen.lt.md ? `` : 'height: 600px; width: 53%'"
     >
       <div
         id="map"
-        style="z-index: 9; width: 100%"
-        :style="`border-radius: ${getBorderRadius}; ${
-          $q.screen.lt.md
-            ? `height: ${mobileViewMapHeight}px !important`
-            : 'height: 600px;'
-        }`"
+        style="z-index: 9; width: 100%; height: 100%"
+        :style="`border-radius: ${getBorderRadius};`"
         class="map"
       ></div>
     </div>
@@ -171,17 +150,17 @@ const isPrivateHouse = ref(false)
 
 const geoloading = ref(false)
 
-const dataContainer = ref<HTMLDivElement>()
+// const dataContainer = ref<HTMLDivElement>()
 
 const q = useQuasar()
 
 let map: CorexLeafletMap
 
-const mobileViewMapHeight = computed(() => {
-  return dataContainer.value
-    ? q.screen.height - dataContainer.value?.clientHeight
-    : undefined
-})
+// const mobileViewMapHeight = computed(() => {
+//   return dataContainer.value
+//     ? q.screen.height - dataContainer.value?.clientHeight
+//     : undefined
+// })
 
 const isSaveAvailable = computed(() => {
   return !!newAddress.value?.name?.length && !!newAddress.value.address.length
