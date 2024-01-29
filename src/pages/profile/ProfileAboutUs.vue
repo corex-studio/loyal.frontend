@@ -14,7 +14,7 @@
           hover-color="primary"
           size="26px"
         />
-        <div class="huge3 bold">О нашем заведении</div>
+        <div class="header2 bold">О нашем заведении</div>
       </div>
       <div class="body">{{ company.description }}</div>
     </div>
@@ -66,7 +66,7 @@
     >
     </q-img>
     <div v-if="contacts.length" class="column full-width">
-      <div class="huge3 bold mb-10">Наши контакты</div>
+      <div class="header2 bold mb-10">Наши контакты</div>
       <div
         style="overflow-x: auto"
         class="row full-width items-center no-wrap gap-xs-4 gap-md-6 gap-lg-8"
@@ -75,8 +75,9 @@
           v-for="(item, index) in contacts"
           :key="index"
           class="contact-block border-radius pa-8 column"
+          style="max-width: 292px"
         >
-          <div class="header3 bold mb-5">{{ item.label }}</div>
+          <div class="subtitle-text bold mb-5">{{ item.label }}</div>
           <div class="row full-width no-wrap">
             <div class="column col gap-2">
               <CButton
