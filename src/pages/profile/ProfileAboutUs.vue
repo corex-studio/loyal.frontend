@@ -21,7 +21,7 @@
     <SwiperContainer
       class="full-width"
       :slides-per-view="1"
-      :items="company.images"
+      :items="company.images.slice(1)"
       :use-bullets="$q.screen.lt.lg"
     >
       <template v-slot:item="{ item }">

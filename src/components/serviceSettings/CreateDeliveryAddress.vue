@@ -32,12 +32,6 @@
           v-model="newAddress.name"
         />
         <div class="column full-width gap-md-6 gap-xs-4">
-          <AddressSearch
-            @update="selectAddress($event)"
-            :address="newAddress.address"
-            label="Укажите адрес"
-            placeholder="Город, улица, дом"
-          />
           <CButton
             @click="geolocate()"
             text-button
@@ -49,6 +43,12 @@
           >
             <div class="body bold">Определить адрес атоматически</div>
           </CButton>
+          <AddressSearch
+            @update="selectAddress($event)"
+            :address="newAddress.address"
+            label="Укажите адрес"
+            placeholder="Город, улица, дом"
+          />
         </div>
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
           <CInput
