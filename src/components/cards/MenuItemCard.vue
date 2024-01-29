@@ -39,7 +39,6 @@
         </span>
       </template>
     </q-img>
-    <!-- text-on-product-tile-color -->
     <div
       :style="`height: ${$q.screen.lt.md ? '165' : '208'}px`"
       class="px-8 py-8 column no-wrap justify-between col-grow text-on-background-color"
