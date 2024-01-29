@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="huge3 bold mb-15">Адреса заведения</div>
+    <div class="header2 bold mb-15">Адреса заведения</div>
     <div
       id="map"
       style="width: 100%; height: 421px; z-index: 9"
