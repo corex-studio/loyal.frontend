@@ -20,6 +20,7 @@ import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 import { Layer } from 'leaflet'
 import { useQuasar } from 'quasar'
+import { store } from 'src/models/store'
 
 const props = defineProps<{
   selectedPoint: SalesPoint | null
@@ -83,9 +84,10 @@ const drawPoints = () => {
   const collection = map.pointCollection(values)
   const layer = map.pointLayer(
     collection,
-    null,
-    `#${uiSettingsRepo.item?.primaryColor.color}`,
-    'store'
+    undefined,
+    undefined,
+    undefined,
+    companyRepo.cartCompany?.image?.thumbnail || store.images.empty
   )
 
   map.lmap.addLayer(layer)
@@ -120,3 +122,17 @@ onMounted(() => {
   map.lmap.addControl(initDraw())
 })
 </script>
+
+<style lang="scss" scoped>
+.map :deep(.leaflet-marker-icon) {
+  width: 37px !important;
+  height: 37px !important;
+  -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  // background-color: #3286c8;
+  // border-radius: 100% 100% 100% 0;
+  border-radius: 10px;
+
+  animation: pulse 2s ease 3 normal, size 1s linear 1 alternate;
+}
+</style>
