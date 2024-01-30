@@ -17,7 +17,7 @@
         !additional) ||
       hover
         ? 'text-primary'
-        : 'text-on-secondary-button-color',
+        : 'text-on-background-color',
     ]"
   >
     <div

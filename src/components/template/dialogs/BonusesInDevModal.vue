@@ -3,6 +3,7 @@
     width="570px"
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
+    class="text-on-background-color"
   >
     <div class="column full-width">
       <div class="row full-width justify-center">

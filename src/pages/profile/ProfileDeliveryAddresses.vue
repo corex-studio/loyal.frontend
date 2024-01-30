@@ -50,7 +50,7 @@
       :size="$q.screen.gt.sm ? '44px' : '40px'"
       icon="fa-regular fa-plus"
     />
-    <div class="body">Добавить новый адрес</div>
+    <div class="body text-on-background-color">Добавить новый адрес</div>
   </div>
   <Pagination
     :loading="$deliveryAddress.loadings.list"
