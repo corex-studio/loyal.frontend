@@ -1,7 +1,7 @@
 <template>
   <div
     :style="`max-width: ${$q.screen.lt.lg ? '' : '628px'}`"
-    class="column full-width"
+    class="column full-width text-on-background-color"
   >
     <div class="header2 bold mb-15">История заказов</div>
     <div

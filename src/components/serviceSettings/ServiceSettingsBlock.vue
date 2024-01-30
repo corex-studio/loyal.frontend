@@ -16,7 +16,12 @@
         class="row no-wrap gap-4 items-center"
         style="overflow: inherit"
       >
-        <CustomIcon width="28px" height="28px" name="bagOnTime.svg" />
+        <!-- <CustomIcon width="28px" height="28px" name="bagOnTime.svg" /> -->
+        <CIcon
+          name="fa-regular fa-bag-shopping"
+          color="on-background-color"
+          size="22px"
+        />
         <div style="line-height: 15px" class="bold nowrap-content">
           {{
             $q.screen.lt.lg ? 'Способ получения' : 'Выберите способ получения'
@@ -25,8 +30,12 @@
       </div>
       <template v-else>
         <div class="row no-wrap gap-md-4 gap-xs-2 items-center">
-          <CustomIcon width="28px" height="28px" name="bagOnTime.svg" />
-
+          <!-- <CustomIcon width="28px" height="28px" name="bagOnTime.svg" /> -->
+          <CIcon
+            name="fa-regular fa-bag-shopping"
+            color="on-background-color"
+            size="22px"
+          />
           <div class="bold text-primary">
             {{ $cart.item.currentDeliveryType }}
           </div>
@@ -55,7 +64,7 @@
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { lightColor, store } from 'src/models/store'
 import CIcon from '../template/helpers/CIcon.vue'
-import CustomIcon from '../template/helpers/CustomIcon.vue'
+// import CustomIcon from '../template/helpers/CustomIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 
 const openDialog = () => {

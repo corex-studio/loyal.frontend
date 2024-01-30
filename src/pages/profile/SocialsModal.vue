@@ -3,6 +3,7 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="456px"
+    class="text-on-background-color"
   >
     <div class="header2 bold mb-10">Ссылки на соц. сети</div>
     <div class="column gap-8">

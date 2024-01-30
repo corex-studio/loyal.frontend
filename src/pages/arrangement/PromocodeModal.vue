@@ -3,6 +3,7 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     width="433px"
+    class="text-on-background-color"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
   >
     <!-- <template v-slot:header> Промокод </template> -->

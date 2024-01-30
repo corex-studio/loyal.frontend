@@ -24,7 +24,7 @@
           ? 'bordered'
           : 'full-width'
       "
-      class="row cursor-pointer items-center no-wrap gap-5 px-10 border-radius py-6 mb-xs-2 mb-lg-0"
+      class="row cursor-pointer text-on-background-color items-center no-wrap gap-5 px-10 border-radius py-6 mb-xs-2 mb-lg-0"
     >
       <div class="body bold ellipsis">
         {{ el.label }}

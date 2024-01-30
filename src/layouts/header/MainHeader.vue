@@ -94,7 +94,12 @@
                 color="background-color"
               >
                 <div class="row gap-4 no-wrap body text-on-background-color">
-                  <CustomIcon width="22px" height="22px" name="city.svg" />
+                  <!-- <CustomIcon width="22px" height="22px" name="city.svg" /> -->
+                  <CIcon
+                    size="22px"
+                    color="on-background-color"
+                    name="fa-regular fa-city"
+                  />
 
                   <div class="mt-1 bold">Калининград</div>
                 </div>
@@ -124,16 +129,16 @@
                     class="cart-badge row justify-center"
                     >{{ $cart.item?.cartItemsQuantitySum }}</q-badge
                   >
-                  <!-- <CIcon
-                  size="23px"
-                  color="on-background-color"
-                  name="fa-regular fa-basket-shopping"
-                /> -->
-                  <CustomIcon
+                  <CIcon
+                    size="23px"
+                    color="on-background-color"
+                    name="fa-regular fa-basket-shopping"
+                  />
+                  <!-- <CustomIcon
                     width="28px"
                     height="28px"
                     name="shoppingBasket.svg"
-                  />
+                  /> -->
                 </template>
                 <q-spinner v-else color="on-background-color" size="23px" />
                 <div class="bold">Корзина</div>
@@ -148,12 +153,12 @@
                   class="balance-badge row justify-center"
                   >{{ previewBalance }}</q-badge
                 >
-                <!-- <CIcon
-                color="on-background-color"
-                size="23px"
-                name="fa-regular fa-gift"
-              /> -->
-                <CustomIcon width="28px" height="28px" name="gift.svg" />
+                <CIcon
+                  color="on-background-color"
+                  size="23px"
+                  name="fa-regular fa-gift"
+                />
+                <!-- <CustomIcon width="28px" height="28px" name="gift.svg" /> -->
                 <div class="bold">Бонусы</div>
               </div>
             </template>
@@ -165,16 +170,16 @@
               "
               class="column full-height justify-between cursor-pointer items-center no-wrap"
             >
-              <!-- <CIcon
+              <CIcon
                 color="on-background-color"
                 size="23px"
                 name="fa-regular fa-face-smile"
-              /> -->
-              <CustomIcon
+              />
+              <!-- <CustomIcon
                 :width="$q.screen.gt.sm ? '28px' : '38px'"
                 :height="$q.screen.gt.sm ? '28px' : '38px'"
                 name="squareFace.svg"
-              />
+              /> -->
 
               <div v-if="$q.screen.gt.sm" class="bold">Профиль</div>
             </div>
@@ -284,7 +289,7 @@ import { computed, onMounted } from 'vue'
 import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
 // import MainHeaderMobile from './MainHeaderMobile.vue'
 import BottomHeader from './BottomHeader.vue'
-import CustomIcon from 'src/components/template/helpers/CustomIcon.vue'
+// import CustomIcon from 'src/components/template/helpers/CustomIcon.vue'
 import BonusesInDevModal from 'src/components/template/dialogs/BonusesInDevModal.vue'
 
 // const router = useRouter()

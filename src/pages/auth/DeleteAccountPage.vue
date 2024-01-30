@@ -2,7 +2,7 @@
   <div
     v-if="ready"
     style="height: 100vh"
-    class="column full-width items-center justify-center bg-background-color text-on-backround-color"
+    class="column full-width items-center justify-center bg-background-color text-on-background-color"
   >
     <PrepareUiSettings />
 

@@ -4,6 +4,7 @@
     @update:model-value="$emit('update:modelValue', $event)"
     width="490px"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
+    class="text-on-background-color"
   >
     <div class="row full-width items-center gap-4 mb-15">
       <CIcon

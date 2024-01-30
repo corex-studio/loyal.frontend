@@ -14,7 +14,7 @@
   >
     <div
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
-      class="no-wrap full-width relative-position"
+      class="no-wrap full-width relative-position text-on-background-color"
     >
       <div
         v-if="$q.screen.lt.md"
