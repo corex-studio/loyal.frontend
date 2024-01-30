@@ -110,7 +110,7 @@
 
           <div
             v-if="authentication.user"
-            class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-5 secondary-text"
+            class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-8 secondary-text"
             style="height: 48px; width: fit-content"
           >
             <template v-if="$q.screen.gt.sm">
@@ -172,7 +172,7 @@
             >
               <CIcon
                 color="on-background-color"
-                size="23px"
+                :size="$q.screen.gt.sm ? '23px' : '32px'"
                 name="fa-regular fa-face-smile"
               />
               <!-- <CustomIcon
