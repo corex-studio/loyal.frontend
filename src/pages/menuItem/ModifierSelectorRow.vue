@@ -15,6 +15,7 @@
       small
       :model-value="item.quantity"
       @update:model-value="item.quantity = $event"
+      text-color="on-secondary-button-color"
       :disable-adding="disableAdding"
     />
   </div>

@@ -114,6 +114,7 @@
               :height="$q.screen.lt.lg ? '40px' : '48px'"
               background-color="white"
               v-model="quantity"
+              text-color="on-secondary-button-color"
             />
             <div
               v-if="$store.tableMode && !$pad.item?.settings.orders_enabled"

@@ -4,7 +4,7 @@
     :class="[
       { 'full-width justify-between': fullWidth },
       backgroundClass ||
-        (outlined ? 'outlined-element' : 'bg-secondary-button-color px-1'),
+        (outlined ? 'outlined-element' : 'bg-secondary-button-color  px-1'),
     ]"
     :style="`height: ${_height}`"
   >

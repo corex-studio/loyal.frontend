@@ -14,7 +14,7 @@
           :class="
             currentNutrition?.uuid === el.uuid
               ? 'bold bg-selector-active-color text-on-selector-active-color box-shadow'
-              : ''
+              : 'text-on-selector-color'
           "
           :style="
             currentNutrition?.uuid === el.uuid
