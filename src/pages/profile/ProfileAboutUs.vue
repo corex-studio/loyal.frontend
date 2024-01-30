@@ -19,6 +19,7 @@
       <div class="body">{{ company.description }}</div>
     </div>
     <SwiperContainer
+      v-if="company.images.slice(1).length"
       class="full-width"
       :slides-per-view="1"
       :items="company.images.slice(1)"
