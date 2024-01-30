@@ -111,14 +111,6 @@
       </div>
     </div>
 
-    <CButton
-      v-if="
-        company.guestContacts.socials.length &&
-        !$uiSettings.item?.socialButtonImage
-      "
-      label="Полезные ссылки"
-      width="200px"
-    />
     <ProfileAddressesOnMap />
   </div>
   <SelectCompany v-else />

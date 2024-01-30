@@ -228,7 +228,7 @@ const drawPoint = () => {
     collection,
     null,
     `#${uiSettingsRepo.item?.primaryColor.color}`,
-    'store'
+    'home'
   )
 
   map.lmap.addLayer(layer)
