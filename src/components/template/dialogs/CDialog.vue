@@ -12,11 +12,7 @@
       :style="`max-width: ${width}; min-height: ${height}; max-height: ${height}; height: ${heightPercent}; border-radius:${
         position === 'bottom' ? bottomBorderRadius() : ''
       }`"
-      style="
-        width: 100%;
-        display: flex;
-        box-shadow: 0px 0px 13px rgba(65, 39, 130, 0.2) !important;
-      "
+      style="width: 100%; display: flex"
       class="relative-position no-overflow column no-wrap no-shadow bg-background-color"
       :class="{ 'border-radius': position !== 'bottom' }"
     >
