@@ -33,6 +33,7 @@
             <div class="row full-width gap-md-8 gap-xs-6">
               <ChangeAmount
                 outlined
+                text-color="on-secondary-button-color"
                 :height="$q.screen.lt.md ? '40px' : '48px'"
                 :model-value="Number(currentBooking.guestsCount)"
                 @update:model-value="

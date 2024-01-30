@@ -2,7 +2,7 @@
 <template>
   <div
     @click="cardClickHandler()"
-    class="column cursor-pointer no-wrap justify-between box-shadow bg-backing-color border-radius px-7 pb-5 items-center body full-height relative-position"
+    class="column cursor-pointer no-wrap justify-between box-shadow bg-backing-color text-on-backing-color border-radius px-7 pb-5 items-center body full-height relative-position"
     :class="
       modifier.quantity
         ? 'bordered-card-active'
@@ -49,9 +49,10 @@
     </template>
     <ChangeAmount
       v-else
-      background-class="bg-backing-color"
-      buttons-color="backing-color"
+      background-class="bg-secondary-button-color"
+      buttons-color="secondary-button-color"
       :model-value="modifier.quantity"
+      text-color="on-secondary-button-color"
       class="mt-7"
       small
       @update:model-value="updateQuantity"

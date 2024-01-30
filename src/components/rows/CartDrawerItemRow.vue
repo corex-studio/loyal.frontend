@@ -62,6 +62,7 @@
       <ChangeAmount
         style="height: fit-content"
         small
+        text-color="on-secondary-button-color"
         :model-value="cartItem.quantity"
         @update:model-value="updateQuantity($event)"
       />

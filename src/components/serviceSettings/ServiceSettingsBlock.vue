@@ -94,7 +94,7 @@ const openDialog = () => {
   height: 4px;
   min-width: 4px;
   max-width: 4px;
-  background-color: var(--secondary-button-color);
+  background-color: var(--on-background-color);
   border-radius: 50%;
 }
 
