@@ -4,6 +4,7 @@
     @update:model-value="$emit('update:modelValue', $event)"
     width="466px"
     persistent
+    class="text-on-background-color"
     no-close
   >
     <div class="huge3 bold">Регистрация</div>
