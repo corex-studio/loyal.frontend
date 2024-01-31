@@ -18,7 +18,6 @@
       mask="#"
       outlined
       @keydown="kek($event, 1)"
-      @mouseup="lel"
       @paste="onPaste"
       @update:model-value="updateFirstDigit"
     />
@@ -124,9 +123,6 @@ const thirdInputRef = ref<HTMLInputElement | null>(null)
 
 const fourthInputRef = ref<HTMLInputElement | null>(null)
 
-const lel = (e) => {
-  console.log(e)
-}
 
 const setInputRef = () => {
   const inputs = block.value?.getElementsByTagName('input')
