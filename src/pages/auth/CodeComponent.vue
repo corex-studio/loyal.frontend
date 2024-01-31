@@ -17,9 +17,11 @@
       class="input firstInput"
       mask="#"
       outlined
+      type="number"
       @keydown="kek($event, 1)"
       @paste="onPaste"
       @update:model-value="updateFirstDigit"
+      autocomplete="one-time-code"
     />
     <CInput
       :class="
@@ -38,9 +40,11 @@
       class="input secondInput"
       mask="#"
       outlined
+      type="number"
       @keydown="kek($event, 2)"
       @paste="onPaste"
       @update:model-value="updateSecondDigit"
+      autocomplete="one-time-code"
     />
     <CInput
       :class="
@@ -59,9 +63,11 @@
       class="input thirdInput"
       mask="#"
       outlined
+      type="number"
       @keydown="kek($event, 3)"
       @paste="onPaste"
       @update:model-value="updateThirdDigit"
+      autocomplete="one-time-code"
     />
     <CInput
       :class="
@@ -80,9 +86,11 @@
       class="input fourthInput"
       mask="#"
       outlined
+      type="number"
       @keydown="kek($event, 4)"
       @paste="onPaste"
       @update:model-value="updateFourthDigit"
+      autocomplete="one-time-code"
     />
   </div>
 </template>
@@ -250,4 +258,12 @@ onMounted(() => {
 .error-input-filled :deep(.q-field__control) {
   outline: 2px $danger solid !important;
 }
+
+.input :deep(input::-webkit-outer-spin-button),
+.input :deep(input::-webkit-inner-spin-button), .input :deep(input[type=number]) {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 </style>
