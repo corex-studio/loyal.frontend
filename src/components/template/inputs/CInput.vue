@@ -4,6 +4,7 @@
       { 'menu-mode': menuMode },
       { 'rounded-text-area': $props.default && textArea },
     ]"
+    :style="$q.platform.is.safari ? `--input-height: ${_height}` : ''"
   >
     <div
       v-if="externalLabel"
@@ -20,60 +21,60 @@
       {{ externalLabel }}
     </div>
     <q-input
-      @update:model-value="updateModelValue"
-      :modelValue="
-        props.customFormattedValue !== undefined && !focused && mounted
-          ? customFormattedValue
-          : formattedValue
-      "
-      @keyup.enter.prevent="$emit('enter')"
-      @blur="_blurInput"
-      @keydown.right="emitDirectionKeys('right', $event)"
-      @keydown.left="emitDirectionKeys('left', $event)"
-      @keydown.up.prevent="$emit('up')"
-      @keydown.down.prevent="$emit('down')"
-      @focus="_focusInput"
       ref="inputRef"
-      :readonly="readonly"
-      :color="_color"
-      :label-color="labelColor"
-      :standout="_standout"
-      :label="label"
-      :type="_type"
-      :hint="hint"
-      :mask="mask"
-      :rules="rules"
-      :fill-mask="fillMask"
-      :clearable="clearable"
-      :borderless="changeAmount || borderless"
-      :filled="changeAmount ? false : $uiSettings.item?.inputType === 'filled'"
-      :loading="loading"
-      :outlined="
-        changeAmount
-          ? false
-          : outlined || $uiSettings.item?.inputType === 'outlined'
-      "
-      :dense="dense"
-      :input-style="inputStyle"
-      :input-class="inputClass ? inputClass : 'text-on-input-color body'"
-      :placeholder="placeholder"
-      :rounded="_rounded"
-      :bg-color="_bgColor"
+      :autocomplete="autocomplete"
       :autogrow="autoGrow"
-      :disabled="_disabled"
-      :disable="_disabled"
-      :style="`width:${width || 'unset'}; height:${_height};`"
-      class="circlized"
+      :bg-color="_bgColor"
+      :borderless="changeAmount || borderless"
       :class="{
         'label-top': _labelTop,
         'no-icon': _noIcon,
         'default-input': !changeAmount,
       }"
-      :unmasked-value="unmaskedValue"
+      :clearable="clearable"
+      :color="_color"
+      :dense="dense"
+      :disable="_disabled"
+      :disabled="_disabled"
+      :fill-mask="fillMask"
+      :filled="changeAmount ? false : $uiSettings.item?.inputType === 'filled'"
+      :hint="hint"
+      :input-class="inputClass ? inputClass : 'text-on-input-color body'"
+      :input-style="inputStyle"
+      :label="label"
+      :label-color="labelColor"
+      :loading="loading"
+      :mask="mask"
+      :modelValue="
+        props.customFormattedValue !== undefined && !focused && mounted
+          ? customFormattedValue
+          : formattedValue
+      "
+      :outlined="
+        changeAmount
+          ? false
+          : outlined || $uiSettings.item?.inputType === 'outlined'
+      "
+      :placeholder="placeholder"
+      :readonly="readonly"
+      :rounded="_rounded"
+      :rules="rules"
       :square="square ? true : false"
-      :autocomplete="autocomplete"
+      :standout="_standout"
+      :style="`width:${width || 'unset'}; height:${_height};`"
+      :type="_type"
+      :unmasked-value="unmaskedValue"
+      class="circlized"
+      @blur="_blurInput"
+      @focus="_focusInput"
+      @update:model-value="updateModelValue"
+      @keyup.enter.prevent="$emit('enter')"
+      @keydown.right="emitDirectionKeys('right', $event)"
+      @keydown.left="emitDirectionKeys('left', $event)"
+      @keydown.up.prevent="$emit('up')"
+      @keydown.down.prevent="$emit('down')"
     >
-      <template v-slot:prepend v-if="$slots.prepend">
+      <template v-if="$slots.prepend" v-slot:prepend>
         <slot name="prepend"></slot>
         <q-icon
           v-if="leftIcon"
@@ -103,15 +104,10 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { QInput, ValidationRule } from 'quasar'
-import { computed, ref, watchEffect, onMounted } from 'vue'
-import { QInputProps } from 'quasar'
-import {
-  useCurrencyInput,
-  CurrencyInputOptions,
-  CurrencyDisplay,
-} from 'vue-currency-input'
+<script lang="ts" setup>
+import { QInput, QInputProps, ValidationRule } from 'quasar'
+import { computed, onMounted, ref, watchEffect } from 'vue'
+import { CurrencyDisplay, CurrencyInputOptions, useCurrencyInput } from 'vue-currency-input'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -122,7 +118,7 @@ const emit = defineEmits([
   'right',
   'left',
   'up',
-  'down',
+  'down'
 ])
 
 const props = defineProps<{
@@ -270,20 +266,20 @@ const currencyOptions = computed(
       currencyDisplay: CurrencyDisplay.hidden,
       precision: props.precision
         ? {
-            min: 0,
-            max: props.precision,
-          }
-        : undefined,
+          min: 0,
+          max: props.precision
+        }
+        : undefined
     }
 )
 
 let { formattedValue, inputRef, setValue } = props.currency
   ? useCurrencyInput(currencyOptions.value)
   : {
-      setValue: undefined,
-      formattedValue: computed(() => props.modelValue),
-      inputRef: ref<QInput>(),
-    }
+    setValue: undefined,
+    formattedValue: computed(() => props.modelValue),
+    inputRef: ref<QInput>()
+  }
 
 const updateModelValue = (value: string | number | null) => {
   if (!props.currency) emit('update:modelValue', value)
@@ -355,7 +351,7 @@ textarea + .q-field__label {
 }
 
 .q-input .q-field__bottom {
-  padding: 3px 12px !important ;
+  padding: 3px 12px !important;
   font-size: 14px;
 }
 
@@ -418,5 +414,11 @@ textarea + .q-field__label {
 
 .q-field--filled .q-field__control:before {
   display: none;
+}
+
+body.safari {
+  .q-field--outlined .q-field__control:after {
+    height: var(--input-height) !important;
+  }
 }
 </style>

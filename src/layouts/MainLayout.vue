@@ -42,7 +42,7 @@
     </q-layout>
     <AuthModal
       :model-value="$store.authModal"
-      @update:model-value="$store.authModal = $event"
+      @update:model-value="$store.authModal = !!$event"
     />
     <ServiceSettingsModal
       :model-value="$store.serviceSettingsModal"
