@@ -3,7 +3,7 @@
     <q-header
       v-if="!isArrangementPage"
       class="text-on-background-color transition bg-background-color"
-      :class="{ 'box-shadow': $store.verticalScroll > 45 }"
+      :class="{ 'box-shadow': $store.verticalScroll > 70 }"
     >
       <div class="column c-container">
         <div
@@ -193,7 +193,7 @@
             Войти
           </div>
         </div>
-        <q-separator color="divider-color" style="z-index: 10" />
+        <!-- <q-separator color="divider-color" style="z-index: 10" /> -->
         <BottomHeader v-if="$route.name === 'home'" />
       </div>
       <!-- <div class="c-container full-height column">

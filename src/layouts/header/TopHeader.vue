@@ -1,32 +1,37 @@
 <template>
-  <div class="row justify-center bg-background-color c-container gap-14 py-8">
-    <div
-      v-for="(el, index) in blocks.filter((v) => !v.hidden)"
-      :key="index"
-      class="row items-center gap-14"
-    >
-      <div
-        v-if="index"
-        style="
-          min-width: 7px;
-          min-height: 7px;
-          max-width: 7px;
-          max-height: 7px;
-          border-radius: 50%;
-        "
-        class="bg-primary"
-      ></div>
-      <CButton
-        @click="el.click()"
-        text-button
-        class="body"
-        text-color="on-background-color"
-        :label="el.label"
-      />
-      <!-- {{ el.label }} -->
+  <div class="c-container">
+    <div class="row justify-between items-center bg-background-color py-6">
+      <div class="row items-center gap-10">
+        <div
+          v-for="(el, index) in blocks.filter((v) => !v.hidden)"
+          :key="index"
+          class="row items-center gap-14"
+        >
+          <div
+            v-if="index"
+            style="
+              min-width: 7px;
+              min-height: 7px;
+              max-width: 7px;
+              max-height: 7px;
+              border-radius: 50%;
+            "
+            class="bg-secondary-button-color"
+          ></div>
+          <CButton
+            @click="el.click()"
+            text-button
+            text-color="on-background-color"
+          >
+            <div class="body bold">{{ el.label }}</div></CButton
+          >
+        </div>
+      </div>
+      <TopHeaderDeliveryInfo />
+      <TopHeaderSocials />
     </div>
+    <q-separator color="divider-color" />
   </div>
-  <q-separator color="divider-color" />
 </template>
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
@@ -34,6 +39,8 @@ import { authentication } from 'src/models/authentication/authentication'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import TopHeaderSocials from './TopHeaderSocials.vue'
+import TopHeaderDeliveryInfo from './TopHeaderDeliveryInfo.vue'
 
 const router = useRouter()
 
@@ -41,12 +48,6 @@ const route = useRoute()
 
 const blocks = computed(() => {
   return [
-    {
-      label: 'Контакты',
-      click: () => {
-        scrollToBlock('footer')
-      },
-    },
     {
       label: 'О нас',
       hidden: !authentication.user,
@@ -56,13 +57,18 @@ const blocks = computed(() => {
         })
       },
     },
-
     {
-      label: 'Разработчик',
+      label: 'Контакты',
       click: () => {
-        window.open('https://corex.studio/', '_blank')
+        scrollToBlock('footer')
       },
     },
+    // {
+    //   label: 'Разработчик',
+    //   click: () => {
+    //     window.open('https://corex.studio/', '_blank')
+    //   },
+    // },
     {
       label: 'Мобильное приложение',
       click: () => {
