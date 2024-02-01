@@ -131,7 +131,6 @@ const thirdInputRef = ref<HTMLInputElement | null>(null)
 
 const fourthInputRef = ref<HTMLInputElement | null>(null)
 
-
 const setInputRef = () => {
   const inputs = block.value?.getElementsByTagName('input')
 
@@ -151,7 +150,7 @@ const onPaste = (e: ClipboardEvent) => {
     0: 'first',
     1: 'second',
     2: 'third',
-    3: 'fourth'
+    3: 'fourth',
   }
   for (const [i, v] of value.slice(0, 4).split('').entries()) {
     const index = i as keyof typeof keysByIndex
@@ -167,7 +166,6 @@ const onPaste = (e: ClipboardEvent) => {
     currentInput?.focus()
     currentInput?.select()
   }, 0)
-
 }
 
 const kek = (v: KeyboardEvent, inputNumber: number) => {
@@ -188,12 +186,11 @@ const kek = (v: KeyboardEvent, inputNumber: number) => {
         inputNumber === 1
           ? (secondInputRef.value?.focus(), secondInputRef.value?.select())
           : inputNumber === 2
-            ? (thirdInputRef.value?.focus(), thirdInputRef.value?.select())
-            : inputNumber === 3
-              ? (fourthInputRef.value?.focus(), fourthInputRef.value?.select())
-              : void 0
+          ? (thirdInputRef.value?.focus(), thirdInputRef.value?.select())
+          : inputNumber === 3
+          ? (fourthInputRef.value?.focus(), fourthInputRef.value?.select())
+          : void 0
       })
-
     }
   }, 0)
 }
@@ -205,7 +202,6 @@ const updateFirstDigit = (v: string | null) => {
       secondInputRef.value?.focus()
       secondInputRef.value?.select()
     })
-
   }
 }
 
@@ -216,7 +212,6 @@ const updateSecondDigit = (v: string | null) => {
       thirdInputRef.value?.focus()
       thirdInputRef.value?.select()
     })
-
   }
 }
 
@@ -227,7 +222,6 @@ const updateThirdDigit = (v: string | null) => {
       fourthInputRef.value?.focus()
       fourthInputRef.value?.select()
     })
-
   }
 }
 
@@ -260,10 +254,10 @@ onMounted(() => {
 }
 
 .input :deep(input::-webkit-outer-spin-button),
-.input :deep(input::-webkit-inner-spin-button), .input :deep(input[type=number]) {
+.input :deep(input::-webkit-inner-spin-button),
+.input :deep(input[type='number']) {
   -moz-appearance: textfield;
   -webkit-appearance: none;
   margin: 0;
 }
-
 </style>
