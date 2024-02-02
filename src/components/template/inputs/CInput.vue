@@ -372,7 +372,7 @@ textarea + .q-field__label {
 }
 
 .default-input ::placeholder {
-  font: var(--header2);
+  font: var(--header3);
 }
 
 .q-field--outlined .bg-black2.q-field__control:before {

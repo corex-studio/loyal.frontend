@@ -95,9 +95,9 @@
                   : $companyGroup.item &&
                     $companyGroup.item.companies.length > 1
                   ? 'justify-center'
-                  : 'justify-end'
+                  : 'justify-center'
               "
-              class="row no-wrap items-center col gap-lg-10 gap-xs-6"
+              class="row no-wrap items-center col gap-lg-8 gap-xs-6"
             >
               <CButton
                 v-if="$q.screen.gt.md"

@@ -65,7 +65,7 @@
               $appSettings.linksData.ios_download_link)
           "
         >
-          <div class="header2 bold mb-lg-15 mb-xs-10">
+          <div class="header3 bold mb-lg-15 mb-xs-10">
             Скачать мобильное приложение
           </div>
           <div

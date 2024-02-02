@@ -5,7 +5,7 @@
     style="width: 100%; height: fit-content"
     class="column gap-md-15 gap-xs-10 border-radius bg-background-color text-on-background-color"
   >
-    <div class="header2 bold">Мои адреса</div>
+    <div class="header3 bold">Мои адреса</div>
     <div class="column full-width gap-lg-10 gap-xs-8 no-wrap">
       <template v-for="(el, index) in $deliveryAddress.items" :key="index">
         <ProfileDeliveryAddressRow
@@ -33,7 +33,7 @@
       size="60px"
     />
     <div class="row full-width justify-center">
-      <div class="header2 col-9" style="text-align: center">
+      <div class="header3 col-9" style="text-align: center">
         У вас нет добавленных адресов доставки
       </div>
     </div>

@@ -7,7 +7,7 @@
     :position="$q.screen.lt.md ? 'bottom' : undefined"
   >
     <!-- <template v-slot:header> Промокод </template> -->
-    <div class="header2 bold mb-8">Промокод</div>
+    <div class="header3 bold mb-8">Промокод</div>
 
     <template v-if="$cart.item">
       <CInput

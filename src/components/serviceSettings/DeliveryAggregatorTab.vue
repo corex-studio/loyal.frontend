@@ -9,7 +9,7 @@
         class="cursor-pointer"
         size="22px"
       />
-      <div class="header2 bold">
+      <div class="header3 bold">
         {{ tab?.label }}
       </div>
     </div>

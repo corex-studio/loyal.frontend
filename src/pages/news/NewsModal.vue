@@ -32,7 +32,7 @@
       class="column no-wrap col-grow justify-between gap-6 full-width bg-background-color text-on-background-color pa-15 relative-position"
     >
       <div class="column full-width gap-6 pb-15">
-        <div class="header2 bold">
+        <div class="header3 bold">
           {{ $promotion.item ? $promotion.item.name : $news.item?.title }}
         </div>
         <div v-if="$promotion.item" class="body">

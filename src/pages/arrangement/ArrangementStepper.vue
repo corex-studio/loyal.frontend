@@ -14,7 +14,7 @@
         ]"
       >
         <div
-          class="bold header2 row justify-center items-center step"
+          class="bold 3 row justify-center items-center step"
           :class="[
             index <= currentStep
               ? 'bg-primary text-background-color'

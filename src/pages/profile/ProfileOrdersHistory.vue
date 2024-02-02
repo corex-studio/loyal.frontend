@@ -3,7 +3,7 @@
     :style="`max-width: ${$q.screen.lt.lg ? '' : '628px'}`"
     class="column full-width text-on-background-color"
   >
-    <div class="header2 bold mb-15">История заказов</div>
+    <div class="header3 bold mb-15">История заказов</div>
     <div
       class="row items-center full-width gap-4 body no-wrap pt-1 pb-2 pr-1"
       style="overflow-x: auto"
@@ -41,7 +41,7 @@
           name="fa-light fa-money-check"
           size="60px"
         />
-        <div class="header2">У вас нет ни одного заказа</div>
+        <div class="header3">У вас нет ни одного заказа</div>
       </div>
     </div>
     <Pagination

@@ -35,15 +35,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="column full-width gap-10 mt-20">
-      <div class="header2 bold">Подписки</div>
-      <CCheckBox
-        v-model="receiveSpecialOffers"
-        label="Получать персональные предложения и акции"
-        class="subtitle-text"
-        size="56px"
-      ></CCheckBox>
-    </div> -->
+
     <CButton
       v-if="$q.screen.gt.md"
       style="width: 100%; max-width: 200px"

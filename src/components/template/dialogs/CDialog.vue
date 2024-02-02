@@ -16,10 +16,9 @@
       class="relative-position no-overflow column no-wrap no-shadow bg-background-color"
       :class="{ 'border-radius': position !== 'bottom' }"
     >
-      <!-- bg-modal-header-color text-on-modal-header-color -->
       <div
         v-if="$slots.header"
-        class="row full-width items-center header2 bold px-md-15 px-xs-8 bg-background-color text-on-background-color mt-15"
+        class="row full-width items-center header3 bold px-md-15 px-xs-8 bg-background-color text-on-background-color mt-15"
       >
         <slot name="header"></slot>
       </div>

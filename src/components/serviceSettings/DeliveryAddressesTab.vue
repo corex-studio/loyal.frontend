@@ -15,7 +15,7 @@
         name="fa-regular fa-angle-left"
         class="cursor-pointer"
       />
-      <div class="header2 bold">Доставка</div>
+      <div class="header3 bold">Доставка</div>
     </div>
     <div
       class="column no-wrap full-width gap-md-8 gap-xs-2 pb-md-10 pb-xs-12"

@@ -40,10 +40,10 @@
       </template>
     </q-img>
     <div
-      :style="`height: ${$q.screen.lt.md ? '165' : '208'}px`"
+      :style="`height: ${$q.screen.lt.md ? '165' : '188'}px`"
       class="px-8 py-8 column no-wrap justify-between col-grow text-on-background-color"
     >
-      <div class="column no-wrap mb-md-14 mb-xs-8">
+      <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
           <div class="header3 bold ellipsis-2-lines">
             {{ item.name }}
@@ -53,7 +53,7 @@
         <div
           style="opacity: 0.6"
           :class="$q.screen.lt.md ? 'ellipsis' : 'ellipsis-2-lines'"
-          class="mt-5 body"
+          class="mt-3 body"
         >
           {{ item.description }}
         </div>

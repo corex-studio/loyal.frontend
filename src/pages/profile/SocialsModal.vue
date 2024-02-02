@@ -5,7 +5,7 @@
     width="456px"
     class="text-on-background-color"
   >
-    <div class="header2 bold mb-10">Ссылки на соц. сети</div>
+    <div class="header3 bold mb-10">Ссылки на соц. сети</div>
     <div class="column gap-8">
       <div
         v-for="(el, index) in $company.companyForProfile?.guestContacts.socials"

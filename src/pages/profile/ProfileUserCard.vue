@@ -24,7 +24,7 @@
         </template>
       </q-img>
       <div class="column gap-3">
-        <div class="header2 bold">
+        <div class="header3 bold">
           {{ authentication.user.fullName }}
         </div>
         <div style="opacity: 0.7" class="body">

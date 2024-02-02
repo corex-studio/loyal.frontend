@@ -18,7 +18,7 @@
         fit="contain"
       />
       <div class="row mb-12 gap-5 items-center full-width justify-center">
-        <div class="header2">Удаление аккаунта</div>
+        <div class="header3">Удаление аккаунта</div>
         <CIcon size="20px" name="fa-light fa-info-circle">
           <q-tooltip>
             <div>

@@ -12,7 +12,7 @@
         name="fa-regular fa-angle-left"
         class="cursor-pointer"
       />
-      <div class="header2 bold">Бронирование</div>
+      <div class="header3 bold">Бронирование</div>
     </div>
     <div
       class="column no-wrap full-width gap-md-8 gap-xs-2 pb-md-10 pb-xs-12"

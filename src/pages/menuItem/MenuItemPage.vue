@@ -129,7 +129,7 @@
             <template v-if="!$menuItem.loadings.retrieve">
               <div
                 v-if="currentSize?.price"
-                :class="$q.screen.xs ? 'header2' : 'header'"
+                :class="$q.screen.xs ? 'header3' : 'header'"
               >
                 {{ currentSize?.price + ' ₽' }}
               </div>

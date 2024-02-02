@@ -3,7 +3,7 @@
     <template v-if="$slots.action">
       <slot name="action"></slot>
     </template>
-    <div :class="$q.screen.lt.lg ? 'header2' : 'huge3'" class="bold">
+    <div :class="$q.screen.lt.lg ? 'header3' : 'huge3'" class="bold">
       {{ getTitle() }}
     </div>
   </div>

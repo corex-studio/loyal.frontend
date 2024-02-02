@@ -1,6 +1,6 @@
 <template>
   <div class="bordered pa-10 border-radius column full-width">
-    <div class="row full-width justify-between items-center header2 mb-2">
+    <div class="row full-width justify-between items-center header3 mb-2">
       <div class="bold">
         {{ order.deliveryType }}
       </div>

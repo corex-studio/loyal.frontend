@@ -4,7 +4,7 @@
       class="border-radius bg-backing-color full-width py-10 column no-wrap gap-10 items-center"
       style="height: 300px"
     >
-      <div class="header2">Мой QR код</div>
+      <div class="header3">Мой QR код</div>
       <div class="border-radius" style="height: 210px; overflow: hidden">
         <div id="qrCode"></div>
       </div>

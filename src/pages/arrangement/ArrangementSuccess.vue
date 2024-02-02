@@ -50,7 +50,7 @@
           <div class="body mb-2" style="opacity: 0.7">
             Заказ № {{ $order.item.number || '-' }}
           </div>
-          <div class="header2 bold mb-md-8 mb-xs-6">
+          <div class="header3 bold mb-md-8 mb-xs-6">
             Приготовим к {{ $order.item?.deliveryTime || '-' }}
           </div>
           <OrderStepper
