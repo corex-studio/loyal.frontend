@@ -83,7 +83,7 @@ const openDialog = () => {
 <style lang="scss" scoped>
 .button {
   border-radius: 100px !important;
-  max-width: 490px;
+  max-width: 430px;
   // width: inherit;
   // width: 100% !important;
 }
