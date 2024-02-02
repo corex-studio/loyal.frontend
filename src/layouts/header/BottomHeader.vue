@@ -4,7 +4,7 @@
       <div
         :style="
           $cart.item || categories?.length
-            ? `height: ${$q.screen.gt.md ? '54' : $q.screen.md ? '48' : '42'}px`
+            ? `height: ${$q.screen.gt.sm ? '48' : '42'}px`
             : ''
         "
         class="row full-width border-radius no-wrap body items-center gap-10 content-row relative-position"
@@ -16,7 +16,7 @@
         >
           <div
             v-if="categories && !$salesPoint.menuLoading"
-            class="gap-lg-14 gap-xs-6 gap-md-8 no-wrap items-center no-scrollbar row"
+            class="gap-lg-7 gap-xs-6 gap-md-8 no-wrap items-center no-scrollbar row"
             style="transition: 0.25s all ease"
           >
             <div
