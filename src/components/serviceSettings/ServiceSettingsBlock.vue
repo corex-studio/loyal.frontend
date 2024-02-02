@@ -41,7 +41,6 @@
           </div>
         </div>
         <div
-          v-if="$q.screen.gt.md"
           class="row no-wrap gap-4 items-center"
           style="overflow: inherit !important"
         >

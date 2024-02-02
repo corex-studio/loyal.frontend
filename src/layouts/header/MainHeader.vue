@@ -11,17 +11,24 @@
           class="row justify-between gap-lg-8 gap-xs-6 items-center no-wrap full-width"
         >
           <div
-            :style="
-              $companyGroup.item && $companyGroup.item.companies.length > 1
-                ? ''
-                : ''
-            "
             class="row gap-6 no-wrap items-center"
-            :class="{
-              col:
-                $companyGroup.item && $companyGroup.item.companies.length < 2,
-            }"
+            :class="
+              $companyGroup.item && $companyGroup.item.companies.length < 2
+                ? $q.screen.lt.lg
+                  ? 'col-shrink'
+                  : 'col'
+                : 'col-shrink'
+            "
           >
+            <CIcon
+              v-if="$q.screen.lt.lg"
+              @click="$store.leftDrawer = true"
+              name="fa-regular fa-bars"
+              color="on-background-color"
+              size="24px"
+              class="mr-5 cursor-pointer"
+              hover-color="primary"
+            />
             <img
               v-if="
                 $company.item?.logo?.thumbnail ||
@@ -64,7 +71,9 @@
             </CButton>
             <div
               v-if="
-                $companyGroup.item && $companyGroup.item.companies.length < 2
+                $companyGroup.item &&
+                $companyGroup.item.companies.length < 2 &&
+                $q.screen.gt.md
               "
               ref="multipleCompaniesSpot"
               class="ml-xl-25 ml-lg-10 ml-xs-0 ml-md-5 col"
@@ -74,20 +83,24 @@
             :disabled="
               !multipleCompaniesSpot ||
               ($companyGroup.item && $companyGroup.item.companies.length > 1) ||
-              false
+              $q.screen.lt.lg
             "
             :to="multipleCompaniesSpot"
           >
             <div
               style="width: inherit"
-              :class="{
-                'justify-center':
-                  $companyGroup.item && $companyGroup.item.companies.length > 1,
-              }"
+              :class="
+                $q.screen.lt.lg
+                  ? 'justify-end'
+                  : $companyGroup.item &&
+                    $companyGroup.item.companies.length > 1
+                  ? 'justify-center'
+                  : 'justify-end'
+              "
               class="row no-wrap items-center col gap-lg-10 gap-xs-6"
             >
               <CButton
-                v-if="$q.screen.gt.sm"
+                v-if="$q.screen.gt.md"
                 style="border-radius: 100px !important"
                 height="44px"
                 outlined
@@ -113,7 +126,7 @@
             class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-8 secondary-text"
             style="height: 48px; width: fit-content"
           >
-            <template v-if="$q.screen.gt.sm">
+            <template v-if="$q.screen.gt.md">
               <div
                 @click="
                   $cart.loading
@@ -144,7 +157,7 @@
                 <div class="bold">Корзина</div>
               </div>
               <div
-                @click="inDevelopmentModal = true"
+                @click="$store.bonusesModal = true"
                 class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
               >
                 <q-badge
@@ -163,6 +176,7 @@
               </div>
             </template>
             <div
+              v-if="$q.screen.gt.md"
               @click="
                 $router.push({
                   name: 'profilePage',
@@ -272,7 +286,7 @@
       </div> -->
     </q-header>
     <ArrangementHeader v-else-if="$q.screen.gt.sm" />
-    <BonusesInDevModal v-model="inDevelopmentModal" />
+    <BonusesInDevModal v-model="$store.bonusesModal" />
   </div>
 </template>
 
@@ -299,8 +313,6 @@ const route = useRoute()
 const header = ref<HTMLDivElement>()
 
 const multipleCompaniesSpot = ref<HTMLDivElement>()
-
-const inDevelopmentModal = ref(false)
 
 const isArrangementPage = computed(() => {
   return route.path.includes('arrangement')

@@ -4,6 +4,7 @@
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
     class="text-on-background-color"
+    :maximize="$q.screen.lt.md"
   >
     <div class="column full-width">
       <div class="row full-width justify-center">
