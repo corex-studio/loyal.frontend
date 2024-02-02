@@ -1,5 +1,5 @@
 <template>
-  <div class="text-on-bottom-menu-color full-width">
+  <div id="footer" class="text-on-bottom-menu-color full-width">
     <div class="row full-width justify-between gap-8">
       <div class="col column gap-8">
         <div class="header3 bold">Информация</div>

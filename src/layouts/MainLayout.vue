@@ -3,7 +3,7 @@
     <PrepareUiSettings />
     <q-layout view="lHh Lpr lFf" class="bg-background-color relative-position">
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
-      <TopHeader />
+      <TopHeader v-if="$q.screen.gt.md" />
       <MainHeader />
 
       <div v-if="$q.screen.lt.md" class="full-width">
@@ -30,11 +30,9 @@
             ),
         }"
       >
-        <!-- <pre class="text-white">
-        {{ $company.item?.guestContacts.socials }} 
-        </pre> -->
         <router-view />
         <CartDrawer />
+        <LeftDrawer v-if="$q.screen.lt.lg" />
         <CartOverlayButton v-if="!$route.path.includes('arrangement')" />
       </q-page-container>
 
@@ -101,6 +99,7 @@ import { NewsType } from 'src/models/news/news'
 import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
 import { useFavicon } from '@vueuse/core'
 import TopHeader from './header/TopHeader.vue'
+import LeftDrawer from './drawer/LeftDrawer.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 

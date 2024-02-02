@@ -143,7 +143,7 @@
           :addresses="currentSalesPoints || []"
         />
       </div>
-      <div v-else class="full-height column">
+      <div v-else class="full-height column text-on-background-color">
         <SalesPointsOnMap
           v-if="
             mobileViewTypeConfirmed &&

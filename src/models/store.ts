@@ -20,6 +20,8 @@ export class Store {
   registrationModal = false
   profileModal = false
   cartDrawer = false
+  leftDrawer = false
+  bonusesModal = false
   serviceSettingsModal = false
   selectCompanyModal = false
   verticalScroll = 0
