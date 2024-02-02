@@ -10,7 +10,7 @@
         :class="[index !== steps.length - 1 ? 'col' : '', ,]"
       >
         <div
-          class="bold header2 row justify-center items-center step"
+          class="bold header3 row justify-center items-center step"
           :class="[
             index <= currentStep
               ? 'bg-primary text-on-primary'

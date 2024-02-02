@@ -10,7 +10,7 @@
     <div class="text-on-background-color">
       <div
         :style="$q.screen.lt.md ? 'text-align: center' : ''"
-        class="header2 bold"
+        class="header3 bold"
       >
         Вход на сайт
       </div>

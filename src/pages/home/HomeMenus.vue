@@ -7,7 +7,7 @@
         class="full-width pt-md-20 pt-xs-10"
         :id="el.id"
       >
-        <div class="huge3 bold mb-lg-20 mb-md-15 mb-xs-8">
+        <div class="header bold mb-lg-15 mb-md-15 mb-xs-8">
           {{ el.name }}
         </div>
         <div v-if="el.items.length" class="row full-width">
@@ -18,7 +18,7 @@
             :md="3"
             :sm="2"
             :xs="2"
-            :gap="$q.screen.gt.md ? '30px' : $q.screen.md ? '16px' : '8px'"
+            :gap="$q.screen.gt.md ? '20px' : $q.screen.md ? '16px' : '8px'"
           >
             <template v-slot:item="{ item }">
               <MenuItemCard :item="(item as MenuItem)" />

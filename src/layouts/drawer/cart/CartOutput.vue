@@ -13,7 +13,7 @@
     </div>
 
     <div class="column">
-      <div class="header2 mb-10">Итого</div>
+      <div class="header3 mb-10">Итого</div>
 
       <div class="box-shadow border-radius py-6 px-5 column gap-7">
         <div

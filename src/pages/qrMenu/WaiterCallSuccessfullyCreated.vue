@@ -4,7 +4,7 @@
     @update:model-value="$emit('update:modelValue', $event)"
     width="345px"
   >
-    <div class="header2 light" style="text-align: center">
+    <div class="header3 light" style="text-align: center">
       Официант скоро подойдет, пожалуйста ожидайте
     </div>
     <div class="row full-width justify-center mt-10">

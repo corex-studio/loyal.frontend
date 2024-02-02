@@ -2,7 +2,7 @@
   <div
     class="column full-width px-xs-8 px-md-0 py-md-0 py-xs-12 text-on-background-color"
   >
-    <div class="header2 bold mb-10">Выберите способ получения</div>
+    <div class="header3 bold mb-10">Выберите способ получения</div>
     <div class="column full-width">
       <div
         v-for="(type, index) in types"

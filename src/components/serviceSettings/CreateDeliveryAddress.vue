@@ -21,7 +21,7 @@
             class="cursor-pointer"
             name="fa-regular fa-angle-left"
           />
-          <div class="header2 bold">
+          <div class="header3 bold">
             {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
           </div>
         </div>

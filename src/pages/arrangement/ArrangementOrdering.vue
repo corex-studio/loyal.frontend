@@ -18,7 +18,7 @@
             hover-color="primary"
             class="cursor-pointer"
           />
-          <div class="header2 bold">
+          <div class="header3 bold">
             Заказ на
             {{ isDelivery ? 'доставку' : 'самовывоз' }}
           </div>
@@ -457,7 +457,7 @@
       </div>
     </div>
   </div>
-  <div v-else class="pt-20 header2 bold">Корзина пуста</div>
+  <div v-else class="pt-20 header3 bold">Корзина пуста</div>
   <SelectPaymentTypeModal
     :types="paymentTypes"
     v-model="selectedPaymentTypeModal"

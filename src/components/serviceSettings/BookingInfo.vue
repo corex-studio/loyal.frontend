@@ -9,7 +9,7 @@
         class="cursor-pointer"
         size="22px"
       />
-      <div class="header2 bold">Забронировать стол</div>
+      <div class="header3 bold">Забронировать стол</div>
     </div>
     <q-tab-panels
       animated

@@ -24,7 +24,7 @@
         <div
           class="row no-wrap items-center text-on-background-color px-md-15 px-xs-8 justify-between pt-md-15 pb-md-11 py-md-0 py-xs-10"
         >
-          <div class="row items-center no-wrap gap-md-5 gap-xs-4 header2 bold">
+          <div class="row items-center no-wrap gap-md-5 gap-xs-4 header3 bold">
             <CIcon
               v-if="$q.screen.lt.lg"
               @click="$store.cartDrawer = false"

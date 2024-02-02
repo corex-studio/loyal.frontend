@@ -14,7 +14,7 @@
           hover-color="primary"
           size="26px"
         />
-        <div class="header2 bold">О нашем заведении</div>
+        <div class="header3 bold">О нашем заведении</div>
       </div>
       <div class="body">{{ company.description }}</div>
     </div>
@@ -67,7 +67,7 @@
     >
     </q-img>
     <div v-if="contacts.length" class="column full-width">
-      <div class="header2 bold mb-10">Наши контакты</div>
+      <div class="header3 bold mb-10">Наши контакты</div>
       <div
         style="overflow-x: auto"
         class="row full-width items-center no-wrap gap-xs-4 gap-md-6 gap-lg-8"
