@@ -44,13 +44,13 @@ const routes: RouteRecordRaw[] = [
             component: () =>
               import('src/pages/profile/ProfileDeliveryAddresses.vue'),
           },
-          {
-            path: 'about',
-            name: 'aboutUs',
-            component: () => import('src/pages/profile/ProfileAboutUs.vue'),
-          },
         ],
         component: () => import('src/pages/profile/ProfilePage.vue'),
+      },
+      {
+        path: 'about',
+        name: 'aboutUs',
+        component: () => import('src/pages/profile/ProfileAboutUs.vue'),
       },
       {
         path: 'menu',
