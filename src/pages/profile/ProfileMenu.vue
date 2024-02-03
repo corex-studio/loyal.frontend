@@ -47,11 +47,6 @@ const tabs = ref([
     label: 'Мои адреса',
     routeName: 'profileAddresses',
   },
-
-  {
-    label: 'О заведении',
-    routeName: 'aboutUs',
-  },
   {
     label: 'История заказов',
     routeName: 'ordersHistory',

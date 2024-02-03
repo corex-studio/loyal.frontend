@@ -25,6 +25,7 @@
           'c-container':
             $route.name !== 'home' &&
             $route.name !== 'qrHome' &&
+            $route.name !== 'aboutUs' &&
             !routesWithoutContainerPaddings.some((v) =>
               $route.path.includes(v)
             ),

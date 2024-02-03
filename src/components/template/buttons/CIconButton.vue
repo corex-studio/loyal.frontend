@@ -198,9 +198,9 @@ const _iconSize = computed(() => {
 .q-btn .q-icon {
   margin-right: 0 !important;
 }
-// .borderedButton:hover {
-//   //color: $accent4 !important;
-// }
+.borderedButton:hover {
+  color: var(--primary) !important;
+}
 
 // .borderedButton:hover:before {
 //   // border: 1px solid $accent4;

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="header3 bold mb-15">Адреса заведения</div>
+    <div class="huge3 bold mb-18">Карта с нашими заведениями</div>
     <div
       id="map"
-      style="width: 100%; height: 421px; z-index: 9"
+      style="width: 100%; height: 475px; z-index: 9"
       class="border-radius col-12 map"
     ></div>
   </div>
