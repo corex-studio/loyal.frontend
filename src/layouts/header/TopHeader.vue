@@ -3,7 +3,7 @@
     <div class="row justify-between items-center bg-background-color py-6">
       <div class="row items-center gap-10">
         <div
-          v-for="(el, index) in blocks.filter((v) => !v.hidden)"
+          v-for="(el, index) in blocks"
           :key="index"
           class="row items-center gap-14"
         >
@@ -35,7 +35,6 @@
 </template>
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { authentication } from 'src/models/authentication/authentication'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -50,7 +49,6 @@ const blocks = computed(() => {
   return [
     {
       label: 'О нас',
-      hidden: !authentication.user,
       click: () => {
         router.push({
           name: 'aboutUs',

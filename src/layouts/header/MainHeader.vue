@@ -76,7 +76,7 @@
                 $q.screen.gt.md
               "
               ref="multipleCompaniesSpot"
-              class="ml-xl-25 ml-lg-10 ml-xs-0 ml-md-5 col"
+              class="ml-xl-15 ml-lg-10 ml-xs-0 ml-md-5 col"
             ></div>
           </div>
           <teleport
@@ -89,14 +89,7 @@
           >
             <div
               style="width: inherit"
-              :class="
-                $q.screen.lt.lg
-                  ? 'justify-end'
-                  : $companyGroup.item &&
-                    $companyGroup.item.companies.length > 1
-                  ? 'justify-center'
-                  : 'justify-center'
-              "
+              :class="$q.screen.lt.lg ? 'justify-end' : $companyGroup.item"
               class="row no-wrap items-center col gap-lg-8 gap-xs-6"
             >
               <CButton
