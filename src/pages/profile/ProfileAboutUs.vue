@@ -337,7 +337,7 @@ const openLink = (link: string) => {
 
 onMounted(() => {
   if (companyGroupRepo.item && companyGroupRepo.item?.companies.length < 2) {
-    companyRepo.companyForProfile = companyRepo.item
+    companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
 })
 </script>
