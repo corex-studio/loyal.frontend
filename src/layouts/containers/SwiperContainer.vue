@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div v-if="$slots.top" class="row full-width justify-between mb-15">
+    <div
+      v-if="$slots.top"
+      class="row full-width no-wrap gap-5 justify-between mb-lg-15 mb-xs-10"
+    >
       <slot name="top"></slot>
       <div class="row gap-4 no-wrap">
         <CIconButton

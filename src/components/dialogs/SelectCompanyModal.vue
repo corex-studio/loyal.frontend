@@ -5,7 +5,7 @@
     :width="$q.screen.lt.md ? '450px' : '735px'"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
-    :no-close="$q.screen.lt.md"
+    :no-close="$q.screen.lt.md || noClose"
   >
     <div class="huge3 bold mb-md-12 mb-xs-10">Выберите заведение</div>
     <div v-if="$companyGroup.item" class="row full-width">
@@ -57,6 +57,7 @@ import { companyRepo } from 'src/models/company/companyRepo'
 
 const props = defineProps<{
   modelValue: boolean
+  noClose?: boolean
 }>()
 
 defineEmits<{
