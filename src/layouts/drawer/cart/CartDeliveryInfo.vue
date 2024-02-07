@@ -5,7 +5,7 @@
     <img
       v-if="$company.item?.image?.thumbnail"
       height="50"
-      class="border-radius"
+      class="border-radius2"
       style="object-fit: contain"
       :src="$company.item?.image?.thumbnail"
     />

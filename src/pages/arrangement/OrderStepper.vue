@@ -18,7 +18,9 @@
             ,
           ]"
           :style="
-            index <= currentStep ? '' : `border: 1px ${getBorderColor} solid`
+            index <= currentStep
+              ? ''
+              : `border: 1px #${$uiSettings.item?.secondaryColor.color} solid`
           "
         >
           <CIcon
@@ -34,7 +36,7 @@
           class="devider col-grow"
           :style="`margin-top: ${
             $q.screen.lt.md ? '22' : '25'
-          }px; background-color: ${getBorderColor}`"
+          }px; background-color: #${$uiSettings.item?.secondaryColor.color}`"
         ></div>
       </div>
     </div>
@@ -44,7 +46,6 @@
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { OrderStatusType } from 'src/models/order/order'
 import { orderRepo } from 'src/models/order/orderRepo'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
 
 const currentStep = computed(() => {
@@ -58,14 +59,6 @@ const currentStep = computed(() => {
   else if (orderRepo.item?.status === OrderStatusType.ON_WAY) return 2
   else if (orderRepo.item?.status === OrderStatusType.READY) return 3
   else return 0
-})
-
-const getBorderColor = computed(() => {
-  if (uiSettingsRepo.item?.backgroundColor.on_color.length === 6) {
-    return `#${uiSettingsRepo.item?.backgroundColor.on_color}27`
-  } else {
-    return `#${uiSettingsRepo.item?.backgroundColor.on_color.slice(0, 6)}27`
-  }
 })
 
 const steps = computed(() => {

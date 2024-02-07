@@ -39,7 +39,7 @@
         hover-color="primary"
         class="cursor-pointer"
         name="fa-regular fa-pen"
-        color="secondary-button-color"
+        color="secondary"
       />
       <CIcon
         @click="
@@ -51,7 +51,7 @@
         hover-color="primary"
         class="cursor-pointer"
         name="fa-regular fa-trash"
-        color="secondary-button-color"
+        color="secondary"
       />
     </div>
   </div>

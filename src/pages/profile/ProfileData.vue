@@ -207,6 +207,6 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .bordered-element {
-  border: 1px var(--secondary-button-color) solid;
+  border: 1px var(--secondary) solid;
 }
 </style>

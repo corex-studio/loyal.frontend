@@ -157,7 +157,7 @@ const onSwiper = (swiper: SwiperClass) => {
 }
 
 .outlined-button :deep(.q-btn--outline:before) {
-  border: 2px var(--secondary-button-color) solid !important;
+  border: 2px var(--secondary) solid !important;
   border-radius: 50%;
 }
 

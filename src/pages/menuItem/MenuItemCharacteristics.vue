@@ -4,13 +4,13 @@
       <div class="subtitle-text bold">Пищевая ценность</div>
       <div
         style="overflow: hidden"
-        class="row items-center bg-selector-color border-radius pa-1"
+        class="row items-center bg-selector-color border-radius2 pa-1"
       >
         <div
           v-for="(el, index) in actualNutritions"
           :key="index"
           @click="currentNutrition = el"
-          class="py-5 px-9 body border-radius cursor-pointer"
+          class="py-5 px-9 body border-radius2 cursor-pointer"
           :class="
             currentNutrition?.uuid === el.uuid
               ? 'bold bg-selector-active-color text-on-selector-active-color box-shadow'

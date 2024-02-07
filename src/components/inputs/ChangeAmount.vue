@@ -1,6 +1,6 @@
 <template>
   <div
-    class="row items-center no-wrap border-radius"
+    class="row items-center no-wrap border-radius2"
     :class="[
       { 'full-width justify-between': fullWidth },
       backgroundClass ||
@@ -288,6 +288,6 @@ const widthInput = computed(() => {
 }
 
 .outlined-element {
-  border: 1px var(--secondary-button-color) solid;
+  border: 1px var(--secondary) solid;
 }
 </style>

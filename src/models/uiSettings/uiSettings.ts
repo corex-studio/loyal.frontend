@@ -42,6 +42,7 @@ export type UiSettingsRaw = {
   uuid: string
   primary_color: ColorRaw
   background_color: ColorRaw
+  secondary_color: ColorRaw
   accent_color: ColorRaw
   input_type: string
   bottom_menu_color: ColorRaw
@@ -58,6 +59,7 @@ export type UiSettingsRaw = {
   card_color: ColorRaw
   loyalty_card_background_color: ColorRaw
   border_radius: number
+  border_radius_small: number
   loader: string
   favicon: string | null
   logo: {
@@ -111,6 +113,7 @@ export class UiSetting implements BaseModel {
   id: string
   primaryColor: Color
   backgroundColor: Color
+  secondaryColor: Color
   accentColor: Color
   inputType: string
   bottomMenuColor: Color
@@ -127,6 +130,7 @@ export class UiSetting implements BaseModel {
   cardColor: Color
   loyaltyCardBackgroundColor: Color
   borderRadius: number
+  borderRadiusSmall: number
   loader: string
   favicon: string | null
   logo: {
@@ -170,6 +174,7 @@ export class UiSetting implements BaseModel {
     this.id = raw.uuid
     this.primaryColor = new Color(raw.primary_color)
     this.backgroundColor = new Color(raw.background_color)
+    this.secondaryColor = new Color(raw.secondary_color)
     this.accentColor = new Color(raw.accent_color)
     this.inputType = raw.input_type
     this.bottomMenuColor = new Color(raw.bottom_menu_color)
@@ -188,6 +193,7 @@ export class UiSetting implements BaseModel {
       raw.loyalty_card_background_color
     )
     this.borderRadius = raw.border_radius
+    this.borderRadiusSmall = raw.border_radius_small
     this.loader = raw.loader
     this.favicon = raw.favicon
     this.logo = raw.logo

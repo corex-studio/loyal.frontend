@@ -75,6 +75,6 @@ defineProps<{
 
 <style lang="scss" scoped>
 .bordered {
-  outline: 1px var(--secondary-button-color) solid;
+  outline: 1px var(--secondary) solid;
 }
 </style>

@@ -114,7 +114,7 @@ const availableTimes = computed(() => {
 
 <style lang="scss" scoped>
 .time-element {
-  border: 1px var(--secondary-button-color) solid;
+  border: 1px var(--secondary) solid;
   transition: background-color 0.4s ease-out;
 }
 

@@ -5,7 +5,7 @@
       $q.screen.lt.md
         ? ''
         : selected
-        ? `outline: 2px ${getBorderColor} solid`
+        ? `outline: 2px #${$uiSettings.item?.primaryColor.color} solid`
         : ''
     "
   >
@@ -47,24 +47,11 @@
 <script lang="ts" setup>
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
 import { Company } from 'src/models/company/company'
-import { lightColor } from 'src/models/store'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed } from 'vue'
 
-const props = defineProps<{
+defineProps<{
   item: Company
   selected: boolean
 }>()
-
-const getBorderColor = computed(() => {
-  return props.selected
-    ? '#' + uiSettingsRepo.item?.primaryColor.color
-    : lightColor(uiSettingsRepo.item?.backgroundColor.on_color || '000', '20')
-})
 </script>
 
-<style lang="scss" scoped>
-.company-row {
-  border: 1px var(--primary) solid;
-}
-</style>
+<style lang="scss" scoped></style>

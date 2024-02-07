@@ -39,25 +39,21 @@
                 .join(', ')
             }}
           </div>
-          <!-- <teleport
-            :to="xsSelectorSpot"
-            :disabled="!xsSelectorSpot || !$q.screen.xs"
-          > -->
+
           <div class="row gap-4 no-wrap body mb-5">
             <div class="bold">
               {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
             </div>
             <div
               v-if="item.totalSum > item.discountedTotalSum"
-              class="text-strike text-secondary"
+              class="text-strike"
+              style="opacity: 0.5"
             >
               {{ beautifyNumber(item.totalSum, true) }} ₽
             </div>
           </div>
-          <!-- </teleport> -->
         </div>
       </div>
-      <!-- <teleport :to="xsPriceSpot" :disabled="!xsPriceSpot || !$q.screen.xs"> -->
 
       <ChangeAmount
         style="height: fit-content"
@@ -66,16 +62,7 @@
         :model-value="cartItem.quantity"
         @update:model-value="updateQuantity($event)"
       />
-      <!-- </teleport> -->
     </div>
-    <!-- <div
-      v-if="$q.screen.xs"
-      class="row full-width justify-between gap-3 items-end mt-3"
-    >
-      <div ref="xsSelectorSpot"></div>
-
-      <div ref="xsPriceSpot"></div>
-    </div> -->
   </template>
 </template>
 <script lang="ts" setup>
@@ -88,20 +75,12 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { beautifyNumber } from 'src/models/store'
 
 const cartItem = ref<CartItem | null>(null)
-// const xsPriceSpot = ref<HTMLDivElement>()
-// const xsSelectorSpot = ref<HTMLDivElement>()
 
 const props = defineProps<{
   item: CartItem
 }>()
 
 const emit = defineEmits(['delete'])
-
-// const isItemDead = computed(() => {
-//   return props.item.availableQuantity
-//     ? props.item.availableQuantity <= 0
-//     : false
-// })
 
 onMounted(() => {
   cartItem.value = props.item
@@ -124,7 +103,6 @@ const updateQuantity = async (v: number) => {
   try {
     cartRepo.loading = true
     await cartItemRepo.update(cartItem.value)
-    // await cartRepo.current();
   } catch {
     Notify.create({
       message: 'Ошибка изменения товара',

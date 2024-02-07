@@ -18,7 +18,7 @@
             hover-color="primary"
             class="cursor-pointer"
           />
-          <div class="header3 bold">
+          <div class="header bold">
             Заказ на
             {{ isDelivery ? 'доставку' : 'самовывоз' }}
           </div>
@@ -48,7 +48,7 @@
                   : ''
               "
               style="min-height: 48px"
-              class="bg-input-color border-radius text-on-input-color row justify-between px-6 py-5 row no-wrap col gap-10"
+              class="bg-input-color border-radius2 text-on-input-color row justify-between px-6 py-5 row no-wrap col gap-10"
             >
               <div>{{ $cart.item?.currentAddress }}</div>
               <template v-if="isDelivery">
@@ -101,14 +101,14 @@
                   ]"
                   style="min-height: 48px; height: inherit"
                   @click="selectClosestTime()"
-                  class="border-radius cursor-pointer bg-input-color px-6 py-5 row no-wrap col"
+                  class="border-radius2 cursor-pointer bg-input-color px-6 py-5 row no-wrap col"
                 >
                   <template v-if="$q.screen.gt.sm">
                     <div>Ближайшая</div>
                     <CIcon
                       class="cursor-pointer"
                       name="fa-regular fa-clock"
-                      color="secondary-button-color"
+                      color="secondary"
                       size="20px"
                     />
                   </template>
@@ -146,14 +146,14 @@
                       ? 'column gap-8'
                       : 'row justify-between items-center  gap-10',
                   ]"
-                  class="border-radius cursor-pointer bg-input-color px-6 py-5 no-wrap col"
+                  class="border-radius2 cursor-pointer bg-input-color px-6 py-5 no-wrap col"
                 >
                   <template v-if="$q.screen.gt.sm">
                     <div>{{ $cart.item.deliveryTime || 'Ко времени' }}</div>
                     <CIcon
                       class="cursor-pointer"
                       name="fa-regular fa-calendar-clock"
-                      color="secondary-button-color"
+                      color="secondary"
                       size="20px"
                     />
                   </template>
@@ -195,7 +195,7 @@
                         :class="[
                           el,
                           {
-                            'bold selected-time border-radius':
+                            'bold selected-time border-radius2':
                               el === $cart.item.deliveryTime?.slice(11, 16),
                           },
                         ]"
@@ -248,7 +248,7 @@
                   : ''
               "
               style="min-height: 48px"
-              class="body border-radius bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+              class="body border-radius2 bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
             >
               <div class="gap-4 row items-center no-wrap">
                 <q-icon size="20px" :name="selectedPaymentType?.icon" />
@@ -789,6 +789,6 @@ onMounted(() => {
 }
 
 .bordered-block {
-  outline: 1px var(--secondary-button-color) solid;
+  outline: 1px var(--secondary) solid;
 }
 </style>

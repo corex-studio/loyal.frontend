@@ -1,5 +1,8 @@
 <template>
-  <div class="c-container">
+  <div
+    v-if="!$route.matched.find((el) => el.name === 'arrangementPage')"
+    class="c-container"
+  >
     <div class="row justify-between items-center bg-background-color py-6">
       <div class="row items-center gap-10">
         <div
@@ -16,7 +19,7 @@
               max-height: 7px;
               border-radius: 50%;
             "
-            class="bg-secondary-button-color"
+            class="bg-secondary"
           ></div>
           <CButton
             @click="el.click()"

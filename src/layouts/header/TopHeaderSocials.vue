@@ -9,7 +9,7 @@
         @click="openLink(el.link)"
         size="30px"
         class="cursor-pointer"
-        color="secondary-button-color"
+        color="secondary"
         hover-color="primary"
         :name="getSocialIcon(el.link_type)"
       />

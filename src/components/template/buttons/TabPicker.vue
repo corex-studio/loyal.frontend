@@ -6,7 +6,7 @@
 
     <div
       :style="`max-width: ${width}; height: ${height}`"
-      class="body bg-selector-color border-radius row full-width no-wrap pa-1"
+      class="body bg-selector-color border-radius2 row full-width no-wrap pa-1"
     >
       <div
         v-for="tab in localTabs"
@@ -22,7 +22,7 @@
             ? 'bg-selector-active-color text-on-selector-active-color'
             : 'text-on-selector-color',
         ]"
-        class="cursor-pointer border-radius col row items-center justify-center rounded-10 body relative-position bold"
+        class="cursor-pointer border-radius2 col row items-center justify-center rounded-10 body relative-position bold"
       >
         {{ tab.label }}
         <slot name="append"></slot>

@@ -126,7 +126,7 @@
         <CartTotalInfo />
         <div
           @click="arrange"
-          class="border-radius row items-center px-10 subtitle-text mt-10"
+          class="border-radius2 row items-center px-10 subtitle-text mt-10"
           :style="`height: ${$q.screen.lt.md ? '40' : '52'}px; width: 100%; ${
             isAddToCardDisabled ? 'cursor: not-allowed' : ''
           }`"

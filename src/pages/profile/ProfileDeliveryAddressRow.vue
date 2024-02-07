@@ -2,12 +2,12 @@
   <div class="row full-width no-wrap justify-between items-center">
     <div class="row items-center gap-6">
       <div
-        class="mark-block bg-secondary-button-color border-radius row items-center justify-center"
+        class="mark-block bg-secondary border-radius2 row items-center justify-center"
       >
         <CIcon
           name="fa-regular fa-location-dot"
           size="24px"
-          color="on-secondary-button-color"
+          color="on-secondary"
         />
       </div>
       <div class="body">

@@ -19,12 +19,12 @@
       @click="tabClickHandler(el.routeName)"
       :class="
         $route.name === el.routeName
-          ? 'bg-secondary-button-color text-on-secondary-button-color'
+          ? 'bg-secondary text-on-secondary'
           : $q.screen.lt.lg
           ? 'bordered'
           : 'full-width'
       "
-      class="row cursor-pointer text-on-background-color items-center no-wrap gap-5 px-10 border-radius py-6 mb-xs-2 mb-lg-0"
+      class="row cursor-pointer text-on-background-color items-center no-wrap gap-5 px-10 border-radius2 py-6 mb-xs-2 mb-lg-0"
     >
       <div class="body bold ellipsis">
         {{ el.label }}

@@ -11,10 +11,7 @@
       }; min-height:${height || '29px'}`,
       modelValue
         ? ''
-        : `border: 1px ${lightColor(
-            $uiSettings.item?.backgroundColor.on_color || '000',
-            '25'
-          )} solid`,
+        : `border: 1px #${$uiSettings.item?.secondaryColor.color} solid`,
     ]"
   >
     <div
@@ -31,7 +28,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { lightColor } from 'src/models/store'
 import CIcon from '../helpers/CIcon.vue'
 
 defineProps<{
