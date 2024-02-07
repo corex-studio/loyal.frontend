@@ -1,14 +1,6 @@
 <template>
   <div
     style="height: 100%; overflow: overlay; overflow-x: hidden"
-    :style="
-      $companyGroup.item?.externalId === 'corex_demo'
-        ? `border: 1px ${lightColor(
-            $uiSettings.item?.backgroundColor.on_color || '000',
-            '10'
-          )} solid`
-        : ''
-    "
     class="border-radius box-shadow column no-wrap cursor-pointer relative-position bg-background-color"
     @click="openMenuItem()"
   >

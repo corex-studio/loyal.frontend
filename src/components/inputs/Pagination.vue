@@ -1,10 +1,10 @@
 <template>
   <div
-    :class="$q.screen.lt.lg ? 'column reverse' : 'row'"
+    :class="'column reverse'"
     class="items-center no-wrap"
     v-if="lastPage > 1"
   >
-    <div class="col-12 col-lg-7 flex justify-end">
+    <div class="col-12 flex justify-end mt-8">
       <div class="row justify-center">
         <CButton
           :loading="loading"
@@ -44,7 +44,7 @@
         <q-pagination
           color="secondary"
           active-color="primary"
-          class="ml-13 pagination"
+          class="pagination"
           size="16px"
           flat
           :modelValue="page"
@@ -66,29 +66,47 @@
             icon-color="secondary"
           />
           <div class="row" style="gap: 18px">
-            <CButton
+            <CIconButton
+              color="transparent"
+              v-if="page !== 1"
+              @click="$emit('update:modelValue', page - 1)"
+              size="30px"
+              icon="fa-regular fa-angle-left"
+              no-padding
+              icon-size="16px"
+              icon-color="secondary"
+            />
+            <!-- <CButton
               v-if="page !== 1"
               icon="fa-regular fa-angle-left"
               icon-size="16px"
-              :label="'Назад'"
               class="body"
               text-button
               no-padding
               text-color="secondary"
               icon-color="secondary"
               @click="$emit('update:modelValue', page - 1)"
-            />
-            <CButton
+            /> -->
+            <!-- <CButton
               v-if="page !== lastPage"
               icon-right="fa-regular fa-angle-right"
               icon-size="18px"
-              :label="'Вперед'"
               class="body"
               text-button
               no-padding
               text-color="secondary"
               icon-color="secondary"
               @click="$emit('update:modelValue', page + 1)"
+            /> -->
+            <CIconButton
+              color="transparent"
+              v-if="page !== lastPage"
+              @click="$emit('update:modelValue', page + 1)"
+              size="30px"
+              icon="fa-regular fa-angle-right"
+              no-padding
+              icon-size="16px"
+              icon-color="secondary"
             />
           </div>
 
@@ -147,6 +165,6 @@ defineProps({
 }
 
 .pagination :deep(.q-btn--rectangle) {
-  border-radius: 8px !important;
+  border-radius: var(--border-radius2) !important;
 }
 </style>

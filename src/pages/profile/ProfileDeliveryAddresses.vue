@@ -44,8 +44,8 @@
     class="row cursor-pointer items-center gap-6 no-wrap mt-md-10 mt-xs-8"
   >
     <CIconButton
-      color="secondary-button-color"
-      icon-color="on-secondary-button-color"
+      color="secondary"
+      icon-color="on-secondary"
       icon-size="20px"
       :size="$q.screen.gt.sm ? '44px' : '40px'"
       icon="fa-regular fa-plus"

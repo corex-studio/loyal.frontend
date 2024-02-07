@@ -107,7 +107,11 @@
 <script lang="ts" setup>
 import { QInput, QInputProps, ValidationRule } from 'quasar'
 import { computed, onMounted, ref, watchEffect } from 'vue'
-import { CurrencyDisplay, CurrencyInputOptions, useCurrencyInput } from 'vue-currency-input'
+import {
+  CurrencyDisplay,
+  CurrencyInputOptions,
+  useCurrencyInput,
+} from 'vue-currency-input'
 
 const emit = defineEmits([
   'update:modelValue',
@@ -118,7 +122,7 @@ const emit = defineEmits([
   'right',
   'left',
   'up',
-  'down'
+  'down',
 ])
 
 const props = defineProps<{
@@ -266,20 +270,20 @@ const currencyOptions = computed(
       currencyDisplay: CurrencyDisplay.hidden,
       precision: props.precision
         ? {
-          min: 0,
-          max: props.precision
-        }
-        : undefined
+            min: 0,
+            max: props.precision,
+          }
+        : undefined,
     }
 )
 
 let { formattedValue, inputRef, setValue } = props.currency
   ? useCurrencyInput(currencyOptions.value)
   : {
-    setValue: undefined,
-    formattedValue: computed(() => props.modelValue),
-    inputRef: ref<QInput>()
-  }
+      setValue: undefined,
+      formattedValue: computed(() => props.modelValue),
+      inputRef: ref<QInput>(),
+    }
 
 const updateModelValue = (value: string | number | null) => {
   if (!props.currency) emit('update:modelValue', value)
@@ -368,7 +372,7 @@ textarea + .q-field__label {
 }
 
 .circlized .q-field__control {
-  border-radius: var(--border-radius) !important;
+  border-radius: var(--border-radius2) !important;
 }
 
 .default-input ::placeholder {

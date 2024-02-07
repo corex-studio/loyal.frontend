@@ -51,7 +51,6 @@
 <script lang="ts" setup>
 import RoundedSelector from '../template/buttons/RoundedSelector.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { lightColor } from 'src/models/store'
 import { computed } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
@@ -77,6 +76,6 @@ const availableBookingAddresses = computed(() => {
 const getBorderColor = (el: SalesPoint) => {
   return props.currentPoint?.id === el.id
     ? '#' + uiSettingsRepo.item?.primaryColor.color
-    : lightColor(uiSettingsRepo.item?.backgroundColor.on_color || '000', '20')
+    : '#' + uiSettingsRepo.item?.secondaryColor.color
 }
 </script>

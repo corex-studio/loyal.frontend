@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="$order.item"
-    class="pt-lg-25 mt-md-15 mt-xs-12 text-on-background-color"
+    class="pt-lg-25 pt-md-15 pt-xs-12 text-on-background-color"
   >
     <div
       class="row full-width items-center no-wrap mb-xs-10 mb-md-5 mb-lg-8 gap-4"
@@ -19,7 +19,7 @@
           })
         "
       />
-      <div class="huge3 bold">Спасибо за заказ!</div>
+      <div class="header bold">Спасибо за заказ!</div>
     </div>
     <div class="row full-width">
       <div
@@ -41,10 +41,7 @@
           </div>
         </div>
         <div
-          :style="`border: 1px ${lightColor(
-            $uiSettings.item?.backgroundColor.on_color || '000',
-            '10'
-          )} solid`"
+          :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
           class="pa-10 column full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
         >
           <div class="body mb-2" style="opacity: 0.7">
@@ -62,10 +59,9 @@
       </div>
     </div>
     <div
-      :style="`border: 1px ${lightColor(
-        $uiSettings.item?.backgroundColor.on_color || '000',
-        '10'
-      )} solid; max-width: ${$q.screen.gt.md ? '550px' : ''} `"
+      :style="`border: 1px #${
+        $uiSettings.item?.secondaryColor.color
+      } solid; max-width: ${$q.screen.gt.md ? '550px' : ''} `"
       class="column full-width mt-md-12 mt-xs-8 mb-lg-20 mb-xs-8 mb-md-12 no-wrap gap-4 pa-10 border-radius box-shadow"
     >
       <div class="body" style="opacity: 0.7">
@@ -81,10 +77,7 @@
     </div>
     <div class="full-width" :style="$q.screen.lt.lg ? '' : 'max-width: 550px'">
       <div
-        :style="`border: 1px ${lightColor(
-          $uiSettings.item?.backgroundColor.on_color || '000',
-          '10'
-        )} solid`"
+        :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
         class="col border-radius box-shadow pa-md-10 pa-xs-8 column"
         style="height: fit-content"
       >
@@ -179,7 +172,7 @@ import OrderStepper from './OrderStepper.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { CartType } from 'src/models/carts/cart'
-import { beautifyNumber, lightColor } from 'src/models/store'
+import { beautifyNumber } from 'src/models/store'
 
 const route = useRoute()
 

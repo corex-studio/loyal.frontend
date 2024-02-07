@@ -2,10 +2,7 @@
   <div
     @click="openDialog()"
     class="row no-wrap justify-between items-center cursor-pointer button px-8 col"
-    :style="`border: 1px solid ${lightColor(
-      $uiSettings.item?.backgroundColor.on_color || '000',
-      '30'
-    )}; height: ${$q.screen.lt.md ? '42' : '44'}px`"
+    :style="`height: ${$q.screen.lt.md ? '42' : '44'}px`"
   >
     <div
       class="row no-wrap gap-4 body items-center text-on-background-color"
@@ -61,7 +58,7 @@
 </template>
 <script lang="ts" setup>
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { lightColor, store } from 'src/models/store'
+import { store } from 'src/models/store'
 import CIcon from '../template/helpers/CIcon.vue'
 // import CustomIcon from '../template/helpers/CustomIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
@@ -84,6 +81,7 @@ const openDialog = () => {
 .button {
   border-radius: 100px !important;
   max-width: 430px;
+  border: 1px solid var(--secondary);
   // width: inherit;
   // width: 100% !important;
 }

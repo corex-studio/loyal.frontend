@@ -23,7 +23,7 @@
         :label="count"
       />
       <q-btn
-        class="border-radius"
+        class="border-radius2"
         @mouseover="_hover = true"
         @mouseleave="_hover = false"
         :ripple="ripple"

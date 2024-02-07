@@ -11,24 +11,18 @@
     :to="to"
     :loading="loading"
     :disabled="_disabled"
-    class="c-btn border-radius"
+    class="c-btn border-radius2"
     :class="{
       borderedButton: outline,
       block: textButton && !to,
       underline: underline,
       'underline-fixed': underlined,
       'text-button': textButton,
+      outlined: outlined,
     }"
     :style="`width:${_width}; height:${_height};font-size:${textSize}; padding:${
       textButton || noPadding ? '0px;' : '4px 16px;'
-    } ${absolute ? 'position: absolute !important;' : ''}; ${
-      outlined
-        ? `border: 1px solid ${lightColor(
-            $uiSettings.item?.backgroundColor.on_color || '000',
-            '30'
-          )}`
-        : ''
-    }`"
+    } ${absolute ? 'position: absolute !important;' : ''}`"
   >
     <slot name="append"></slot>
     <div
@@ -83,7 +77,6 @@
 </template>
 
 <script lang="ts" setup>
-import { lightColor } from 'src/models/store'
 import { computed, ref } from 'vue'
 
 const emit = defineEmits(['click'])
@@ -159,7 +152,6 @@ const iconGap_ = computed(() => {
 })
 
 const _color = computed(() => {
-  // return _hover.value && props.hoverColor ? props.hoverColor : props.textButton ? 'tranparent' : props.color
   if (_hover.value && props.hoverColor) {
     return props.hoverColor
   } else if (props.textButton) {
@@ -246,6 +238,10 @@ const clickHandler = () => {
 
 .c-btn span {
   height: 100%;
+}
+
+.outlined {
+  border: 1px solid var(--secondary);
 }
 
 .c-btn .left-icon {

@@ -14,10 +14,10 @@
         @click="changeOrdersFilterType(el.val)"
         :class="
           el.val === currentType
-            ? 'bg-secondary-button-color text-on-secondary-button-color bold'
+            ? 'bg-secondary text-on-secondary bold'
             : 'text-on-background-color bordered-type'
         "
-        class="cursor-pointer px-10 body py-6 border-radius"
+        class="cursor-pointer px-10 body py-6 border-radius2"
       >
         {{ el.label }}
       </div>
@@ -53,13 +53,6 @@
       :last-page="$order.pagination.last_page"
     ></Pagination>
   </div>
-  <!-- <div
-    
-    style="height: 100vh"
-    class="absolute-full flex items-center justify-center"
-  >
-    <q-spinner-puff color="primary" size="10%" />
-  </div> -->
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
@@ -127,6 +120,6 @@ const orderTypes = ref<
 
 <style lang="scss" scoped>
 .bordered-type {
-  border: 1px var(--secondary-button-color) solid;
+  border: 1px var(--secondary) solid;
 }
 </style>

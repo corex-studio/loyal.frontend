@@ -85,7 +85,7 @@ const getDateName = (date: string | null) => {
 
 <style lang="scss" scoped>
 .date-element {
-  border: 1px var(--secondary-button-color) solid;
+  border: 1px var(--secondary) solid;
   transition: background-color 0.4s ease-out;
 }
 

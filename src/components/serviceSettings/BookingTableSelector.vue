@@ -26,7 +26,7 @@
         v-for="(table, index_) in selectedTables"
         :key="index_"
         style="white-space: nowrap"
-        class="px-4 py-2 bg-background-color border-radius row no-wrap items-center gap-3 bg-secondary-button-color body"
+        class="px-4 py-2 border-radius row no-wrap items-center gap-3 bg-secondary text-on-secondary body"
       >
         Стол
         {{ table.number }}

@@ -54,8 +54,7 @@
             hover-color="primary"
             size="22px"
             name="fa-light fa-pen"
-            color="on-background-color"
-            style="opacity: 0.2"
+            color="secondary"
           />
         </div>
       </template>
@@ -86,7 +85,6 @@
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import RoundedSelector from '../template/buttons/RoundedSelector.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { lightColor } from 'src/models/store'
 import CIcon from '../template/helpers/CIcon.vue'
 import CButton from '../template/buttons/CButton.vue'
 
@@ -106,6 +104,6 @@ defineEmits<{
 const getBorderColor = (el: DeliveryAddress) => {
   return props.currentAddress?.id === el.id
     ? '#' + uiSettingsRepo.item?.primaryColor.color
-    : lightColor(uiSettingsRepo.item?.backgroundColor.on_color || '000', '20')
+    : '#' + uiSettingsRepo.item?.secondaryColor.color
 }
 </script>
