@@ -5,13 +5,13 @@
         class="border-radius main-image-block row justify-center items-center full-width relative-position"
         :style="`background-image: url(${
           company.images[1].image || $store.images.empty
-        })`"
+        }); height: ${$q.screen.gt.md ? '388' : '320'}px`"
       >
         <CIconButton
           v-if="$companyGroup.item && $companyGroup.item.companies.length > 1"
           @click="$company.companyForProfile = null"
           icon="fa-regular fa-angle-left"
-          style="position: absolute; top: 10px; left: 10px"
+          style="position: absolute; top: 10px; left: 10px; z-index: 2"
           outline
           icon-size="24px"
           size="48px"
@@ -19,16 +19,73 @@
           class="outlined-button"
         />
         <div
-          class="col-8 column items-center text-white gap-10 py-18 glassed-block"
+          class="col-xs-8 col-lg-9 col-xs-11 column items-center text-white py-18 glassed-block"
         >
-          <div class="huge">О компании {{ company.name }}</div>
-          <div class="row gap-4">
+          <div style="text-align: center" class="huge">
+            О компании {{ company.name }}
+          </div>
+          <div
+            v-if="company.salesPoints"
+            style="text-align: center"
+            class="row justify-center gap-4 mt-10"
+          >
             <div
-              v-for="(el, index) in company.salesPoints"
+              v-for="(el, index) in company.salesPoints?.slice(0, 2)"
               :key="index"
-              class="subtitle-text"
+              class="subtitle-text row justify-center gap-4 items-center"
             >
-              {{ el.customAddress }}
+              <div v-if="index">•</div>
+              <div class="ellipsis">
+                {{ el.customAddress }}
+              </div>
+            </div>
+          </div>
+          <div class="row full-width justify-center">
+            <div class="mt-6 col-9 subtitle-text">
+              <div
+                class="row full-width justify-center items-center gap-3 no-wrap"
+              >
+                <div>Открыто:</div>
+                <div class="ellipsis">
+                  {{
+                    currentSchedule?.times
+                      .map((v) => `c ${v.start} до ${v.end}`)
+                      .join(', ')
+                  }}
+                </div>
+                <CIcon
+                  name="fa-regular fa-angle-down"
+                  color="white"
+                  hover-color="primary"
+                  class="cursor-pointer"
+                  size="24px"
+                >
+                  <q-menu
+                    max-width="400px"
+                    auto-close
+                    class="pa-5 column gap-4"
+                  >
+                    <div
+                      v-for="(el, index) in $salesPoint.item?.schedule?.days"
+                      :key="index"
+                      class="row secondary-text gap-3 no-wrap text-on-background-color"
+                    >
+                      <div
+                        :class="{ 'text-primary': moment().day() === el.day }"
+                        class="bold"
+                        style="min-width: 110px"
+                      >
+                        {{ days.find((v) => v.val === el.day)?.label }}:
+                      </div>
+                      <div>
+                        {{
+                          el.times.map((v) => `${v.start}-${v.end}`).join('; ')
+                        }}
+                      </div>
+                    </div>
+                  </q-menu>
+                </CIcon>
+              </div>
             </div>
           </div>
         </div>
@@ -36,8 +93,9 @@
     </div>
     <div class="c-container">
       <div
-        style="overflow-x: auto"
-        class="row full-width gap-17 items-center no-wrap pb-2 no-scrollbar mt-20 mb-29"
+        :style="$q.screen.lt.md ? '' : 'overflow-x: auto'"
+        :class="{ 'no-wrap': $q.screen.gt.sm }"
+        class="row full-width gap-lg-17 gap-md-10 gap-xs-6 items-center pb-2 no-scrollbar mt-lg-20 mt-md-15 mt-xs-10 mb-lg-29 mb-md-25 mb-xs-10"
       >
         <div
           v-for="(el, index) in features"
@@ -46,7 +104,9 @@
           :class="{ 'cursor-pointer': el.click }"
           class="row justify-between items-center px-15 bg-backing-color text-on-backing-color border-radius relative-position"
           style="height: 120px"
-          :style="`min-width: ${features.length < 4 ? '407' : '380'}px`"
+          :style="`min-width: ${
+            $q.screen.lt.md ? '100%' : features.length < 4 ? '407px' : '380px'
+          }`"
         >
           <div class="left-circle"></div>
           <div class="right-circle"></div>
@@ -54,22 +114,39 @@
             <div class="bold">{{ el.title }}</div>
             <div class="bold text-primary">{{ el.text }}</div>
           </div>
-          <div class="row justify-center items-center icon-block border-radius">
-            <CIcon :name="el.icon" color="on-background-color" size="45px" />
+          <div
+            class="row justify-center items-center icon-block border-radius2"
+          >
+            <CIcon
+              :name="el.icon"
+              color="on-background-color"
+              :size="$q.screen.gt.md ? '45px' : $q.screen.lt.md ? '33' : '38'"
+            />
           </div>
         </div>
       </div>
     </div>
-    <div class="bg-backing-color py-32">
+    <div class="bg-backing-color py-lg-32 pt-xs-15 pb-md-11">
       <div class="c-container">
-        <div class="row no-wrap items-center gap-23 text-on-backing-color">
-          <div class="column gap-9 col">
+        <div
+          :class="$q.screen.gt.md ? 'no-wrap' : 'justify-center'"
+          class="row items-center gap-lg-23 gap-md-10 text-on-backing-color"
+        >
+          <div
+            :class="$q.screen.lt.lg ? 'full-width' : 'col'"
+            class="column gap-md-9 gap-xs-6"
+          >
             <div class="huge bold">{{ company.name }}</div>
             <div class="header3">
               {{ company.description }}
             </div>
           </div>
-          <div style="height: 500px; width: 45%">
+          <div
+            v-if="$q.screen.gt.sm"
+            :style="`height: ${$q.screen.lt.lg ? '220px' : '500px'};width: ${
+              $q.screen.lt.lg ? '100%' : '45%'
+            }; max-width: ${$q.screen.lt.lg ? '520px' : 'unset'}`"
+          >
             <q-img
               height="100%"
               fit="cover"
@@ -77,14 +154,22 @@
               :src="company.image?.thumbnail"
             />
           </div>
+          <div v-else class="row full-width justify-end">
+            <q-img
+              src="~assets/pinkHearts.png"
+              height="87px"
+              width="97px"
+              fit="contain"
+            />
+          </div>
         </div>
       </div>
     </div>
     <div
       v-if="company.salesPoints?.some((v) => v.images.length)"
-      class="c-container mt-30"
+      class="c-container mt-lg-30 mt-md-25 mt-xs-15"
     >
-      <div class="column gap-30">
+      <div class="column gap-lg-30 gap-xs-15">
         <SwiperContainer
           v-for="(el, index) in company.salesPoints.filter(
             (v) => v.images.length
@@ -92,7 +177,7 @@
           :key="index"
           class="full-width"
           no-navigation
-          :slides-per-view="3"
+          :slides-per-view="$q.screen.gt.md ? 3 : $q.screen.lt.md ? 1 : 2"
           :items="el.images"
           :use-bullets="$q.screen.lt.lg"
         >
@@ -103,19 +188,11 @@
             </div>
           </template>
           <template v-slot:item="{ item }">
-            <div
-              :style="`overflow: hidden; height: ${
-                $q.screen.lt.lg ? ($q.screen.md ? '300' : '170') : '310'
-              }px`"
-            >
+            <div :style="`overflow: hidden; height: 314px`">
               <q-img
-                :height="
-                  $q.screen.lt.lg ? ($q.screen.md ? '300px' : '170px') : '310px'
-                "
+                height="314px"
                 class="border-radius"
-                :style="`min-height: ${
-                  $q.screen.lt.lg ? ($q.screen.md ? '300' : '170') : '310'
-                }px`"
+                :style="`min-height: 314px`"
                 :src="item.image || $store.images.empty"
                 fit="cover"
               >
@@ -124,7 +201,7 @@
                     <q-img
                       class="border-radius"
                       fit="cover"
-                      height="530px"
+                      height="314px"
                       :src="$store.images.empty"
                     ></q-img>
                   </span>
@@ -142,14 +219,14 @@
       "
       fit="cover"
       @click="socialsModal = true"
-      class="border-radius cursor-pointer c-container mt-62"
+      class="border-radius cursor-pointer c-container mt-lg-62 mt-md-25 mt-xs-15"
       :src="$uiSettings.item?.socialButtonImage?.image"
     >
     </q-img>
     <div v-if="contacts.length" class="c-container">
       <div
         style="overflow-x: auto"
-        class="row full-width items-center no-wrap gap-16 mt-35"
+        class="row full-width items-center no-wrap gap-lg-16 gap-md-10 gap-xs-8 mt-lg-35 mt-md-25 mt-xs-15 no-scrollbar"
       >
         <div
           v-for="(item, index) in contacts"
@@ -184,10 +261,14 @@
       </div>
     </div>
 
-    <ProfileAddressesOnMap class="c-container mt-33" />
+    <ProfileAddressesOnMap class="c-container mt-lg-33 mt-md-25 mt-xs-15" />
   </div>
-  <div v-else class="c-container">
-    <SelectCompany class="mt-20" />
+  <div v-else>
+    <SelectCompanyModal
+      :model-value="!$company.companyForProfile"
+      @select="companySelected($event)"
+      no-close
+    />
   </div>
   <SocialsModal
     :model-value="socialsModal"
@@ -206,19 +287,38 @@ import { computed, ref, onMounted } from 'vue'
 import SocialsModal from './SocialsModal.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import ProfileAddressesOnMap from './ProfileAddressesOnMap.vue'
-import SelectCompany from './SelectCompany.vue'
 import ContactsModal from './ContactsModal.vue'
 import { useRouter } from 'vue-router'
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
+import moment from 'moment'
+import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
+import { Company } from 'src/models/company/company'
 
 const socialsModal = ref(false)
 
 const concatsModal = ref(false)
 
 const router = useRouter()
+
+const days = [
+  { label: 'Понедельник', val: 1 },
+  { label: 'Вторник', val: 2 },
+  { label: 'Среда', val: 3 },
+  { label: 'Четверг', val: 4 },
+  { label: 'Пятница', val: 5 },
+  { label: 'Суббота', val: 6 },
+  { label: 'Воcкресенье', val: 7 },
+]
+
+const currentSchedule = computed(() => {
+  if (!company.value?.salesPoints) return
+  return company.value?.salesPoints[0].schedule?.days.find(
+    (el) => el.day === moment().day()
+  )
+})
 
 const features = computed(() => {
   const result: [
@@ -319,6 +419,10 @@ const contacts = computed(() => {
   return result
 })
 
+const companySelected = (v: Company | null) => {
+  companyRepo.companyForProfile = v
+}
+
 const getImage = (v: string) => {
   try {
     return require('assets/' + v)
@@ -345,12 +449,11 @@ onMounted(() => {
 <style lang="scss" scoped>
 .contact-block {
   border: 1px var(--secondary) solid;
-  min-width: 280px;
+  min-width: 340px;
   width: 100%;
 }
 
 .main-image-block {
-  height: 388px;
   width: 100%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -420,6 +523,27 @@ onMounted(() => {
   min-width: 80px;
   min-height: 80px;
   background-color: var(--background-color);
+}
+
+body.screen--md {
+  .icon-block {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    min-height: 64px;
+    background-color: var(--background-color);
+  }
+}
+
+body.screen--xs,
+body.screen--sm {
+  .icon-block {
+    width: 56px;
+    height: 56px;
+    min-width: 56px;
+    min-height: 56px;
+    background-color: var(--background-color);
+  }
 }
 
 .circle-point {

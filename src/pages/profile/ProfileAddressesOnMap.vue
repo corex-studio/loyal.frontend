@@ -1,6 +1,8 @@
 <template>
   <div>
-    <div class="huge3 bold mb-18">Карта с нашими заведениями</div>
+    <div class="huge3 bold mb-lg-18 mb-md-15 mb-xs-10">
+      Карта с нашими заведениями
+    </div>
     <div
       id="map"
       style="width: 100%; height: 475px; z-index: 9"
