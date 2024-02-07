@@ -44,7 +44,8 @@
           text-button
           text-color="on-background-color"
           style="width: fit-content"
-          class="body"
+          :style="$q.screen.lt.md ? '' : 'font-size: 16px !important;'"
+          :class="{ body: $q.screen.gt.sm }"
           :label="el.label"
         />
       </div>
