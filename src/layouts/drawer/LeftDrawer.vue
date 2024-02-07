@@ -44,8 +44,7 @@
           text-button
           text-color="on-background-color"
           style="width: fit-content"
-          :style="$q.screen.lt.md ? '' : 'font-size: 16px !important;'"
-          :class="{ body: $q.screen.gt.sm }"
+          class="body button"
           :label="el.label"
         />
       </div>
@@ -140,3 +139,12 @@ const scrollToBlock = (v: string, tab?: string) => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+body.screen--xs,
+body.screen--sm {
+  .button :deep(.button-label) {
+    font-size: 16px !important;
+  }
+}
+</style>
