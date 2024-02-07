@@ -211,18 +211,20 @@
         ></SwiperContainer>
       </div>
     </div>
-
-    <q-img
-      v-if="
-        $uiSettings.item?.socialButtonImage &&
-        company.guestContacts.socials.length
-      "
-      fit="cover"
-      @click="socialsModal = true"
-      class="border-radius cursor-pointer c-container mt-lg-62 mt-md-25 mt-xs-15"
-      :src="$uiSettings.item?.socialButtonImage?.image"
-    >
-    </q-img>
+    <div class="c-container">
+      <q-img
+        v-if="
+          $uiSettings.item?.socialButtonImage &&
+          company.guestContacts.socials.length
+        "
+        fit="cover"
+        @click="socialsModal = true"
+        width="100%"
+        class="border-radius cursor-pointer mt-lg-62 mt-md-25 mt-xs-15"
+        :src="$uiSettings.item?.socialButtonImage?.image"
+      >
+      </q-img>
+    </div>
     <div v-if="contacts.length" class="c-container">
       <div
         style="overflow-x: auto"
