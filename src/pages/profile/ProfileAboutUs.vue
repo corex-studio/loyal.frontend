@@ -102,11 +102,10 @@
           :key="index"
           @click="el.click"
           :class="{ 'cursor-pointer': el.click }"
-          class="row justify-between items-center px-15 bg-backing-color text-on-backing-color border-radius relative-position"
-          style="height: 120px"
+          class="row justify-between items-center px-lg-15 px-xs-13 bg-backing-color text-on-backing-color border-radius relative-position"
           :style="`min-width: ${
             $q.screen.lt.md ? '100%' : features.length < 4 ? '407px' : '380px'
-          }`"
+          }; height: ${$q.screen.lt.md ? '100' : '120'}px`"
         >
           <div class="left-circle"></div>
           <div class="right-circle"></div>
@@ -228,12 +227,12 @@
     <div v-if="contacts.length" class="c-container">
       <div
         style="overflow-x: auto"
-        class="row full-width items-center no-wrap gap-lg-16 gap-md-10 gap-xs-8 mt-lg-35 mt-md-25 mt-xs-15 no-scrollbar"
+        class="row full-width no-wrap gap-lg-16 gap-md-10 gap-xs-8 mt-lg-35 mt-md-25 mt-xs-15 no-scrollbar"
       >
         <div
           v-for="(item, index) in contacts"
           :key="index"
-          class="contact-block border-radius pl-15 pr-7 pt-7 row relative-position"
+          class="contact-block border-radius pl-lg-15 pl-xs-12 pr-7 pt-7 row relative-position"
           style="max-width: 407px"
         >
           <div class="left-circle-bordered"></div>
@@ -256,8 +255,8 @@
           <q-img
             style="align-self: flex-end"
             :src="getImage(item.image)"
-            width="100px"
-            height="100px"
+            :width="$q.screen.gt.md ? '100px' : $q.screen.md ? '80px' : '60px'"
+            :height="$q.screen.gt.md ? '100px' : $q.screen.md ? '80px' : '60px'"
           />
         </div>
       </div>

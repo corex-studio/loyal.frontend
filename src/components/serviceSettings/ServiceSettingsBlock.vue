@@ -49,7 +49,6 @@
       </template>
     </div>
     <CIcon
-      v-if="$q.screen.gt.md"
       size="22px"
       color="on-background-color"
       name="fa-regular fa-angle-right"
