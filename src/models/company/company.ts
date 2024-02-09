@@ -62,6 +62,8 @@ export type CompanyRaw = {
   visible: boolean
   image: ImageRaw | null
   logo?: ImageRaw | null
+  description_image?: ImageRaw | null
+  header_image?: ImageRaw | null
   images?: ImageRaw[]
   settings: {
     uuid: string
@@ -170,6 +172,8 @@ export class Company implements BaseModel {
   visible: boolean
   image: Image | null
   logo: Image | null
+  descriptionImage: Image | null
+  headerImage: Image | null
   images: Image[]
   settings: {
     uuid: string
@@ -204,6 +208,10 @@ export class Company implements BaseModel {
     this.visible = raw.visible
     this.image = raw.image ? new Image(raw.image) : null
     this.logo = raw.logo ? new Image(raw.logo) : null
+    this.descriptionImage = raw.description_image
+      ? new Image(raw.description_image)
+      : null
+    this.headerImage = raw.header_image ? new Image(raw.header_image) : null
     this.images = raw.images ? raw.images.map((el) => new Image(el)) : []
     this.settings = raw.settings || {
       auto_upload_menu: false,

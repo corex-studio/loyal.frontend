@@ -19,7 +19,7 @@
       class="bg-primary"
       style="height: 10px; width: 10px; border-radius: 50%"
     ></div>
-    <CIcon
+    <q-icon
       v-if="modelValue && check"
       color="on-primary"
       name="fa-regular fa-check"
@@ -28,8 +28,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import CIcon from '../helpers/CIcon.vue'
-
 defineProps<{
   modelValue: boolean
   height?: string
