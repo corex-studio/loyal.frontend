@@ -4,7 +4,9 @@
       <div
         class="border-radius main-image-block row justify-center items-center full-width relative-position"
         :style="`background-image: url(${
-          company.images[1].image || $store.images.empty
+          company.headerImage?.image ||
+          company.images[1].image ||
+          $store.images.empty
         }); height: ${$q.screen.gt.md ? '388' : '320'}px`"
       >
         <CIconButton
@@ -150,7 +152,11 @@
               height="100%"
               fit="cover"
               class="border-radius"
-              :src="company.image?.thumbnail"
+              :src="
+                company.descriptionImage?.image ||
+                $company.item?.image?.image ||
+                $store.images.empty
+              "
             />
           </div>
           <div v-else class="row full-width justify-end">
