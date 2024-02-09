@@ -55,8 +55,6 @@ export class Store {
   setCompanyGroup(v: string) {
     LocalStorage.set('Company-Group', v)
     authentication.setCompanyGroupHeader(v)
-
-    window.location.reload()
   }
 
   async loadCatalog(point: SalesPoint | string) {

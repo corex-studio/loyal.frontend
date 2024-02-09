@@ -72,15 +72,10 @@ import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import AuthModal from 'src/pages/auth/AuthModal.vue'
 import { authentication } from 'src/models/authentication/authentication'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { cartRepo } from 'src/models/carts/cartRepo'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
 import { handleMessage } from 'src/models/webSocket/webSocketRepo'
 import { newsRepo } from 'src/models/news/newsRepo'
 import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
-import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import CartDrawer from './drawer/cart/CartDrawer.vue'
 import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
@@ -88,19 +83,15 @@ import { Company } from 'src/models/company/company'
 import { companyRepo } from 'src/models/company/companyRepo'
 import CFooter from './footer/CFooter.vue'
 import { padRepo } from 'src/models/pads/padRepo'
-import { api } from 'src/boot/axios'
-import { waiterCallRepo } from 'src/models/customer/waiterCall/waiterCallRepo'
-import { orderRepo } from 'src/models/order/orderRepo'
 import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
 import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
 import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
 import NewsModal from 'src/pages/news/NewsModal.vue'
 import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
-import { NewsType } from 'src/models/news/news'
 import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
-import { useFavicon } from '@vueuse/core'
 import TopHeader from './header/TopHeader.vue'
 import LeftDrawer from './drawer/LeftDrawer.vue'
+import { AppManager } from 'src/models/utils/appManager'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -115,7 +106,6 @@ const q = useQuasar()
 const route = useRoute()
 const router = useRouter()
 const ready = ref(false)
-const icon = useFavicon()
 
 watch(
   () => authentication.user?.id,
@@ -154,112 +144,84 @@ const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
 
-const setBodyScrollClass = () => {
-  if (q.platform.is.win) {
-    const body = document.getElementsByTagName('body')
-    if (body.length) body[0].classList.add('custom-scroll-bar')
-  }
-}
-
-const getCurrentCompanyGroup = async () => {
-  try {
-    await companyGroupRepo.current()
-  } catch {
-    authentication.tokens = new authentication.tokensClass(null, null)
-    authentication.setApiHeader()
-    localStorage.setItem('access', '')
-    localStorage.setItem('refresh', '')
-    // window.location.reload()
-  }
-}
-
-function changeFavicon(src?: string) {
-  if (!src) return
-  icon.value = src
-}
-
 onMounted(async () => {
-  window.addEventListener('scroll', () => {
-    store.verticalScroll = window.scrollY
+  const manager = new AppManager({
+    companyGroupId: route.query.group ? String(route.query.group) : undefined,
+    initMenuPage: true,
   })
-  if (route.path.includes('qr_menu')) {
-    store.tableMode = true
-  }
-  salesPointRepo.menuLoading = true
-  setBodyScrollClass()
-  if (!store.tableMode) {
-    store.getCompanyGroup(String(route.params.companyGroup))
-    await getCurrentCompanyGroup()
-    changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-    await uiSettingsRepo.fetchSettings()
-    await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
-    try {
-      await authentication.validateTokens()
-      await authentication.me()
-      await cartRepo.current()
-    } catch {
-      authentication.loading = false
-      ready.value = true
-      cartRepo.loading = false
-    }
-    if (!newsRepo.news.length) {
-      void newsRepo
-        .list({
-          company_group: companyGroupRepo.item?.id,
-          active: true,
-          type: NewsType.DEFAULT,
-        })
-        .then((res) => {
-          newsRepo.news = res.items
-        })
-    }
-    if (!newsRepo.promotions.length) {
-      void newsRepo
-        .list({
-          company_group: companyGroupRepo.item?.id,
-          active: true,
-          type: NewsType.PROMOTION,
-        })
-        .then((res) => {
-          newsRepo.promotions = res.items
-        })
-    }
-    const currentPoint = cartRepo.item
-      ? cartRepo.item?.salesPoint
-      : companyGroupRepo.item?.companies[0]?.salesPoints &&
-        companyGroupRepo.item?.companies[0]?.salesPoints.length
-      ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
-      : null
-    if (currentPoint) void store.loadCatalog(currentPoint)
-  } else {
-    Object.assign(api.defaults.headers, {
-      ['User-Role']: 'pad_manager',
-    })
-    Object.assign(api.defaults.headers, {
-      ['Company-Group']: route.params.companyGroup,
-    })
-    void uiSettingsRepo.fetchSettings()
-    await padRepo.retrieve(String(route.params.padId))
-    if (!padRepo.item?.companyGroup) return
-    await companyGroupRepo.retrieve(padRepo.item.companyGroup)
-    changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-    store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
-    void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
-    void waiterCallRepo
-      .list({
-        pad: padRepo.item.id,
-      })
-      .then(() => {
-        waiterCallRepo.item = waiterCallRepo.items[0]
-      })
-    void orderRepo.current(padRepo.item)
-    void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
-  }
-
+  await manager.initApp()
   ready.value = true
+  // if (route.path.includes('qr_menu')) {
+  //   store.tableMode = true
+  // }
+  // salesPointRepo.menuLoading = true
+  // setBodyScrollClass()
+  // if (!store.tableMode) {
+  //   store.getCompanyGroup(String(route.params.companyGroup))
+  //   await getCurrentCompanyGroup()
+  //   changeFavicon(companyGroupRepo.item?.image?.thumbnail)
+  //   await uiSettingsRepo.fetchSettings()
+  //   await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
+  //   try {
+
+  //   } catch {
+  //     authentication.loading = false
+  //     ready.value = true
+  //     cartRepo.loading = false
+  //   }
+  // if (!newsRepo.news.length) {
+  //   void newsRepo
+  //     .list({
+  //       company_group: companyGroupRepo.item?.id,
+  //       active: true,
+  //       type: NewsType.DEFAULT,
+  //     })
+  //     .then((res) => {
+  //       newsRepo.news = res.items
+  //     })
+  // }
+  // if (!newsRepo.promotions.length) {
+  //   void newsRepo
+  //     .list({
+  //       company_group: companyGroupRepo.item?.id,
+  //       active: true,
+  //       type: NewsType.PROMOTION,
+  //     })
+  //     .then((res) => {
+  //       newsRepo.promotions = res.items
+  //     })
+  // }
+
+  // } else {
+  //   Object.assign(api.defaults.headers, {
+  //     ['User-Role']: 'pad_manager',
+  //   })
+  //   Object.assign(api.defaults.headers, {
+  //     ['Company-Group']: route.params.companyGroup,
+  //   })
+  //   void uiSettingsRepo.fetchSettings()
+  //   await padRepo.retrieve(String(route.params.padId))
+  //   if (!padRepo.item?.companyGroup) return
+  //   await companyGroupRepo.retrieve(padRepo.item.companyGroup)
+  //   changeFavicon(companyGroupRepo.item?.image?.thumbnail)
+  //   store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
+  //   void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
+  //   void waiterCallRepo
+  //     .list({
+  //       pad: padRepo.item.id,
+  //     })
+  //     .then(() => {
+  //       waiterCallRepo.item = waiterCallRepo.items[0]
+  //     })
+  //   void orderRepo.current(padRepo.item)
+  //   void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
+  // }
+
+  // ready.value = true
 })
 
 const companySelected = (v: Company | null) => {
+  console.log(v)
   if (!authentication.user) {
     if (!v || !v.salesPoints || !v.salesPoints.length) return
     void store.loadCatalog(v.salesPoints[0])
