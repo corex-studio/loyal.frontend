@@ -2,55 +2,42 @@
   <CDialog
     :model-value="modelValue"
     @update:model-value="$emit('update:modelValue', $event)"
-    :width="$q.screen.lt.md ? '450px' : '735px'"
+    :width="'400px'"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
     :no-close="$q.screen.lt.md || noClose"
   >
-    <div class="huge3 bold mb-md-12 mb-xs-10">Выберите заведение</div>
-    <div v-if="$companyGroup.item" class="row full-width">
-      <GridContainer
-        :items="$companyGroup.item?.companies"
-        :lg="2"
-        :xl="2"
-        :md="2"
-        :sm="1"
-        :xs="1"
-        :gap="$q.screen.lt.md ? '12px' : '20px'"
-      >
-        <template v-slot:item="{ item }">
-          <q-separator
-            v-if="
-              $q.screen.lt.md && item.id !== $companyGroup.item.companies[0].id
-            "
-            class="mb-6"
-          />
+    <div class="column full-width">
+      <div class="header bold mb-md-15 mb-xs-10">Выберите заведение</div>
+      <div class="column no-wrap full-width gap-md-10 gap-xs-6">
+        <template
+          v-for="(item, index) in $companyGroup.item?.companies"
+          :key="index"
+        >
+          <q-separator v-if="index && $q.screen.lt.md" color="divider-color" />
           <CompanyRow
             @click="selectCompany(item)"
             :item="item"
             :selected="selectedCompany?.id === item.id"
           />
         </template>
-      </GridContainer>
+      </div>
+
+      <CButton
+        @click="$emit('select', selectedCompany)"
+        :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"
+        :disabled="!selectedCompany"
+        :height="$q.screen.lt.md ? '40px' : '48px'"
+        width="100%"
+        class="body mt-15"
+      />
     </div>
-    <CButton
-      @click="$emit('select', selectedCompany)"
-      :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"
-      :disabled="!selectedCompany"
-      :height="$q.screen.lt.md ? '40px' : '48px'"
-      width="100%"
-      :style="
-        $q.screen.gt.md ? 'max-width: 288px' : 'position: sticky; bottom: 0px'
-      "
-      class="body mt-15"
-    />
   </CDialog>
 </template>
 <script lang="ts" setup>
 import { Company } from 'src/models/company/company'
 import CDialog from '../template/dialogs/CDialog.vue'
 import CompanyRow from 'src/pages/profile/CompanyRow.vue'
-import GridContainer from '../containers/GridContainer.vue'
 import CButton from '../template/buttons/CButton.vue'
 import { ref, watch } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
