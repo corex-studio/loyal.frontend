@@ -26,14 +26,17 @@ export class AppManager {
     this.setScrollSettings()
     let companyGroupId = this.config.companyGroupId
     const _value = LocalStorage.getItem('Company-Group')
-    if (_value) companyGroupId = String(_value)
+    if (_value && !companyGroupId) companyGroupId = String(_value)
     if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
     await Promise.all([
       this.tryAuth(),
       this.getCurrentCompanyGroup(),
       uiSettingsRepo.fetchSettings(),
       appSettingsRepo.getLinksSettings(),
-    ])
+    ]).then(() => {
+      if (companyRepo.item?.externalId)
+        store.setCompanyGroup(companyRepo.item?.externalId)
+    })
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
       void this.loadMenuPage()
