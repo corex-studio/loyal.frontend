@@ -95,7 +95,7 @@
       <div
         :style="$q.screen.lt.md ? '' : 'overflow-x: auto'"
         :class="{ 'no-wrap': $q.screen.gt.sm }"
-        class="row full-width gap-lg-17 gap-md-10 gap-xs-6 items-center pb-2 no-scrollbar mt-lg-20 mt-md-15 mt-xs-10 mb-lg-29 mb-md-25 mb-xs-10"
+        class="row full-width gap-lg-16 gap-md-10 gap-xs-6 items-center pb-2 no-scrollbar mt-lg-20 mt-md-15 mt-xs-10 mb-lg-29 mb-md-25 mb-xs-10"
       >
         <div
           v-for="(el, index) in features"
@@ -104,7 +104,7 @@
           :class="{ 'cursor-pointer': el.click }"
           class="row justify-between items-center px-lg-15 px-xs-13 bg-backing-color text-on-backing-color border-radius relative-position"
           :style="`min-width: ${
-            $q.screen.lt.md ? '100%' : features.length < 4 ? '407px' : '380px'
+            $q.screen.lt.md ? '100%' : features.length < 4 ? '407px' : '350px'
           }; height: ${$q.screen.lt.md ? '100' : '120'}px`"
         >
           <div class="left-circle"></div>
