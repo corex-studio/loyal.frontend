@@ -2,7 +2,7 @@
   "name": "loyal-frontend",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "loyal",
+  "productName": "Loyalhub",
   "author": "Msim <mskulkin35@gmail.com>",
   "private": true,
   "scripts": {

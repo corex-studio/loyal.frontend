@@ -221,7 +221,6 @@ onMounted(async () => {
 })
 
 const companySelected = (v: Company | null) => {
-  console.log(v)
   if (!authentication.user) {
     if (!v || !v.salesPoints || !v.salesPoints.length) return
     void store.loadCatalog(v.salesPoints[0])
