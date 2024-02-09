@@ -150,7 +150,7 @@
           >
             <q-img
               height="100%"
-              fit="cover"
+              fit="contain"
               class="border-radius"
               :src="
                 company.descriptionImage?.image ||
