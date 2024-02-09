@@ -34,15 +34,17 @@ export class CartRepo extends BaseRepo<Cart> {
 
   async current(sales_point?: string, pad?: Pad) {
     this.loading = true
-    const res: CartRaw = await this.api.send({
-      method: 'GET',
-      action: 'current',
-      params: {
-        sales_point,
-        pad: pad?.id,
-      },
-    })
-    this.item = new Cart(res)
+    try {
+      const res: CartRaw = await this.api.send({
+        method: 'GET',
+        action: 'current',
+        params: {
+          sales_point,
+          pad: pad?.id,
+        },
+      })
+      this.item = new Cart(res)
+    } catch {}
     this.loading = false
     return this.item
   }
