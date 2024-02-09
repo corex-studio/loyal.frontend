@@ -1,12 +1,12 @@
 <template>
   <div
-    class="row items-center no-wrap border-radius cursor-pointer pa-4 gap-6"
+    class="row items-center no-wrap border-radius cursor-pointer py-md-4 px-md-6 gap-6"
     :style="
       $q.screen.lt.md
         ? ''
         : selected
         ? `outline: 2px #${$uiSettings.item?.primaryColor.color} solid`
-        : ''
+        : `outline: 1px #${$uiSettings.item?.secondaryColor.color} solid`
     "
   >
     <q-img
@@ -34,12 +34,11 @@
       {{ item.name }}
 
       <RoundedSelector
-        v-if="$q.screen.lt.md"
         :model-value="selected"
         check
-        height="24px"
-        width="24px"
-        icon-size="14px"
+        height="22px"
+        width="22px"
+        icon-size="13px"
       />
     </div>
   </div>
