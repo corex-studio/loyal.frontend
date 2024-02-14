@@ -45,6 +45,9 @@
         @click="
           $router.push({
             name: 'deleteAccountPage',
+            params: {
+              companyGroup: $companyGroup.item?.externalId,
+            },
           })
         "
         size="20px"

@@ -122,8 +122,8 @@ import CInput from 'src/components/template/inputs/CInput.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 import CodeComponent from './CodeComponent.vue'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const props = defineProps<{
   modelValue: boolean
@@ -131,8 +131,6 @@ const props = defineProps<{
 
 const delay = ref(30)
 let interval: NodeJS.Timeout | null = null
-
-const route = useRoute()
 
 const codeError = ref(false)
 
@@ -162,14 +160,16 @@ const currentStep = ref(1)
 
 const openPolicy = () => {
   window.open(
-    `https://loyalhub.ru/${String(route.params.companyGroup)}/policy`,
+    `https://loyalhub.ru/${String(companyGroupRepo.item?.externalId)}/policy`,
     '_blank'
   )
 }
 
 const openTermsOfService = () => {
   window.open(
-    `https://loyalhub.ru/${String(route.params.companyGroup)}/terms_of_service`,
+    `https://loyalhub.ru/${String(
+      companyGroupRepo.item?.externalId
+    )}/terms_of_service`,
     '_blank'
   )
 }
