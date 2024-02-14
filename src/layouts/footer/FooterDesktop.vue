@@ -151,7 +151,7 @@
             @click="
               openLink(
                 `https://loyalhub.ru/${String(
-                  route.params.companyGroup
+                  $companyGroup.item?.externalId
                 )}/policy`
               )
             "
@@ -160,7 +160,7 @@
             @click="
               openLink(
                 `https://loyalhub.ru/${String(
-                  route.params.companyGroup
+                  $companyGroup.item?.externalId
                 )}/terms_of_service`
               )
             "

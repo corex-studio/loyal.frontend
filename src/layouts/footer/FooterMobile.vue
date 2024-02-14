@@ -119,7 +119,9 @@
         label="Политика конфиденциальноости"
         @click="
           openLink(
-            `https://loyalhub.ru/${String(route.params.companyGroup)}/policy`
+            `https://loyalhub.ru/${String(
+              $companyGroup.item?.externalId
+            )}/policy`
           )
         "
       />
@@ -127,7 +129,7 @@
         @click="
           openLink(
             `https://loyalhub.ru/${String(
-              route.params.companyGroup
+              $companyGroup.item?.externalId
             )}/terms_of_service`
           )
         "
