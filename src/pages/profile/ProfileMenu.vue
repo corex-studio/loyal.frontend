@@ -21,10 +21,10 @@
         $route.name === el.routeName
           ? 'bg-secondary text-on-secondary'
           : $q.screen.lt.lg
-          ? 'bordered'
-          : 'full-width'
+          ? 'bordered text-on-background-color'
+          : 'full-width text-on-background-color'
       "
-      class="row cursor-pointer text-on-background-color items-center no-wrap gap-5 px-10 border-radius2 py-6 mb-xs-2 mb-lg-0"
+      class="row cursor-pointer items-center no-wrap gap-5 px-10 border-radius2 py-6 mb-xs-2 mb-lg-0"
     >
       <div class="body bold ellipsis">
         {{ el.label }}
