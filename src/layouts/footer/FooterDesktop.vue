@@ -168,7 +168,7 @@
             text-color="on-bottom-menu-color"
             text-button
             style="opacity: 0.8"
-            label="Пользовательское соглашение"
+            label="Условия использования"
           />
           <div class="row no-wrap gap-3">
             <div style="opacity: 0.8">Работает на</div>

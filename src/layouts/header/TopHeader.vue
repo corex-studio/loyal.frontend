@@ -6,7 +6,7 @@
     <div class="row justify-between items-center bg-background-color py-6">
       <div class="row items-center gap-10">
         <div
-          v-for="(el, index) in blocks"
+          v-for="(el, index) in blocks.filter((el) => el.visible)"
           :key="index"
           class="row items-center gap-14"
         >
@@ -43,6 +43,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from './TopHeaderSocials.vue'
 import TopHeaderDeliveryInfo from './TopHeaderDeliveryInfo.vue'
+import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 
 const router = useRouter()
 
@@ -52,6 +53,7 @@ const blocks = computed(() => {
   return [
     {
       label: 'О нас',
+      visible: true,
       click: () => {
         router.push({
           name: 'aboutUs',
@@ -60,6 +62,7 @@ const blocks = computed(() => {
     },
     {
       label: 'Контакты',
+      visible: true,
       click: () => {
         scrollToBlock('footer')
       },
@@ -72,6 +75,11 @@ const blocks = computed(() => {
     // },
     {
       label: 'Мобильное приложение',
+      visible:
+        appSettingsRepo.linksData &&
+        (appSettingsRepo.linksData.app_redirect_link ||
+          appSettingsRepo.linksData.android_download_link ||
+          appSettingsRepo.linksData.ios_download_link),
       click: () => {
         scrollToBlock('footer')
       },
