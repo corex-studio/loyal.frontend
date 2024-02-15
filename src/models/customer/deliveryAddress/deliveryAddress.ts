@@ -5,7 +5,10 @@ export type DeliveryAddressRaw = {
   customer?: string
   name: string | null
   address: string | null
-  coords: number[]
+  coords: {
+    latitude: number | null
+    longitude: number | null
+  } | null
   city: string | null
   street: string | null
   house: string | null
@@ -21,7 +24,10 @@ export class DeliveryAddress implements BaseModel {
   customer: string
   name: string | null
   address: string
-  coords: number[]
+  coords: {
+    latitude: number | null
+    longitude: number | null
+  } | null
   city: string | null
   street: string | null
   house: string | null

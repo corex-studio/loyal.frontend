@@ -730,7 +730,10 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
     deliveryAddressesModal.value = false
     return
   }
-  const res = await deliveryAreaRepo.byCoords(address.coords)
+  const res = await deliveryAreaRepo.byCoords([
+    address.coords?.latitude || 0,
+    address.coords?.longitude || 0,
+  ])
   if (!res.length) {
     Notify.create({
       message: 'По данному адресу не осуществляется доставка',
