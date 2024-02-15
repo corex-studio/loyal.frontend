@@ -161,7 +161,7 @@
             class="column gap-md-9 gap-xs-6"
           >
             <div class="huge bold">{{ company.name }}</div>
-            <div class="header3">
+            <div class="header3" style="white-space: pre-line">
               {{ company.description }}
             </div>
           </div>
