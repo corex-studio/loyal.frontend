@@ -214,13 +214,10 @@ const drawPoint = () => {
       longitude: number | null
     }
   }[] = []
-  if (newAddress.value?.coords.length)
+  if (newAddress.value?.coords?.latitude || newAddress.value?.coords?.longitude)
     values.push({
       id: newAddress.value.id,
-      coords: {
-        latitude: newAddress.value.coords[0],
-        longitude: newAddress.value.coords[1],
-      },
+      coords: newAddress.value.coords,
     })
 
   const collection = map.pointCollection(values)
@@ -258,7 +255,7 @@ onMounted(() => {
     uuid: props.address?.id || undefined,
     name: props.address?.name || '',
     address: props.address?.address || '',
-    coords: props.address?.coords || [],
+    coords: props.address?.coords || null,
     city: props.address?.city || '',
     street: props.address?.street || '',
     house: props.address?.house || '',
@@ -318,7 +315,10 @@ const selectAddress = (v: Address) => {
 
   newAddress.value.address = v.address
   newAddress.value.city = v.city
-  newAddress.value.coords = v.coords
+  newAddress.value.coords = {
+    latitude: v.coords[0],
+    longitude: v.coords[1],
+  }
 
   newAddress.value.flat = v.flat
   newAddress.value.street = v.street

@@ -486,9 +486,10 @@ const confirmSelectedAddress = async () => {
     selectedDeliveryAddress.value &&
     currentTab.value?.type === CartType.DELIVERY
   ) {
-    const res = await deliveryAreaRepo.byCoords(
-      selectedDeliveryAddress.value?.coords
-    )
+    const res = await deliveryAreaRepo.byCoords([
+      selectedDeliveryAddress.value?.coords?.latitude || 0,
+      selectedDeliveryAddress.value?.coords?.longitude || 0,
+    ])
     if (!res.length) {
       Notify.create({
         message: 'По данному адресу не осуществляется доставка',
