@@ -25,7 +25,7 @@ export class Store {
   serviceSettingsModal = false
   selectCompanyModal = false
   verticalScroll = 0
-  offersTab = 'Акции'
+  offersTab = 'Новости'
   menuItemModal = false
   newsModal = false
   images = {

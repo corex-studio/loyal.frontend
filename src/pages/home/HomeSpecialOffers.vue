@@ -148,8 +148,8 @@ const q = useQuasar()
 
 const tabs = computed(() => {
   const result = []
-  result.push('Акции')
   result.push('Новости')
+  result.push('Акции')
   return result
 })
 

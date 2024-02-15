@@ -38,9 +38,28 @@
             >
               <div v-if="index">•</div>
               <div class="ellipsis">
-                {{ el.customAddress }}
+                {{ el.customAddress || el.address }}
               </div>
             </div>
+
+            <CIcon
+              v-if="company.salesPoints.length > 2"
+              name="fa-regular fa-angle-down"
+              color="white"
+              hover-color="primary"
+              class="cursor-pointer"
+              size="24px"
+            >
+              <q-menu max-width="400px" auto-close class="pa-5 column gap-4">
+                <div
+                  v-for="(el, index) in company.salesPoints.slice(2)"
+                  :key="index"
+                  class="row secondary-text no-wrap text-on-background-color"
+                >
+                  {{ el.customAddress || el.address }}
+                </div>
+              </q-menu>
+            </CIcon>
           </div>
           <div class="row full-width justify-center">
             <div class="mt-6 col-9 subtitle-text">
@@ -48,13 +67,15 @@
                 class="row full-width justify-center items-center gap-3 no-wrap"
               >
                 <div>Открыто:</div>
-                <div class="ellipsis">
+
+                <div v-if="currentSchedule?.times.length" class="ellipsis">
                   {{
                     currentSchedule?.times
                       .map((v) => `c ${v.start} до ${v.end}`)
                       .join(', ')
                   }}
                 </div>
+                <div v-else>-</div>
                 <CIcon
                   name="fa-regular fa-angle-down"
                   color="white"
@@ -81,7 +102,9 @@
                       </div>
                       <div>
                         {{
-                          el.times.map((v) => `${v.start}-${v.end}`).join('; ')
+                          el.times
+                            .map((v) => `${v.start}-${v.end}`)
+                            .join('; ') || '-'
                         }}
                       </div>
                     </div>
