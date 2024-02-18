@@ -7,7 +7,7 @@
     >
       <CIcon
         @click="openLink(el.link)"
-        size="30px"
+        size="32px"
         class="cursor-pointer"
         color="secondary"
         hover-color="primary"
