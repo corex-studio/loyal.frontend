@@ -306,7 +306,11 @@
       <TopHeaderSocials />
 
       <div
-        v-if="$appSettings.linksData"
+        v-if="
+          $appSettings.linksData &&
+          ($appSettings.linksData.ios_download_link ||
+            $appSettings.linksData.android_download_link)
+        "
         class="row gap-20 col-xs-12 col-lg-shrink"
       >
         <div class="body">
@@ -315,10 +319,10 @@
         </div>
         <div class="row gap-10">
           <div
+            v-if="$appSettings.linksData.ios_download_link"
             class="app-link-block items-center justify-center row border-radius2"
           >
             <img
-              v-if="$appSettings.linksData.ios_download_link"
               @click="openLink($appSettings.linksData.ios_download_link)"
               class="cursor-pointer"
               style="object-fit: contain; width: 106px"
@@ -326,10 +330,10 @@
             />
           </div>
           <div
+            v-if="$appSettings.linksData.android_download_link"
             class="app-link-block row items-center justify-center border-radius2"
           >
             <img
-              v-if="$appSettings.linksData.android_download_link"
               @click="openLink($appSettings.linksData.android_download_link)"
               class="cursor-pointer"
               style="object-fit: contain; width: 111px"
