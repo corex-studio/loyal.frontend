@@ -23,13 +23,13 @@
       </div>
       <template v-if="$q.screen.gt.md">
         <div class="column text-on-bottom-menu-color" style="width: 186px">
-          <div class="bold subtitle-text mb-10">Информация</div>
+          <div class="bold subtitle-text mb-8">Информация</div>
           <div class="column gap-6">
             <div v-for="(item, index) in infoBlocks" :key="index">
               <CButton
                 @click="item.click()"
                 text-button
-                style="opacity: 0.8"
+                style="opacity: 0.6"
                 text-color="on-bottom-menu-color"
               >
                 <div class="body">
@@ -40,14 +40,14 @@
           </div>
         </div>
         <div class="text-on-bottom-menu-color">
-          <div class="bold subtitle-text mb-10 text-on-bottom-menu-color">
+          <div class="bold subtitle-text mb-8 text-on-bottom-menu-color">
             Правовая информация
           </div>
           <div class="column gap-6 items-start">
             <CButton
               text-color="on-bottom-menu-color"
               text-button
-              style="opacity: 0.8"
+              style="opacity: 0.6"
               class="body"
               label="Политика конфиденциальноости"
               @click="
@@ -69,7 +69,7 @@
               class="body"
               text-color="on-bottom-menu-color"
               text-button
-              style="opacity: 0.8"
+              style="opacity: 0.6"
               label="Условия использования"
             />
           </div>
@@ -84,35 +84,36 @@
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
           >
-            <div
-              v-for="(item, index) in $company.item?.guestContacts.phones"
-              :key="index"
-              class="cursor-pointer bold"
-              @click="openLink(item.link)"
-            >
-              {{ item.value }}
-            </div>
-            <div class="body" style="opacity: 0.8">
+            <div class="subtitle-text bold">
               {{
                 $company.item?.guestContacts.phones.length > 1
                   ? 'Контактные телефоны'
                   : 'Контактный телефон'
               }}
             </div>
+            <div
+              v-for="(item, index) in $company.item?.guestContacts.phones"
+              :key="index"
+              class="cursor-pointer body"
+              style="opacity: 0.6"
+              @click="openLink(item.link)"
+            >
+              {{ item.value }}
+            </div>
           </div>
           <div v-if="$company.item?.salesPoints" class="column gap-6">
-            <div
-              v-for="(item, index) in $company.item?.salesPoints"
-              :key="index"
-              class="bold"
-            >
-              {{ item.customAddress || item.address }}
-            </div>
-            <div class="body" style="opacity: 0.8">
+            <div class="subtitle-text bold">
               {{
                 $company.item?.salesPoints?.length > 1
                   ? 'Адреса заведений в Калининграде'
                   : 'Адрес заведения в Калининграде'
+              }}
+            </div>
+            <div style="opacity: 0.6" class="body">
+              {{
+                $company.item?.salesPoints
+                  .map((v) => v.customAddress || v.address)
+                  .join(' • ')
               }}
             </div>
           </div>
@@ -123,13 +124,13 @@
         class="row col-grow gap-md-15 gap-lg-5 justify-between no-wrap"
       >
         <div class="column text-on-bottom-menu-color" style="width: 186px">
-          <div class="bold subtitle-text mb-10">Информация</div>
+          <div class="bold subtitle-text mb-6">Информация</div>
           <div class="column gap-6">
             <div v-for="(item, index) in infoBlocks" :key="index">
               <CButton
                 @click="item.click()"
                 text-button
-                style="opacity: 0.8"
+                style="opacity: 0.6"
                 text-color="on-bottom-menu-color"
               >
                 <div class="body">
@@ -140,14 +141,14 @@
           </div>
         </div>
         <div class="text-on-bottom-menu-color">
-          <div class="bold subtitle-text mb-10 text-on-bottom-menu-color">
+          <div class="bold subtitle-text mb-6 text-on-bottom-menu-color">
             Правовая информация
           </div>
           <div class="column gap-6 items-start">
             <CButton
               text-color="on-bottom-menu-color"
               text-button
-              style="opacity: 0.8"
+              style="opacity: 0.6"
               class="body"
               label="Политика конфиденциальноости"
               @click="
@@ -169,7 +170,7 @@
               class="body"
               text-color="on-bottom-menu-color"
               text-button
-              style="opacity: 0.8"
+              style="opacity: 0.6"
               label="Условия использования"
             />
           </div>
@@ -181,35 +182,38 @@
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
           >
-            <div
-              v-for="(item, index) in $company.item?.guestContacts.phones"
-              :key="index"
-              class="cursor-pointer"
-              @click="openLink(item.link)"
-            >
-              {{ item.value }}
-            </div>
-            <div class="body" style="opacity: 0.8">
+            <div class="subtitle-text bold">
               {{
                 $company.item?.guestContacts.phones.length > 1
                   ? 'Контактные телефоны'
                   : 'Контактный телефон'
               }}
             </div>
+            <div
+              v-for="(item, index) in $company.item?.guestContacts.phones"
+              :key="index"
+              class="cursor-pointer body"
+              @click="openLink(item.link)"
+              style="opacity: 0.6"
+            >
+              {{ item.value }}
+            </div>
           </div>
           <div v-if="$company.item?.salesPoints" class="column gap-6">
-            <div
-              v-for="(item, index) in $company.item?.salesPoints"
-              :key="index"
-            >
-              {{ item.customAddress || item.address }}
-            </div>
-            <div class="body" style="opacity: 0.8">
+            <div class="subtitle-text bold">
               {{
                 $company.item?.salesPoints?.length > 1
                   ? 'Адреса заведений в Калининграде'
                   : 'Адрес заведения в Калининграде'
               }}
+            </div>
+            <div
+              v-for="(item, index) in $company.item?.salesPoints"
+              :key="index"
+              class="body"
+              style="opacity: 0.6"
+            >
+              {{ item.customAddress || item.address }}
             </div>
           </div>
         </div>
@@ -290,20 +294,19 @@
       class="row full-width body text-on-bottom-menu-color gap-15"
     >
       <div class="column gap-5">
-        <div>© Все права защищены 2024</div>
-        <div class="row no-wrap gap-3">
-          <div style="opacity: 0.8">Работает на</div>
-          <q-img style="width: 30px" src="~assets/loyalHeart.svg" />
+        <div class="row no-wrap items-center gap-3">
+          <div>Работает на</div>
+          <q-img style="width: 30px" src="~assets/loyalHeartWhite.png" />
           <a
-            style="opacity: 0.8"
             class="text-on-bottom-menu-color"
             href="https://corex.studio/loyal"
           >
             Loyalhub</a
           >
         </div>
+        <div style="opacity: 0.6">© Все права защищены 2024</div>
       </div>
-      <TopHeaderSocials />
+      <!-- <TopHeaderSocials /> -->
 
       <div
         v-if="
