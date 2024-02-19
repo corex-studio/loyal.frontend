@@ -1,7 +1,7 @@
 <template>
   <div
     style="height: 100%; overflow: overlay; overflow-x: hidden"
-    class="border-radius box-shadow column no-wrap cursor-pointer relative-position bg-background-color"
+    class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
   >
     <q-chip
@@ -33,7 +33,7 @@
     </q-img>
     <div
       :style="`height: ${$q.screen.lt.md ? '165' : '188'}px`"
-      class="px-8 py-8 column no-wrap justify-between col-grow text-on-background-color"
+      class="px-8 py-8 column no-wrap justify-between col-grow text-on-product-tile-color"
     >
       <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">

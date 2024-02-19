@@ -1,11 +1,11 @@
 <template>
   <div
     @click="openDialog()"
-    class="row no-wrap justify-between items-center cursor-pointer button px-8 col"
+    class="row no-wrap justify-between items-center cursor-pointer button bg-product-tile-color px-8 col"
     :style="`height: ${$q.screen.lt.md ? '42' : '44'}px`"
   >
     <div
-      class="row no-wrap gap-4 body items-center text-on-background-color"
+      class="row no-wrap gap-4 body items-center text-on-product-tile-color"
       style="overflow: hidden"
     >
       <div
@@ -16,7 +16,7 @@
         <!-- <CustomIcon width="28px" height="28px" name="bagOnTime.svg" /> -->
         <CIcon
           name="fa-regular fa-bag-shopping"
-          color="on-background-color"
+          color="on-product-tile-color"
           size="22px"
         />
         <div style="line-height: 15px" class="bold nowrap-content">
@@ -30,7 +30,7 @@
           <!-- <CustomIcon width="28px" height="28px" name="bagOnTime.svg" /> -->
           <CIcon
             name="fa-regular fa-bag-shopping"
-            color="on-background-color"
+            color="on-product-tile-color"
             size="22px"
           />
           <div class="bold text-primary">
@@ -50,7 +50,7 @@
     </div>
     <CIcon
       size="22px"
-      color="on-background-color"
+      color="on-product-tile-color"
       name="fa-regular fa-angle-right"
     />
   </div>
