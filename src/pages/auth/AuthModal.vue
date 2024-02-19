@@ -124,6 +124,7 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { ref, watch } from 'vue'
 import CodeComponent from './CodeComponent.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { store } from 'src/models/store'
 
 const props = defineProps<{
   modelValue: boolean
@@ -226,6 +227,9 @@ const auth = async () => {
     await authentication.me()
     currentStep.value = 1
     emit('update:modelValue', false)
+    if (authentication.user?.registeredAt === null) {
+      store.registrationModal = true
+    }
   } catch {
     codeError.value = true
   } finally {
