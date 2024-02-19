@@ -59,14 +59,15 @@
           ₽
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
-          <CButton
-            @click.capture.stop="toCartClickHandler()"
-            color="background-color"
-            :style="`background-color: ${lightColor(
+          <!-- background-color: ${lightColor(
               buttonColor || '000',
               '27'
-            )} !important; ${item.isDead ? 'cursor: not-allowed' : ''}`"
-            :text-color="item.isDead ? 'on-background-color' : 'primary'"
+            )} !important; -->
+          <CButton
+            @click.capture.stop="toCartClickHandler()"
+            :color="item.isDead ? 'secondary' : 'primary'"
+            :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
+            :text-color="item.isDead ? 'on-secondary' : 'on-primary'"
             height="40px"
             class="body"
             :loading="loading"
@@ -86,7 +87,7 @@
 </template>
 <script lang="ts" setup>
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
-import { lightColor, store } from 'src/models/store'
+import { store } from 'src/models/store'
 import CButton from '../template/buttons/CButton.vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
@@ -96,9 +97,9 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { Notify } from 'quasar'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+// import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 
 const props = defineProps<{
@@ -107,11 +108,11 @@ const props = defineProps<{
 
 const loading = ref(false)
 
-const buttonColor = computed(() => {
-  return props.item.isDead
-    ? uiSettingsRepo.item?.backgroundColor.on_color
-    : uiSettingsRepo.item?.primaryColor.color
-})
+// const buttonColor = computed(() => {
+//   return props.item.isDead
+//     ? uiSettingsRepo.item?.backgroundColor.on_color
+//     : uiSettingsRepo.item?.primaryColor.color
+// })
 
 const toCartClickHandler = async () => {
   if (props.item.isDead) return
