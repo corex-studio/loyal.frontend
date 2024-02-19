@@ -33,6 +33,7 @@ export class AppManager {
       this.getCurrentCompanyGroup(),
       uiSettingsRepo.fetchSettings(),
       appSettingsRepo.getLinksSettings(),
+      companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
       this.changeFavicon(companyGroupRepo.item?.image?.thumbnail)
       if (companyRepo.item?.externalId)
