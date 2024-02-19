@@ -32,7 +32,7 @@
         <div>
           {{
             currentNutrition?.calories
-              ? currentNutrition?.calories + ' ккал'
+              ? currentNutrition?.calories.toFixed() + ' ккал'
               : '-'
           }}
         </div>
@@ -41,14 +41,20 @@
         <div style="opacity: 0.5">Белки</div>
         <div>
           {{
-            currentNutrition?.proteins ? currentNutrition?.proteins + ' г' : '-'
+            currentNutrition?.proteins
+              ? currentNutrition?.proteins.toFixed() + ' г'
+              : '-'
           }}
         </div>
       </div>
       <div class="column gap-2">
         <div style="opacity: 0.5">Жиры</div>
         <div>
-          {{ currentNutrition?.fats ? currentNutrition?.fats + ' г' : '-' }}
+          {{
+            currentNutrition?.fats
+              ? currentNutrition?.fats.toFixed() + ' г'
+              : '-'
+          }}
         </div>
       </div>
       <div class="column gap-2">
@@ -56,7 +62,7 @@
         <div>
           {{
             currentNutrition?.carbohydrates
-              ? currentNutrition?.carbohydrates + ' г'
+              ? currentNutrition?.carbohydrates.toFixed() + ' г'
               : '-'
           }}
         </div>
@@ -67,6 +73,7 @@
 <script lang="ts" setup>
 import { ItemSize, nutritionsNames } from 'src/models/menu/menu'
 import { NotritionRaw } from 'src/models/order/order'
+import { beautifyNumber } from 'src/models/store'
 import { onMounted, ref, computed } from 'vue'
 
 const props = defineProps<{
