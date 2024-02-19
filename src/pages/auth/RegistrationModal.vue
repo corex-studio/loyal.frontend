@@ -6,23 +6,28 @@
     persistent
     class="text-on-background-color"
     no-close
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :maximize="$q.screen.lt.md"
   >
     <div class="huge3 bold">Регистрация</div>
     <div
       class="column text-on-background-color bg-background-color full-width gap-10"
     >
       <div class="mt-4 body">Пожалуйста заполните следующие поля</div>
+
       <CInput
+        v-if="!$companyGroup.requiredFields?.first_name.hidden"
         external-label="Ваше имя"
         height="48px"
         v-model="data.firstName"
       />
-      <!-- <CInput
+      <CInput
+        v-if="!$companyGroup.requiredFields?.last_name.hidden"
         external-label="Ваша фамилия"
         input-class="body"
         height="48px"
         v-model="data.lastName"
-      /> -->
+      />
       <!-- <CInput
         external-label="Ваш телефон"
         input-class="body"
@@ -32,13 +37,21 @@
         v-model="data.phone"
       /> -->
       <CInput
+        v-if="!$companyGroup.requiredFields?.email.hidden"
         external-label="Ваш email"
         height="48px"
         :rules="[rules.email]"
         v-model="data.email"
       />
-      <div class="row full-width gap-6">
+      <div
+        v-if="
+          !$companyGroup.requiredFields?.sex.hidden ||
+          !$companyGroup.requiredFields?.birthday.hidden
+        "
+        class="row no-wrap full-width gap-6"
+      >
         <TabPicker
+          v-if="!$companyGroup.requiredFields?.sex.hidden"
           @update-tab="data.sex = $event"
           :model-value="data.sex"
           class="col-5"
@@ -47,9 +60,10 @@
           external-label="Пол"
         />
         <CInput
+          v-if="!$companyGroup.requiredFields?.birthday.hidden"
           external-label="Дата рождения"
           height="48px"
-          class="col-grow"
+          class="col"
           :model-value="data.birthday"
         >
           <q-menu
@@ -102,24 +116,33 @@ const data = ref<{
   email: string | null
   sex: string
   birthday: string | null
-  // phone: string | null
 }>({
   firstName: null,
   lastName: null,
   email: null,
   sex: 'М',
   birthday: null,
-  // phone: null,
 })
 
 const sexTabs = ['М', 'Ж']
 
 const isSendingAvailable = computed(() => {
   return (
-    !!data.value.firstName?.length &&
-    !!data.value.email?.length &&
-    typeof rules.email(data.value.email) !== 'string' &&
-    !!data.value.birthday
+    (companyGroupRepo.requiredFields?.first_name.required
+      ? !!data.value.firstName?.length
+      : true) &&
+    (companyGroupRepo.requiredFields?.last_name.required
+      ? !!data.value.lastName?.length
+      : true) &&
+    (companyGroupRepo.requiredFields?.email.required
+      ? !!data.value.email?.length &&
+        typeof rules.email(data.value.email) !== 'string'
+      : !!data.value.email?.length
+      ? typeof rules.email(data.value.email) !== 'string'
+      : true) &&
+    (companyGroupRepo.requiredFields?.birthday.required
+      ? !!data.value.birthday
+      : true)
   )
 })
 
@@ -140,12 +163,14 @@ const register = async () => {
   try {
     loading.value = true
     const user = await authRepo.register({
-      birthday: moment(data.value.birthday, 'DD.MM.YYYY').format('YYYY-MM-DD'),
-      email: data.value.email,
-      first_name: data.value.firstName,
-      last_name: data.value.lastName,
+      birthday: data.value.birthday
+        ? moment(data.value.birthday, 'DD.MM.YYYY').format('YYYY-MM-DD')
+        : undefined,
+      email: data.value.email || undefined,
+      first_name: data.value.firstName || undefined,
+      last_name: data.value.lastName || undefined,
       sex: data.value.sex === 'Ж' ? SexType.FEMALE : SexType.MALE,
-      company_group: companyGroupRepo.item?.id,
+      company_group: companyGroupRepo.item?.id || undefined,
     })
     authentication.user = user
     Notify.create({
