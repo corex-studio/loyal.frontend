@@ -57,13 +57,17 @@
               "
               @click="$store.selectCompanyModal = true"
               text-button
-              text-color="on-secondary-button-color"
+              text-color="secondary"
             >
               <div
                 v-if="$q.screen.gt.lg"
                 class="row no-wrap gap-2 items-center"
               >
-                <CIcon size="21px" name="fa-regular fa-angle-left" />
+                <CIcon
+                  color="secondary"
+                  size="21px"
+                  name="fa-regular fa-angle-left"
+                />
 
                 <div class="body bold mt-1">Все заведения</div>
               </div>
@@ -97,13 +101,13 @@
                 style="border-radius: 100px !important"
                 height="44px"
                 outlined
-                color="background-color"
+                color="product-tile-color"
               >
-                <div class="row gap-4 no-wrap body text-on-background-color">
+                <div class="row gap-4 no-wrap body text-on-product-tile-color">
                   <!-- <CustomIcon width="22px" height="22px" name="city.svg" /> -->
                   <CIcon
                     size="22px"
-                    color="on-background-color"
+                    color="on-product-tile-color"
                     name="fa-regular fa-city"
                   />
 
