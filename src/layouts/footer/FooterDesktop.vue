@@ -104,6 +104,28 @@
               {{ item.value }}
             </div>
           </div>
+
+          <div
+            v-if="$company.item?.guestContacts.emails.length"
+            class="column gap-6"
+          >
+            <div class="subtitle-text bold">
+              {{
+                $company.item?.guestContacts.emails.length > 1
+                  ? 'Электронные почты'
+                  : 'Электронная почта'
+              }}
+            </div>
+            <div
+              v-for="(item, index) in $company.item?.guestContacts.emails"
+              :key="index"
+              class="cursor-pointer body"
+              @click="openLink(item.link)"
+              style="opacity: 0.6"
+            >
+              {{ item.value }}
+            </div>
+          </div>
           <div v-if="$company.item?.salesPoints" class="column gap-6">
             <div class="subtitle-text bold">
               {{
@@ -180,6 +202,7 @@
         </div>
 
         <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
+
         <div style="max-width: 336px" class="column gap-10 bold subtitle-text">
           <div
             v-if="$company.item?.guestContacts.phones.length"
@@ -194,6 +217,28 @@
             </div>
             <div
               v-for="(item, index) in $company.item?.guestContacts.phones"
+              :key="index"
+              class="cursor-pointer body"
+              @click="openLink(item.link)"
+              style="opacity: 0.6"
+            >
+              {{ item.value }}
+            </div>
+          </div>
+
+          <div
+            v-if="$company.item?.guestContacts.emails.length"
+            class="column gap-6"
+          >
+            <div class="subtitle-text bold">
+              {{
+                $company.item?.guestContacts.emails.length > 1
+                  ? 'Электронные почты'
+                  : 'Электронная почта'
+              }}
+            </div>
+            <div
+              v-for="(item, index) in $company.item?.guestContacts.emails"
               :key="index"
               class="cursor-pointer body"
               @click="openLink(item.link)"
