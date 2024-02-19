@@ -291,21 +291,11 @@
     />
     <div
       :class="{ 'justify-between': $q.screen.gt.md }"
-      class="row full-width body text-on-bottom-menu-color gap-15"
+      class="row full-width body text-on-bottom-menu-color gap-xs-8"
     >
-      <div class="column gap-5">
-        <div class="row no-wrap items-center gap-3">
-          <div>Работает на</div>
-          <q-img style="width: 30px" src="~assets/loyalHeartWhite.png" />
-          <a
-            class="text-on-bottom-menu-color"
-            href="https://corex.studio/loyal"
-          >
-            Loyalhub</a
-          >
-        </div>
-        <div style="opacity: 0.6">© Все права защищены 2024</div>
-      </div>
+      <!-- <div class="column gap-5"> -->
+      <div>© Все права защищены 2024</div>
+      <!-- </div> -->
       <!-- <TopHeaderSocials /> -->
 
       <div
@@ -344,6 +334,13 @@
             />
           </div>
         </div>
+      </div>
+      <div class="row no-wrap items-center gap-3">
+        <div>Работает на</div>
+        <q-img style="width: 30px" src="~assets/loyalHeartWhite.png" />
+        <a class="text-on-bottom-menu-color" href="https://corex.studio/loyal">
+          Loyalhub</a
+        >
       </div>
 
       <!-- <div class="row items-center gap-10">
@@ -418,7 +415,7 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import TopHeaderSocials from '../header/TopHeaderSocials.vue'
+// import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 
 const route = useRoute()
 const router = useRouter()
