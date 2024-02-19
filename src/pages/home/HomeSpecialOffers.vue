@@ -13,7 +13,7 @@
         ></div>
         <div
           @click="$store.offersTab = el"
-          :style="$store.offersTab !== el ? 'opacity: 0.5' : ''"
+          :class="{ 'text-secondary': $store.offersTab !== el }"
           class="cursor-pointer bold"
         >
           {{ el }}
