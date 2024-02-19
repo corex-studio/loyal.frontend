@@ -31,35 +31,59 @@
             style="text-align: center"
             class="row justify-center gap-4 mt-10"
           >
-            <div
-              v-for="(el, index) in company.salesPoints?.slice(0, 2)"
-              :key="index"
-              class="subtitle-text row justify-center gap-4 items-center"
-            >
-              <div v-if="index">•</div>
-              <div class="ellipsis">
-                {{ el.customAddress || el.address }}
-              </div>
-            </div>
-
-            <CIcon
-              v-if="company.salesPoints.length > 2"
-              name="fa-regular fa-angle-down"
-              color="white"
-              hover-color="primary"
-              class="cursor-pointer"
-              size="24px"
-            >
-              <q-menu max-width="400px" auto-close class="pa-5 column gap-4">
-                <div
-                  v-for="(el, index) in company.salesPoints.slice(2)"
-                  :key="index"
-                  class="row secondary-text no-wrap text-on-background-color"
-                >
+            <template v-if="$companyGroup.item?.externalId !== 'HooDoo'">
+              <div
+                v-for="(el, index) in company.salesPoints?.slice(0, 2)"
+                :key="index"
+                class="subtitle-text row justify-center gap-4 items-center"
+              >
+                <div v-if="index">•</div>
+                <div class="ellipsis">
                   {{ el.customAddress || el.address }}
                 </div>
-              </q-menu>
-            </CIcon>
+              </div>
+
+              <CIcon
+                v-if="company.salesPoints.length > 2"
+                name="fa-regular fa-angle-down"
+                color="white"
+                hover-color="primary"
+                class="cursor-pointer"
+                size="24px"
+              >
+                <q-menu max-width="400px" auto-close class="pa-5 column gap-4">
+                  <div
+                    v-for="(el, index) in company.salesPoints.slice(2)"
+                    :key="index"
+                    class="row secondary-text no-wrap text-on-background-color"
+                  >
+                    {{ el.customAddress || el.address }}
+                  </div>
+                </q-menu>
+              </CIcon>
+            </template>
+            <div v-else class="row items-center gap-3">
+              <div class="subtitle-text">Адреса:</div>
+
+              <CIcon
+                v-if="company.salesPoints.length"
+                name="fa-regular fa-angle-down"
+                color="white"
+                hover-color="primary"
+                class="cursor-pointer"
+                size="24px"
+              >
+                <q-menu max-width="400px" auto-close class="pa-5 column gap-4">
+                  <div
+                    v-for="(el, index) in company.salesPoints"
+                    :key="index"
+                    class="row secondary-text no-wrap text-on-background-color"
+                  >
+                    {{ el.customAddress || el.address }}
+                  </div>
+                </q-menu>
+              </CIcon>
+            </div>
           </div>
           <div class="row full-width justify-center">
             <div class="mt-6 col-9 subtitle-text">
