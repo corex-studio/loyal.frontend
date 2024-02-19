@@ -25,7 +25,10 @@
         <div class="column text-on-bottom-menu-color" style="width: 186px">
           <div class="bold subtitle-text mb-8">Информация</div>
           <div class="column gap-6">
-            <div v-for="(item, index) in infoBlocks" :key="index">
+            <div
+              v-for="(item, index) in infoBlocks.filter((el) => !el.hidden)"
+              :key="index"
+            >
               <CButton
                 @click="item.click()"
                 text-button
@@ -413,6 +416,7 @@
 <script setup lang="ts">
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { store } from 'src/models/store'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 // import TopHeaderSocials from '../header/TopHeaderSocials.vue'
@@ -463,6 +467,13 @@ const infoBlocks = computed(() => {
         router.push({
           name: 'aboutUs',
         })
+      },
+    },
+    {
+      label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
+      hidden: !uiSettingsRepo.item?.becomeFranchisee,
+      click: () => {
+        window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
       },
     },
   ]
