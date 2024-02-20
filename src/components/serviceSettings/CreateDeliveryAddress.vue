@@ -41,7 +41,7 @@
             :loading="geoloading"
             text-color="primary"
           >
-            <div class="body bold">Определить адрес атоматически</div>
+            <div class="body bold">Определить адрес автоматически</div>
           </CButton>
           <AddressSearch
             @update="selectAddress($event)"
@@ -65,6 +65,7 @@
             :readonly="isPrivateHouse"
             external-label="Этаж"
             placeholder="Номер"
+            type="number"
             v-model="newAddress.floor"
           />
           <CInput
@@ -97,6 +98,9 @@
           :disabled="!isSaveAvailable"
           height="48px"
           class="body"
+          :loading="
+            $deliveryAddress.loadings.update || $deliveryAddress.loadings.create
+          "
           width="100%"
           label="Сохранить"
         />
@@ -199,9 +203,9 @@ const geolocate = async () => {
 
 const privateHouseClickHandler = () => {
   if (!newAddress.value) return
-  newAddress.value.entrance = null
-  newAddress.value.floor = null
-  newAddress.value.intercom = null
+  // newAddress.value.entrance = null
+  // newAddress.value.floor = null
+  // newAddress.value.intercom = null
   isPrivateHouse.value = !isPrivateHouse.value
 }
 
@@ -265,19 +269,26 @@ onMounted(() => {
     intercom: props.address?.intercom || null,
     description: props.address?.description || '',
   })
-  map = new CorexLeafletMap()
-  if (!map) return
-  map.lmap.addLayer(drawnItems)
   setTimeout(() => {
+    map = new CorexLeafletMap()
+    if (!map) return
+    map.lmap.addLayer(drawnItems)
+    // setTimeout(() => {
     drawPoint()
     map.lmap.addControl(initDraw())
     map.lmap.invalidateSize()
-  }, 0)
+    // }, 0)
+  }, 200)
 })
 
 const createAddress = async () => {
   try {
     if (props.address) {
+      if (isPrivateHouse.value && newAddress.value) {
+        newAddress.value.entrance = null
+        newAddress.value.floor = null
+        newAddress.value.intercom = null
+      }
       const res = await deliveryAddressRepo.update(newAddress.value)
       const foundAddressIndex = deliveryAddressRepo.items.findIndex(
         (v) => v.id === newAddress.value?.id

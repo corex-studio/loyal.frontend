@@ -73,7 +73,6 @@
 <script lang="ts" setup>
 import { ItemSize, nutritionsNames } from 'src/models/menu/menu'
 import { NotritionRaw } from 'src/models/order/order'
-import { beautifyNumber } from 'src/models/store'
 import { onMounted, ref, computed } from 'vue'
 
 const props = defineProps<{

@@ -688,6 +688,9 @@ const makeAnOrder = async () => {
             ? 'card'
             : 'web_form',
       },
+      extra_data: {
+        system_source: 'website',
+      },
       pad: store.tableMode ? padRepo.item?.id : undefined,
     })
     if (store.tableMode) {

@@ -61,6 +61,7 @@
           height="48px"
           class="col-grow"
           :model-value="item.birthday"
+          readonly
         >
           <q-menu
             ><q-date

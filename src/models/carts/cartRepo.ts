@@ -1,3 +1,4 @@
+import { CartItem } from './cartItem/cartItem'
 import { OrderRaw, Order } from './../order/order'
 import { Cart, CartParams, CartRaw, AvailableHours } from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
@@ -11,6 +12,12 @@ export class CartRepo extends BaseRepo<Cart> {
   setParamsLoading = false
   arrangeLoading = false
   promocodeError = false
+
+  isItemInCart(id: string): CartItem | undefined {
+    return this.item
+      ? this.item?.cartItems.find((v) => v.size.menu_item === id)
+      : undefined
+  }
 
   async setParams(data: CartParams) {
     this.setParamsLoading = true

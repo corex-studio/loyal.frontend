@@ -14,7 +14,6 @@
           : _rounded
           ? 'mb-2 helper-text ml-6'
           : 'mb-2 helper-text',
-        { 'readonly-label': readonly },
       ]"
       class="bold"
     >
@@ -300,9 +299,9 @@ watchEffect(() => {
 </script>
 
 <style lang="scss">
-.readonly-label {
-  opacity: 0.5;
-}
+// .readonly-label {
+//   opacity: 0.5;
+// }
 
 body.screen--sm {
   .q-field {
@@ -355,7 +354,7 @@ textarea + .q-field__label {
 }
 
 .q-input .q-field__bottom {
-  padding: 3px 12px !important;
+  padding: 4px 12px !important;
   font-size: 14px;
 }
 

@@ -40,6 +40,7 @@ import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from './TopHeaderSocials.vue'
 import TopHeaderDeliveryInfo from './TopHeaderDeliveryInfo.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
+import { companyRepo } from 'src/models/company/companyRepo'
 
 const router = useRouter()
 
@@ -58,7 +59,9 @@ const blocks = computed(() => {
     },
     {
       label: 'Контакты',
-      visible: true,
+      visible:
+        !!companyRepo.item?.guestContacts.emails.length ||
+        !!companyRepo.item?.guestContacts.phones.length,
       click: () => {
         scrollToBlock('footer')
       },
