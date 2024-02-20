@@ -199,7 +199,7 @@
             v-else
             @click="$store.authModal = true"
             :style="`height: ${$q.screen.gt.sm ? '44' : '40'}px`"
-            class="auth-button cursor-pointer text-primary body bold row items-center px-15"
+            class="auth-button cursor-pointer text-primary body bold row items-center px-sm-15 px-xs-10"
           >
             Войти
           </div>

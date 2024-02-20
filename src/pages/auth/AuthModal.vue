@@ -213,18 +213,22 @@ const nextStepHandler = async () => {
     loading.value = false
   } else {
     await auth()
-    await cartRepo.current()
+    if (authentication.user) void cartRepo.current()
+
     loading.value = false
   }
 }
 
 const auth = async () => {
   try {
+    loading.value = true
     await authentication.login({
       phone: `7${data.value.phone}`,
       code: `${data.value.sms.first}${data.value.sms.second}${data.value.sms.third}${data.value.sms.fourth}`,
     })
     await authentication.me()
+    if (authentication.user) void cartRepo.current()
+
     currentStep.value = 1
     emit('update:modelValue', false)
     if (authentication.user?.registeredAt === null) {
@@ -233,6 +237,7 @@ const auth = async () => {
   } catch {
     codeError.value = true
   } finally {
+    loading.value = false
   }
 }
 

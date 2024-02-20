@@ -1,7 +1,7 @@
 <template>
   <template v-if="cartItem">
     <div class="row full-width items-center no-wrap justify-between gap-5">
-      <div class="row gap-6 no-wrap">
+      <div @click="openItemModal()" class="row gap-6 no-wrap cursor-pointer">
         <q-img
           class="border-radius"
           :src="cartItem.size.image?.thumbnail || $store.images.empty"
@@ -72,7 +72,9 @@ import { ref, onMounted, watch } from 'vue'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { Notify } from 'quasar'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { beautifyNumber } from 'src/models/store'
+import { beautifyNumber, store } from 'src/models/store'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 
 const cartItem = ref<CartItem | null>(null)
 
@@ -81,6 +83,13 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['delete'])
+
+const openItemModal = async () => {
+  store.menuItemModal = true
+  await menuItemRepo.retrieve(props.item.size.menu_item || '', {
+    sales_point: salesPointRepo.item?.id,
+  })
+}
 
 onMounted(() => {
   cartItem.value = props.item

@@ -55,7 +55,8 @@
                   <div
                     v-for="(el, index) in company.salesPoints.slice(2)"
                     :key="index"
-                    class="row secondary-text no-wrap text-on-background-color"
+                    class="secondary-text text-on-background-color"
+                    style="white-space: nowrap"
                   >
                     {{ el.customAddress || el.address }}
                   </div>
@@ -77,7 +78,8 @@
                   <div
                     v-for="(el, index) in company.salesPoints"
                     :key="index"
-                    class="row secondary-text no-wrap text-on-background-color"
+                    class="secondary-text text-on-background-color"
+                    style="white-space: nowrap"
                   >
                     {{ el.customAddress || el.address }}
                   </div>
@@ -99,7 +101,7 @@
                       .join(', ')
                   }}
                 </div>
-                <div v-else>-</div>
+                <div v-else>Не указано</div>
                 <CIcon
                   name="fa-regular fa-angle-down"
                   color="white"
@@ -124,11 +126,11 @@
                       >
                         {{ days.find((v) => v.val === el.day)?.label }}:
                       </div>
-                      <div>
+                      <div style="white-space: nowrap">
                         {{
                           el.times
                             .map((v) => `${v.start}-${v.end}`)
-                            .join('; ') || '-'
+                            .join('; ') || 'Не указано'
                         }}
                       </div>
                     </div>

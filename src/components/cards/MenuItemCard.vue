@@ -4,6 +4,21 @@
     class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
   >
+    <div
+      v-if="$cart.isItemInCart(item.id)?.quantity"
+      style="
+        width: 36px;
+        height: 36px;
+        border-radius: 100px;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 9;
+      "
+      class="bg-primary row justify-center items-center"
+    >
+      <CIcon name="fa-solid fa-cart-shopping" color="on-primary" size="16px" />
+    </div>
     <q-chip
       v-if="false"
       class="info-chip subtitle-text"
@@ -101,6 +116,7 @@ import { ref } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 // import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CTooltip from '../helpers/CTooltip.vue'
+import CIcon from '../template/helpers/CIcon.vue'
 
 const props = defineProps<{
   item: MenuItem
