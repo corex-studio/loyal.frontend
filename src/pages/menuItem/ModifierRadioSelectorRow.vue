@@ -20,7 +20,7 @@
           style="height: 10px; width: 10px; border-radius: 50%"
         ></div>
       </div> -->
-      <div>
+      <div :class="{ 'text-primary': item.quantity }">
         {{ item.name }}
       </div>
     </div>

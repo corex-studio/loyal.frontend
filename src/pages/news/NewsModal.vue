@@ -9,14 +9,26 @@
     :maximize="$q.screen.lt.md"
     :no-close="$q.screen.lt.md"
   >
+    <div
+      v-if="$q.screen.lt.md"
+      @click="$emit('update:modelValue', false)"
+      class="close-button row box-shadow items-center justify-center cursor-pointer"
+    >
+      <CIcon
+        color="on-background-color"
+        hover-color="primary"
+        class="mt-1"
+        name="fa-regular fa-angle-down"
+        size="24px"
+      />
+    </div>
     <q-img
       :src="
         $promotion.item
           ? $promotion.item.image?.image || $store.images.empty
           : $news.item?.image?.image || $store.images.empty
       "
-      height="300px"
-      style="min-height: 300px"
+      style="max-height: 400px"
       fit="cover"
     >
       <template v-slot:error>
@@ -55,6 +67,7 @@
 <script lang="ts" setup>
 // import CButton from 'src/components/template/buttons/CButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
+import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
 
@@ -70,3 +83,17 @@ const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 })
 </script>
+
+<style lang="scss" scoped>
+.close-button {
+  position: sticky;
+  margin-bottom: -40px;
+  top: 10px;
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  border-radius: 50%;
+  background-color: var(--background-color);
+  left: 10px;
+}
+</style>

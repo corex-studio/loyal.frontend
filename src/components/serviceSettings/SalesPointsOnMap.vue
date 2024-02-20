@@ -114,12 +114,14 @@ const initDraw = () => {
 }
 
 onMounted(() => {
-  map = new CorexLeafletMap()
-  if (!map) return
-  map.lmap.addLayer(drawnItems)
-
-  drawPoints()
-  map.lmap.addControl(initDraw())
+  setTimeout(() => {
+    map = new CorexLeafletMap()
+    if (!map) return
+    map.lmap.addLayer(drawnItems)
+    drawPoints()
+    map.lmap.addControl(initDraw())
+    map.lmap.invalidateSize()
+  }, 200)
 })
 </script>
 

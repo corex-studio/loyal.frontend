@@ -26,4 +26,8 @@ defineEmits<{
   border-radius: 6px;
   //   border: 2px var(--secondary-button-color) solid;
 }
+
+.q-checkbox :deep(.q-checkbox__inner--falsy) {
+  color: var(--on-background-color);
+}
 </style>

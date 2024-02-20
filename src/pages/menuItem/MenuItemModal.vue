@@ -55,6 +55,7 @@
           </span> </template
       ></q-img>
       <div
+        v-if="!$menuItem.loadings.retrieve"
         style="overflow-x: auto; width: -webkit-fill-available"
         class="column no-wrap justify-between full-height px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0 relative-position bg-background-color"
         :style="`border-radius: ${
@@ -142,6 +143,23 @@
             </div>
           </div>
         </teleport>
+      </div>
+      <div
+        v-else
+        class="column justify-between full-width px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0"
+      >
+        <div>
+          <q-skeleton height="30px" width="80%" class="mb-5" />
+          <q-skeleton height="30px" width="40%" class="mb-5" />
+          <q-skeleton height="20px" width="20%" class="mb-5" />
+          <q-skeleton height="20px" width="100%" class="mb-3" />
+          <q-skeleton height="20px" width="100%" class="mb-3" />
+          <q-skeleton height="20px" width="40%" />
+        </div>
+        <div class="row full-width py-lg-12 py-xs-10 gap-sm-15 gap-xs-5">
+          <q-skeleton :height="$q.screen.lt.lg ? '40px' : '48px'" width="30%" />
+          <q-skeleton :height="$q.screen.lt.lg ? '40px' : '48px'" class="col" />
+        </div>
       </div>
     </div>
     <div v-if="$q.screen.lt.lg" ref="touchSpot"></div>

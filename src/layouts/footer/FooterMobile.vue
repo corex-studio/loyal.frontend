@@ -18,7 +18,7 @@
       </div>
       <div v-if="showContacts" class="col column gap-8">
         <div class="header3 bold">Контакты</div>
-        <div class="column full-width gap-6">
+        <div class="column full-width gap-6" style="overflow: hidden">
           <template
             v-for="(item, index) in $company.item?.guestContacts.emails"
             :key="index"

@@ -4,7 +4,18 @@
       style="min-height: 36px"
       class="row no-wrap justify-between full-width mb-4"
     >
-      <div class="header3 bold col-8 ellipsis-2-lines">{{ group.name }}</div>
+      <div class="header3 bold col-8 ellipsis-2-lines">
+        {{ group.name
+        }}<span
+          v-if="
+            group.restrictions?.min_quantity &&
+            !sum(group.items.map((el) => el.quantity))
+          "
+          class="text-primary"
+        >
+          *</span
+        >
+      </div>
       <q-chip
         v-if="
           group.restrictions?.min_quantity &&
