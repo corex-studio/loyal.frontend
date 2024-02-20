@@ -77,6 +77,13 @@
               style="font-size: 14px"
               >Пользовательское соглашение</a
             >
+            <a
+              :href="linkToOffer"
+              target="_blank"
+              class="mt-8"
+              style="font-size: 14px"
+              >Публичная оферта</a
+            >
           </div>
         </div>
       </div>
@@ -199,6 +206,12 @@ const linkToTermsOfUse = computed(() => {
   return `https://${window.location.host}/${String(
     route.params.externalId
   )}/terms_of_use`
+})
+
+const linkToOffer = computed(() => {
+  return `https://${window.location.host}/${String(
+    route.params.externalId
+  )}/offer`
 })
 
 // const isBest2Pay = computed(() => {

@@ -6260,6 +6260,11 @@ yaml@^1.10.0, yaml@^1.10.2, yaml@^1.7.2:
   resolved "https://registry.npmjs.org/yaml/-/yaml-1.10.2.tgz"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
+yandex-metrika-vue3@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/yandex-metrika-vue3/-/yandex-metrika-vue3-1.2.0.tgz#078e8fe24c1ffc8f89108c65975957da9f8ccb5e"
+  integrity sha512-R67vVtUTanP3wolz03F6pvbudJNLLLWbwcdTAD7jMQQaVppywUxe4pGtlK+oATeAv/TgDEqIMiwCaV0i2dvIdQ==
+
 yargs-parser@^18.1.2:
   version "18.1.3"
   resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-18.1.3.tgz"
