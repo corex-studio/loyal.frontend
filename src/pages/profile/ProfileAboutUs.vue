@@ -4,9 +4,11 @@
       <div
         class="border-radius main-image-block row justify-center items-center full-width relative-position"
         :style="`background-image: url(${
-          company.headerImage?.image ||
-          company.images[1].image ||
-          $store.images.empty
+          company.headerImage
+            ? company.headerImage.image
+            : company.images.length
+            ? company.images[1].image
+            : $store.images.empty
         }); height: ${$q.screen.gt.md ? '388' : '320'}px`"
       >
         <CIconButton
