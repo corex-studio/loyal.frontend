@@ -13,7 +13,7 @@
         ></div>
         <div
           @click="$store.offersTab = el"
-          :class="{ 'text-secondary': $store.offersTab !== el }"
+          :class="{ 'text-secondary-text': $store.offersTab !== el }"
           class="cursor-pointer bold"
         >
           {{ el }}

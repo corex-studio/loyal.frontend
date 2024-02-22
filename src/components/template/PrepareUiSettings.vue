@@ -14,6 +14,8 @@ const onPrimaryColor = ref<string>('#000')
 const secondaryColor = ref<string>('#f8f8f8')
 const onSecondaryColor = ref<string>('#000')
 
+const secondaryTextColor = ref<string>('#f8f8f8')
+
 const accentColor = ref<string>('#fdffb7')
 const onAccentColor = ref<string>('#000')
 
@@ -87,6 +89,7 @@ onMounted(() => {
     onPrimaryColor.value = `#${uiSettingsRepo.item.primaryColor.on_color}`
     secondaryColor.value = `#${uiSettingsRepo.item.secondaryColor.color}`
     onSecondaryColor.value = `#${uiSettingsRepo.item.secondaryColor.on_color}`
+    secondaryTextColor.value = `#${uiSettingsRepo.item.secondaryTextColor.color}`
     accentColor.value = `#${uiSettingsRepo.item.accentColor.color}`
     onAccentColor.value = `#${uiSettingsRepo.item.accentColor.on_color}`
     backgroundColor.value = `#${uiSettingsRepo.item.backgroundColor.color}`
@@ -139,6 +142,8 @@ onMounted(() => {
 
   document.body.style.setProperty('--secondary', secondaryColor.value)
   document.body.style.setProperty('--on-secondary', onSecondaryColor.value)
+
+  document.body.style.setProperty('--secondary-text', secondaryTextColor.value)
 
   document.body.style.setProperty('--q-primary', primaryColor.value)
 
@@ -271,6 +276,7 @@ $colors: (
   'on-primary': --on-primary,
   'secondary': --secondary,
   'on-secondary': --on-secondary,
+  'secondary-text': --secondary-text,
   'accent': --accent,
   'on-accent': --on-accent,
   'background-color': --background-color,

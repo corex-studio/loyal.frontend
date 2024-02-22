@@ -21,7 +21,7 @@
             "
             class="bg-secondary"
           ></div>
-          <CButton @click="el.click()" text-button text-color="secondary">
+          <CButton @click="el.click()" text-button text-color="secondary-text">
             <div class="body bold">{{ el.label }}</div></CButton
           >
         </div>
