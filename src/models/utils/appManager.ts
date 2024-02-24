@@ -103,15 +103,16 @@ export class AppManager {
     }
   }
 
-  loadMenuPage() {
-    const currentPoint = cartRepo.item
+  async loadMenuPage() {
+    let currentPoint = cartRepo.item
       ? cartRepo.item?.salesPoint
       : companyGroupRepo.item?.companies[0]?.salesPoints &&
         companyGroupRepo.item?.companies[0]?.salesPoints.length
       ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
       : null
+    if (authentication.user) await cartRepo.current()
+    if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
     if (currentPoint) void store.loadCatalog(currentPoint)
-    if (authentication.user) void cartRepo.current()
 
     if (!newsRepo.news.length) {
       void newsRepo
