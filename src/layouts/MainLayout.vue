@@ -1,7 +1,7 @@
 <template>
   <template v-if="ready">
     <PrepareUiSettings />
-    <q-layout view="lHh Lpr lFf" class="bg-background-color relative-position">
+    <q-layout class="bg-background-color relative-position" view="lHh Lpr lFf">
       <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
       <TopHeader v-if="$q.screen.gt.md" />
       <MainHeader />
@@ -16,11 +16,6 @@
         />
       </div>
       <q-page-container
-        :style="
-          $q.screen.lt.md
-            ? 'padding-bottom: 50px'
-            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: 100px`
-        "
         :class="{
           'c-container':
             $route.name !== 'home' &&
@@ -30,6 +25,11 @@
               $route.path.includes(v)
             ),
         }"
+        :style="
+          $q.screen.lt.md
+            ? 'padding-bottom: 50px'
+            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: 100px`
+        "
       >
         <router-view />
         <CartDrawer />
@@ -51,8 +51,8 @@
     />
     <SelectCompanyModal
       :model-value="$store.selectCompanyModal"
-      @update:model-value="$store.selectCompanyModal = false"
       @select="companySelected($event)"
+      @update:model-value="$store.selectCompanyModal = false"
     />
     <MenuItemModal v-model="$store.menuItemModal" />
     <NewsModal
@@ -64,10 +64,10 @@
   </template>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
 import { Screen, useQuasar } from 'quasar'
-import { onMounted, ref, watch, computed } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import AuthModal from 'src/pages/auth/AuthModal.vue'

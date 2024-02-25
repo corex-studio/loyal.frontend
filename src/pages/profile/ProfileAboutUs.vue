@@ -316,8 +316,10 @@
         </div>
       </div>
     </div>
-
-    <ProfileAddressesOnMap class="c-container mt-lg-33 mt-md-25 mt-xs-15" />
+    <ProfileAddressesOnMap
+      :key="$company.companyForProfile?.id"
+      class="c-container mt-lg-33 mt-md-25 mt-xs-15"
+    />
   </div>
   <div v-else>
     <SelectCompanyModal
@@ -352,6 +354,9 @@ import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import moment from 'moment'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
 import { Company } from 'src/models/company/company'
+import { daysNames } from 'src/services/daysEnum'
+import { useEventBus } from '@vueuse/core'
+import { selectCompanyKey } from 'src/services/eventBusKeys'
 
 const socialsModal = ref(false)
 
@@ -359,15 +364,12 @@ const concatsModal = ref(false)
 
 const router = useRouter()
 
-const days = [
-  { label: 'Понедельник', val: 1 },
-  { label: 'Вторник', val: 2 },
-  { label: 'Среда', val: 3 },
-  { label: 'Четверг', val: 4 },
-  { label: 'Пятница', val: 5 },
-  { label: 'Суббота', val: 6 },
-  { label: 'Воcкресенье', val: 7 },
-]
+const days = Object.values(daysNames).map((key) => {
+  return {
+    label: daysNames[Number(key) as keyof typeof daysNames],
+    val: Number(key),
+  }
+})
 
 const currentSchedule = computed(() => {
   if (!company.value?.salesPoints) return
@@ -499,6 +501,9 @@ onMounted(() => {
   if (companyGroupRepo.item && companyGroupRepo.item?.companies.length < 2) {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
+  useEventBus(selectCompanyKey).on(
+    (e) => (companyRepo.companyForProfile = e.company)
+  )
 })
 </script>
 

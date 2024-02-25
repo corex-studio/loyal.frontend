@@ -1,9 +1,9 @@
 import { RequiredFieldRaw } from './../settings/settings'
 import {
   CompanyGroup,
-  TermsOfServiceInfo,
-  CompanyGroupRaw,
   CompanyGroupAppSettings,
+  CompanyGroupRaw,
+  TermsOfServiceInfo,
 } from './companyGroup'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { companyGroupApi } from './companyGroupApi'
@@ -54,6 +54,7 @@ export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
       },
     })
     this.item = new CompanyGroup(res)
+    return this.item
   }
 
   async getAppSettings(id: string): Promise<CompanyGroupAppSettings> {

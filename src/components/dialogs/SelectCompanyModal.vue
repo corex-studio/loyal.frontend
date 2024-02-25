@@ -24,7 +24,7 @@
       </div>
 
       <CButton
-        @click="$emit('select', selectedCompany)"
+        @click="emitSelectedCompany"
         :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"
         :disabled="!selectedCompany"
         :height="$q.screen.lt.md ? '40px' : '48px'"
@@ -41,18 +41,30 @@ import CompanyRow from 'src/pages/profile/CompanyRow.vue'
 import CButton from '../template/buttons/CButton.vue'
 import { ref, watch } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
+import { useEventBus } from '@vueuse/core'
+import { selectCompanyKey } from 'src/services/eventBusKeys'
 
 const props = defineProps<{
   modelValue: boolean
   noClose?: boolean
+  selectedCompany?: Company
+  closeOnSelect?: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
   (evt: 'select', v: Company | null): void
 }>()
 
-const selectedCompany = ref<Company | null>(null)
+const selectedCompany = ref<Company | null>(props.selectedCompany || null)
+
+watch(
+  () => props.modelValue,
+  (v) => {
+    if (v && props.selectedCompany)
+      selectedCompany.value = props.selectedCompany
+  }
+)
 
 watch(
   () => props.modelValue,
@@ -65,5 +77,13 @@ watch(
 
 const selectCompany = (v: Company) => {
   selectedCompany.value = v
+}
+
+const emitSelectedCompany = () => {
+  useEventBus(selectCompanyKey).emit({
+    company: selectedCompany.value as Company,
+  })
+  emit('select', selectedCompany.value)
+  if (props.closeOnSelect) emit('update:modelValue', false)
 }
 </script>

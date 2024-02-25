@@ -8,6 +8,15 @@ import { authentication } from './authentication/authentication'
 import { LocalStorage } from 'quasar'
 import { reactive } from 'vue'
 import moment from 'moment'
+import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
+import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
+
+type DeliveryAreaInfoDrawerData = {
+  salesPoint: SalesPoint
+  deliveryAreaSettings: DeliveryAreaSettings[]
+  defaultDeliveryAreaSettings: DeliveryAreaSettings[]
+  deliveryArea: DeliveryArea
+}
 
 export class Store {
   footerHeight = 0
@@ -20,6 +29,8 @@ export class Store {
   registrationModal = false
   profileModal = false
   cartDrawer = false
+  deliveryAreaInfoDrawer = false
+  deliveryAreaInfoDrawerData: DeliveryAreaInfoDrawerData | null = null
   leftDrawer = false
   bonusesModal = false
   serviceSettingsModal = false
@@ -50,6 +61,10 @@ export class Store {
     else {
       // authentication.setCompanyGroupHeader(this.companyGroup)
     }
+  }
+
+  log(...v: any) {
+    console.log(...v)
   }
 
   setCompanyGroup(v: string) {
