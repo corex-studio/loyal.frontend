@@ -43,6 +43,7 @@ export type UiSettingsRaw = {
   primary_color: ColorRaw
   background_color: ColorRaw
   secondary_color: ColorRaw
+  secondary_text_color: ColorRaw
   accent_color: ColorRaw
   input_type: string
   bottom_menu_color: ColorRaw
@@ -118,6 +119,7 @@ export class UiSetting implements BaseModel {
   primaryColor: Color
   backgroundColor: Color
   secondaryColor: Color
+  secondaryTextColor: Color
   accentColor: Color
   inputType: string
   bottomMenuColor: Color
@@ -183,6 +185,7 @@ export class UiSetting implements BaseModel {
     this.primaryColor = new Color(raw.primary_color)
     this.backgroundColor = new Color(raw.background_color)
     this.secondaryColor = new Color(raw.secondary_color)
+    this.secondaryTextColor = new Color(raw.secondary_text_color)
     this.accentColor = new Color(raw.accent_color)
     this.inputType = raw.input_type
     this.bottomMenuColor = new Color(raw.bottom_menu_color)

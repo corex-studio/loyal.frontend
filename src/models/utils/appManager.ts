@@ -5,7 +5,7 @@ import { uiSettingsRepo } from '../uiSettings/uiSettingsRepo'
 import { cartRepo } from '../carts/cartRepo'
 import { appSettingsRepo } from '../appSettings/appSettingsRepo'
 import { authentication } from '../authentication/authentication'
-import { useFavicon } from '@vueuse/core'
+import { useFavicon, useTitle } from '@vueuse/core'
 import { newsRepo } from '../news/newsRepo'
 import { NewsType } from '../news/news'
 import { companyRepo } from '../company/companyRepo'
@@ -18,6 +18,7 @@ export type AppManagerConfig = {
 export class AppManager {
   config: AppManagerConfig
   icon = useFavicon()
+  websiteName = useTitle()
 
   constructor(config: AppManagerConfig) {
     this.config = config
@@ -26,6 +27,11 @@ export class AppManager {
     this.setScrollSettings()
     let companyGroupId = this.config.companyGroupId
     const _value = LocalStorage.getItem('Company-Group')
+    const _favicon = LocalStorage.getItem('Favicon')
+    const _websiteName = LocalStorage.getItem('Website-Name')
+
+    if (_favicon) this.changeFavicon(String(_favicon))
+    if (_websiteName) this.changeWebsiteName(String(_websiteName))
     if (_value && !companyGroupId) companyGroupId = String(_value)
     if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
     await Promise.all([
@@ -35,7 +41,17 @@ export class AppManager {
       appSettingsRepo.getLinksSettings(),
       companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
-      this.changeFavicon(companyGroupRepo.item?.image?.thumbnail)
+      if (
+        companyGroupRepo.item?.externalId !== _value ||
+        !_favicon ||
+        !_websiteName
+      ) {
+        LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
+        LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
+        this.changeFavicon(companyGroupRepo.item?.image?.thumbnail)
+        this.changeWebsiteName(companyGroupRepo.item?.name || undefined)
+      }
+
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
     })
@@ -87,15 +103,16 @@ export class AppManager {
     }
   }
 
-  loadMenuPage() {
-    const currentPoint = cartRepo.item
+  async loadMenuPage() {
+    let currentPoint = cartRepo.item
       ? cartRepo.item?.salesPoint
       : companyGroupRepo.item?.companies[0]?.salesPoints &&
         companyGroupRepo.item?.companies[0]?.salesPoints.length
       ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
       : null
+    if (authentication.user) await cartRepo.current()
+    if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
     if (currentPoint) void store.loadCatalog(currentPoint)
-    if (authentication.user) void cartRepo.current()
 
     if (!newsRepo.news.length) {
       void newsRepo
@@ -127,5 +144,10 @@ export class AppManager {
   changeFavicon(src?: string) {
     if (!src) return
     this.icon.value = src
+  }
+
+  changeWebsiteName(name?: string) {
+    if (!name) return
+    this.websiteName.value = name
   }
 }

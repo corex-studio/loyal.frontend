@@ -17,7 +17,7 @@
         !additional) ||
       hover
         ? 'text-primary'
-        : 'text-secondary',
+        : 'text-secondary-text',
     ]"
   >
     <div

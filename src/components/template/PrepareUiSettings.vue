@@ -5,10 +5,6 @@
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { onMounted, ref } from 'vue'
 
-const props = defineProps<{
-  initDelay?: number
-}>()
-
 const borderRadius = ref<string>('15px')
 const borderRadius2 = ref<string>('10px')
 
@@ -17,6 +13,8 @@ const onPrimaryColor = ref<string>('#000')
 
 const secondaryColor = ref<string>('#f8f8f8')
 const onSecondaryColor = ref<string>('#000')
+
+const secondaryTextColor = ref<string>('#f8f8f8')
 
 const accentColor = ref<string>('#fdffb7')
 const onAccentColor = ref<string>('#000')
@@ -84,201 +82,191 @@ const loyaltyCardBackgroundColor = ref<string>('#e9e9e9')
 const onLoyaltyCardBackgroundColor = ref<string>('#000')
 
 onMounted(() => {
-  setTimeout(() => {
-    if (uiSettingsRepo.item) {
-      borderRadius.value = `${uiSettingsRepo.item.borderRadius}px`
-      borderRadius2.value = `${uiSettingsRepo.item.borderRadiusSmall}px`
-      primaryColor.value = `#${uiSettingsRepo.item.primaryColor.color}`
-      onPrimaryColor.value = `#${uiSettingsRepo.item.primaryColor.on_color}`
-      secondaryColor.value = `#${uiSettingsRepo.item.secondaryColor.color}`
-      onSecondaryColor.value = `#${uiSettingsRepo.item.secondaryColor.on_color}`
-      accentColor.value = `#${uiSettingsRepo.item.accentColor.color}`
-      onAccentColor.value = `#${uiSettingsRepo.item.accentColor.on_color}`
-      backgroundColor.value = `#${uiSettingsRepo.item.backgroundColor.color}`
-      onBackgroundColor.value = `#${uiSettingsRepo.item.backgroundColor.on_color}`
-      inputColor.value = `#${uiSettingsRepo.item.inputColor.color}`
-      onInputColor.value = `#${uiSettingsRepo.item.inputColor.on_color}`
-      dividerColor.value = `#${uiSettingsRepo.item.dividerColor.color}`
-      bottomMenuColor.value = `#${uiSettingsRepo.item.bottomMenuColor.color}`
-      onBottomMenuColor.value = `#${uiSettingsRepo.item.bottomMenuColor.on_color}`
-      backingColor.value = `#${uiSettingsRepo.item.backingColor.color}`
-      onBackingColor.value = `#${uiSettingsRepo.item.backingColor.on_color}`
-      bonusColor.value = `#${uiSettingsRepo.item.bonusColor.color}`
-      onBonusColor.value = `#${uiSettingsRepo.item.bonusColor.on_color}`
-      saleColor.value = `#${uiSettingsRepo.item.saleColor.color}`
-      onSaleColor.value = `#${uiSettingsRepo.item.saleColor.on_color}`
-      giftColor.value = `#${uiSettingsRepo.item.giftColor.color}`
-      onGiftColor.value = `#${uiSettingsRepo.item.giftColor.on_color}`
-      productTileColor.value = `#${uiSettingsRepo.item.productTileColor.color}`
-      onProductTileColor.value = `#${uiSettingsRepo.item.productTileColor.on_color}`
-      selectorColor.value = `#${uiSettingsRepo.item.selectorColor.color}`
-      onSelectorColor.value = `#${uiSettingsRepo.item.selectorColor.on_color}`
-      selectorActiveColor.value = `#${uiSettingsRepo.item.selectorActiveColor.color}`
-      onSelectorActiveColor.value = `#${uiSettingsRepo.item.selectorActiveColor.on_color}`
-      buttonColor.value = `#${uiSettingsRepo.item.buttonColor.color}`
-      onButtonColor.value = `#${uiSettingsRepo.item.buttonColor.on_color}`
-      secondaryButtonColor.value = `#${uiSettingsRepo.item.secondaryButtonColor.color}`
-      onSecondaryButtonColor.value = `#${uiSettingsRepo.item.secondaryButtonColor.on_color}`
-      deliveryButtonColor.value = `#${uiSettingsRepo.item.deliveryButtonColor.color}`
-      onDeliveryButtonColor.value = `#${uiSettingsRepo.item.deliveryButtonColor.on_color}`
-      pickupButtonColor.value = `#${uiSettingsRepo.item.pickupButtonColor.color}`
-      onPickupButtonColor.value = `#${uiSettingsRepo.item.pickupButtonColor.on_color}`
-      bookingButtonColor.value = `#${uiSettingsRepo.item.bookingButtonColor.color}`
-      onBookingButtonColor.value = `#${uiSettingsRepo.item.bookingButtonColor.on_color}`
-      modalHeaderColor.value = `#${uiSettingsRepo.item.modalHeaderColor.color}`
-      onModalHeaderColor.value = `#${uiSettingsRepo.item.modalHeaderColor.on_color}`
-      boxShadow.value = `${uiSettingsRepo.item.boxShadow.offset_x}px ${uiSettingsRepo.item.boxShadow.offset_y}px ${uiSettingsRepo.item.boxShadow.blur}px ${uiSettingsRepo.item.boxShadow.spread}px #${uiSettingsRepo.item.boxShadow.color}`
-      cashButtonColor.value = `#${uiSettingsRepo.item.cashButtonColor.color}`
-      onCashButtonColor.value = `#${uiSettingsRepo.item.cashButtonColor.on_color}`
-      cardButtonColor.value = `#${uiSettingsRepo.item.cardButtonColor.color}`
-      onCardButtonColor.value = `#${uiSettingsRepo.item.cardButtonColor.on_color}`
-      onlineButtonColor.value = `#${uiSettingsRepo.item.onlinePaymentButtonColor.color}`
-      onOnlineButtonColor.value = `#${uiSettingsRepo.item.onlinePaymentButtonColor.on_color}`
-      qrColor.value = `#${uiSettingsRepo.item.qrColor.color}`
-      onQrColor.value = `#${uiSettingsRepo.item.qrColor.on_color}`
-      loyaltyCardBackgroundColor.value = `#${uiSettingsRepo.item.loyaltyCardBackgroundColor.color}`
-      onLoyaltyCardBackgroundColor.value = `#${uiSettingsRepo.item.loyaltyCardBackgroundColor.on_color}`
-    }
-    document.body.style.setProperty('--primary', primaryColor.value)
-    document.body.style.setProperty('--on-primary', onPrimaryColor.value)
+  if (uiSettingsRepo.item) {
+    borderRadius.value = `${uiSettingsRepo.item.borderRadius}px`
+    borderRadius2.value = `${uiSettingsRepo.item.borderRadiusSmall}px`
+    primaryColor.value = `#${uiSettingsRepo.item.primaryColor.color}`
+    onPrimaryColor.value = `#${uiSettingsRepo.item.primaryColor.on_color}`
+    secondaryColor.value = `#${uiSettingsRepo.item.secondaryColor.color}`
+    onSecondaryColor.value = `#${uiSettingsRepo.item.secondaryColor.on_color}`
+    secondaryTextColor.value = `#${uiSettingsRepo.item.secondaryTextColor.color}`
+    accentColor.value = `#${uiSettingsRepo.item.accentColor.color}`
+    onAccentColor.value = `#${uiSettingsRepo.item.accentColor.on_color}`
+    backgroundColor.value = `#${uiSettingsRepo.item.backgroundColor.color}`
+    onBackgroundColor.value = `#${uiSettingsRepo.item.backgroundColor.on_color}`
+    inputColor.value = `#${uiSettingsRepo.item.inputColor.color}`
+    onInputColor.value = `#${uiSettingsRepo.item.inputColor.on_color}`
+    dividerColor.value = `#${uiSettingsRepo.item.dividerColor.color}`
+    bottomMenuColor.value = `#${uiSettingsRepo.item.bottomMenuColor.color}`
+    onBottomMenuColor.value = `#${uiSettingsRepo.item.bottomMenuColor.on_color}`
+    backingColor.value = `#${uiSettingsRepo.item.backingColor.color}`
+    onBackingColor.value = `#${uiSettingsRepo.item.backingColor.on_color}`
+    bonusColor.value = `#${uiSettingsRepo.item.bonusColor.color}`
+    onBonusColor.value = `#${uiSettingsRepo.item.bonusColor.on_color}`
+    saleColor.value = `#${uiSettingsRepo.item.saleColor.color}`
+    onSaleColor.value = `#${uiSettingsRepo.item.saleColor.on_color}`
+    giftColor.value = `#${uiSettingsRepo.item.giftColor.color}`
+    onGiftColor.value = `#${uiSettingsRepo.item.giftColor.on_color}`
+    productTileColor.value = `#${uiSettingsRepo.item.productTileColor.color}`
+    onProductTileColor.value = `#${uiSettingsRepo.item.productTileColor.on_color}`
+    selectorColor.value = `#${uiSettingsRepo.item.selectorColor.color}`
+    onSelectorColor.value = `#${uiSettingsRepo.item.selectorColor.on_color}`
+    selectorActiveColor.value = `#${uiSettingsRepo.item.selectorActiveColor.color}`
+    onSelectorActiveColor.value = `#${uiSettingsRepo.item.selectorActiveColor.on_color}`
+    buttonColor.value = `#${uiSettingsRepo.item.buttonColor.color}`
+    onButtonColor.value = `#${uiSettingsRepo.item.buttonColor.on_color}`
+    secondaryButtonColor.value = `#${uiSettingsRepo.item.secondaryButtonColor.color}`
+    onSecondaryButtonColor.value = `#${uiSettingsRepo.item.secondaryButtonColor.on_color}`
+    deliveryButtonColor.value = `#${uiSettingsRepo.item.deliveryButtonColor.color}`
+    onDeliveryButtonColor.value = `#${uiSettingsRepo.item.deliveryButtonColor.on_color}`
+    pickupButtonColor.value = `#${uiSettingsRepo.item.pickupButtonColor.color}`
+    onPickupButtonColor.value = `#${uiSettingsRepo.item.pickupButtonColor.on_color}`
+    bookingButtonColor.value = `#${uiSettingsRepo.item.bookingButtonColor.color}`
+    onBookingButtonColor.value = `#${uiSettingsRepo.item.bookingButtonColor.on_color}`
+    modalHeaderColor.value = `#${uiSettingsRepo.item.modalHeaderColor.color}`
+    onModalHeaderColor.value = `#${uiSettingsRepo.item.modalHeaderColor.on_color}`
+    boxShadow.value = `${uiSettingsRepo.item.boxShadow.offset_x}px ${uiSettingsRepo.item.boxShadow.offset_y}px ${uiSettingsRepo.item.boxShadow.blur}px ${uiSettingsRepo.item.boxShadow.spread}px #${uiSettingsRepo.item.boxShadow.color}`
+    cashButtonColor.value = `#${uiSettingsRepo.item.cashButtonColor.color}`
+    onCashButtonColor.value = `#${uiSettingsRepo.item.cashButtonColor.on_color}`
+    cardButtonColor.value = `#${uiSettingsRepo.item.cardButtonColor.color}`
+    onCardButtonColor.value = `#${uiSettingsRepo.item.cardButtonColor.on_color}`
+    onlineButtonColor.value = `#${uiSettingsRepo.item.onlinePaymentButtonColor.color}`
+    onOnlineButtonColor.value = `#${uiSettingsRepo.item.onlinePaymentButtonColor.on_color}`
+    qrColor.value = `#${uiSettingsRepo.item.qrColor.color}`
+    onQrColor.value = `#${uiSettingsRepo.item.qrColor.on_color}`
+    loyaltyCardBackgroundColor.value = `#${uiSettingsRepo.item.loyaltyCardBackgroundColor.color}`
+    onLoyaltyCardBackgroundColor.value = `#${uiSettingsRepo.item.loyaltyCardBackgroundColor.on_color}`
+  }
+  document.body.style.setProperty('--primary', primaryColor.value)
+  document.body.style.setProperty('--on-primary', onPrimaryColor.value)
 
-    document.body.style.setProperty('--secondary', secondaryColor.value)
-    document.body.style.setProperty('--on-secondary', onSecondaryColor.value)
-    document.body.style.setProperty('--q-primary', primaryColor.value)
+  document.body.style.setProperty('--secondary', secondaryColor.value)
+  document.body.style.setProperty('--on-secondary', onSecondaryColor.value)
 
-    document.body.style.setProperty('--accent', accentColor.value)
-    document.body.style.setProperty('--on-accent', onAccentColor.value)
+  document.body.style.setProperty('--secondary-text', secondaryTextColor.value)
 
-    document.body.style.setProperty('--background-color', backgroundColor.value)
-    document.body.style.setProperty(
-      '--on-background-color',
-      onBackgroundColor.value
-    )
-    document.body.style.setProperty('--input-color', inputColor.value)
-    document.body.style.setProperty('--on-input-color', onInputColor.value)
+  document.body.style.setProperty('--q-primary', primaryColor.value)
 
-    document.body.style.setProperty('--divider-color', dividerColor.value)
-    document.body.style.setProperty(
-      '--bottom-menu-color',
-      bottomMenuColor.value
-    )
-    document.body.style.setProperty(
-      '--on-bottom-menu-color',
-      onBottomMenuColor.value
-    )
-    document.body.style.setProperty('--backing-color', backingColor.value)
-    document.body.style.setProperty('--on-backing-color', onBackingColor.value)
-    document.body.style.setProperty('--bonus-color', bonusColor.value)
-    document.body.style.setProperty('--on-bonus-color', onBonusColor.value)
-    document.body.style.setProperty('--sale-color', saleColor.value)
-    document.body.style.setProperty('--on-sale-color', onSaleColor.value)
-    document.body.style.setProperty('--gift-color', giftColor.value)
-    document.body.style.setProperty('--on-gift-color', onGiftColor.value)
-    document.body.style.setProperty(
-      '--product-tile-color',
-      productTileColor.value
-    )
-    document.body.style.setProperty(
-      '--on-product-tile-color',
-      onProductTileColor.value
-    )
-    document.body.style.setProperty('--selector-color', selectorColor.value)
-    document.body.style.setProperty(
-      '--on-selector-color',
-      onSelectorColor.value
-    )
-    document.body.style.setProperty(
-      '--selector-active-color',
-      selectorActiveColor.value
-    )
-    document.body.style.setProperty(
-      '--on-selector-active-color',
-      onSelectorActiveColor.value
-    )
+  document.body.style.setProperty('--accent', accentColor.value)
+  document.body.style.setProperty('--on-accent', onAccentColor.value)
 
-    document.body.style.setProperty('--button-color', buttonColor.value)
+  document.body.style.setProperty('--background-color', backgroundColor.value)
+  document.body.style.setProperty(
+    '--on-background-color',
+    onBackgroundColor.value
+  )
+  document.body.style.setProperty('--input-color', inputColor.value)
+  document.body.style.setProperty('--on-input-color', onInputColor.value)
 
-    document.body.style.setProperty('--on-button-color', onButtonColor.value)
+  document.body.style.setProperty('--divider-color', dividerColor.value)
+  document.body.style.setProperty('--bottom-menu-color', bottomMenuColor.value)
+  document.body.style.setProperty(
+    '--on-bottom-menu-color',
+    onBottomMenuColor.value
+  )
+  document.body.style.setProperty('--backing-color', backingColor.value)
+  document.body.style.setProperty('--on-backing-color', onBackingColor.value)
+  document.body.style.setProperty('--bonus-color', bonusColor.value)
+  document.body.style.setProperty('--on-bonus-color', onBonusColor.value)
+  document.body.style.setProperty('--sale-color', saleColor.value)
+  document.body.style.setProperty('--on-sale-color', onSaleColor.value)
+  document.body.style.setProperty('--gift-color', giftColor.value)
+  document.body.style.setProperty('--on-gift-color', onGiftColor.value)
+  document.body.style.setProperty(
+    '--product-tile-color',
+    productTileColor.value
+  )
+  document.body.style.setProperty(
+    '--on-product-tile-color',
+    onProductTileColor.value
+  )
+  document.body.style.setProperty('--selector-color', selectorColor.value)
+  document.body.style.setProperty('--on-selector-color', onSelectorColor.value)
+  document.body.style.setProperty(
+    '--selector-active-color',
+    selectorActiveColor.value
+  )
+  document.body.style.setProperty(
+    '--on-selector-active-color',
+    onSelectorActiveColor.value
+  )
 
-    document.body.style.setProperty(
-      '--secondary-button-color',
-      secondaryButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-secondary-button-color',
-      onSecondaryButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--delivery-button-color',
-      deliveryButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-delivery-button-color',
-      onDeliveryButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--pickup-button-color',
-      pickupButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-pickup-button-color',
-      onPickupButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--booking-button-color',
-      bookingButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-booking-button-color',
-      onBookingButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--modal-header-color',
-      modalHeaderColor.value
-    )
-    document.body.style.setProperty(
-      '--on-modal-header-color',
-      onModalHeaderColor.value
-    )
-    document.body.style.setProperty('--border-radius', borderRadius.value)
-    document.body.style.setProperty('--border-radius2', borderRadius2.value)
-    document.body.style.setProperty('--box-shadow', boxShadow.value)
+  document.body.style.setProperty('--button-color', buttonColor.value)
 
-    document.body.style.setProperty(
-      '--cash-button-color',
-      cashButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-cash-button-color',
-      onCashButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--card-button-color',
-      cardButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-card-button-color',
-      onCardButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--online-button-color',
-      onlineButtonColor.value
-    )
-    document.body.style.setProperty(
-      '--on-online-button-color',
-      onOnlineButtonColor.value
-    )
-    document.body.style.setProperty('--qr-color', qrColor.value)
-    document.body.style.setProperty('--on-qr-color', onQrColor.value)
-    document.body.style.setProperty(
-      '--loyalty-card-background-color',
-      loyaltyCardBackgroundColor.value
-    )
-    document.body.style.setProperty(
-      '--on-loyalty-card-background-color',
-      onLoyaltyCardBackgroundColor.value
-    )
-  }, props.initDelay || 0)
+  document.body.style.setProperty('--on-button-color', onButtonColor.value)
+
+  document.body.style.setProperty(
+    '--secondary-button-color',
+    secondaryButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--on-secondary-button-color',
+    onSecondaryButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--delivery-button-color',
+    deliveryButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--on-delivery-button-color',
+    onDeliveryButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--pickup-button-color',
+    pickupButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--on-pickup-button-color',
+    onPickupButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--booking-button-color',
+    bookingButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--on-booking-button-color',
+    onBookingButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--modal-header-color',
+    modalHeaderColor.value
+  )
+  document.body.style.setProperty(
+    '--on-modal-header-color',
+    onModalHeaderColor.value
+  )
+  document.body.style.setProperty('--border-radius', borderRadius.value)
+  document.body.style.setProperty('--border-radius2', borderRadius2.value)
+  document.body.style.setProperty('--box-shadow', boxShadow.value)
+
+  document.body.style.setProperty('--cash-button-color', cashButtonColor.value)
+  document.body.style.setProperty(
+    '--on-cash-button-color',
+    onCashButtonColor.value
+  )
+  document.body.style.setProperty('--card-button-color', cardButtonColor.value)
+  document.body.style.setProperty(
+    '--on-card-button-color',
+    onCardButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--online-button-color',
+    onlineButtonColor.value
+  )
+  document.body.style.setProperty(
+    '--on-online-button-color',
+    onOnlineButtonColor.value
+  )
+  document.body.style.setProperty('--qr-color', qrColor.value)
+  document.body.style.setProperty('--on-qr-color', onQrColor.value)
+  document.body.style.setProperty(
+    '--loyalty-card-background-color',
+    loyaltyCardBackgroundColor.value
+  )
+  document.body.style.setProperty(
+    '--on-loyalty-card-background-color',
+    onLoyaltyCardBackgroundColor.value
+  )
 })
 </script>
 
@@ -288,6 +276,7 @@ $colors: (
   'on-primary': --on-primary,
   'secondary': --secondary,
   'on-secondary': --on-secondary,
+  'secondary-text': --secondary-text,
   'accent': --accent,
   'on-accent': --on-accent,
   'background-color': --background-color,
