@@ -6,6 +6,7 @@
     <CIconButton
       class="absolute pa-0"
       color="transparent"
+      icon-color="on-backing-color"
       icon="fal fa-times"
       no-padding
       size="20px"
