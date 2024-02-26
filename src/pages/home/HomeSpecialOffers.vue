@@ -9,11 +9,13 @@
         <div
           v-if="index"
           style="width: 9px; height: 9px; border-radius: 50%"
-          class="bg-secondary"
+          class="bg-secondary-text"
         ></div>
         <div
           @click="$store.offersTab = el"
-          :class="$store.offersTab !== el ? 'text-secondary' : 'text-primary'"
+          :class="
+            $store.offersTab !== el ? 'text-secondary-text' : 'text-primary'
+          "
           class="cursor-pointer bold"
         >
           {{ el }}
