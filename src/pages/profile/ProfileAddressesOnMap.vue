@@ -139,6 +139,7 @@ const drawPoints = () => {
   const layer = map.pointLayer(
     collection,
     (el) => {
+      drawnItems.getLayers().forEach((v) => v.closeTooltip())
       const currentSalesPoint =
         companyRepo.companyForProfile?.salesPoints?.find((v) => v.id === el.id)
       if (currentSalesPoint) {
