@@ -56,7 +56,7 @@
               Стоимость доставки: {{ currentDay?.mainItem?.deliveryPrice }} ₽
             </div>
             <q-icon
-              v-if="currentDay?.children"
+              v-if="currentDay?.children?.length"
               class="ml-3"
               name="fal fa-info-circle"
             >
