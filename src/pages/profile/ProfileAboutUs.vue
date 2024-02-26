@@ -95,7 +95,6 @@
                 class="row full-width justify-center items-center gap-3 no-wrap"
               >
                 <div>Открыто:</div>
-
                 <div v-if="currentSchedule?.times.length" class="ellipsis">
                   {{
                     currentSchedule?.times
@@ -356,9 +355,9 @@ import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import moment from 'moment'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
 import { Company } from 'src/models/company/company'
-import { daysNames } from 'src/services/daysEnum'
 import { useEventBus } from '@vueuse/core'
 import { selectCompanyKey } from 'src/services/eventBusKeys'
+import { daysNames } from 'src/services/daysEnum'
 
 const socialsModal = ref(false)
 
@@ -366,7 +365,7 @@ const concatsModal = ref(false)
 
 const router = useRouter()
 
-const days = Object.values(daysNames).map((key) => {
+const days = Object.keys(daysNames).map((key) => {
   return {
     label: daysNames[Number(key) as keyof typeof daysNames],
     val: Number(key),
@@ -472,7 +471,7 @@ const contacts = computed(() => {
       label: v.name || '-',
       image: 'contactsFaceImage.png',
       field: 'emails',
-      values: company.value?.guestContacts.emails,
+      values: [v],
     })
   })
 
