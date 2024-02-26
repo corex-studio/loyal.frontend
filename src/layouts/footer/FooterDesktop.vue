@@ -9,16 +9,16 @@
           v-if="
             $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
           "
+          :src="$company.item.logo?.thumbnail || $company.item.image?.thumbnail"
+          :style="$q.screen.gt.md ? 'width: 100%' : ''"
+          class="border-radius cursor-pointer"
+          height="46"
+          style="object-fit: contain; max-width: 230px"
           @click="
             $router.push({
               name: 'home',
             })
           "
-          height="46"
-          class="border-radius cursor-pointer"
-          style="object-fit: contain; max-width: 230px"
-          :style="$q.screen.gt.md ? 'width: 100%' : ''"
-          :src="$company.item.logo?.thumbnail || $company.item.image?.thumbnail"
         />
       </div>
       <template v-if="$q.screen.gt.md">
@@ -30,15 +30,15 @@
               :key="index"
             >
               <CButton
-                @click="item.click()"
-                text-button
                 style="opacity: 0.6"
+                text-button
                 text-color="on-bottom-menu-color"
+                @click="item.click()"
               >
                 <div class="body">
                   {{ item.label }}
-                </div></CButton
-              >
+                </div>
+              </CButton>
             </div>
           </div>
         </div>
@@ -48,11 +48,11 @@
           </div>
           <div class="column gap-6 items-start">
             <CButton
-              text-color="on-bottom-menu-color"
-              text-button
-              style="opacity: 0.6"
               class="body"
               label="Политика конфиденциальноости"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
               @click="
                 openLink(
                   `https://loyalhub.ru/${String(
@@ -62,6 +62,11 @@
               "
             />
             <CButton
+              class="body"
+              label="Условия использования"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
               @click="
                 openLink(
                   `https://loyalhub.ru/${String(
@@ -69,19 +74,28 @@
                   )}/terms_of_service`
                 )
               "
+            />
+            <CButton
               class="body"
-              text-color="on-bottom-menu-color"
-              text-button
+              label="Публичная оферта"
               style="opacity: 0.6"
-              label="Условия использования"
+              text-button
+              text-color="on-bottom-menu-color"
+              @click="
+                openLink(
+                  `https://loyalhub.ru/${String(
+                    $companyGroup.item?.externalId
+                  )}/offer`
+                )
+              "
             />
           </div>
         </div>
 
         <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
         <div
-          style="max-width: 336px"
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
+          style="max-width: 336px"
         >
           <div
             v-if="$company.item?.guestContacts.phones.length"
@@ -120,8 +134,8 @@
               v-for="(item, index) in $company.item?.guestContacts.emails"
               :key="index"
               class="cursor-pointer body"
-              @click="openLink(item.link)"
               style="opacity: 0.6"
+              @click="openLink(item.link)"
             >
               {{ item.value }}
             </div>
@@ -134,7 +148,7 @@
                   : 'Адрес заведения в Калининграде'
               }}
             </div>
-            <div style="opacity: 0.6" class="body">
+            <div class="body" style="opacity: 0.6">
               {{
                 $company.item?.salesPoints
                   .map((v) => v.customAddress || v.address)
@@ -142,8 +156,8 @@
               }}
             </div>
           </div>
-        </div></template
-      >
+        </div>
+      </template>
       <div
         v-else
         class="row col-grow gap-md-15 gap-lg-5 justify-between no-wrap"
@@ -153,15 +167,15 @@
           <div class="column gap-6">
             <div v-for="(item, index) in infoBlocks" :key="index">
               <CButton
-                @click="item.click()"
-                text-button
                 style="opacity: 0.6"
+                text-button
                 text-color="on-bottom-menu-color"
+                @click="item.click()"
               >
                 <div class="body">
                   {{ item.label }}
-                </div></CButton
-              >
+                </div>
+              </CButton>
             </div>
           </div>
         </div>
@@ -171,11 +185,11 @@
           </div>
           <div class="column gap-6 items-start">
             <CButton
-              text-color="on-bottom-menu-color"
-              text-button
-              style="opacity: 0.6"
               class="body"
               label="Политика конфиденциальноости"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
               @click="
                 openLink(
                   `https://loyalhub.ru/${String(
@@ -185,6 +199,11 @@
               "
             />
             <CButton
+              class="body"
+              label="Условия использования"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
               @click="
                 openLink(
                   `https://loyalhub.ru/${String(
@@ -192,18 +211,13 @@
                   )}/terms_of_service`
                 )
               "
-              class="body"
-              text-color="on-bottom-menu-color"
-              text-button
-              style="opacity: 0.6"
-              label="Условия использования"
             />
           </div>
         </div>
 
         <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
 
-        <div style="max-width: 336px" class="column gap-10 bold subtitle-text">
+        <div class="column gap-10 bold subtitle-text" style="max-width: 336px">
           <div
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
@@ -219,8 +233,8 @@
               v-for="(item, index) in $company.item?.guestContacts.phones"
               :key="index"
               class="cursor-pointer body"
-              @click="openLink(item.link)"
               style="opacity: 0.6"
+              @click="openLink(item.link)"
             >
               {{ item.value }}
             </div>
@@ -241,8 +255,8 @@
               v-for="(item, index) in $company.item?.guestContacts.emails"
               :key="index"
               class="cursor-pointer body"
-              @click="openLink(item.link)"
               style="opacity: 0.6"
+              @click="openLink(item.link)"
             >
               {{ item.value }}
             </div>
@@ -333,9 +347,9 @@
       </div> -->
     </div>
     <q-separator
-      style="opacity: 0.5"
-      color="divider-color"
       class="full-width mt-lg-25 mb-lg-15 my-xs-15"
+      color="divider-color"
+      style="opacity: 0.5"
     />
     <div
       :class="{ 'justify-between': $q.screen.gt.md }"
@@ -364,10 +378,10 @@
             class="app-link-block items-center justify-center row border-radius2"
           >
             <img
-              @click="openLink($appSettings.linksData.ios_download_link)"
               class="cursor-pointer"
-              style="object-fit: contain; width: 106px"
               src="~assets/Apple.png"
+              style="object-fit: contain; width: 106px"
+              @click="openLink($appSettings.linksData.ios_download_link)"
             />
           </div>
           <div
@@ -375,17 +389,17 @@
             class="app-link-block row items-center justify-center border-radius2"
           >
             <img
-              @click="openLink($appSettings.linksData.android_download_link)"
               class="cursor-pointer"
-              style="object-fit: contain; width: 111px"
               src="~assets/Google.png"
+              style="object-fit: contain; width: 111px"
+              @click="openLink($appSettings.linksData.android_download_link)"
             />
           </div>
         </div>
       </div>
       <div class="row no-wrap items-center gap-3">
         <div>Работает на</div>
-        <q-img style="width: 30px" src="~assets/loyalHeartWhite.png" />
+        <q-img src="~assets/loyalHeartWhite.png" style="width: 30px" />
         <a class="text-on-bottom-menu-color" href="https://corex.studio/loyal">
           Loyalhub</a
         >
@@ -458,7 +472,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { store } from 'src/models/store'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'

@@ -32,7 +32,8 @@
     "vue": "^3.0.0",
     "vue-currency-input": "^3.0.4",
     "vue-router": "^4.0.0",
-    "vue-timer-hook": "^1.0.60"
+    "vue-timer-hook": "^1.0.60",
+    "yandex-metrika-vue3": "^1.2.0"
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.0.0",

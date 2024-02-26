@@ -141,6 +141,11 @@
           "
           :selected-point="selectedPickupAddress"
           :addresses="currentSalesPoints || []"
+          @select="
+            currentTab?.type === CartType.DELIVERY
+              ? (selectedSalesPoint = $event)
+              : (selectedPickupAddress = $event)
+          "
         />
       </div>
       <div v-else class="full-height column text-on-background-color">
@@ -153,6 +158,11 @@
           "
           :selected-point="selectedPickupAddress"
           :addresses="currentSalesPoints || []"
+          @select="
+            currentTab?.type === CartType.DELIVERY
+              ? (selectedSalesPoint = $event)
+              : (selectedPickupAddress = $event)
+          "
         />
         <DeliveryTypeSelector
           v-if="!mobileViewTypeConfirmed"

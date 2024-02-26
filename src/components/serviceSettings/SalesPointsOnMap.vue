@@ -5,20 +5,19 @@
   >
     <div
       id="map"
-      style="width: 100%; height: 100%; z-index: 9"
       :style="`border-radius: ${getBorderRadius}`"
-      class="map"
+      class="marker-shadow"
+      style="width: 100%; height: 100%; z-index: 9"
     ></div>
   </div>
 </template>
 <script lang="ts" setup>
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
-import L from 'leaflet'
-import { onMounted, computed, watch } from 'vue'
+import L, { Layer } from 'leaflet'
+import { computed, onMounted, watch } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
-import { Layer } from 'leaflet'
 import { useQuasar } from 'quasar'
 import { store } from 'src/models/store'
 
@@ -26,6 +25,8 @@ const props = defineProps<{
   selectedPoint: SalesPoint | null
   addresses: SalesPoint[]
 }>()
+
+const emit = defineEmits(['select'])
 
 let map: CorexLeafletMap
 const drawnItems = new L.FeatureGroup()
@@ -84,7 +85,12 @@ const drawPoints = () => {
   const collection = map.pointCollection(values)
   const layer = map.pointLayer(
     collection,
-    undefined,
+    (el) => {
+      if (el.id) {
+        const found = props.addresses.find((v) => v.id === el.id)
+        if (found) emit('select', found)
+      }
+    },
     undefined,
     undefined,
     companyRepo.cartCompany?.image?.thumbnail || store.images.empty
@@ -125,16 +131,4 @@ onMounted(() => {
 })
 </script>
 
-<style lang="scss" scoped>
-.map :deep(.leaflet-marker-icon) {
-  width: 37px !important;
-  height: 37px !important;
-  -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
-  // background-color: #3286c8;
-  // border-radius: 100% 100% 100% 0;
-  border-radius: 10px;
-
-  animation: pulse 2s ease 3 normal, size 1s linear 1 alternate;
-}
-</style>
+<style lang="scss" scoped></style>

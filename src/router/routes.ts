@@ -169,6 +169,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/TermsOfUse.vue'),
   },
   {
+    path: '/:externalId/offer',
+    name: 'offerPage',
+    component: () => import('pages/Offer.vue'),
+  },
+  {
     path: '/:catchAll(.*)*',
     component: () => import('src/pages/404page.vue'),
   },

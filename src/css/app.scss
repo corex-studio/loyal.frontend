@@ -209,3 +209,12 @@ li {
 .q-menu {
   border-radius: var(--border-radius);
 }
+
+.marker-shadow .leaflet-marker-icon {
+  width: 37px !important;
+  height: 37px !important;
+  -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  animation: pulse 2s ease 3 normal, size 1s linear 1 alternate;
+}

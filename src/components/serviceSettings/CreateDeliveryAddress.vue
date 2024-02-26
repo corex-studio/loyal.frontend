@@ -1,120 +1,120 @@
 <template>
   <div
-    :style="$q.screen.lt.md ? '' : 'height: 600px'"
     :class="$q.screen.lt.md ? 'column reverse full-height' : 'row '"
+    :style="$q.screen.lt.md ? '' : 'height: 600px'"
     class="full-width no-wrap"
   >
     <div
       v-if="newAddress"
-      style="overflow-y: auto"
       :style="$q.screen.lt.md ? 'max-height: 65vh' : 'width: 47%'"
       class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 py-xs-12 px-xs-8"
+      style="overflow-y: auto"
     >
       <div class="column full-width gap-md-8 gap-xs-6">
         <div class="row items-center no-wrap gap-5 mb-md-7 mb-xs-4">
           <CIcon
             v-if="backCallback"
-            @click="backCallback()"
-            size="24px"
+            class="cursor-pointer"
             color="on-background-color"
             hover-color="primary"
-            class="cursor-pointer"
             name="fa-regular fa-angle-left"
+            size="24px"
+            @click="backCallback()"
           />
           <div class="header3 bold">
             {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
           </div>
         </div>
         <CInput
-          height="48px"
-          external-label="Название адреса"
-          placeholder="Название"
           v-model="newAddress.name"
+          external-label="Название адреса"
+          height="48px"
+          placeholder="Название"
         />
         <div class="column full-width gap-md-6 gap-xs-4">
           <CButton
-            @click="geolocate()"
-            text-button
-            style="width: fit-content"
+            :loading="geoloading"
             icon="fa-regular fa-location-dot"
             icon-size="24px"
-            :loading="geoloading"
+            style="width: fit-content"
+            text-button
             text-color="primary"
+            @click="geolocate()"
           >
             <div class="body bold">Определить адрес автоматически</div>
           </CButton>
           <AddressSearch
-            @update="selectAddress($event)"
             :address="newAddress.address"
             label="Укажите адрес"
             placeholder="Город, улица, дом"
+            @update="selectAddress($event)"
           />
         </div>
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
           <CInput
-            height="48px"
-            class="col"
-            :readonly="isPrivateHouse"
-            external-label="Подъезд"
-            placeholder="Номер"
             v-model="newAddress.entrance"
+            :readonly="isPrivateHouse"
+            class="col"
+            external-label="Подъезд"
+            height="48px"
+            placeholder="Номер"
           />
           <CInput
-            height="48px"
-            class="col"
+            v-model="newAddress.floor"
             :readonly="isPrivateHouse"
+            class="col"
             external-label="Этаж"
+            height="48px"
             placeholder="Номер"
             type="number"
-            v-model="newAddress.floor"
           />
           <CInput
-            height="48px"
-            class="col"
-            :readonly="isPrivateHouse"
-            external-label="Код двери"
-            placeholder="Номер"
             v-model="newAddress.intercom"
+            :readonly="isPrivateHouse"
+            class="col"
+            external-label="Код двери"
+            height="48px"
+            placeholder="Номер"
           />
         </div>
         <CInput
-          placeholder="Комментарий"
-          input-style="border-radius: 15px !important"
           v-model="newAddress.description"
           auto-grow
           height="fit-content"
+          input-style="border-radius: 15px !important"
+          placeholder="Комментарий"
         />
       </div>
       <div class="mt-md-15 mt-xs-8 column full-width gap-12">
         <CCheckBox
-          @click="privateHouseClickHandler()"
           :model-value="isPrivateHouse"
-          size="50px"
           class="body"
           label="У меня частный дом"
+          size="50px"
+          @click="privateHouseClickHandler()"
         />
         <CButton
-          @click="createAddress()"
           :disabled="!isSaveAvailable"
-          height="48px"
-          class="body"
           :loading="
             $deliveryAddress.loadings.update || $deliveryAddress.loadings.create
           "
-          width="100%"
+          class="body"
+          height="48px"
           label="Сохранить"
+          width="100%"
+          @click="createAddress()"
         />
       </div>
     </div>
     <div
-      class="col"
       :style="$q.screen.lt.md ? `` : 'height: 600px; width: 53%'"
+      class="col"
     >
       <div
         id="map"
-        style="z-index: 9; width: 100%; height: 100%"
         :style="`border-radius: ${getBorderRadius};`"
         class="map"
+        style="z-index: 9; width: 100%; height: 100%"
       ></div>
     </div>
   </div>
@@ -124,24 +124,27 @@ import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAdd
 import CButton from '../template/buttons/CButton.vue'
 import AddressSearch from '../template/inputs/AddressSearch.vue'
 import CInput from '../template/inputs/CInput.vue'
-import { ref, onMounted, computed } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import { Notify, useQuasar } from 'quasar'
 import { Address } from 'src/models/types'
 import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import L from 'leaflet'
+import L, { Layer } from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
-import { Layer } from 'leaflet'
 import CCheckBox from '../helpers/CCheckBox.vue'
 import { useGeolocation } from '@vueuse/core'
 import { utilsRepo } from 'src/models/utils/utilsRepo'
 
-const { coords, resume, pause } = useGeolocation()
-
 const props = defineProps<{
   address?: DeliveryAddress
   backCallback?: () => void
+}>()
+
+const { coords, resume, pause } = useGeolocation()
+const currentCoords = ref<{
+  lat: number
+  lng: number
 }>()
 
 const emit = defineEmits(['updated'])
@@ -177,28 +180,51 @@ const getBorderRadius = computed(() => {
 })
 
 const geolocate = async () => {
-  try {
-    geoloading.value = true
-    if (!newAddress.value) throw new Error('Объект адреса не может быть пустым')
-    resume()
-    const res = await utilsRepo.geolocate(
-      coords.value.latitude,
-      coords.value.longitude
-    )
-    const addressWithCorrectCoords: Address = {
-      ...res,
-      coords: [res.coords[1], res.coords[0]],
+  geoloading.value = true
+  if (coords.value.latitude !== Infinity) {
+    currentCoords.value = {
+      lat: coords.value.latitude,
+      lng: coords.value.longitude,
     }
-    selectAddress(addressWithCorrectCoords)
-  } catch {
+    await loadAddressDataByCoords()
+  } else {
+    currentCoords.value = undefined
     Notify.create({
       message: 'Ошибка при получении вашего положения',
       color: 'danger',
     })
-  } finally {
-    geoloading.value = false
-    pause()
   }
+  geoloading.value = false
+  // if (!newAddress.value) throw new Error('Объект адреса не может быть пустым')
+  // resume()
+  // const res = await utilsRepo.geolocate(
+  //   coords.value.latitude,
+  //   coords.value.longitude
+
+  // )
+  // const addressWithCorrectCoords: Address = {
+  //   ...res,
+  //   coords: [res.coords[1], res.coords[0]],
+  // }
+  // selectAddress(addressWithCorrectCoords)
+  // } catch {
+  //   Notify.create({
+  //     message: 'Ошибка при получении вашего положения',
+  //     color: 'danger',
+  //   })
+  // } finally {
+  //   geoloading.value = false
+  //   // pause()
+  // }
+}
+
+const loadAddressDataByCoords = async () => {
+  if (!currentCoords.value) return
+  const res = await utilsRepo.geolocate(
+    currentCoords.value.lat,
+    currentCoords.value.lng
+  )
+  selectAddress(res)
 }
 
 const privateHouseClickHandler = () => {
@@ -210,7 +236,6 @@ const privateHouseClickHandler = () => {
 }
 
 const drawPoint = () => {
-  drawnItems.clearLayers()
   const values: {
     id: number | string | undefined
     coords: {
@@ -236,25 +261,12 @@ const drawPoint = () => {
   if (values.length) map.lmap.fitBounds(layer.getBounds(), { maxZoom: 12 })
 }
 
-const initDraw = () => {
-  return new map.L.Control.Draw({
-    edit: {
-      featureGroup: drawnItems,
-      edit: false,
-      remove: false,
-    },
-    draw: {
-      marker: false,
-      circlemarker: false,
-      polyline: false,
-      circle: false,
-      rectangle: false,
-      polygon: false,
-    },
-  })
-}
+onBeforeUnmount(() => {
+  pause()
+})
 
 onMounted(() => {
+  resume()
   newAddress.value = new DeliveryAddress({
     uuid: props.address?.id || undefined,
     name: props.address?.name || '',
@@ -273,11 +285,26 @@ onMounted(() => {
     map = new CorexLeafletMap()
     if (!map) return
     map.lmap.addLayer(drawnItems)
-    // setTimeout(() => {
+    void geolocate()
     drawPoint()
-    map.lmap.addControl(initDraw())
     map.lmap.invalidateSize()
-    // }, 0)
+    map.lmap.on(
+      'click',
+      async (v: { latlng: { lat: number; lng: number } }) => {
+        if (!newAddress.value) return
+        newAddress.value.coords = {
+          latitude: v.latlng.lat,
+          longitude: v.latlng.lng,
+        }
+
+        const res = await utilsRepo.geolocate(v.latlng.lat, v.latlng.lng)
+        const addressWithCorrectCoords: Address = {
+          ...res,
+        }
+        selectAddress(addressWithCorrectCoords)
+        // redrawPoint()
+      }
+    )
   }, 200)
 })
 
@@ -327,18 +354,20 @@ const selectAddress = (v: Address) => {
   newAddress.value.address = v.address
   newAddress.value.city = v.city
   newAddress.value.coords = {
-    latitude: v.coords[0],
-    longitude: v.coords[1],
+    latitude: v.coords[1],
+    longitude: v.coords[0],
   }
 
   newAddress.value.flat = v.flat
   newAddress.value.street = v.street
   newAddress.value.house = v.house
+  redrawPoint()
+}
 
+const redrawPoint = () => {
   map.lmap.eachLayer((layer: Layer) => {
     if (layer instanceof map.L.Marker) layer.remove()
   })
   drawPoint()
-  map.lmap.addControl(initDraw())
 }
 </script>

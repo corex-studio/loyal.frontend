@@ -1,6 +1,3 @@
-<template>
-  <div></div>
-</template>
 <script lang="ts" setup>
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { onMounted, ref } from 'vue'
