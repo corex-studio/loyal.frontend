@@ -43,22 +43,50 @@
         {{ deliverySchedule.length ? 'График доставки' : 'График работы' }}
       </div>
       <div class="column no-wrap mt-5 overflow-auto" style="max-height: 298px">
-        <div v-if="!currentDay?.timesData.length" class="body">
+        <div
+          v-if="!currentDay?.mainItem && !currentDay?.timesData.length"
+          class="body"
+        >
           Не заполнено
         </div>
-        <template v-for="(item, index) in currentDay?.timesData" :key="index">
-          <q-separator v-if="index" class="my-4" />
-          <div class="body">Расписание: {{ item.time }}</div>
-          <template v-if="deliverySchedule.length">
+        <template v-if="isDelivery">
+          <div class="body">Расписание: {{ currentDay?.mainItem?.time }}</div>
+          <div class="row items-center">
             <div class="body">
-              Стоимость доставки: {{ item.deliveryPrice }} ₽
+              Стоимость доставки: {{ currentDay?.mainItem?.deliveryPrice }} ₽
             </div>
-            <div class="body">
-              Время доставки: {{ item.deliveryDuration }} мин
-            </div>
-            <div class="body">
-              Минимальная сумма заказа: {{ item.minimalOrderSum }} ₽
-            </div>
+            <q-icon
+              v-if="currentDay?.children"
+              class="ml-3"
+              name="fal fa-info-circle"
+            >
+              <q-tooltip>
+                <div class="body mb-2">
+                  Стоимость доставки зависит от суммы заказа
+                </div>
+                <div
+                  v-for="(child, index) in currentDay.children"
+                  :key="index"
+                  class="body"
+                >
+                  {{ child.deliveryPrice }} ₽ при заказе от:
+                  {{ child.minimalOrderSum }} ₽
+                </div>
+              </q-tooltip>
+            </q-icon>
+          </div>
+          <div class="body">
+            Время доставки: {{ currentDay?.mainItem?.deliveryDuration }} мин
+          </div>
+          <div class="body">
+            Минимальная сумма заказа:
+            {{ currentDay?.mainItem?.minimalOrderSum }} ₽
+          </div>
+        </template>
+        <template v-else>
+          <template v-for="(item, index) in currentDay?.timesData" :key="index">
+            <q-separator v-if="index" class="my-4" />
+            <div class="body">Расписание: {{ item.time }}</div>
           </template>
         </template>
       </div>
@@ -68,7 +96,6 @@
 <script lang="ts" setup>
 import { daysNames, shortDaysNames } from 'src/services/daysEnum'
 import { computed, ref, watch } from 'vue'
-import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import moment from 'moment/moment'
 import CButton from 'components/template/buttons/CButton.vue'
 import CIconButton from 'components/template/buttons/CIconButton.vue'
@@ -76,6 +103,7 @@ import {
   SalesPointDeliveryData,
   SalesPointPickupData,
 } from 'pages/profile/types/types'
+import { SalesPointScheduleDataBuilder } from 'pages/profile/services/salesPointScheduleDataBuilder'
 
 const props = defineProps<{
   deliveryData?: SalesPointDeliveryData
@@ -88,24 +116,19 @@ type DefaultScheduleData = {
   day: number
   selected: boolean
 }
-
-type DeliveryScheduleData = DefaultScheduleData & {
-  timesData: {
-    time: string
-    deliveryPrice: number
-    deliveryDuration: number
-    minimalOrderSum: number
-  }[]
-}
-
 type PickupScheduleData = DefaultScheduleData & {
   timesData: {
     time: string
   }[]
 }
 
-const deliverySchedule = ref<DeliveryScheduleData[]>([])
+type DeliveryScheduleType = ReturnType<
+  typeof SalesPointScheduleDataBuilder.prototype.init
+>[number]
+
+const deliverySchedule = ref<DeliveryScheduleType[]>([])
 const pickupSchedule = ref<PickupScheduleData[]>([])
+const isDelivery = computed(() => !!props.deliveryData)
 
 const salesPointName = computed(() => {
   const salesPoint =
@@ -116,18 +139,15 @@ const salesPointName = computed(() => {
 watch(
   () => props.deliveryData,
   () => {
-    let data: DeliveryScheduleData[] = []
-    const settings = props.deliveryData
-    if (
-      settings?.deliveryAreaSettings.length ||
-      settings?.defaultDeliveryAreaSettings.length
-    )
-      data = processDeliveryAreaSettings(
-        settings?.deliveryAreaSettings.length
-          ? settings?.deliveryAreaSettings
-          : settings?.defaultDeliveryAreaSettings
-      )
-    deliverySchedule.value = data
+    const settings = props.deliveryData?.deliveryAreaSettings.length
+      ? props.deliveryData?.deliveryAreaSettings
+      : props.deliveryData?.defaultDeliveryAreaSettings || []
+    if (settings?.length) {
+      deliverySchedule.value = new SalesPointScheduleDataBuilder(
+        settings,
+        currentDay.value?.day
+      ).init()
+    }
   }
 )
 
@@ -160,35 +180,48 @@ const getIsDaySelected = (dayNumber: number) => {
   return moment().isoWeekday() === dayNumber
 }
 
-const processDeliveryAreaSettings = (items: DeliveryAreaSettings[]) => {
-  const data: DeliveryScheduleData[] = []
-  for (const dayNumber of Object.keys(daysNames).map((v) => Number(v))) {
-    const currentItems = items.filter((v) =>
-      v.weekdays.some((day) => day === dayNumber)
-    )
-    const scheduleData: DeliveryScheduleData = {
-      day: dayNumber,
-      selected: getIsDaySelected(dayNumber),
-      timesData: [],
-    }
-    for (const settings of currentItems) {
-      const _data = {
-        time:
-          settings.startTime === settings.endTime
-            ? 'Круглосуточно'
-            : `${settings.startTime} - ${settings.endTime}`,
-        deliveryDuration: settings.deliveryDuration,
-        deliveryPrice: settings.deliveryPrice,
-        minimalOrderSum: settings.minimalOrderSum,
-      }
-
-      if (!scheduleData.timesData.find((v) => v.time === _data.time))
-        scheduleData.timesData.push(_data)
-    }
-    data.push(scheduleData)
-  }
-  return data
-}
+// const processDeliveryAreaSettings = (items: DeliveryAreaSettings[]) => {
+//   const process = (settings: DeliveryAreaSettings) => {
+//     return {
+//       time:
+//         settings.startTime === settings.endTime
+//           ? 'Круглосуточно'
+//           : `${settings.startTime} - ${settings.endTime}`,
+//       deliveryDuration: settings.deliveryDuration,
+//       deliveryPrice: settings.deliveryPrice,
+//       minimalOrderSum: settings.minimalOrderSum,
+//     }
+//   }
+//   const dataByTimes: Record<string, DeliveryScheduleData[]> = {}
+//   const data: DeliveryScheduleData[] = []
+//   for (const dayNumber of Object.keys(daysNames).map((v) => Number(v))) {
+//     const currentItems = items.filter((v) =>
+//       v.weekdays.some((day) => day === dayNumber)
+//     )
+//     const scheduleData: DeliveryScheduleData = {
+//       day: dayNumber,
+//       selected: getIsDaySelected(dayNumber),
+//       timesData: [],
+//     }
+//     for (const settings of currentItems) {
+//       const _data = {
+//         time:
+//           settings.startTime === settings.endTime
+//             ? 'Круглосуточно'
+//             : `${settings.startTime} - ${settings.endTime}`,
+//         deliveryDuration: settings.deliveryDuration,
+//         deliveryPrice: settings.deliveryPrice,
+//         minimalOrderSum: settings.minimalOrderSum,
+//       }
+//
+//       // if (!scheduleData.timesData.find((v) => v.time === _data.time))
+//       scheduleData.timesData.push(_data)
+//     }
+//     data.push(scheduleData)
+//   }
+//   new SalesPointScheduleDataBuilder(items, currentDay).init()
+//   return data
+// }
 
 const processPickupAreaSettings = () => {
   const data: PickupScheduleData[] = []
@@ -209,8 +242,8 @@ const processPickupAreaSettings = () => {
             : `${times.start} - ${times.end}`,
       }
 
-      if (!scheduleData.timesData.find((v) => v.time === _data.time))
-        scheduleData.timesData.push(_data)
+      // if (!scheduleData.timesData.find((v) => v.time === _data.time))
+      scheduleData.timesData.push(_data)
     }
     data.push(scheduleData)
   }

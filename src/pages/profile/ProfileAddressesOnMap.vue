@@ -44,6 +44,7 @@ import {
   SalesPointDeliveryData,
   SalesPointPickupData,
 } from 'pages/profile/types/types'
+import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 
 let map: CorexLeafletMap
 const mapRef = ref<HTMLDivElement | null>(null)
@@ -70,9 +71,12 @@ onMounted(() => {
     map = new CorexLeafletMap('map-about-us')
     if (!map) return
     setColorsBySalesPointsIds()
-    await deliveryAreaSettingsRepo.list({
-      company: companyRepo.companyForProfile?.id,
-    })
+    await deliveryAreaSettingsRepo.list(
+      {
+        company: companyRepo.companyForProfile?.id,
+      },
+      { pageSize: 'all' }
+    )
     await deliveryAreaRepo.list({
       company: companyRepo.companyForProfile?.id,
     })
@@ -186,20 +190,25 @@ const drawDeliveryAreas = async (el: Feature) => {
       color: salesPointColor,
     }).addTo(drawnItems)
     layer.on('click', () => {
+      layer.bindTooltip('Выбранная зона', { direction: 'top' })
+      layer.openTooltip()
       const salesPoint = salesPoints?.find((v) => v.id === el.id)
       if (!salesPoint)
         throw Error(
           `Sales point with id ${el.id} was not found, available sales points: ${salesPoints}`
         )
       salesPointInfoModelValue.value = true
+      const filterSettings = (
+        v: DeliveryAreaSettings // filter fn
+      ) => v.salesPoint === salesPointId && v.deliveryArea === item.id
       salesPointDeliveryData.value = {
         deliveryArea: item,
         salesPoint: salesPoint as SalesPoint,
         deliveryAreaSettings: deliveryAreaSettingsRepo.items.filter(
-          (v) => v.deliveryType === 'delivery'
+          (v) => v.deliveryType === 'delivery' && filterSettings(v)
         ),
         defaultDeliveryAreaSettings: deliveryAreaSettingsRepo.items.filter(
-          (v) => v.deliveryType === 'default'
+          (v) => v.deliveryType === 'default' && filterSettings(v) // todo надо ли проверять по deliveryArea
         ),
       }
       map.lmap.fitBounds(layer.getBounds(), { maxZoom: 13 })
@@ -222,5 +231,9 @@ const drawDeliveryAreas = async (el: Feature) => {
   position: fixed;
   background: white;
   z-index: 1001;
+}
+
+:deep(.leaflet-interactive:focus) {
+  outline: unset !important;
 }
 </style>
