@@ -185,12 +185,15 @@ const drawDeliveryAreas = async (el: Feature) => {
   const salesPointColor = colorBySalesPointId.value[String(salesPointId)]
   for (const item of items.filter((v) => v.active)) {
     const layer = L.polygon(L.GeoJSON.coordsToLatLngs(item.coords), {
-      interactive: true,
-      bubblingMouseEvents: true,
       color: salesPointColor,
     }).addTo(drawnItems)
+    drawnItems.getLayers().forEach((v) => v.closeTooltip())
     layer.on('click', () => {
-      layer.bindTooltip('Выбранная зона', { direction: 'top' })
+      drawnItems.getLayers().forEach((v) => v.closeTooltip())
+      layer.bindTooltip('Выбранная зона', {
+        direction: 'top',
+        permanent: true,
+      })
       layer.openTooltip()
       const salesPoint = salesPoints?.find((v) => v.id === el.id)
       if (!salesPoint)
