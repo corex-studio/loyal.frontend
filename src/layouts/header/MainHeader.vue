@@ -57,14 +57,14 @@
               "
               @click="$store.selectCompanyModal = true"
               text-button
-              text-color="secondary"
+              text-color="secondary-text"
             >
               <div
                 v-if="$q.screen.gt.lg"
                 class="row no-wrap gap-2 items-center"
               >
                 <CIcon
-                  color="secondary"
+                  color="secondary-text"
                   size="21px"
                   name="fa-regular fa-angle-left"
                 />
