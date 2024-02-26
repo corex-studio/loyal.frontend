@@ -12,9 +12,12 @@
           <div class="body mb-5">Выберите юр.лицо</div>
           <div class="row gap-10 no-wrap overflow-auto full-width">
             <CButton v-for="item in info.legal_entities" :key="item.uuid"
-                     :color="item.uuid === selectedLegalEntity?.uuid ? 'primary' : 'secondary1'"
-                     :label="item.name" :text-color="item.uuid === selectedLegalEntity?.uuid ? 'white' : 'black'"
-                     @click="selectedLegalEntity = item" />
+                     :color="item.uuid === selectedLegalEntity?.uuid ? 'selected-company' : 'secondary1'"
+                     :hover-text-color="item.uuid === selectedLegalEntity?.uuid ? 'white' : 'black'"
+                     :label="item.name"
+                     :text-color="item.uuid === selectedLegalEntity?.uuid ? 'white' : 'black'"
+                     @click="selectedLegalEntity = item">
+            </CButton>
           </div>
         </div>
       </div>
@@ -435,4 +438,9 @@ body.screen--xs {
     line-height: 32px;
   }
 }
+
+.bg-selected-company {
+  background: #6a5ecc
+}
+
 </style>
