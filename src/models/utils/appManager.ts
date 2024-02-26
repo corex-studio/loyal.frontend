@@ -9,11 +9,15 @@ import { useFavicon, useTitle } from '@vueuse/core'
 import { newsRepo } from '../news/newsRepo'
 import { NewsType } from '../news/news'
 import { companyRepo } from '../company/companyRepo'
+import { customerRepo } from '../customer/customerRepo'
+import moment from 'moment'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
   initMenuPage?: boolean
 }
+
+let interval: NodeJS.Timeout | null = null
 
 export class AppManager {
   config: AppManagerConfig
@@ -29,7 +33,6 @@ export class AppManager {
     const _value = LocalStorage.getItem('Company-Group')
     const _favicon = LocalStorage.getItem('Favicon')
     const _websiteName = LocalStorage.getItem('Website-Name')
-
     if (_favicon) this.changeFavicon(String(_favicon))
     if (_websiteName) this.changeWebsiteName(String(_websiteName))
     if (_value && !companyGroupId) companyGroupId = String(_value)
@@ -55,6 +58,10 @@ export class AppManager {
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
     })
+    if (authentication.user) {
+      this.setDeviceMeta()
+      this.setOnline()
+    }
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
       void this.loadMenuPage()
@@ -90,6 +97,30 @@ export class AppManager {
       await authentication.validateTokens()
       await authentication.me()
     } catch {}
+  }
+
+  async setDeviceMeta() {
+    if (!authentication.user) return
+    await customerRepo.setDeviceMeta(authentication.user?.id, {
+      device_id: 1,
+      app_build_version: 1,
+      app_version: 1,
+      device_name: window.navigator.userAgent,
+      system: 3,
+      mac: window.navigator.userAgent,
+      timezone: `${moment().format('Z')} ${
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      }`,
+    })
+  }
+
+  async setOnline() {
+    if (interval) clearInterval(interval)
+    else void customerRepo.setOnline(window.navigator.userAgent)
+
+    interval = setInterval(() => {
+      void customerRepo.setOnline(window.navigator.userAgent)
+    }, 30000)
   }
 
   getCurrentCompanyGroup = async () => {

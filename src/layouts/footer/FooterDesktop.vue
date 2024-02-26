@@ -148,12 +148,13 @@
                   : 'Адрес заведения в Калининграде'
               }}
             </div>
-            <div class="body" style="opacity: 0.6">
-              {{
-                $company.item?.salesPoints
-                  .map((v) => v.customAddress || v.address)
-                  .join(' • ')
-              }}
+            <div
+              class="body"
+              v-for="(el, index) in $company.item?.salesPoints"
+              :key="index"
+              style="opacity: 0.6"
+            >
+              {{ el.customAddress || el.address }}
             </div>
           </div>
         </div>
