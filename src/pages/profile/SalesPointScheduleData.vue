@@ -1,5 +1,8 @@
 <template>
-  <div class="px-5 pb-7 pt-10 relative-position" style="max-width: 333px">
+  <div
+    class="px-5 pb-7 pt-10 relative-position bg-background-color text-on-background-color rounded-10"
+    style="max-width: 333px"
+  >
     <CIconButton
       class="absolute pa-0"
       color="transparent"
@@ -19,10 +22,16 @@
             ? deliverySchedule
             : pickupSchedule"
           :key="item.day"
-          :color="currentDay?.day === item.day ? 'primary' : 'selector-color'"
+          :color="
+            currentDay?.day === item.day
+              ? 'selector-active-color'
+              : 'selector-color'
+          "
           :label="shortDaysNames[item.day]"
           :text-color="
-            currentDay?.day === item.day ? 'on-primary' : 'on-selector-color'
+            currentDay?.day === item.day
+              ? 'on-selector-active-color'
+              : 'on-selector-color'
           "
           height="35px"
           no-padding
