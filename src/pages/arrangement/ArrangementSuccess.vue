@@ -132,6 +132,16 @@
               {{ beautifyNumber($order.item.totalSum, true) }} ₽
             </div>
           </div>
+
+          <div
+            v-if="$order.item?.type === CartType.DELIVERY"
+            class="row full-width justify-between"
+          >
+            <div class="body bold">Стоимость доставки</div>
+            <div class="body bold">
+              {{ beautifyNumber($order.item?.deliveryPrice, true) }} ₽
+            </div>
+          </div>
           <div
             v-if="$order.item.appliedBonuses"
             class="row full-width justify-between items-center gap-6 body text-primary"

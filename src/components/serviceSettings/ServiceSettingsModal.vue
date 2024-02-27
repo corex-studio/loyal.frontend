@@ -254,6 +254,7 @@
       <CreateDeliveryAddress
         :back-callback="() => (newAddressMode = false)"
         @updated="deliveryAddressCreateHandler()"
+        @created="deliveryAddressCreateHandler($event)"
         :address="deliveryAddressToEdit || undefined"
       />
     </template>
@@ -434,9 +435,13 @@ const editAddressHandler = (v: DeliveryAddress) => {
   deliveryAddressToEdit.value = v
 }
 
-const deliveryAddressCreateHandler = () => {
+const deliveryAddressCreateHandler = async (newAddress?: DeliveryAddress) => {
   newAddressMode.value = false
   void deliveryAddressRepo.list()
+  if (newAddress) {
+    selectedDeliveryAddress.value = newAddress
+    await confirmSelectedAddress()
+  }
 }
 
 const navigationButtonClickHandler = () => {

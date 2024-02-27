@@ -56,12 +56,12 @@ export class CartRepo extends BaseRepo<Cart> {
     return this.item
   }
 
-  async getAvailableHours(): Promise<AvailableHours> {
+  async getAvailableHours(salesPointId?: string): Promise<AvailableHours> {
     const res: AvailableHours = await this.api.send({
       method: 'GET',
       action: 'get_available_hours',
       params: {
-        sales_point: this.item?.salesPoint.id,
+        sales_point: salesPointId,
       },
     })
     return res
