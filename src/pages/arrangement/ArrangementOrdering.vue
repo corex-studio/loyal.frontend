@@ -307,7 +307,7 @@
             @click="makeAnOrder()"
             :loading="loading"
             :disabled="!isArrangeAvailable"
-            label="Оплатить"
+            label="Оформить"
             :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
             class="col body"
           />
@@ -415,6 +415,15 @@
             <div class="body bold">Списано бонусов</div>
             <div class="body bold">
               -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
+            </div>
+          </div>
+          <div
+            v-if="$cart.item.type === CartType.DELIVERY"
+            class="row full-width justify-between"
+          >
+            <div class="body bold">Стоимость доставки</div>
+            <div class="body bold">
+              {{ beautifyNumber($cart.item?.deliveryPrice, true) }} ₽
             </div>
           </div>
           <div class="row full-width justify-between">
@@ -627,9 +636,16 @@ watch(
   }
 )
 
-const selectClosestTime = () => {
+const selectClosestTime = async () => {
   if (!cartRepo.item) return
   cartRepo.item.deliveryTime = null
+  await cartRepo.setParams({
+    delivery_time: cartRepo.item?.deliveryTime
+      ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
+          .utc()
+          .format('YYYY-MM-DD HH:mm:ss')
+      : null,
+  })
   // if (availableHours.value?.today.length) {
   //   cartRepo.item.deliveryTime = moment(
   //     availableHours.value.today[0].start
@@ -642,7 +658,7 @@ const selectClosestTime = () => {
   // }
 }
 
-const setDeliveryTime = (v: string | null) => {
+const setDeliveryTime = async (v: string | null) => {
   if (!cartRepo.item) return
   if (v && !availableTimes.value?.includes(v)) return
   const today = moment().format('DD.MM.YYYY')
@@ -654,6 +670,13 @@ const setDeliveryTime = (v: string | null) => {
     cartRepo.item.deliveryTime = [tomorrow, v].join(' ')
   }
   menu.value = false
+  await cartRepo.setParams({
+    delivery_time: cartRepo.item?.deliveryTime
+      ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
+          .utc()
+          .format('YYYY-MM-DD HH:mm:ss')
+      : null,
+  })
 }
 
 const makeAnOrder = async () => {
@@ -762,7 +785,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
 }
 
 onMounted(() => {
-  void cartRepo.getAvailableHours().then((res) => {
+  void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
   })
   void deliveryAddressRepo.list()
