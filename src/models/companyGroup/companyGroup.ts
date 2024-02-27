@@ -16,6 +16,15 @@ export enum BankType {
   PAYONLINE = 'payonline',
 }
 
+export type CityType = {
+  uuid: string
+  active: boolean
+  name: string | null
+  coords: number[]
+  created_at: string | null
+  updated_at: string | null
+}
+
 export type LegalEntityRaw = {
   uuid: string
   code: number | string | null
@@ -166,6 +175,10 @@ export type CompanyGroupRaw = {
   companies: CompanyRaw[]
   contacts: Contact
   image?: ImageRaw | null
+  city_data?: {
+    current: CityType | null
+    results: CityType[]
+  }
 }
 
 export class CompanyGroup implements BaseModel {
@@ -177,6 +190,10 @@ export class CompanyGroup implements BaseModel {
   companies: Company[]
   contacts: Contact
   image: Image | null
+  cityData: {
+    current: CityType | null
+    results: CityType[]
+  }
 
   constructor(raw: CompanyGroupRaw) {
     this.id = raw.uuid || ''
@@ -189,6 +206,10 @@ export class CompanyGroup implements BaseModel {
       : []
     this.contacts = raw.contacts
     this.image = raw.image ? new Image(raw.image) : null
+    this.cityData = raw.city_data || {
+      current: null,
+      results: [],
+    }
   }
 
   get currentCompany() {

@@ -44,6 +44,7 @@ export class Store {
   }
   catalogLoading = false
   storedMenuItem: string | null = null
+  citySelectorModal = false
 
   getCompanyGroup(externalId: string) {
     // LocalStorage.getItem('Company-Group')

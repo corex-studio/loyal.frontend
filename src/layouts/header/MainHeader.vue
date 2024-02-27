@@ -98,6 +98,7 @@
             >
               <CButton
                 v-if="$q.screen.gt.md"
+                @click="openCitySelectorModal()"
                 style="border-radius: 100px !important"
                 height="44px"
                 outlined
@@ -111,7 +112,12 @@
                     name="fa-regular fa-city"
                   />
 
-                  <div class="mt-1 bold">Калининград</div>
+                  <div class="mt-1 bold">
+                    {{
+                      $companyGroup.item?.cityData.current?.name ||
+                      'Калининград'
+                    }}
+                  </div>
                 </div>
               </CButton>
               <ServiceSettingsBlock />
@@ -284,6 +290,7 @@
     </q-header>
     <ArrangementHeader v-else-if="$q.screen.gt.sm" />
     <BonusesInDevModal v-model="$store.bonusesModal" />
+    <CitySelectorModal v-model="$store.citySelectorModal" />
   </div>
 </template>
 
@@ -302,6 +309,8 @@ import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
 import BottomHeader from './BottomHeader.vue'
 // import CustomIcon from 'src/components/template/helpers/CustomIcon.vue'
 import BonusesInDevModal from 'src/components/template/dialogs/BonusesInDevModal.vue'
+import CitySelectorModal from 'src/components/template/dialogs/CitySelectorModal.vue'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 // const router = useRouter()
 
@@ -335,6 +344,13 @@ const previewBalance = computed(() => {
 //   companyRepo.cartCompany = v
 //   serviceModal.value = true
 // }
+
+const openCitySelectorModal = () => {
+  if (!companyGroupRepo.item) return
+  if (companyGroupRepo.item?.cityData.results.length > 1) {
+    store.citySelectorModal = true
+  }
+}
 
 onMounted(() => {
   store.headerHeight = header.value?.clientHeight || 0
