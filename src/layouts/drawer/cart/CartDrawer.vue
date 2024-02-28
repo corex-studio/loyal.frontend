@@ -262,8 +262,8 @@ const deleteCartItem = async (item: CartItem) => {
 const applyBonuses = () => {
   if (cartRepo.item?.walletPayments.some((v) => v.applied_sum)) {
     void cartRepo.setParams({
-      sales_point: cartRepo.item?.salesPoint.id,
-      type: cartRepo.item?.type,
+      sales_point: cartRepo.item?.salesPoint?.id,
+      type: cartRepo.item?.type || undefined,
       applied_wallet_payments: [
         {
           wallet_payment: cartRepo.item.walletPayments[0].uuid,
