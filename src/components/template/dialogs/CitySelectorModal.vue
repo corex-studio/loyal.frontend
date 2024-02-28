@@ -96,7 +96,7 @@ const reRequest = async () => {
     initMenuPage: true,
   })
   await companyGroupRepo.current()
-
+  manager.setDefaultCompany()
   await manager.loadMenuPage()
 }
 </script>
