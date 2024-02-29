@@ -38,7 +38,7 @@
               Адрес {{ isDelivery ? 'доставки' : 'самовывоза' }}
             </div>
             <div v-else class="row items-center full-width gap-3 no-wrap">
-              <CIcon name="fa-regular fa-home" />
+              <CIcon color="on-background-color" name="fa-regular fa-home" />
               <div class="body bold mt-2">Адрес</div>
             </div>
             <div
@@ -442,7 +442,7 @@
     >
       <q-separator color="divider-color" class="full-width" />
       <div
-        class="row full-width gap-md-10 gap-xs-8 no-wrap py-md-15 py-xs-8 items-center"
+        class="row full-width gap-md-10 gap-xs-8 no-wrap py-md-15 py-xs-8 items-center text-on-background-color"
       >
         <div v-if="$q.screen.gt.sm" class="header3 bold px-md-20 px-xs-10">
           Сумма {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
