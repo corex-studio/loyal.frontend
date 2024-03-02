@@ -87,19 +87,27 @@
           window._metrikaKey = res.yandex_metrika_key
         })
       })
+      const setFavicons = (url) => {
+        let favicons = document.querySelectorAll('link[rel~=\'icon\']')
+        console.log(favicons)
+        if (!favicons.length) {
+          const favicon = document.createElement('link')
+          favicon.rel = 'icon'
+          favicon.href = url
+          document.head.appendChild(favicon)
+        } else {
+          for (const el of favicons) {
+            el.href = url
+          }
+        }
+      }
+
+      const cachedFavicon = localStorage.getItem('faviconUrl')
+      if (cachedFavicon) setFavicons(cachedFavicon)
+
       fetch(backend + '/site_settings/favicon/' + query).then(res => {
         res.json().then(thumbUrl => {
-          let favicons = document.querySelectorAll('link[rel~=\'icon\']')
-          if (!favicons.length) {
-            const favicon = document.createElement('link')
-            favicon.rel = 'icon'
-            favicon.href = thumbUrl
-            document.head.appendChild(favicon)
-          } else {
-            for (const el of favicons) {
-              el.href = thumbUrl
-            }
-          }
+          setFavicons(thumbUrl)
         })
       })
 
