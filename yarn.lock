@@ -343,7 +343,7 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@quasar/app-vite@^2.0.0-beta.1":
+"@quasar/app-vite@^2.0.0-beta.3":
   version "2.0.0-beta.3"
   resolved "https://registry.yarnpkg.com/@quasar/app-vite/-/app-vite-2.0.0-beta.3.tgz#2acecab273cb5e4e22efc9550c4ec20c9156fc21"
   integrity sha512-abT2kTBYgAYcw8EOrnw34sgRBbf7qEry9chbtNR5qkiDfCRlOKB1C89o8z4qIifep7PnyLNZxxHOVWmkde+1Wg==
@@ -3020,9 +3020,9 @@ qs@6.11.0:
     side-channel "^1.0.4"
 
 quasar@^2.6.0:
-  version "2.11.3"
-  resolved "https://registry.npmjs.org/quasar/-/quasar-2.11.3.tgz"
-  integrity sha512-a+PApE126fwtCsuPvbDLuSSgcFUy5bGu9WjqvVRP3z0xw+7pH93Hva2M+QQLMsYs4a5tpT4N/qXlsI591nxuxA==
+  version "2.14.6"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.14.6.tgz#d48d8c5d2844c286941fc656c59f4d623cceb344"
+  integrity sha512-/mG6TEH4vBHU1CqMXwijlYjwvmPsIGBmz/8NXbV6g1AVCfMXvol1SBQOI19OPfKK/oTMdq43HZbHQEO3WhSowg==
 
 queue-microtask@^1.2.2:
   version "1.2.3"
