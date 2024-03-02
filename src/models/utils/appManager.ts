@@ -5,7 +5,6 @@ import { uiSettingsRepo } from '../uiSettings/uiSettingsRepo'
 import { cartRepo } from '../carts/cartRepo'
 import { appSettingsRepo } from '../appSettings/appSettingsRepo'
 import { authentication } from '../authentication/authentication'
-import { useFavicon, useTitle } from '@vueuse/core'
 import { newsRepo } from '../news/newsRepo'
 import { NewsType } from '../news/news'
 import { companyRepo } from '../company/companyRepo'
@@ -21,8 +20,6 @@ let interval: NodeJS.Timeout | null = null
 
 export class AppManager {
   config: AppManagerConfig
-  icon = useFavicon()
-  websiteName = useTitle()
 
   constructor(config: AppManagerConfig) {
     this.config = config
@@ -31,10 +28,6 @@ export class AppManager {
     this.setScrollSettings()
     let companyGroupId = this.config.companyGroupId
     const _value = LocalStorage.getItem('Company-Group')
-    const _favicon = LocalStorage.getItem('Favicon')
-    const _websiteName = LocalStorage.getItem('Website-Name')
-    if (_favicon) this.changeFavicon(String(_favicon))
-    if (_websiteName) this.changeWebsiteName(String(_websiteName))
     if (_value && !companyGroupId) companyGroupId = String(_value)
     if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
     await Promise.all([
@@ -44,23 +37,17 @@ export class AppManager {
       appSettingsRepo.getLinksSettings(),
       companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
-      if (
-        companyGroupRepo.item?.externalId !== _value ||
-        !_favicon ||
-        !_websiteName
-      ) {
+      if (companyGroupRepo.item?.externalId !== _value) {
         LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
         LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
-        this.changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-        this.changeWebsiteName(companyGroupRepo.item?.name || undefined)
       }
 
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
     })
     if (authentication.user) {
-      this.setDeviceMeta()
-      this.setOnline()
+      void this.setDeviceMeta()
+      void this.setOnline()
     }
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
@@ -170,15 +157,5 @@ export class AppManager {
     if (authentication.user?.registeredAt === null) {
       store.registrationModal = true
     }
-  }
-
-  changeFavicon(src?: string) {
-    if (!src) return
-    this.icon.value = src
-  }
-
-  changeWebsiteName(name?: string) {
-    if (!name) return
-    this.websiteName.value = name
   }
 }

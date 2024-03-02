@@ -62,6 +62,9 @@
 
     <RegistrationModal v-model="$store.registrationModal" />
   </template>
+  <div v-else class="loader flex flex-center">
+    <q-spinner size="5em" thickness="1" />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -246,5 +249,15 @@ const closeNewsModal = () => {
 
 .q-footer {
   position: relative;
+}
+
+.loader {
+  z-index: 999999999;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
 </style>

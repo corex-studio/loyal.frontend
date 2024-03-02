@@ -90,7 +90,7 @@ module.exports = configure(function (ctx) {
           bodyClasses: true, // <<< add this
         },
         notify: {},
-        plugins: ['LocalStorage'],
+        plugins: ['LocalStorage', 'Meta'],
       },
 
       // iconSet: 'material-icons', // Quasar icon set
