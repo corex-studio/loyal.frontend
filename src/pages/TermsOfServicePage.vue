@@ -238,19 +238,19 @@ const selectCompanyModalModelValue = ref(false)
 
 const linkToPolicy = computed(() => {
   return `https://${window.location.host}/${String(
-    route.params.externalId
+    route.params.externalId,
   )}/policy`
 })
 
 const linkToTermsOfUse = computed(() => {
   return `https://${window.location.host}/${String(
-    route.params.externalId
+    route.params.externalId,
   )}/terms_of_use`
 })
 
 const linkToOffer = computed(() => {
   return `https://${window.location.host}/${String(
-    route.params.externalId
+    route.params.externalId,
   )}/offer`
 })
 
@@ -262,7 +262,7 @@ const linkToOffer = computed(() => {
 
 const getLegalEntity = (v: SalesPointRaw) => {
   return info.value?.legal_entities.find((val) =>
-    val.sales_points.map((el) => el.uuid).includes(v.uuid)
+    val.sales_points.map((el) => el.uuid).includes(v.uuid),
   )
 }
 
@@ -280,7 +280,7 @@ onMounted(async () => {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
   info.value = await companyGroupRepo.getTermsOfServiceInfo(
-    String(route.params.externalId)
+    String(route.params.externalId),
   )
   // const headers = {
   //   'Company-Group': route.params.externalId,

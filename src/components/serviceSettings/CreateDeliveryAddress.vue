@@ -47,7 +47,7 @@
             :address="newAddress.address"
             label="Укажите адрес"
             placeholder="Город, улица, дом"
-            @update="selectAddress($event)"
+            @update="selectAddress($event, 15)"
           />
         </div>
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
@@ -147,7 +147,10 @@ const currentCoords = ref<{
   lng: number
 }>()
 
-const emit = defineEmits(['updated'])
+const emit = defineEmits<{
+  (evt: 'updated'): void
+  (evt: 'created', val: DeliveryAddress): void
+}>()
 
 const drawnItems = new L.FeatureGroup()
 
@@ -157,17 +160,9 @@ const isPrivateHouse = ref(false)
 
 const geoloading = ref(false)
 
-// const dataContainer = ref<HTMLDivElement>()
-
 const q = useQuasar()
 
 let map: CorexLeafletMap
-
-// const mobileViewMapHeight = computed(() => {
-//   return dataContainer.value
-//     ? q.screen.height - dataContainer.value?.clientHeight
-//     : undefined
-// })
 
 const isSaveAvailable = computed(() => {
   return !!newAddress.value?.name?.length && !!newAddress.value.address.length
@@ -224,18 +219,15 @@ const loadAddressDataByCoords = async () => {
     currentCoords.value.lat,
     currentCoords.value.lng
   )
-  selectAddress(res)
+  selectAddress(res, 13)
 }
 
 const privateHouseClickHandler = () => {
   if (!newAddress.value) return
-  // newAddress.value.entrance = null
-  // newAddress.value.floor = null
-  // newAddress.value.intercom = null
   isPrivateHouse.value = !isPrivateHouse.value
 }
 
-const drawPoint = () => {
+const drawPoint = (zoom?: number) => {
   const values: {
     id: number | string | undefined
     coords: {
@@ -258,7 +250,10 @@ const drawPoint = () => {
   )
 
   map.lmap.addLayer(layer)
-  if (values.length) map.lmap.fitBounds(layer.getBounds(), { maxZoom: 12 })
+  if (values.length)
+    map.lmap.fitBounds(layer.getBounds(), {
+      maxZoom: zoom || map.lmap.getZoom(),
+    })
 }
 
 onBeforeUnmount(() => {
@@ -286,7 +281,7 @@ onMounted(() => {
     if (!map) return
     map.lmap.addLayer(drawnItems)
     void geolocate()
-    drawPoint()
+    drawPoint(13)
     map.lmap.invalidateSize()
     map.lmap.on(
       'click',
@@ -302,7 +297,6 @@ onMounted(() => {
           ...res,
         }
         selectAddress(addressWithCorrectCoords)
-        // redrawPoint()
       }
     )
   }, 200)
@@ -326,13 +320,14 @@ const createAddress = async () => {
       Notify.create({
         message: 'Адрес успешно изменен',
       })
+      emit('updated')
     } else {
-      await deliveryAddressRepo.create(newAddress.value)
+      const res = await deliveryAddressRepo.create(newAddress.value)
       Notify.create({
         message: 'Адрес успешно создан',
       })
+      emit('created', res)
     }
-    emit('updated')
   } catch {
     if (props.address) {
       Notify.create({
@@ -348,7 +343,7 @@ const createAddress = async () => {
   }
 }
 
-const selectAddress = (v: Address) => {
+const selectAddress = (v: Address, zoom?: number) => {
   if (!newAddress.value) return
 
   newAddress.value.address = v.address
@@ -361,13 +356,13 @@ const selectAddress = (v: Address) => {
   newAddress.value.flat = v.flat
   newAddress.value.street = v.street
   newAddress.value.house = v.house
-  redrawPoint()
+  redrawPoint(zoom)
 }
 
-const redrawPoint = () => {
+const redrawPoint = (zoom?: number) => {
   map.lmap.eachLayer((layer: Layer) => {
     if (layer instanceof map.L.Marker) layer.remove()
   })
-  drawPoint()
+  drawPoint(zoom)
 }
 </script>

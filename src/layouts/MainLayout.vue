@@ -152,6 +152,7 @@ onMounted(async () => {
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
     initMenuPage: true,
   })
+
   await manager.initApp()
   ready.value = true
   // if (route.path.includes('qr_menu')) {

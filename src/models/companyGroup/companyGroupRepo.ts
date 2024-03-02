@@ -51,6 +51,8 @@ export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
       action: 'current',
       params: {
         only_visible: true,
+        use_cities: true,
+        city: localStorage.getItem('city') || undefined,
       },
     })
     this.item = new CompanyGroup(res)

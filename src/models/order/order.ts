@@ -214,7 +214,7 @@ export class Order implements BaseModel {
   createdAt: string | null
   updatedAt: string | null
   items?: OrderItemRaw[]
-  deliveryPrice?: number
+  deliveryPrice: number
   appliedBonuses: number
   receivedBonuses: number
   paymentUrl: string | null
@@ -244,7 +244,7 @@ export class Order implements BaseModel {
       .format('DD.MM.YYYY HH:mm')
     this.updatedAt = raw.updated_at
     this.items = raw.items
-    this.deliveryPrice = raw.delivery_price
+    this.deliveryPrice = raw.delivery_price || 0
     this.appliedBonuses = raw.applied_bonuses
     this.receivedBonuses = raw.received_bonuses
     this.paymentUrl = raw.payment_url

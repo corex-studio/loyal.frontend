@@ -51,7 +51,7 @@ export class AppManager {
     }
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
-      void this.loadMenuPage()
+      await this.loadMenuPage()
     }
   }
 

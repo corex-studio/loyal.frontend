@@ -96,7 +96,7 @@ const loadAddresses = async (address: string) => {
 
 const selectAddress = (val: Address) => {
   currentFullAddress.value = val
-  emit('update', val)
+  emit('update', { ...val, coords: [val.coords[1], val.coords[0]] })
   menu.value = false
 }
 

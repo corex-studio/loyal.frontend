@@ -21,7 +21,7 @@ export class CartRepo extends BaseRepo<Cart> {
 
   async setParams(data: CartParams) {
     this.setParamsLoading = true
-    if (!data.sales_point && this.item?.salesPoint.id) {
+    if (!data.sales_point && this.item?.salesPoint?.id) {
       data.sales_point = this.item.salesPoint.id
     }
     const res: CartRaw = await this.api.send({
@@ -41,6 +41,7 @@ export class CartRepo extends BaseRepo<Cart> {
 
   async current(sales_point?: string, pad?: Pad) {
     this.loading = true
+    const city = localStorage.getItem('city')
     try {
       const res: CartRaw = await this.api.send({
         method: 'GET',
@@ -48,20 +49,23 @@ export class CartRepo extends BaseRepo<Cart> {
         params: {
           sales_point,
           pad: pad?.id,
+          city,
         },
       })
       this.item = new Cart(res)
-    } catch {}
+    } catch {
+      this.item = null
+    }
     this.loading = false
     return this.item
   }
 
-  async getAvailableHours(): Promise<AvailableHours> {
+  async getAvailableHours(salesPointId?: string): Promise<AvailableHours> {
     const res: AvailableHours = await this.api.send({
       method: 'GET',
       action: 'get_available_hours',
       params: {
-        sales_point: this.item?.salesPoint.id,
+        sales_point: salesPointId,
       },
     })
     return res
