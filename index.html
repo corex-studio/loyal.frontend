@@ -89,7 +89,6 @@
       })
       const setFavicons = (url) => {
         let favicons = document.querySelectorAll('link[rel~=\'icon\']')
-        console.log(favicons)
         if (!favicons.length) {
           const favicon = document.createElement('link')
           favicon.rel = 'icon'
