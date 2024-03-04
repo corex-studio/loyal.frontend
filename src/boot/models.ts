@@ -1,3 +1,4 @@
+import { menuRulesForAddingRepo } from './../models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import {
   OrderReviewRepo,
   orderReviewRepo,
@@ -58,6 +59,7 @@ import { menuRepo, MenuRepo } from './../models/menu/menuRepo'
 import { store, Store } from 'src/models/store'
 import { boot } from 'quasar/wrappers'
 import { PromotionsRepo } from 'src/models/promotion/promotionsRepo'
+import { MenuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -83,6 +85,7 @@ declare module '@vue/runtime-core' {
     $pad: PadRepo
     $waiterCall: WaiterCallRepo
     $orderReview: OrderReviewRepo
+    $menuRulesForAdding: MenuRulesForAddingRepo
   }
 }
 
@@ -109,4 +112,5 @@ export default boot(({ app }) => {
   app.config.globalProperties.$pad = padRepo
   app.config.globalProperties.$waiterCall = waiterCallRepo
   app.config.globalProperties.$orderReview = orderReviewRepo
+  app.config.globalProperties.$menuRulesForAdding = menuRulesForAddingRepo
 })

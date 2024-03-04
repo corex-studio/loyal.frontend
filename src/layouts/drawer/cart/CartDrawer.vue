@@ -76,7 +76,9 @@
           <template v-if="$cart.item?.cartItems.length">
             <div class="column">
               <template
-                v-for="(item, index) in $cart.item?.cartItems"
+                v-for="(item, index) in $cart.item?.cartItems.filter(
+                  (v) => !v.attachedTo,
+                )"
                 :key="index"
               >
                 <q-separator
@@ -117,7 +119,7 @@
             class="body"
             :style="`background-color: ${lightColor(
               $uiSettings.item?.primaryColor.color || '000',
-              '27'
+              '27',
             )} !important`"
             height="40px"
             text-color="primary"
@@ -214,14 +216,14 @@ watch(
     if (v) {
       selectPaymentType.value = false
     }
-  }
+  },
 )
 
 const isAddToCardDisabled = computed(() => {
   return cartRepo.item?.cartItems.some(
     (v) =>
       v.availableQuantity !== null &&
-      (v.availableQuantity <= 0 || v.availableQuantity < v.quantity)
+      (v.availableQuantity <= 0 || v.availableQuantity < v.quantity),
   )
 })
 
@@ -247,7 +249,7 @@ const deleteCartItem = async (item: CartItem) => {
     })
     await cartRepo.current()
     const foundIndex = cartRepo.item?.cartItems.findIndex(
-      (v) => v.id === item.id
+      (v) => v.id === item.id,
     )
     if (foundIndex !== undefined && foundIndex > -1)
       cartRepo.item?.cartItems.splice(foundIndex, 1)

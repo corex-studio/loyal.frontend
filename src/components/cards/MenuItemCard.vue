@@ -117,6 +117,7 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 // import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
+import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const props = defineProps<{
   item: MenuItem
@@ -142,14 +143,14 @@ const toCartClickHandler = async () => {
         v.id ===
         (typeof salesPointRepo.item?.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item?.company?.id || '')
+          : salesPointRepo.item?.company?.id || ''),
     )
     if (foundCompany) companyRepo.item = foundCompany
     else
       await companyRepo.retrieve(
         typeof salesPointRepo.item.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item.company?.id || ''
+          : salesPointRepo.item.company?.id || '',
       )
     store.storedMenuItem = props.item.id || null
     store.serviceSettingsModal = true
@@ -167,6 +168,9 @@ const openMenuItem = async () => {
   await menuItemRepo.retrieve(props.item.id, {
     sales_point: salesPointRepo.item?.id,
   })
+  await menuRulesForAddingRepo.list({
+    menu_item: menuItemRepo.item?.id,
+  })
 }
 
 const addToCart = async () => {
@@ -178,7 +182,7 @@ const addToCart = async () => {
     await companyRepo.retrieve(
       typeof salesPointRepo.item.company === 'string'
         ? salesPointRepo.item.company
-        : salesPointRepo.item.company?.id || ''
+        : salesPointRepo.item.company?.id || '',
     )
 
     store.serviceSettingsModal = true
@@ -201,7 +205,7 @@ const addToCart = async () => {
                   sum: String(Number(el.price) * el.quantity),
                 } as CartItemModifier
               })
-              .filter((e) => e.quantity)
+              .filter((e) => e.quantity),
           ) || [],
       })
     } catch (e) {
