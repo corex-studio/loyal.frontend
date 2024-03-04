@@ -46,7 +46,7 @@ const getImage = (link: LinkType | null) => {
     if (link === LinkType.VK) fileName = 'VKLogo.png'
     if (link === LinkType.WEBSITE) fileName = 'websiteIcon.png'
 
-    return require('assets/' + fileName) as string
+    return `src/assets/${fileName}`
   } catch {
     return store.images.empty
   }
