@@ -22,7 +22,7 @@ export const salesPointPromocodesSettingNames = {
 }
 
 export const salesPointPromocodesSettingValues = Object.keys(
-  salesPointPromocodesSettingNames
+  salesPointPromocodesSettingNames,
 ).map((v) => {
   const key = v as keyof typeof salesPointPromocodesSettingNames
   return {
@@ -38,6 +38,7 @@ export type SalesPointSettings = {
   booking_enabled: boolean
   booking_table_pick_enabled: boolean
   cart_enabled: boolean
+  allow_order_arrangement_without_delivery_time: boolean
   promo_codes: PromoCodeMode
 }
 
@@ -139,8 +140,8 @@ export class SalesPoint implements BaseModel {
       typeof raw.company === 'string'
         ? raw.company
         : raw.company
-        ? new Company(raw.company)
-        : null
+          ? new Company(raw.company)
+          : null
     this.companyGroup = raw.company_group
     this.testSettings = raw.test_settings
     this.testPaymentSettings = raw.test_payment_settings

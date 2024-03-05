@@ -7,8 +7,8 @@
           company.headerImage
             ? company.headerImage.image
             : company.images.length
-            ? company.images[1].image
-            : $store.images.empty
+              ? company.images[1].image
+              : $store.images.empty
         }); height: ${$q.screen.gt.md ? '388' : '320'}px`"
       >
         <CIconButton
@@ -227,7 +227,7 @@
       <div class="column gap-lg-30 gap-xs-15">
         <SwiperContainer
           v-for="(el, index) in company.salesPoints.filter(
-            (v) => v.images.length
+            (v) => v.images.length,
           )"
           :key="index"
           class="full-width"
@@ -350,7 +350,7 @@ import ContactsModal from './ContactsModal.vue'
 import { useRouter } from 'vue-router'
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { store } from 'src/models/store'
+// import { store } from 'src/models/store'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import moment from 'moment'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
@@ -375,7 +375,7 @@ const days = Object.keys(daysNames).map((key) => {
 const currentSchedule = computed(() => {
   if (!company.value?.salesPoints) return
   return company.value?.salesPoints[0].schedule?.days.find(
-    (el) => el.day === moment().day()
+    (el) => el.day === moment().day(),
   )
 })
 
@@ -386,7 +386,7 @@ const features = computed(() => {
       text: string
       click?: () => void
       icon: string
-    }
+    },
   ] = [
     {
       title: 'Наше меню',
@@ -401,7 +401,7 @@ const features = computed(() => {
   ]
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.delivery_enabled
+      (v) => v.settings.delivery_enabled,
     )
   ) {
     result.push({
@@ -412,7 +412,7 @@ const features = computed(() => {
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.pickup_enabled
+      (v) => v.settings.pickup_enabled,
     )
   ) {
     result.push({
@@ -423,7 +423,7 @@ const features = computed(() => {
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.booking_enabled
+      (v) => v.settings.booking_enabled,
     )
   ) {
     result.push({
@@ -483,11 +483,11 @@ const companySelected = (v: Company | null) => {
 }
 
 const getImage = (v: string) => {
-  try {
-    return require('assets/' + v)
-  } catch {
-    return store.images.empty
-  }
+  // try {
+  return `src/assets/${v}`
+  // } catch {
+  //   return store.images.empty
+  // }
 }
 
 const company = computed(() => {
@@ -503,7 +503,7 @@ onMounted(() => {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
   useEventBus(selectCompanyKey).on(
-    (e) => (companyRepo.companyForProfile = e.company)
+    (e) => (companyRepo.companyForProfile = e.company),
   )
 })
 </script>
