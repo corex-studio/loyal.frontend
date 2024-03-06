@@ -28,7 +28,7 @@
               ? 'selector-active-color'
               : 'selector-color'
           "
-          :label="shortDaysNames[item.day]"
+          :label="shortDaysNames[item.day as keyof typeof shortDaysNames]"
           :text-color="
             currentDay?.day === item.day
               ? 'on-selector-active-color'
@@ -146,17 +146,19 @@ watch(
     if (settings?.length) {
       deliverySchedule.value = new SalesPointScheduleDataBuilder(
         settings,
-        currentDay.value?.day
+        currentDay.value?.day,
       ).init()
+      pickupSchedule.value = []
     }
-  }
+  },
 )
 
 watch(
   () => props.pickupData,
   () => {
     pickupSchedule.value = processPickupAreaSettings()
-  }
+    deliverySchedule.value = []
+  },
 )
 
 const currentDay = computed(() => {

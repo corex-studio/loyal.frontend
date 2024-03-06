@@ -50,7 +50,7 @@ export class SalesPointScheduleDataBuilder {
     const result: DeliveryScheduleData[] = []
     for (const dayNumber of Object.keys(daysNames).map((v) => Number(v))) {
       const currentItems = this.items.filter((v) =>
-        v.weekdays.some((day) => day === dayNumber)
+        v.weekdays.some((day) => day === dayNumber),
       )
       const scheduleData: DeliveryScheduleData = {
         day: dayNumber,
@@ -107,15 +107,15 @@ export class SalesPointScheduleDataBuilder {
         this.deliveryDataByDayByTimes[Number(dayNumber)]
       for (const time of Object.keys(currentItemsByTime)) {
         const currentItems = currentItemsByTime[time].sort(
-          (a, b) => b.deliveryPrice - a.deliveryDuration
+          (a, b) => b.deliveryPrice - a.deliveryDuration,
         )
         for (const [index, currentItem] of currentItems.entries()) {
           if (!index) resItem.mainItem = currentItem
           resItem.children.push(currentItem)
         }
-        result.push(resItem)
-        resetResItem()
       }
+      result.push(resItem)
+      resetResItem()
     }
     return result
   }
