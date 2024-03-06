@@ -15,7 +15,7 @@
     </div>
     <div class="row full-width gap-8 items-center no-wrap">
       <q-img
-        src="~assets/yandexLogo.png"
+        src="assets/yandexLogo.png"
         width="62px"
         height="62px"
         style="min-width: 62px"

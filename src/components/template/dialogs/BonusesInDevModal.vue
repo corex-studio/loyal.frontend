@@ -8,7 +8,7 @@
   >
     <div class="column full-width">
       <div class="row full-width justify-center">
-        <q-img src="~assets/bonuses.png" width="325px" />
+        <q-img src="assets/bonuses.png" width="325px" />
       </div>
 
       <div class="huge3 bold mt-15">Этот блок находится в разработке!</div>
