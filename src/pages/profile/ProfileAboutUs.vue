@@ -484,7 +484,8 @@ const companySelected = (v: Company | null) => {
 
 const getImage = (v: string) => {
   // try {
-  return `src/assets/${v}`
+  return String(new URL('../../assets/' + v, import.meta.url))
+
   // } catch {
   //   return store.images.empty
   // }
