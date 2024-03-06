@@ -105,24 +105,24 @@
             </div>
             <div class="row full-width justify-evenly my-15">
               <img
-                src="~assets/psMir.png"
+                src="assets/psMir.png"
                 style="object-fit: contain"
                 width="150px"
               />
               <img
-                src="~assets/psVisa.png"
+                src="assets/psVisa.png"
                 style="object-fit: contain"
                 width="150px"
               />
 
               <img
-                src="~assets/psMasterCard.png"
+                src="assets/psMasterCard.png"
                 style="object-fit: contain"
                 width="150px "
               />
 
               <img
-                src="~assets/psJCB.svg"
+                src="assets/psJCB.svg"
                 style="object-fit: contain"
                 width="150px "
               />
