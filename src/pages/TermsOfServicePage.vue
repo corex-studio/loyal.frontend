@@ -188,10 +188,15 @@
             <template v-slot:title>
               <div class="row items-center mt-0 mb-10 gap-10">
                 <h6 class="bold ma-0">Карта с нашими заведениями:</h6>
-                <div v-if="$companyGroup.item?.companies.length > 1">
+                <div
+                  v-if="
+                    $companyGroup.item &&
+                    $companyGroup.item.companies.length > 1
+                  "
+                >
                   <CButton
                     class="body"
-                    :label="$company.companyForProfile?.name"
+                    :label="$company.companyForProfile?.name || undefined"
                     text-button
                     icon-right="fal fa-chevron-down"
                     @click="selectCompanyModalModelValue = true"
@@ -212,7 +217,7 @@
   </div>
   <SelectCompanyModal
     v-model="selectCompanyModalModelValue"
-    :selected-company="$company.companyForProfile"
+    :selected-company="$company.companyForProfile || undefined"
     @select="$company.companyForProfile = $event"
     close-on-select
   />

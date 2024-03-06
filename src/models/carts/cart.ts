@@ -29,13 +29,13 @@ export type AvailableHours = {
     {
       start: string
       end: string
-    }
+    },
   ]
   tomorrow: [
     {
       start: string
       end: string
-    }
+    },
   ]
 }
 
@@ -140,7 +140,9 @@ export class Cart implements BaseModel {
   }
 
   get cartItemsQuantitySum() {
-    return sum(this.cartItems.map((v) => v.quantity))
+    return sum(
+      this.cartItems.filter((el) => !el.attachedTo).map((v) => v.quantity),
+    )
   }
 
   get currentAddress() {
@@ -153,8 +155,8 @@ export class Cart implements BaseModel {
     return this.type === 'pickup'
       ? 'Самовывоз'
       : this.type === 'delivery'
-      ? 'Доставка'
-      : 'Бронь'
+        ? 'Доставка'
+        : 'Бронь'
   }
 
   toJson(): Record<string, any> {

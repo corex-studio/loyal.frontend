@@ -79,6 +79,15 @@
           </div>
           <MenuItemCharacteristics v-if="currentSize" :size="currentSize" />
 
+          <MenuItemRelatedItems
+            v-if="
+              $cart.item &&
+              currentMenuRulesForAdding?.length &&
+              !$menuRulesForAdding.loadings.list
+            "
+            :items="currentMenuRulesForAdding"
+          />
+
           <div
             v-if="$menuItem.item && $menuItem.item.sizes.length > 1"
             class="relative-position mt-8"
@@ -191,6 +200,8 @@ import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { beautifyNumber } from 'src/models/store'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
+import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
+import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const props = defineProps<{
   modelValue: boolean
@@ -214,6 +225,15 @@ const route = useRoute()
 
 const router = useRouter()
 
+const currentMenuRulesForAdding = computed(() => {
+  if (!cartRepo.item) return
+  return menuRulesForAddingRepo.items.filter((el) => {
+    const availableTypes = el.availableDeliveryTypes as string[]
+    const currentCartType = cartRepo.item?.type as string
+    return availableTypes.includes(currentCartType)
+  })
+})
+
 const getImageBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${
     q.screen.lt.lg ? uiSettingsRepo.item?.borderRadius : '0'
@@ -229,7 +249,7 @@ const getBottomBlockBorderRadius = computed(() => {
 const currentModifierGroups = computed(() => {
   return currentSize.value?.modifierGroups?.filter(
     (v) =>
-      !v.isHidden && !!v.items.length && v.items.some((el) => !el.is_hidden)
+      !v.isHidden && !!v.items.length && v.items.some((el) => !el.is_hidden),
   )
 })
 
@@ -238,8 +258,8 @@ const currentPrice = computed(() => {
     ((currentSize.value?.price || 0) +
       sum(
         currentSize.value?.modifierGroups?.flatMap((v) =>
-          v.items.map((el) => el.quantity * (el.price || 0))
-        )
+          v.items.map((el) => el.quantity * (el.price || 0)),
+        ),
       )) *
     quantity.value
   )
@@ -250,20 +270,11 @@ watch(
   () => {
     if (props.modelValue) {
       quantity.value = 1
-      // if (menuItemRepo.item) {
-      //   const test = [1, 3, 4, 5, 6, 7, 8]
-      //   test.forEach((el) =>
-      //     menuItemRepo.item?.sizes.push({
-      //       ...menuItemRepo.item.sizes[0],
-      //       id: String(el),
-      //     })
-      //   )
-      // }
       currentSize.value = menuItemRepo.item?.sizes[0]
         ? menuItemRepo.item?.sizes[0]
         : null
     }
-  }
+  },
 )
 
 const isAddToCardDisabled = computed(() => {
@@ -273,7 +284,7 @@ const isAddToCardDisabled = computed(() => {
     currentSize.value?.modifierGroups?.some(
       (v) =>
         v.restrictions?.min_quantity &&
-        sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity
+        sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity,
     ) ||
     !quantity.value
   )
@@ -290,14 +301,14 @@ const addToCart = async () => {
         v.id ===
         (typeof salesPointRepo.item?.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item?.company?.id || '')
+          : salesPointRepo.item?.company?.id || ''),
     )
     if (foundCompany) companyRepo.item = foundCompany
     else
       await companyRepo.retrieve(
         typeof salesPointRepo.item.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item.company?.id || ''
+          : salesPointRepo.item.company?.id || '',
       )
     store.serviceSettingsModal = true
     store.storedMenuItem = menuItemRepo.item?.id || null
@@ -321,7 +332,7 @@ const addToCart = async () => {
                   sum: String(Number(el.price) * el.quantity),
                 } as CartItemModifier
               })
-              .filter((e) => e.quantity)
+              .filter((e) => e.quantity),
           ) || [],
       })
       quantity.value = 1

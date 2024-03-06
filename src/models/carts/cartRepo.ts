@@ -15,7 +15,9 @@ export class CartRepo extends BaseRepo<Cart> {
 
   isItemInCart(id: string): CartItem | undefined {
     return this.item
-      ? this.item?.cartItems.find((v) => v.size.menu_item === id)
+      ? this.item?.cartItems
+          .filter((el) => !el.attachedTo)
+          .find((v) => v.size.menu_item === id)
       : undefined
   }
 
@@ -32,6 +34,10 @@ export class CartRepo extends BaseRepo<Cart> {
     this.setParamsLoading = false
     this.item = new Cart(res)
     return this.item
+  }
+
+  getRelatedItems(v: CartItem) {
+    return this.item?.cartItems.filter((el) => el.attachedTo === v.id)
   }
 
   isInCart(uuid?: string) {

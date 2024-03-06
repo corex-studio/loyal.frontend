@@ -1,6 +1,5 @@
 import { MenuModifierGroupItemRaw } from './../../menu/menuModifierGroup/menuModifierGroup'
 import { ImageRaw } from 'src/models/image/image'
-
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { PriceRaw } from 'src/models/order/order'
 
@@ -45,6 +44,7 @@ export type CartItemRaw = {
   cart_item_modifiers: CartItemFullModifier[]
   free_item: string | number | null
   available_quantity: number | null
+  attached_to: string | null
 }
 
 export class CartItem implements BaseModel {
@@ -59,6 +59,7 @@ export class CartItem implements BaseModel {
   cartItemModifiers: CartItemFullModifier[]
   freeItem: string | number | null
   availableQuantity: number | null
+  attachedTo: string | null
 
   constructor(raw: CartItemRaw) {
     this.id = raw.uuid
@@ -72,6 +73,7 @@ export class CartItem implements BaseModel {
     this.cartItemModifiers = raw.cart_item_modifiers
     this.freeItem = raw.free_item
     this.availableQuantity = raw.available_quantity
+    this.attachedTo = raw.attached_to
   }
 
   get isDead() {
