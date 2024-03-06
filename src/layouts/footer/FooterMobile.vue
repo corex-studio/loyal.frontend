@@ -80,7 +80,7 @@
               border-radius: 7px;
               width: 100%;
             "
-            src="~assets/Apple.svg"
+            src="assets/Apple.svg"
           />
           <img
             v-if="$appSettings.linksData.android_download_link"
@@ -93,7 +93,7 @@
               border-radius: 7px;
               width: 100%;
             "
-            src="~assets/Google.svg"
+            src="assets/Google.svg"
           />
         </div>
       </div>
@@ -120,8 +120,8 @@
         @click="
           openLink(
             `https://loyalhub.ru/${String(
-              $companyGroup.item?.externalId
-            )}/policy`
+              $companyGroup.item?.externalId,
+            )}/policy`,
           )
         "
       />
@@ -129,8 +129,8 @@
         @click="
           openLink(
             `https://loyalhub.ru/${String(
-              $companyGroup.item?.externalId
-            )}/terms_of_service`
+              $companyGroup.item?.externalId,
+            )}/terms_of_service`,
           )
         "
         class="body"
@@ -141,7 +141,7 @@
       />
       <div class="row no-wrap gap-3">
         <div style="opacity: 0.7">Работает на</div>
-        <q-img style="width: 30px" src="~assets/loyalHeart.svg" />
+        <q-img style="width: 30px" src="assets/loyalHeart.svg" />
         <a
           style="opacity: 0.7"
           class="text-on-bottom-menu-color"

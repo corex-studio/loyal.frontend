@@ -211,7 +211,7 @@
           </div>
           <div v-else class="row full-width justify-end">
             <q-img
-              src="~assets/pinkHearts.png"
+              src="assets/pinkHearts.png"
               height="87px"
               width="97px"
               fit="contain"
@@ -484,7 +484,7 @@ const companySelected = (v: Company | null) => {
 
 const getImage = (v: string) => {
   // try {
-  return String(new URL('../../assets/' + v, import.meta.url))
+  return 'assets/' + v
 
   // } catch {
   //   return store.images.empty
