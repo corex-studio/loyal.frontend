@@ -484,7 +484,6 @@ const companySelected = (v: Company | null) => {
 
 const getImage = (v: string) => {
   // try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   return `src/assets/${v}`
   // } catch {
   //   return store.images.empty

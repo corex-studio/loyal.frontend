@@ -127,10 +127,13 @@
                     </div>
                   </template>
                 </div>
+
                 <div
                   v-if="
-                    availableHours?.today.length ||
-                    availableHours?.tomorrow.length
+                    !$salesPoint.item?.settings
+                      .allow_order_arrangement_without_delivery_time &&
+                    (availableHours?.today.length ||
+                      availableHours?.tomorrow.length)
                   "
                   :style="
                     $uiSettings.item?.inputType === 'outlined'
@@ -356,22 +359,22 @@
                           $q.screen.gt.md
                             ? '65px'
                             : $q.screen.md
-                            ? '60px'
-                            : '55px'
+                              ? '60px'
+                              : '55px'
                         }`"
                         :width="
                           $q.screen.gt.md
                             ? '65px'
                             : $q.screen.md
-                            ? '60px'
-                            : '55px'
+                              ? '60px'
+                              : '55px'
                         "
                         :height="
                           $q.screen.gt.md
                             ? '65px'
                             : $q.screen.md
-                            ? '60px'
-                            : '55px'
+                              ? '60px'
+                              : '55px'
                         "
                         :src="$store.images.empty"
                       ></q-img>
@@ -541,7 +544,7 @@ const isArrangeAvailable = computed(() => {
     cartRepo.item?.cartItems.every(
       (v) =>
         !v.isDead &&
-        (v.availableQuantity ? v.quantity <= v.availableQuantity : true)
+        (v.availableQuantity ? v.quantity <= v.availableQuantity : true),
     )
   )
 })
@@ -626,14 +629,14 @@ watch(
       setTimeout(() => {
         if (!availableTimes.value || !menuRef.value) return
         const foundTimeElement = menuRef.value.getElementsByClassName(
-          availableTimes.value[0]
+          availableTimes.value[0],
         )
         if (foundTimeElement) {
           foundTimeElement[0].scrollIntoView()
         }
       }, 0)
     }
-  }
+  },
 )
 
 const selectClosestTime = async () => {
@@ -708,8 +711,8 @@ const makeAnOrder = async () => {
           selectedPaymentType.value?.type === PaymentType.PAY_LATER
             ? undefined
             : selectedPaymentType.value?.type === PaymentType.CARD
-            ? 'card'
-            : 'web_form',
+              ? 'card'
+              : 'web_form',
       },
       extra_data: {
         system_source: 'website',
@@ -719,7 +722,7 @@ const makeAnOrder = async () => {
     if (store.tableMode) {
       await cartRepo.current(
         padRepo.item?.salesPoint?.id,
-        padRepo.item || undefined
+        padRepo.item || undefined,
       )
       void router.push({
         name: 'currentOrderPage',
@@ -790,7 +793,7 @@ onMounted(() => {
   })
   void deliveryAddressRepo.list()
   const foundOnlinePaymentType = paymentTypes.value.find(
-    (v) => v.type === PaymentType.ONLINE
+    (v) => v.type === PaymentType.ONLINE,
   )
   if (foundOnlinePaymentType) {
     selectedPaymentType.value = foundOnlinePaymentType
