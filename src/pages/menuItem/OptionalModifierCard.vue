@@ -7,8 +7,8 @@
       modifier.quantity
         ? 'bordered-card-active'
         : $companyGroup.item?.externalId === 'corex_demo'
-        ? 'bordered-card'
-        : ''
+          ? 'bordered-card'
+          : ''
     "
   >
     <div v-if="modifier.quantity" class="check-block">
@@ -22,14 +22,14 @@
     <div class="column full-width items-center">
       <q-img
         style="height: 80px; width: 80px"
-        :src="modifier.image?.thumbnail || '~assets/emptyMod.svg'"
+        :src="modifier.image?.thumbnail || 'assets/emptyMod.svg'"
       >
         <template v-slot:error>
           <span>
             <q-img
               class="border-radius"
               style="height: 80px; width: 80px"
-              src="~assets/emptyMod.svg"
+              src="assets/emptyMod.svg"
             ></q-img>
           </span>
         </template>
