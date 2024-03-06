@@ -588,7 +588,7 @@ const paymentTypes = computed(() => {
       class: 'bg-cash-button-color text-on-cash-button-color',
       icon: 'fa-light fa-money-bill',
     })
-    if (cartRepo.item?.salesPoint.paymentSettings.online_payment_enabled) {
+    if (salesPointRepo.paymentSettings?.online_payment_enabled) {
       result.push({
         label: 'Онлайн',
         type: PaymentType.ONLINE,
@@ -597,21 +597,21 @@ const paymentTypes = computed(() => {
       })
     }
   } else {
-    if (cartRepo.item?.salesPoint.paymentSettings.cash_enabled)
+    if (salesPointRepo.paymentSettings?.cash_enabled)
       result.push({
         label: 'Наличными при получении',
         type: PaymentType.CASH,
         class: 'bg-cash-button-color text-on-cash-button-color',
         icon: 'fa-light fa-money-bill',
       })
-    if (cartRepo.item?.salesPoint.paymentSettings.card_enabled)
+    if (salesPointRepo.paymentSettings?.card_enabled)
       result.push({
         label: 'Картой при получении',
         type: PaymentType.CARD,
         class: 'bg-card-button-color text-on-card-button-color',
         icon: 'fa-light fa-credit-card',
       })
-    if (cartRepo.item?.salesPoint.paymentSettings.online_payment_enabled)
+    if (salesPointRepo.paymentSettings?.online_payment_enabled)
       result.push({
         label: 'Онлайн',
         type: PaymentType.ONLINE,
@@ -792,6 +792,8 @@ onMounted(() => {
     availableHours.value = res
   })
   void deliveryAddressRepo.list()
+
+  void salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
   const foundOnlinePaymentType = paymentTypes.value.find(
     (v) => v.type === PaymentType.ONLINE,
   )

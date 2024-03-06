@@ -6,12 +6,13 @@ import { salesPointApi } from './salesPointApi'
 import { reactive } from 'vue'
 import { Schedule, ScheduleDay, ScheduleRaw } from './schedule/schedule'
 import { Image, ImageRaw } from '../image/image'
+import { cartRepo } from '../carts/cartRepo'
 
 export class SalesPointRepo extends BaseRepo<SalesPoint> {
   api = salesPointApi
   menuLoading = false
-
-  paymentTypes: AvailablePaymentType[] = []
+  paymentSettings: PaymentSettings | null = null
+  externalPaymentTypes: AvailablePaymentType[] = []
 
   async status(sales_point?: string): Promise<boolean> {
     const res: {
@@ -36,7 +37,7 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       id: this.item?.id,
     })
 
-    this.paymentTypes = res.results
+    this.externalPaymentTypes = res.results
     return res.results
   }
 
@@ -92,14 +93,32 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       method: 'GET',
       action: 'menu',
       id,
+      params: {
+        cart: cartRepo.item?.id || undefined,
+        delivery_type: cartRepo.item?.type || undefined,
+      },
     })
     this.menuLoading = false
     return new Menu(res)
   }
 
+  async getAvailablePayments(salesPointId?: string): Promise<PaymentSettings> {
+    const res: PaymentSettings = await this.api.send({
+      method: 'GET',
+      action: 'get_available_payments',
+      id: salesPointId,
+      params: {
+        cart: cartRepo.item?.id || undefined,
+        delivery_type: cartRepo.item?.type || undefined,
+      },
+    })
+    salesPointRepo.paymentSettings = res
+    return res
+  }
+
   async getAvailableWorkingHours(
     date: string | null,
-    salesPointId?: string
+    salesPointId?: string,
   ): Promise<AvailableHours> {
     const res: AvailableHours = await this.api.send({
       method: 'GET',
