@@ -813,8 +813,11 @@ watch(selectedPaymentTypeModal, async (v) => {
     if (
       selectedPaymentType.value?.type === PaymentType.ONLINE &&
       !foundOnlinePaymentType
-    )
-      selectedPaymentType.value = null
+    ) {
+      if (paymentTypes.value.length)
+        selectedPaymentType.value = paymentTypes.value[0]
+      else selectedPaymentType.value = null
+    }
   }
 })
 
