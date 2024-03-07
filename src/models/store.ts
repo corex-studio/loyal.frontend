@@ -10,6 +10,7 @@ import { reactive } from 'vue'
 import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
+import { QrData } from './utils/qrData/qrData'
 
 type DeliveryAreaInfoDrawerData = {
   salesPoint: SalesPoint
@@ -45,6 +46,7 @@ export class Store {
   catalogLoading = false
   storedMenuItem: string | null = null
   citySelectorModal = false
+  qrData: QrData | null = null
 
   getCompanyGroup(externalId: string) {
     // LocalStorage.getItem('Company-Group')
@@ -90,7 +92,7 @@ export class Store {
           v.id ===
           (typeof salesPoint?.company === 'string'
             ? salesPoint.company
-            : salesPoint?.company?.id)
+            : salesPoint?.company?.id),
       )
 
       if (foundCompany) companyRepo.item = foundCompany

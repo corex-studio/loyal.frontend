@@ -39,6 +39,7 @@ export type SalesPointSettings = {
   booking_table_pick_enabled: boolean
   cart_enabled: boolean
   allow_order_arrangement_without_delivery_time: boolean
+  allow_arrange_from_qr: boolean
   promo_codes: PromoCodeMode
 }
 

@@ -4,7 +4,6 @@ import { Cart, CartParams, CartRaw, AvailableHours } from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { cartApi } from './cartApi'
 import { reactive } from 'vue'
-import { Pad } from '../pads/pad'
 
 export class CartRepo extends BaseRepo<Cart> {
   api = cartApi
@@ -45,7 +44,7 @@ export class CartRepo extends BaseRepo<Cart> {
     return this.item.cartItems.map((v) => v.size.uuid).includes(uuid)
   }
 
-  async current(sales_point?: string, pad?: Pad) {
+  async current(sales_point?: string, pad?: string | null) {
     this.loading = true
     const city = localStorage.getItem('city')
     try {
@@ -54,7 +53,7 @@ export class CartRepo extends BaseRepo<Cart> {
         action: 'current',
         params: {
           sales_point,
-          pad: pad?.id,
+          pad: pad || undefined,
           city,
         },
       })

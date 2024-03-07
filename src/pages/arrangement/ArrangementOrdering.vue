@@ -77,6 +77,7 @@
             :to="timeBlockMobileSpot"
           >
             <div
+              v-if="$cart.item.type !== CartType.TABLE"
               :class="$q.screen.lt.md ? 'column' : 'row items-center'"
               class="body full-width gap-5"
             >
@@ -701,6 +702,7 @@ const makeAnOrder = async () => {
             .format('YYYY-MM-DD HH:mm:ss')
         : null,
       comment: cartRepo.item?.comment || undefined,
+      pad: store.qrData?.data?.pad?.id || undefined,
     })
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
@@ -717,12 +719,27 @@ const makeAnOrder = async () => {
       extra_data: {
         system_source: 'website',
       },
-      pad: store.tableMode ? padRepo.item?.id : undefined,
+      pad: store.tableMode
+        ? padRepo.item?.id
+        : store.qrData
+          ? store.qrData.data?.pad?.id
+          : undefined,
     })
-    if (store.tableMode) {
+    if (store.qrData && store.qrData.data?.pad) {
+      await cartRepo.current(
+        store.qrData.data?.salesPoint?.id,
+        store.qrData.data?.pad?.id,
+      )
+      void router.push({
+        name: 'successOrderPage',
+        params: {
+          orderId: order.id,
+        },
+      })
+    } else if (store.tableMode) {
       await cartRepo.current(
         padRepo.item?.salesPoint?.id,
-        padRepo.item || undefined,
+        padRepo.item?.id || undefined,
       )
       void router.push({
         name: 'currentOrderPage',

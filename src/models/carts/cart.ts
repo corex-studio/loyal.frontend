@@ -13,6 +13,7 @@ export enum CartType {
   PICKUP = 'pickup',
   DELIVERY = 'delivery',
   BOOKING = 'booking',
+  TABLE = 'table',
 }
 
 export type WalletPaymentRaw = {
@@ -42,6 +43,7 @@ export type AvailableHours = {
 export type CartParams = {
   sales_point?: string
   type?: string
+  pad?: string
   delivery_address?: string
   delivery_time?: string | null
   promo_code?: string
@@ -156,7 +158,9 @@ export class Cart implements BaseModel {
       ? 'Самовывоз'
       : this.type === 'delivery'
         ? 'Доставка'
-        : 'Бронь'
+        : this.type === 'table'
+          ? 'В стол'
+          : 'Бронь'
   }
 
   toJson(): Record<string, any> {

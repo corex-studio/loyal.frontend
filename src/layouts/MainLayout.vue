@@ -22,7 +22,7 @@
             $route.name !== 'qrHome' &&
             $route.name !== 'aboutUs' &&
             !routesWithoutContainerPaddings.some((v) =>
-              $route.path.includes(v)
+              $route.path.includes(v),
             ),
         }"
         :style="
@@ -115,7 +115,7 @@ watch(
     webSocket.value.onmessage = (event) => {
       handleMessage(event)
     }
-  }
+  },
 )
 
 watch(
@@ -128,7 +128,7 @@ watch(
         handleMessage(event)
       }
     }
-  }
+  },
 )
 
 watch(
@@ -137,7 +137,7 @@ watch(
     if (route.name === 'menuPage' && q.screen.lt.md) {
       void router.push({ name: 'testPage' })
     }
-  }
+  },
 )
 
 const footerAndHeaderHeight = computed(() => {
@@ -149,7 +149,6 @@ onMounted(async () => {
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
     initMenuPage: true,
   })
-
   await manager.initApp()
   ready.value = true
   // if (route.path.includes('qr_menu')) {

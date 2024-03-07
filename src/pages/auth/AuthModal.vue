@@ -162,16 +162,16 @@ const currentStep = ref(1)
 const openPolicy = () => {
   window.open(
     `https://loyalhub.ru/${String(companyGroupRepo.item?.externalId)}/policy`,
-    '_blank'
+    '_blank',
   )
 }
 
 const openTermsOfService = () => {
   window.open(
     `https://loyalhub.ru/${String(
-      companyGroupRepo.item?.externalId
+      companyGroupRepo.item?.externalId,
     )}/terms_of_service`,
-    '_blank'
+    '_blank',
   )
 }
 
@@ -185,7 +185,7 @@ watch(
     if (v === 1 && interval) {
       clearInterval(interval)
     }
-  }
+  },
 )
 
 watch(
@@ -200,7 +200,7 @@ watch(
       }
       codeError.value = false
     }
-  }
+  },
 )
 
 const nextStepHandler = async () => {
@@ -213,7 +213,6 @@ const nextStepHandler = async () => {
     loading.value = false
   } else {
     await auth()
-    if (authentication.user) void cartRepo.current()
 
     loading.value = false
   }
@@ -222,12 +221,25 @@ const nextStepHandler = async () => {
 const auth = async () => {
   try {
     loading.value = true
+
     await authentication.login({
       phone: `7${data.value.phone}`,
       code: `${data.value.sms.first}${data.value.sms.second}${data.value.sms.third}${data.value.sms.fourth}`,
     })
     await authentication.me()
-    if (authentication.user) void cartRepo.current()
+    if (authentication.user) {
+      if (store.qrData) {
+        await cartRepo.setParams({
+          sales_point: store.qrData.data?.salesPoint?.id,
+          type: 'table',
+          pad: store.qrData.data?.pad?.id,
+        })
+      }
+      void cartRepo.current(undefined, store.qrData?.data?.pad?.id)
+      if (store.qrData && store.qrData.data?.salesPoint?.id) {
+        void store.loadCatalog(store.qrData.data?.salesPoint?.id)
+      }
+    }
 
     currentStep.value = 1
     emit('update:modelValue', false)

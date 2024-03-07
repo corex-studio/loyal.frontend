@@ -7,6 +7,7 @@ import { reactive } from 'vue'
 import { Schedule, ScheduleDay, ScheduleRaw } from './schedule/schedule'
 import { Image, ImageRaw } from '../image/image'
 import { cartRepo } from '../carts/cartRepo'
+import { store } from '../store'
 
 export class SalesPointRepo extends BaseRepo<SalesPoint> {
   api = salesPointApi
@@ -95,7 +96,10 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       id,
       params: {
         cart: cartRepo.item?.id || undefined,
-        delivery_type: cartRepo.item?.type || undefined,
+        pad: store.qrData?.data?.pad?.id || undefined,
+        delivery_type: store.qrData
+          ? 'table'
+          : cartRepo.item?.type || undefined,
       },
     })
     this.menuLoading = false
