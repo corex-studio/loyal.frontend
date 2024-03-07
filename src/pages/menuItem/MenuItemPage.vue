@@ -37,8 +37,8 @@
           $q.screen.xs
             ? 'width: 100%; '
             : $q.screen.sm
-            ? 'width: 45%'
-            : 'width: 40%; min-height: 600px; max-height: 600px'
+              ? 'width: 45%'
+              : 'width: 40%; min-height: 600px; max-height: 600px'
         }`"
         fit="cover"
         :class="{ 'main-image border-radius': !$q.screen.xs }"
@@ -276,7 +276,7 @@ const notFoundModalCloseHandler = () => {
 const cartModalCloseHandler = () => {
   cartConfigureModal.value = false
   const menuItemsIds = menuRepo.item?.groups?.flatMap((v) =>
-    v.items.map((el) => el.id)
+    v.items.map((el) => el.id),
   )
   if (
     menuItemRepo.item &&
@@ -293,7 +293,7 @@ const isAddToCardDisabled = computed(() => {
     currentSize.value?.modifierGroups?.some(
       (v) =>
         v.restrictions?.min_quantity &&
-        sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity
+        sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity,
     ) ||
     !quantity.value
   )
@@ -308,7 +308,7 @@ const addToCart = async () => {
     await companyRepo.retrieve(
       typeof salesPointRepo.item.company === 'string'
         ? salesPointRepo.item.company
-        : salesPointRepo.item.company?.id || ''
+        : salesPointRepo.item.company?.id || '',
     )
     cartConfigureModal.value = true
   } else if (cartRepo.item && currentSize.value) {
@@ -329,7 +329,7 @@ const addToCart = async () => {
                   sum: String(Number(el.price) * el.quantity),
                 } as CartItemModifier
               })
-              .filter((e) => e.quantity)
+              .filter((e) => e.quantity),
           ) || [],
       })
       quantity.value = 1

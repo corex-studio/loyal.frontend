@@ -1,5 +1,8 @@
 <template>
-  <div v-if="$cart.item && $q.screen.lt.lg" class="parent-block">
+  <div
+    v-if="$cart.item && $cart.item.cartItems.length && $q.screen.lt.lg"
+    class="parent-block"
+  >
     <div
       @click="$store.cartDrawer = !$store.cartDrawer"
       class="cart-button row justify-center items-center cursor-pointer"

@@ -247,7 +247,10 @@ const deleteCartItem = async (item: CartItem) => {
     Notify.create({
       message: 'Блюдо удалено из корзины',
     })
-    await cartRepo.current()
+    await cartRepo.current(
+      store.qrData?.data?.salesPoint?.id,
+      store.qrData?.data?.pad?.id,
+    )
     const foundIndex = cartRepo.item?.cartItems.findIndex(
       (v) => v.id === item.id,
     )
