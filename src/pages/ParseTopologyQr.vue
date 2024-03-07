@@ -10,14 +10,14 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { qrDataRepo } from 'src/models/utils/qrData/qrDataRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-// import { useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { store } from 'src/models/store'
 
 const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
 
-// const q = useQuasar()
+const q = useQuasar()
 
 onMounted(async () => {
   loading.value = true
@@ -34,9 +34,8 @@ onMounted(async () => {
 
       if (
         route.query.type === 'pad' &&
-        parsedData.data.companyGroup?.externalId === 'ResidenceOfKings'
-        // &&
-        // q.platform.is.ios
+        parsedData.data.companyGroup?.externalId === 'ResidenceOfKings' &&
+        q.platform.is.ios
       ) {
         store.qrData = parsedData
         // window.location.replace(
