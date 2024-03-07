@@ -60,7 +60,7 @@ watch(
     if (v) {
       if (props.currentType) selectedPaymentType.value = props.currentType
     }
-  }
+  },
 )
 
 const select = () => {

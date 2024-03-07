@@ -253,6 +253,7 @@
               "
               style="min-height: 48px"
               class="body border-radius2 bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
+              @click="selectedPaymentTypeModal = true"
             >
               <div class="gap-4 row items-center no-wrap">
                 <q-icon size="20px" :name="selectedPaymentType?.icon" />
@@ -260,7 +261,6 @@
               </div>
               <CButton
                 v-if="$q.screen.gt.sm"
-                @click="selectedPaymentTypeModal = true"
                 text-button
                 label="Изменить"
                 class="body pr-5"
@@ -489,14 +489,14 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { PaymentType, PaymentObjectType } from 'src/models/order/order'
+import { PaymentObjectType, PaymentType } from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
   store,
   totalDayTimes,
 } from 'src/models/store'
-import { ref, computed, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
@@ -804,13 +804,27 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
   }
 }
 
-onMounted(() => {
+watch(selectedPaymentTypeModal, async (v) => {
+  if (v) {
+    await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
+    const foundOnlinePaymentType = paymentTypes.value.find(
+      (v) => v.type === PaymentType.ONLINE,
+    )
+    if (
+      selectedPaymentType.value?.type === PaymentType.ONLINE &&
+      !foundOnlinePaymentType
+    )
+      selectedPaymentType.value = null
+  }
+})
+
+onMounted(async () => {
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
   })
   void deliveryAddressRepo.list()
 
-  void salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
+  await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
   const foundOnlinePaymentType = paymentTypes.value.find(
     (v) => v.type === PaymentType.ONLINE,
   )
