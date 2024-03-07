@@ -338,19 +338,19 @@ watch(
         selectCurrentTab()
       })
     }
-  }
+  },
 )
 
 const modalWidth = computed(() => {
   return q.screen.lt.md
     ? '450px'
     : newAddressMode.value
-    ? '1094px'
-    : currentTab.value?.type === CartType.PICKUP ||
-      (currentTab.value?.type === CartType.BOOKING &&
-        bookingMode.value === 'bookingList')
-    ? '1300px'
-    : '649px'
+      ? '1094px'
+      : currentTab.value?.type === CartType.PICKUP ||
+          (currentTab.value?.type === CartType.BOOKING &&
+            bookingMode.value === 'bookingList')
+        ? '1300px'
+        : '649px'
 })
 
 const modalHeight = computed(() => {
@@ -373,13 +373,13 @@ const currentSalesPoints = computed(() => {
 
 const availablePickupAddresses = computed(() => {
   return companyRepo.cartCompany?.salesPoints?.filter(
-    (v) => v.settings.pickup_enabled
+    (v) => v.settings.pickup_enabled,
   )
 })
 
 const availableBookingAddresses = computed(() => {
   return companyRepo.cartCompany?.salesPoints?.filter(
-    (v) => v.settings.booking_enabled
+    (v) => v.settings.booking_enabled,
   )
 })
 
@@ -387,7 +387,7 @@ const availableCartTypes = computed(() => {
   const result: TabRaw[] = []
   if (
     companyRepo.cartCompany?.salesPoints?.some(
-      (v) => v.settings.delivery_enabled
+      (v) => v.settings.delivery_enabled,
     )
   ) {
     result.push({
@@ -405,7 +405,7 @@ const availableCartTypes = computed(() => {
   }
   if (
     companyRepo.cartCompany?.salesPoints?.some(
-      (v) => v.settings.booking_enabled
+      (v) => v.settings.booking_enabled,
     ) &&
     authentication.user
   ) {
@@ -474,7 +474,7 @@ const selectCurrentTab = () => {
       selectedSalesPoint.value = cartRepo.item.salesPoint || null
     }
     const foundType = availableCartTypes.value.find(
-      (el) => el.type === cartRepo.item?.type
+      (el) => el.type === cartRepo.item?.type,
     )
     if (foundType) {
       currentTab.value = foundType
@@ -518,6 +518,7 @@ const confirmSelectedAddress = async () => {
         type: 'delivery',
         delivery_address: selectedDeliveryAddress.value?.id,
       })
+    store.qrData = null
     await store.loadCatalog(res[0].salesPoint)
     void openPreviousMenuItem()
     emit('update:modelValue', false)
@@ -525,11 +526,13 @@ const confirmSelectedAddress = async () => {
     currentTab.value?.type === CartType.PICKUP &&
     selectedPickupAddress.value
   ) {
-    if (authentication.user)
+    if (authentication.user) {
       await cartRepo.setParams({
         sales_point: selectedPickupAddress.value.id,
         type: 'pickup',
       })
+    }
+    store.qrData = null
     await store.loadCatalog(selectedPickupAddress.value)
     void openPreviousMenuItem()
     emit('update:modelValue', false)

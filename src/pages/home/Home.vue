@@ -11,7 +11,7 @@
         class="mb-20 mb-xs-10 mb-sm-15 c-container"
       /> -->
       <!-- <BottomHeader /> -->
-
+      <HomeScanQr v-if="$salesPoint.item?.settings.allow_arrange_from_qr" />
       <HomeSpecialOffers />
       <HomeMenus class="c-container" />
     </div>
@@ -23,6 +23,7 @@ import HomeSpecialOffers from './HomeSpecialOffers.vue'
 import { onMounted } from 'vue'
 import HomeMenus from './HomeMenus.vue'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import HomeScanQr from './HomeScanQr.vue'
 // import { authentication } from 'src/models/authentication/authentication'
 // import HomeProfile from './HomeProfile.vue'
 // import HomeQrCard from './HomeQrCard.vue'

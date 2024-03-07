@@ -45,9 +45,12 @@ export class AppManager {
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
     })
+
     if (authentication.user) {
       void this.setDeviceMeta()
       void this.setOnline()
+    } else if (store.qrData) {
+      store.authModal = true
     }
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
@@ -125,10 +128,19 @@ export class AppManager {
     let currentPoint = cartRepo.item
       ? cartRepo.item?.salesPoint
       : companyGroupRepo.item?.companies[0]?.salesPoints &&
-        companyGroupRepo.item?.companies[0]?.salesPoints.length
-      ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
-      : null
-    if (authentication.user) await cartRepo.current()
+          companyGroupRepo.item?.companies[0]?.salesPoints.length
+        ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
+        : null
+    if (authentication.user) {
+      if (store.qrData) {
+        await cartRepo.setParams({
+          sales_point: store.qrData.data?.salesPoint?.id,
+          type: 'table',
+          pad: store.qrData.data?.pad?.id,
+        })
+        await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
+      }
+    }
     if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
     if (currentPoint) void store.loadCatalog(currentPoint)
 

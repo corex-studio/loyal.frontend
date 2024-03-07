@@ -33,7 +33,7 @@
             color="on-product-tile-color"
             size="22px"
           />
-          <div class="bold text-primary">
+          <div style="white-space: nowrap" class="bold text-primary">
             {{ $cart.item.currentDeliveryType }}
           </div>
         </div>

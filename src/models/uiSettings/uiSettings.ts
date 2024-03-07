@@ -103,6 +103,7 @@ export type UiSettingsRaw = {
     title: string | null
     link: string | null
   } | null
+  qr_arrangement_description: string | null
 }
 
 export type BoxShadow = {
@@ -179,6 +180,7 @@ export class UiSetting implements BaseModel {
     title: string | null
     link: string | null
   } | null
+  qrArrangementDescription: string | null
 
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
@@ -201,7 +203,7 @@ export class UiSetting implements BaseModel {
     this.selectionColor = new Color(raw.selection_color)
     this.cardColor = new Color(raw.card_color)
     this.loyaltyCardBackgroundColor = new Color(
-      raw.loyalty_card_background_color
+      raw.loyalty_card_background_color,
     )
     this.borderRadius = raw.border_radius
     this.borderRadiusSmall = raw.border_radius_small
@@ -249,6 +251,7 @@ export class UiSetting implements BaseModel {
     this.onlinePaymentButtonColor = new Color(raw.online_payment_button_color)
     this.bottomBarElements = raw.bottom_bar_elements
     this.becomeFranchisee = raw.become_franchisee
+    this.qrArrangementDescription = raw.qr_arrangement_description
   }
 
   toJson() {
