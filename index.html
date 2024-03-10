@@ -47,6 +47,19 @@
 
 
     <script>
+      const setFavicon = (url) => {
+        let favicon = document.querySelector('link[rel~=\'icon\']')
+        if (!favicon) {
+          const favicon = document.createElement('link')
+          favicon.rel = 'icon'
+          favicon.href = url
+          document.head.appendChild(favicon)
+        } else {
+          favicon.href = url
+        }
+      }
+
+
       const group = ((location.search || '').split('?').find(v => v.startsWith('group=')) || '').replace('group=', '')
       let query = ''
       if (group) query = '?group=' + group
@@ -61,33 +74,13 @@
           if (description) description.content = res.description || ''
           localStorage.setItem('siteDataResponse', JSON.stringify(res))
           window._metrikaKey = res.yandex_metrika_key
+          if (window.location.host === 'loyalhub.ru') {
+            const cachedFavicon = localStorage.getItem('faviconUrl')
+            if (cachedFavicon) setFavicon(cachedFavicon)
+            setFavicon(res.favicon)
+          }
         })
       })
-      const setFavicon = (url) => {
-        let favicon = document.querySelector('link[rel~=\'icon\']')
-        if (!favicon) {
-          const favicon = document.createElement('link')
-          favicon.rel = 'icon'
-          favicon.href = url
-          document.head.appendChild(favicon)
-        } else {
-          favicon.href = url
-          }
-      }
-
-      if (window.location.host === 'loyalhub.ru') {
-
-        const cachedFavicon = localStorage.getItem('faviconUrl')
-        if (cachedFavicon) setFavicon(cachedFavicon)
-
-        fetch(backend + '/site_settings/favicon/' + query).then(res => {
-          res.json().then(thumbUrl => {
-            setFavicon(thumbUrl)
-          })
-        })
-      }
-
-
     </script>
   </body>
 </html>
