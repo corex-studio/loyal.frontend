@@ -1,6 +1,9 @@
 <template>
   <div class="column gap-5">
-    <q-img style="max-width: 700px" src="assets/paymentServices.png" />
+    <q-img
+      style="max-width: 700px"
+      src="https://s3.timeweb.com/1f39f2f5-loyalhub/core/best2pay_payment_logos.png"
+    />
     <div>
       Оплатить заказ можно с помощью банковских карт платёжных систем Visa,
       MasterCard, МИР. При оплате банковской картой безопасность платежей
