@@ -178,13 +178,13 @@
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import MenuItemCharacteristics from './MenuItemCharacteristics.vue'
 import { ItemSize } from 'src/models/menu/menu'
-import { ref, watch, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import ItemSizeSelector from './ItemSizeSelector.vue'
 import ModifiersSelector from './ModifiersSelector.vue'
 import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { store } from 'src/models/store'
+import { beautifyNumber, store } from 'src/models/store'
 import { padRepo } from 'src/models/pads/padRepo'
 import { sum } from 'lodash'
 import { authentication } from 'src/models/authentication/authentication'
@@ -197,7 +197,6 @@ import { Notify, useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { beautifyNumber } from 'src/models/store'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
@@ -317,7 +316,7 @@ const addToCart = async () => {
     try {
       cartRepo.loading = true
       loading.value = true
-      await cartItemRepo.createCartItem({
+      cartRepo.item = await cartItemRepo.createCartItem({
         cart: cartRepo.item?.id,
         quantity: quantity.value,
         size: currentSize.value?.id || '',
@@ -336,15 +335,14 @@ const addToCart = async () => {
           ) || [],
       })
       quantity.value = 1
-      loading.value = false
     } catch (e) {
-      loading.value = false
-
       Notify.create({
         message: 'Ошибка при добавлении в корзину',
         color: 'danger',
       })
     } finally {
+      loading.value = false
+      cartRepo.loading = false
       emit('update:modelValue', false)
     }
   }

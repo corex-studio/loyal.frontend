@@ -162,6 +162,8 @@ const updateQuantity = async (v: number) => {
       message: 'Ошибка изменения товара',
       color: 'danger',
     })
+  } finally {
+    cartRepo.loading = false
   }
 }
 </script>

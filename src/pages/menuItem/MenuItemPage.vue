@@ -314,7 +314,7 @@ const addToCart = async () => {
   } else if (cartRepo.item && currentSize.value) {
     try {
       loading.value = true
-      await cartItemRepo.createCartItem({
+      cartRepo.item = await cartItemRepo.createCartItem({
         cart: cartRepo.item?.id,
         quantity: quantity.value,
         size: currentSize.value?.id,

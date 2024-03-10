@@ -229,7 +229,7 @@ const isAddToCardDisabled = computed(() => {
 
 const clearCart = async () => {
   try {
-    await cartRepo.clear()
+    cartRepo.item = await cartRepo.clear()
     Notify.create({
       message: 'Корзина очищена',
     })

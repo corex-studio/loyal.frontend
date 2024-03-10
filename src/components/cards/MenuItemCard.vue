@@ -190,7 +190,7 @@ const addToCart = async () => {
     try {
       cartRepo.loading = true
       loading.value = true
-      await cartItemRepo.createCartItem({
+      cartRepo.item = await cartItemRepo.createCartItem({
         cart: cartRepo.item?.id,
         quantity: 1,
         size: props.item.sizes[0].id || '',
@@ -209,12 +209,12 @@ const addToCart = async () => {
           ) || [],
       })
     } catch (e) {
-      cartRepo.loading = false
       Notify.create({
         message: 'Ошибка при добавлении в корзину',
         color: 'danger',
       })
     } finally {
+      cartRepo.loading = false
       loading.value = false
     }
   }
