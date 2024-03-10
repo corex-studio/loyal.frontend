@@ -86,23 +86,25 @@ const deliverySteps = computed(() => {
 const progress = computed(() => {
   let val = 0
   const steps = deliverySteps.value.steps
-  const lastStepValue = last(steps)?.orderSum || 0
-  const nextStep = deliverySteps.value.nextStep
-  if (nextStep) {
-    const currentStepOffset =
-      steps.find((v) => v.orderSum === nextStep.minimalOrderSum)?.leftOffset ||
-      1
-    const prevStepOffset =
-      clone(steps)
-        .reverse()
-        .find((v) => v.orderSum < nextStep.minimalOrderSum)?.leftOffset || 1
-    val =
-      ((cartSum.value / nextStep.minimalOrderSum) * 100 * currentStepOffset) /
-      100
-    if (prevStepOffset > val) val = prevStepOffset
-  } else val = (cartSum.value / lastStepValue) * 100
-  if (val >= 98.5 && val < 100) val -= 2.5
-  if (val >= 100) val = 100
+  if (steps.length) {
+    const lastStepValue = last(steps)?.orderSum || 0
+    const nextStep = deliverySteps.value.nextStep
+    if (nextStep) {
+      const currentStepOffset =
+        steps.find((v) => v.orderSum === nextStep.minimalOrderSum)
+          ?.leftOffset || 1
+      const prevStepOffset =
+        clone(steps)
+          .reverse()
+          .find((v) => v.orderSum < nextStep.minimalOrderSum)?.leftOffset || 1
+      val =
+        ((cartSum.value / nextStep.minimalOrderSum) * 100 * currentStepOffset) /
+        100
+      if (prevStepOffset > val) val = prevStepOffset
+    } else val = (cartSum.value / lastStepValue) * 100
+    if (val >= 98.5 && val < 100) val -= 2.5
+    if (val >= 100) val = 100
+  }
   return val + '%'
 })
 </script>

@@ -130,11 +130,11 @@
           @click="arrange"
           class="border-radius2 row items-center px-10 subtitle-text mt-10"
           :style="`height: ${$q.screen.lt.md ? '40' : '52'}px; width: 100%; ${
-            isAddToCardDisabled ? 'cursor: not-allowed' : ''
+            addToCartDisabledInfo ? 'cursor: not-allowed' : ''
           }`"
           :class="[
             $q.screen.gt.sm ? 'justify-between' : 'justify-center',
-            isAddToCardDisabled
+            addToCartDisabledInfo
               ? 'bg-secondary-button-color text-on-secondary-button-color'
               : 'bg-button-color text-on-button-color cursor-pointer',
           ]"
@@ -146,9 +146,9 @@
             <q-spinner size="28px" />
           </div>
           <template v-else>
-            <CTooltip v-if="isAddToCardDisabled"
-              >Имеются недоступные позиции</CTooltip
-            >
+            <CTooltip v-if="addToCartDisabledInfo">{{
+              addToCartDisabledInfo
+            }}</CTooltip>
             <div>Оформить заказ</div>
             <q-badge
               v-if="$q.screen.gt.sm"
@@ -159,7 +159,7 @@
               "
               class="subtitle-text py-3 px-5"
               :class="{
-                'text-on-secondary-button-color': isAddToCardDisabled,
+                'text-on-secondary-button-color': addToCartDisabledInfo,
               }"
               >{{
                 $cart.item?.discountedTotalSum
@@ -224,12 +224,25 @@ watch(
   },
 )
 
-const isAddToCardDisabled = computed(() => {
-  return cartRepo.item?.cartItems.some(
-    (v) =>
-      v.availableQuantity !== null &&
-      (v.availableQuantity <= 0 || v.availableQuantity < v.quantity),
+const addToCartDisabledInfo = computed(() => {
+  if (
+    cartRepo.item?.cartItems.some(
+      (v) =>
+        v.availableQuantity !== null &&
+        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity),
+    )
   )
+    return 'Имеются недоступные позиции'
+  if (cartRepo.item?.deliveryAddress) {
+    if (
+      !currentDeliverySettings.value?.find(
+        (v) => cartRepo.item && v.minimalOrderSum < cartRepo.item.totalSum,
+      )
+    ) {
+      return 'Не набрана минимальная сумма'
+    }
+  }
+  return false
 })
 
 const clearCart = async () => {
@@ -285,7 +298,7 @@ const applyBonuses = () => {
 }
 
 const arrange = () => {
-  if (isAddToCardDisabled.value) return
+  if (addToCartDisabledInfo.value) return
   applyBonuses()
   void router.push({
     name: 'arrangementPage',
