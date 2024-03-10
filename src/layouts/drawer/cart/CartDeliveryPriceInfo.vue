@@ -15,11 +15,25 @@
         При заказе от {{ deliverySteps.nextStep.minimalOrderSum }} ₽ - доставка
         {{ deliverySteps.nextStep.deliveryPrice || 'бесплатно' }}
         {{ deliverySteps.nextStep.deliveryPrice ? '₽' : '' }}
+        <q-icon
+          v-if="deliverySteps.steps.length > 1"
+          name="far fa-info-circle"
+          style="font-size: 0.8em"
+          class="cursor-pointer ml-2"
+          @click="openInfoModal"
+        />
       </div>
     </template>
     <div v-else class="body text-on-backing-color">
       Доставка осуществляется при заказе от
       <span class="bold"> {{ deliverySteps.minimalRequiredSum }} ₽ </span>
+      <q-icon
+        v-if="deliverySteps.steps.length > 1"
+        name="far fa-info-circle"
+        style="font-size: 0.8em"
+        class="cursor-pointer ml-2"
+        @click="openInfoModal"
+      />
     </div>
     <div class="row steps-wrapper">
       <div
@@ -29,21 +43,27 @@
           left: `calc(${el.leftOffset + '%'} - 3px)`,
           display: el.hidden ? 'none' : '',
         }"
-        v-html="el.orderSum"
       />
     </div>
   </div>
+  <DeliveryInfoModal
+    v-model="deliveryInfoModalModelValue"
+    :items="deliverySettings"
+  />
 </template>
 <script lang="ts" setup>
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
-import { computed, toRef } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { clone, last } from 'lodash'
 import { DeliverySteps } from 'layouts/drawer/cart/types/types'
+import DeliveryInfoModal from 'layouts/drawer/cart/DeliveryInfoModal.vue'
 
 const props = defineProps<{
   deliverySettings: DeliveryAreaSettings[]
 }>()
+
+const deliveryInfoModalModelValue = ref(false)
 
 const deliverySettings = computed(() => {
   const items = props.deliverySettings.filter(
@@ -107,6 +127,10 @@ const progress = computed(() => {
   }
   return val + '%'
 })
+
+const openInfoModal = () => {
+  deliveryInfoModalModelValue.value = true
+}
 </script>
 <style lang="scss" scoped>
 .delivery-info-wrapper {
