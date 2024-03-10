@@ -22,31 +22,7 @@
       rel="stylesheet"
     />
 
-    <link
-      href="icons/favicon-128x128.png"
-      rel="icon"
-      sizes="128x128"
-      type="image/png"
-    />
-    <link
-      href="icons/favicon-96x96.png"
-      rel="icon"
-      sizes="96x96"
-      type="image/png"
-    />
-    <link
-      href="icons/favicon-32x32.png"
-      rel="icon"
-      sizes="32x32"
-      type="image/png"
-    />
-    <link
-      href="icons/favicon-16x16.png"
-      rel="icon"
-      sizes="16x16"
-      type="image/png"
-    />
-    <link href="favicon.ico" rel="icon" type="image/ico" />
+    <link href="/api/v1/site_settings/favicon_file/" rel="icon" type="image/ico" />
     <!-- <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -87,28 +63,29 @@
           window._metrikaKey = res.yandex_metrika_key
         })
       })
-      const setFavicons = (url) => {
-        let favicons = document.querySelectorAll('link[rel~=\'icon\']')
-        if (!favicons.length) {
+      const setFavicon = (url) => {
+        let favicon = document.querySelector('link[rel~=\'icon\']')
+        if (!favicon) {
           const favicon = document.createElement('link')
           favicon.rel = 'icon'
           favicon.href = url
           document.head.appendChild(favicon)
         } else {
-          for (const el of favicons) {
-            el.href = url
+          favicon.href = url
           }
-        }
       }
 
-      const cachedFavicon = localStorage.getItem('faviconUrl')
-      if (cachedFavicon) setFavicons(cachedFavicon)
+      if (window.location.host !== 'loyalhub.ru') {
 
-      fetch(backend + '/site_settings/favicon/' + query).then(res => {
-        res.json().then(thumbUrl => {
-          setFavicons(thumbUrl)
+        const cachedFavicon = localStorage.getItem('faviconUrl')
+        if (cachedFavicon) setFavicon(cachedFavicon)
+
+        fetch(backend + '/site_settings/favicon/' + query).then(res => {
+          res.json().then(thumbUrl => {
+            setFavicon(thumbUrl)
+          })
         })
-      })
+      }
 
 
     </script>
