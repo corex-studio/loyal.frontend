@@ -106,6 +106,7 @@ export class Cart implements BaseModel {
   cartItems: CartItem[]
   deliveryPrice: number
   walletPayments: WalletPaymentRaw[]
+  deliveryArea: string | null
   errors: {
     description: string | null
     title: string | null
@@ -138,6 +139,7 @@ export class Cart implements BaseModel {
     this.cartItems = raw.cart_items.map((item) => new CartItem(item))
     this.deliveryPrice = raw.delivery_price
     this.walletPayments = raw.wallet_payments
+    this.deliveryArea = raw.delivery_area
     this.errors = raw.errors
   }
 

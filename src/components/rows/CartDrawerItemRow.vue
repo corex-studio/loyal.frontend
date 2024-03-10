@@ -156,7 +156,7 @@ const updateQuantity = async (v: number) => {
   cartItem.value.quantity = v
   try {
     cartRepo.loading = true
-    await cartItemRepo.update(cartItem.value)
+    cartRepo.item = await cartItemRepo.updateItem(cartItem.value)
   } catch {
     Notify.create({
       message: 'Ошибка изменения товара',

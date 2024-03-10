@@ -125,7 +125,7 @@
             text-color="primary"
           />
         </div>
-        <CartTotalInfo />
+        <CartTotalInfo :delivery-settings="currentDeliverySettings" />
         <div
           @click="arrange"
           class="border-radius2 row items-center px-10 subtitle-text mt-10"
@@ -186,7 +186,7 @@ import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { beautifyNumber, lightColor, store } from 'src/models/store'
-import { ref, watch, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { Notify } from 'quasar'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
@@ -199,6 +199,9 @@ import CartBonuses from './CartBonuses.vue'
 import { PromoCodeMode } from 'src/models/salesPoint/salesPoint'
 import PromocodeModal from 'src/pages/arrangement/PromocodeModal.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
+import { deliveryAreaSettingsRepo } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettingsRepo'
+import moment from 'moment'
+import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 
 const selectPaymentType = ref(false)
 
@@ -209,6 +212,8 @@ const router = useRouter()
 const loading = ref(false)
 
 const promocodeModal = ref(false)
+
+const currentDeliverySettings = ref<DeliveryAreaSettings[] | undefined>()
 
 watch(
   () => store.cartDrawer,
@@ -287,68 +292,31 @@ const arrange = () => {
   })
 }
 
-// const makeAnOrder = async () => {
-//   try {
-//     loading.value = true
-//     const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
-//     if (!status) {
-//       Notify.create({
-//         message: 'В данный момент невозможно оформить заказ',
-//         color: 'danger',
-//       })
-//       return
-//     }
-//     const order = await cartRepo.arrange({
-//       sales_point: cartRepo.item?.salesPoint.id,
-//       payment_data: {
-//         type: currentPaymentType.value,
-//         payment_service:
-//           currentPaymentType.value === PaymentType.CASH ||
-//           currentPaymentType.value === PaymentType.PAY_LATER
-//             ? undefined
-//             : currentPaymentType.value === PaymentType.CARD
-//             ? 'card'
-//             : 'web_form',
-//       },
-//       pad: store.tableMode ? padRepo.item?.id : undefined,
-//     })
-//     cartMode.value = 'cart'
-//     if (store.tableMode) {
-//       await cartRepo.current(
-//         padRepo.item?.salesPoint?.id,
-//         padRepo.item || undefined
-//       )
-//       void router.push({
-//         name: 'currentOrderPage',
-//       })
-//     } else {
-//       cartRepo.item = null
-//     }
-//     if (order.paymentUrl) {
-//       window.open(order.paymentUrl, '_blank')
-//     }
-//     Notify.create({
-//       message: 'Заказ успешно оформлен',
-//     })
-//     orderRepo.item = order
-//   } catch {
-//     cartRepo.arrangeLoading = false
-//     Notify.create({
-//       message: 'Ошибка при оформлении заказа',
-//       color: 'danger',
-//     })
-//   } finally {
-//     loading.value = false
-//   }
-// }
-
-// const toPreviousStep = () => {
-//   if (cartMode.value === 'output') {
-//     cartMode.value = 'cart'
-//   } else {
-//     store.cartDrawer = false
-//   }
-// }
+watch(
+  () => store.cartDrawer,
+  async (v) => {
+    currentDeliverySettings.value = cartRepo.item?.deliveryAddress
+      ? []
+      : undefined
+    if (v && cartRepo.item?.deliveryArea) {
+      const { items } = await deliveryAreaSettingsRepo.list(
+        {
+          delivery_area: cartRepo.item.deliveryArea,
+        },
+        { pageSize: 'all' },
+      )
+      const currentWeekday = moment().isoWeekday()
+      const currentTime = moment().format('HH:mm:ss')
+      const byToday = items.filter((v) => v.weekdays.includes(currentWeekday))
+      currentDeliverySettings.value = byToday.filter(
+        (v) =>
+          (v.endTime >= currentTime && v.startTime <= currentTime) ||
+          v.startTime === v.endTime,
+      )
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style lang="scss" scoped></style>
