@@ -75,7 +75,7 @@
           }
       }
 
-      if (window.location.host !== 'loyalhub.ru') {
+      if (window.location.host === 'loyalhub.ru') {
 
         const cachedFavicon = localStorage.getItem('faviconUrl')
         if (cachedFavicon) setFavicon(cachedFavicon)
