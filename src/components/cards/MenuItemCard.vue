@@ -3,6 +3,7 @@
     style="height: 100%; overflow: overlay; overflow-x: hidden"
     class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
+    :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
   >
     <div
       v-if="$cart.isItemInCart(item.id)?.quantity"
@@ -232,5 +233,9 @@ const addToCart = async () => {
 
 .dimmed {
   filter: grayscale(90%);
+}
+
+.bordered-item {
+  outline: 1px var(--divider-color) solid;
 }
 </style>
