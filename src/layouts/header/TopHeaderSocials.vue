@@ -47,6 +47,11 @@ const socialsTypes = ref([
     icon: 'fa-brands fa-odnoklassniki',
     link: '',
   },
+  {
+    type: LinkType.INSTAGRAM,
+    icon: 'fa-brands fa-instagram',
+    link: '',
+  },
 ])
 
 const openLink = (v: string) => {
