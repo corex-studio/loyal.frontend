@@ -86,12 +86,16 @@
                   class="my-md-10 my-xs-8"
                   color="divider-color"
                 />
+
                 <CartDrawerItemRow
                   @delete="deleteCartItem(item)"
                   :item="item"
                 />
               </template>
             </div>
+            <CartFreeItems
+              v-if="$cart.item.freeItems.filter((el) => !el.applied).length"
+            />
           </template>
           <div v-else class="subtitle-text">Корзина пуста</div>
         </div>
@@ -202,6 +206,7 @@ import CTooltip from 'src/components/helpers/CTooltip.vue'
 import { deliveryAreaSettingsRepo } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettingsRepo'
 import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
+import CartFreeItems from './CartFreeItems.vue'
 
 const selectPaymentType = ref(false)
 

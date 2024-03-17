@@ -54,7 +54,10 @@
       @select="companySelected($event)"
       @update:model-value="$store.selectCompanyModal = false"
     />
-    <MenuItemModal v-model="$store.menuItemModal" />
+    <MenuItemModal
+      :model-value="$store.menuItemModal"
+      @update:model-value="closeMenuItemModal()"
+    />
     <NewsModal
       :model-value="$store.newsModal"
       @update:model-value="closeNewsModal()"
@@ -143,6 +146,11 @@ watch(
 const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
+
+const closeMenuItemModal = () => {
+  store.freeItem = null
+  store.menuItemModal = false
+}
 
 onMounted(async () => {
   const manager = new AppManager({

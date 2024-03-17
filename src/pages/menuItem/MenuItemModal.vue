@@ -121,6 +121,7 @@
             }`"
           >
             <ChangeAmount
+              v-if="!$store.freeItem"
               :height="$q.screen.lt.lg ? '40px' : '48px'"
               background-color="white"
               v-model="quantity"
@@ -333,6 +334,7 @@ const addToCart = async () => {
               })
               .filter((e) => e.quantity),
           ) || [],
+        free_item: store.freeItem || undefined,
       })
       quantity.value = 1
     } catch (e) {
