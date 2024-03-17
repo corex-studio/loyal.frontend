@@ -39,6 +39,7 @@ export class Store {
   verticalScroll = 0
   offersTab = 'Новости'
   menuItemModal = false
+  freeItem: string | null = null
   newsModal = false
   images = {
     empty: 'https://mtraktor.ru/images/no-image.png',

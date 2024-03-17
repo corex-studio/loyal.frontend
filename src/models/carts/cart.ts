@@ -8,6 +8,7 @@ import { CartItem, CartItemRaw } from './cartItem/cartItem'
 import moment from 'moment'
 import { WalletRaw } from '../customer/customer'
 import { sum } from 'lodash'
+import { MenuItem, MenuItemRaw } from '../menu/menuItem/menuItem'
 
 export enum CartType {
   PICKUP = 'pickup',
@@ -72,7 +73,14 @@ export type CartRaw = {
   promo_code: string | null
   comment: string | null
   cart_items: CartItemRaw[]
-  // free_items: [];
+  free_items: {
+    uuid: string
+    active: boolean
+    cart: string
+    cart_item: string
+    menu_item: MenuItemRaw
+    applied: boolean
+  }[]
   // wallet_payments: [];
   // tables: [];
   calculation_status: string
@@ -111,6 +119,14 @@ export class Cart implements BaseModel {
     description: string | null
     title: string | null
   }[]
+  freeItems: {
+    uuid: string
+    active: boolean
+    cart: string
+    cartItem: string
+    menuItem: MenuItem
+    applied: boolean
+  }[]
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -141,6 +157,16 @@ export class Cart implements BaseModel {
     this.walletPayments = raw.wallet_payments
     this.deliveryArea = raw.delivery_area
     this.errors = raw.errors
+    this.freeItems = raw.free_items.map((el) => {
+      return {
+        uuid: el.uuid,
+        active: el.active,
+        cart: el.cart,
+        cartItem: el.cart_item,
+        menuItem: new MenuItem(el.menu_item),
+        applied: el.applied,
+      }
+    })
   }
 
   get cartItemsQuantitySum() {
