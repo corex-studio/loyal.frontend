@@ -3,20 +3,24 @@ import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { orderApi } from './orderApi'
 import { reactive } from 'vue'
 import { Pad } from '../pads/pad'
+import { LocalStorage } from 'quasar'
 
 export class OrderRepo extends BaseRepo<Order> {
   api = orderApi
   filters: OrdersFilter = new OrdersFilter()
+  ordersToReview: Order[] = []
+  orderToReview: Order | null = null
 
-  async current(pad: Pad): Promise<Order[]> {
+  async current(pad?: Pad, for_review?: boolean): Promise<Order[]> {
     const res: {
       results: OrderRaw[]
     } = await this.api.send({
       method: 'GET',
       action: 'current',
       params: {
-        sales_point: pad.salesPoint?.id,
-        pad: pad.id,
+        for_review,
+        sales_point: pad?.salesPoint?.id,
+        pad: pad?.id,
       },
     })
     if (res.results[0]) this.item = new Order(res.results[0])
@@ -31,6 +35,17 @@ export class OrderRepo extends BaseRepo<Order> {
       data,
     })
     return new Order(res)
+  }
+
+  ignoreOrderReview(orderId: string | undefined) {
+    if (!orderId) return
+    const resultStr = LocalStorage.getItem('Ignored-Orders') as string
+    let resultArr: string[] = []
+    if (resultStr) {
+      resultArr = resultStr.split(',')
+    }
+    resultArr.push(orderId)
+    LocalStorage.set('Ignored-Orders', resultArr.join(','))
   }
 }
 

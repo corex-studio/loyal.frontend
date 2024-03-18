@@ -62,15 +62,40 @@
         </div>
       </div>
     </div>
+    <CButton
+      v-if="shouldBeReviewed"
+      @click="openReviewModal()"
+      class="mt-8 body"
+      label="Оценить заказ"
+      height="40px"
+      :width="$q.screen.lt.md ? '100%' : '150px'"
+    />
   </div>
 </template>
 <script lang="ts" setup>
+import CButton from 'src/components/template/buttons/CButton.vue'
 import { Order } from 'src/models/order/order'
-import { beautifyNumber, lightColor } from 'src/models/store'
+import { orderRepo } from 'src/models/order/orderRepo'
+import { beautifyNumber, lightColor, store } from 'src/models/store'
+import { computed } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   order: Order
 }>()
+
+const shouldBeReviewed = computed(() => {
+  return orderRepo.ordersToReview.map((el) => el.id).includes(props.order.id)
+})
+
+const openReviewModal = () => {
+  const foundOrder = orderRepo.ordersToReview.find(
+    (v) => v.id === props.order.id,
+  )
+  if (foundOrder) {
+    orderRepo.orderToReview = foundOrder
+    store.reviewModal = true
+  }
+}
 </script>
 
 <style lang="scss" scoped>
