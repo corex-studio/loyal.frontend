@@ -165,7 +165,7 @@ onMounted(async () => {
     initMenuPage: true,
   })
   await manager.initApp()
-  await orderReviewRepo.getOrderToReview()
+  if (authentication.user) void orderReviewRepo.getOrderToReview()
   ready.value = true
   // if (route.path.includes('qr_menu')) {
   //   store.tableMode = true
