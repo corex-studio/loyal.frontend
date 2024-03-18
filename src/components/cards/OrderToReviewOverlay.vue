@@ -19,10 +19,7 @@
     <div class="header3 bold">Как вам заказ?</div>
     <div class="row full-width items-center gap-5 mt-5 no-wrap">
       <q-img
-        :src="
-          $order.orderToReview?.salesPoint.image?.thumbnail ||
-          $store.images.empty
-        "
+        :src="getCurrentCompany()?.image?.thumbnail || $store.images.empty"
         height="60px"
         width="60px"
         style="min-width: 60px"
@@ -40,18 +37,18 @@
       </q-img>
       <div class="column gap-2">
         <div class="body bold">
-          {{
-            $order.orderToReview?.salesPoint.name ||
-            $order.orderToReview?.salesPoint.customAddress ||
-            $order.orderToReview?.salesPoint.address
-          }}
+          {{ getCurrentCompany()?.name }}
         </div>
         <div
           v-if="$order.orderToReview?.deliveryTime"
           class="body text-secondary"
         >
-          Заказ получен
-          {{ getDeliveryDate($order.orderToReview?.deliveryTime) }}
+          Заказ
+          {{
+            $order.orderToReview?.number
+              ? `№ ${$order.orderToReview?.number}`
+              : 'б/н'
+          }}
         </div>
       </div>
     </div>
@@ -91,16 +88,23 @@
 </template>
 
 <script lang="ts" setup>
-import moment from 'moment'
+// import moment from 'moment'
 import CIconButton from '../template/buttons/CIconButton.vue'
 import CButton from '../template/buttons/CButton.vue'
 import { lightColor } from 'src/models/store'
 import { orderRepo } from 'src/models/order/orderRepo'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
-const getDeliveryDate = (date: string | null | undefined) => {
-  return date
-    ? moment(date, 'DD.MM.YYYY HH:mm').locale('ru').format('MMMM DD')
-    : '-'
+// const getDeliveryDate = (date: string | null | undefined) => {
+//   return date
+//     ? moment(date, 'DD.MM.YYYY HH:mm').locale('ru').format('MMMM DD')
+//     : '-'
+// }
+
+const getCurrentCompany = () => {
+  return companyGroupRepo.item?.companies.find(
+    (el) => el.id === orderRepo.orderToReview?.salesPoint.company,
+  )
 }
 
 const close = () => {

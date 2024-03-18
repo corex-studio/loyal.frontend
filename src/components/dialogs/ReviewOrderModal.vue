@@ -20,18 +20,15 @@
             ? `№ ${$order.orderToReview?.number}`
             : 'б/н'
         }}
-        <template v-if="$order.orderToReview?.deliveryTime">
+        <!-- <template v-if="$order.orderToReview?.deliveryTime">
           • доставлен {{ getDeliveryDate($order.orderToReview?.deliveryTime) }}
-        </template>
+        </template> -->
       </div>
       <div
         class="row full-width no-wrap items-center gap-md-7 gap-xs-5 mt-10 px-xs-10 px-lg-15"
       >
         <q-img
-          :src="
-            $order.orderToReview?.salesPoint.image?.thumbnail ||
-            $store.images.empty
-          "
+          :src="getCurrentCompany()?.image?.thumbnail || $store.images.empty"
           :height="$q.screen.lt.md ? '47px' : '60px'"
           :width="$q.screen.lt.md ? '47px' : '60px'"
           :style="`min-width: ${$q.screen.lt.md ? '47px' : '60px'} `"
@@ -49,11 +46,11 @@
         </q-img>
         <div class="column">
           <div class="subtitle-text bold">
-            {{
-              $order.orderToReview?.salesPoint.name ||
-              $order.orderToReview?.salesPoint.customAddress ||
-              $order.orderToReview?.salesPoint.address
-            }}
+            {{ getCurrentCompany()?.name }}
+            <!-- {{ $order.orderToReview?.salesPoint.company }} -->
+            <!-- // $order.orderToReview?.salesPoint.name || //
+            $order.orderToReview?.salesPoint.customAddress || //
+            $order.orderToReview?.salesPoint.address -->
           </div>
           <div class="body">
             Сумма заказа:
@@ -155,7 +152,7 @@
   </CDialog>
 </template>
 <script lang="ts" setup>
-import moment from 'moment'
+// import moment from 'moment'
 import CDialog from '../template/dialogs/CDialog.vue'
 import { beautifyNumber } from 'src/models/store'
 import { ref, watch } from 'vue'
@@ -165,6 +162,7 @@ import CButton from '../template/buttons/CButton.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { Notify } from 'quasar'
 import { orderRepo } from 'src/models/order/orderRepo'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const props = defineProps<{
   modelValue: boolean
@@ -186,16 +184,23 @@ watch(
     if (v) {
       item.value = new OrderReview({
         order: orderRepo.orderToReview?.id,
+        rating: 5,
       })
     }
   },
 )
 
-const getDeliveryDate = (date: string | null | undefined) => {
-  return date
-    ? moment(date, 'DD.MM.YYYY HH:mm').locale('ru').format('DD MMMM HH:mm')
-    : '-'
+const getCurrentCompany = () => {
+  return companyGroupRepo.item?.companies.find(
+    (el) => el.id === orderRepo.orderToReview?.salesPoint.company,
+  )
 }
+
+// const getDeliveryDate = (date: string | null | undefined) => {
+//   return date
+//     ? moment(date, 'DD.MM.YYYY HH:mm').locale('ru').format('DD MMMM HH:mm')
+//     : '-'
+// }
 
 const createReview = async () => {
   try {
