@@ -46,7 +46,7 @@
               }}
             </div>
 
-            <div class="row gap-4 no-wrap body">
+            <div v-if="!cartItem.freeItem" class="row gap-4 no-wrap body">
               <div class="bold">
                 {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
               </div>
@@ -58,14 +58,26 @@
                 {{ beautifyNumber(item.totalSum, true) }} ₽
               </div>
             </div>
+            <div v-else class="secondary-text">Подарок</div>
           </div>
           <ChangeAmount
+            v-if="!cartItem.freeItem"
             style="height: fit-content"
             small
             text-color="on-secondary-button-color"
             :model-value="cartItem.quantity"
             @update:model-value="updateQuantity($event)"
           />
+          <div
+            v-else
+            class="bg-backing-color gift-icon row justify-center items-center"
+          >
+            <CIcon
+              size="16px"
+              name="fa-regular fa-gift"
+              color="on-backing-color"
+            />
+          </div>
         </div>
         <div
           v-if="$cart.getRelatedItems(item)?.length"
@@ -120,6 +132,7 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { beautifyNumber, store } from 'src/models/store'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import CIcon from '../template/helpers/CIcon.vue'
 
 const cartItem = ref<CartItem | null>(null)
 
@@ -171,5 +184,11 @@ const updateQuantity = async (v: number) => {
 <style lang="scss" scoped>
 .dimmed {
   filter: grayscale(90%);
+}
+
+.gift-icon {
+  height: 34px;
+  width: 34px;
+  border-radius: 100px;
 }
 </style>

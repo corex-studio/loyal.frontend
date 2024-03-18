@@ -12,6 +12,7 @@ export class CartItemRepo extends BaseRepo<CartItem> {
     cart: string
     quantity: number
     cart_item_modifiers: CartItemModifier[]
+    free_item?: string
   }) {
     const res: CartRaw = await this.api.send({
       method: 'POST',

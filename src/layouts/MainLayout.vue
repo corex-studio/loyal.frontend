@@ -35,6 +35,9 @@
         <CartDrawer />
         <LeftDrawer v-if="$q.screen.lt.lg" />
         <CartOverlayButton v-if="!$route.path.includes('arrangement')" />
+        <OrderToReviewOverlay
+          v-if="$order.orderToReview && $route.name === 'home'"
+        />
       </q-page-container>
 
       <q-footer v-if="!$store.tableMode">
@@ -54,13 +57,17 @@
       @select="companySelected($event)"
       @update:model-value="$store.selectCompanyModal = false"
     />
-    <MenuItemModal v-model="$store.menuItemModal" />
+    <MenuItemModal
+      :model-value="$store.menuItemModal"
+      @update:model-value="closeMenuItemModal()"
+    />
     <NewsModal
       :model-value="$store.newsModal"
       @update:model-value="closeNewsModal()"
     />
 
     <RegistrationModal v-model="$store.registrationModal" />
+    <ReviewOrderModal v-model="$store.reviewModal" />
   </template>
 </template>
 
@@ -92,6 +99,9 @@ import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
 import TopHeader from './header/TopHeader.vue'
 import LeftDrawer from './drawer/LeftDrawer.vue'
 import { AppManager } from 'src/models/utils/appManager'
+import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
+import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
+import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -144,12 +154,18 @@ const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
 
+const closeMenuItemModal = () => {
+  store.freeItem = null
+  store.menuItemModal = false
+}
+
 onMounted(async () => {
   const manager = new AppManager({
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
     initMenuPage: true,
   })
   await manager.initApp()
+  if (authentication.user) void orderReviewRepo.getOrderToReview()
   ready.value = true
   // if (route.path.includes('qr_menu')) {
   //   store.tableMode = true

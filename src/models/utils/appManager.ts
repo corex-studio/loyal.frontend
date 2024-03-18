@@ -138,8 +138,8 @@ export class AppManager {
           type: 'table',
           pad: store.qrData.data?.pad?.id,
         })
-        await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
       }
+      await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
     }
     if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
     if (currentPoint) void store.loadCatalog(currentPoint)

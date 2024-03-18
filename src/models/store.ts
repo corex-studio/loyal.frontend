@@ -39,6 +39,7 @@ export class Store {
   verticalScroll = 0
   offersTab = 'Новости'
   menuItemModal = false
+  freeItem: string | null = null
   newsModal = false
   images = {
     empty: 'https://mtraktor.ru/images/no-image.png',
@@ -47,6 +48,7 @@ export class Store {
   storedMenuItem: string | null = null
   citySelectorModal = false
   qrData: QrData | null = null
+  reviewModal = false
 
   getCompanyGroup(externalId: string) {
     // LocalStorage.getItem('Company-Group')

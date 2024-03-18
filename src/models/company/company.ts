@@ -9,6 +9,7 @@ export enum LinkType {
   WEBSITE = 'website',
   MAPS = 'maps',
   OK = 'ok',
+  INSTAGRAM = 'instagram',
 }
 
 export enum AggregatorType {
@@ -242,7 +243,7 @@ export class Company implements BaseModel {
         messages: [],
         phones: [],
         socials: [],
-      }
+      },
     )
     this.deliveryAggregators = raw.delivery_aggregators
   }
