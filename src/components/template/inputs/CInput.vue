@@ -12,8 +12,8 @@
         externalLabelClass
           ? externalLabelClass
           : _rounded
-          ? 'mb-2 helper-text ml-6'
-          : 'mb-2 helper-text',
+            ? 'mb-2 helper-text ml-6'
+            : 'mb-2 helper-text',
       ]"
       class="bold"
     >
@@ -178,7 +178,7 @@ const props = defineProps<{
 
 const emitDirectionKeys = (
   direction: 'up' | 'down' | 'left' | 'right',
-  event: KeyboardEvent
+  event: KeyboardEvent,
 ) => {
   if (props.preventEmitDirection) event.preventDefault()
   emit(direction)
@@ -273,7 +273,7 @@ const currencyOptions = computed(
             max: props.precision,
           }
         : undefined,
-    }
+    },
 )
 
 let { formattedValue, inputRef, setValue } = props.currency
@@ -344,8 +344,8 @@ body.screen--xs {
 }
 
 textarea + .q-field__label {
-  top: 15px;
-  left: 7px;
+  top: 24px;
+  left: 0px;
 }
 
 .q-input:not(.q-file) .label-top .q-field__label {

@@ -35,6 +35,9 @@
         <CartDrawer />
         <LeftDrawer v-if="$q.screen.lt.lg" />
         <CartOverlayButton v-if="!$route.path.includes('arrangement')" />
+        <OrderToReviewOverlay
+          v-if="$order.orderToReview && $route.name === 'home'"
+        />
       </q-page-container>
 
       <q-footer v-if="!$store.tableMode">
@@ -64,6 +67,7 @@
     />
 
     <RegistrationModal v-model="$store.registrationModal" />
+    <ReviewOrderModal v-model="$store.reviewModal" />
   </template>
 </template>
 
@@ -95,6 +99,9 @@ import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
 import TopHeader from './header/TopHeader.vue'
 import LeftDrawer from './drawer/LeftDrawer.vue'
 import { AppManager } from 'src/models/utils/appManager'
+import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
+import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
+import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -158,6 +165,7 @@ onMounted(async () => {
     initMenuPage: true,
   })
   await manager.initApp()
+  await orderReviewRepo.getOrderToReview()
   ready.value = true
   // if (route.path.includes('qr_menu')) {
   //   store.tableMode = true
