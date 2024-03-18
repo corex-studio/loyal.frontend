@@ -95,7 +95,6 @@ const deliverySteps = computed(() => {
   }
   data.minimalRequiredSum = last(items)?.minimalOrderSum || 0
   let index = items.findIndex((v) => cartSum.value >= v.minimalOrderSum)
-  console.log(cartSum.value, items)
   if (index > -1) data.currentStep = items[index]
   else {
     data.nextStep = last(items) || null
