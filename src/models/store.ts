@@ -47,6 +47,7 @@ export class Store {
   catalogLoading = false
   storedMenuItem: string | null = null
   citySelectorModal = false
+  cityCheckModal = false
   qrData: QrData | null = null
   reviewModal = false
 

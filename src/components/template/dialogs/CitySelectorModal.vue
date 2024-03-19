@@ -5,11 +5,13 @@
     width="400px"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
-    :no-close="$q.screen.lt.md"
+    no-close
+    persistent
   >
     <div class="text-on-background-color">
-      <div class="header bold mb-md-15 mb-xs-10">Укажите город</div>
-      <div class="column no-wrap full-width gap-md-10 gap-xs-6">
+      <div class="header3 bold mb-2">Выберите город</div>
+      <div class="body text-secondary">Блюда и акции зависят от города</div>
+      <div class="column no-wrap full-width gap-xs-6 mt-8">
         <template
           v-for="(item, index) in $companyGroup.item?.cityData.results"
           :key="index"
@@ -43,10 +45,10 @@
       <CButton
         @click="confirmSelectedCity()"
         :disabled="!currentCity"
-        :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать город'"
+        label="Далее"
         :height="$q.screen.lt.md ? '40px' : '48px'"
         width="100%"
-        class="body mt-15"
+        class="body mt-10"
       />
     </div>
   </CDialog>
@@ -80,7 +82,7 @@ watch(
       if (companyGroupRepo.item)
         currentCity.value = companyGroupRepo.item?.cityData.current
     }
-  }
+  },
 )
 
 const confirmSelectedCity = async () => {
