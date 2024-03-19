@@ -92,6 +92,7 @@ export type CustomerRaw = {
   description: string | null
   technical_information: string | null
   image?: ImageRaw | null
+  is_anonymous?: boolean
 }
 
 export class Customer implements BaseModel {
@@ -125,6 +126,7 @@ export class Customer implements BaseModel {
   description: string | null
   technicalInformation: string | null
   image: ImageRaw | null
+  isAnonymous?: boolean
 
   constructor(raw: CustomerRaw) {
     this.id = raw.uuid
@@ -157,6 +159,7 @@ export class Customer implements BaseModel {
     this.description = raw.description
     this.technicalInformation = raw.technical_information
     this.image = raw.image || null
+    this.isAnonymous = raw.is_anonymous
   }
 
   get loyaltyCard() {

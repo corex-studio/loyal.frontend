@@ -9,7 +9,13 @@
             v-if="$q.screen.lt.md"
             @click="
               $router.push({
-                name: 'home',
+                name: $store.tableMode ? 'qrHome' : 'home',
+                params: {
+                  padId:
+                    $store.tableMode && $route.params.padId
+                      ? $route.params.padId
+                      : undefined,
+                },
               })
             "
             name="fa-regular fa-angle-left"
@@ -19,8 +25,7 @@
             class="cursor-pointer"
           />
           <div class="header bold">
-            Заказ на
-            {{ isDelivery ? 'доставку' : 'самовывоз' }}
+            {{ orderTypeText }}
           </div>
         </div>
         <div class="column gap-md-12 gap-xs-8 full-width">
@@ -29,8 +34,8 @@
             class="full-width mb-2"
             ref="timeBlockMobileSpot"
           ></div>
-
           <div
+            v-if="!$store.tableMode"
             :class="$q.screen.lt.md ? 'column' : 'row items-center'"
             class="body full-width gap-md-5 gap-xs-4"
           >
@@ -220,7 +225,10 @@
               </div>
             </div>
           </teleport>
-          <q-separator v-if="$q.screen.lt.md" color="divider-color" />
+          <q-separator
+            v-if="$q.screen.lt.md && !$store.tableMode"
+            color="divider-color"
+          />
           <div
             :class="$q.screen.lt.md ? 'column' : 'row'"
             class="body full-width gap-md-5 gap-xs-4"
@@ -554,6 +562,11 @@ const isDelivery = computed(() => {
   return cartRepo.item?.type === CartType.DELIVERY
 })
 
+const orderTypeText = computed(() => {
+  if (cartRepo.item?.type === CartType.TABLE) return 'Заказ в стол'
+  return `Заказ на ${isDelivery.value ? 'доставку' : 'самовывоз'}`
+})
+
 const availableTimes = computed(() => {
   return currentDay.value === 'Сегодня'
     ? availableHours.value?.today.flatMap((v) => {
@@ -582,44 +595,44 @@ const availableTimes = computed(() => {
 
 const paymentTypes = computed(() => {
   const result: PaymentObjectType[] = []
-  if (store.tableMode) {
+  // if (store.tableMode) {
+  //   result.push({
+  //     label: 'Внести в счет',
+  //     type: PaymentType.PAY_LATER,
+  //     class: 'bg-cash-button-color text-on-cash-button-color',
+  //     icon: 'fa-light fa-money-bill',
+  //   })
+  //   if (salesPointRepo.paymentSettings?.online_payment_enabled) {
+  //     result.push({
+  //       label: 'Онлайн',
+  //       type: PaymentType.ONLINE,
+  //       class: 'bg-cash-button-color text-on-cash-button-color',
+  //       icon: 'fa-light fa-ruble-sign',
+  //     })
+  //   }
+  // } else {
+  if (salesPointRepo.paymentSettings?.cash_enabled)
     result.push({
-      label: 'Внести в счет',
-      type: PaymentType.PAY_LATER,
+      label: 'Наличными при получении',
+      type: PaymentType.CASH,
       class: 'bg-cash-button-color text-on-cash-button-color',
       icon: 'fa-light fa-money-bill',
     })
-    if (salesPointRepo.paymentSettings?.online_payment_enabled) {
-      result.push({
-        label: 'Онлайн',
-        type: PaymentType.ONLINE,
-        class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-ruble-sign',
-      })
-    }
-  } else {
-    if (salesPointRepo.paymentSettings?.cash_enabled)
-      result.push({
-        label: 'Наличными при получении',
-        type: PaymentType.CASH,
-        class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-money-bill',
-      })
-    if (salesPointRepo.paymentSettings?.card_enabled)
-      result.push({
-        label: 'Картой при получении',
-        type: PaymentType.CARD,
-        class: 'bg-card-button-color text-on-card-button-color',
-        icon: 'fa-light fa-credit-card',
-      })
-    if (salesPointRepo.paymentSettings?.online_payment_enabled)
-      result.push({
-        label: 'Онлайн',
-        type: PaymentType.ONLINE,
-        class: 'bg-online-button-color text-on-online-button-color',
-        icon: 'fa-light fa-ruble-sign',
-      })
-  }
+  if (salesPointRepo.paymentSettings?.card_enabled)
+    result.push({
+      label: 'Картой при получении',
+      type: PaymentType.CARD,
+      class: 'bg-card-button-color text-on-card-button-color',
+      icon: 'fa-light fa-credit-card',
+    })
+  if (salesPointRepo.paymentSettings?.online_payment_enabled)
+    result.push({
+      label: 'Онлайн',
+      type: PaymentType.ONLINE,
+      class: 'bg-online-button-color text-on-online-button-color',
+      icon: 'fa-light fa-ruble-sign',
+    })
+  // }
   return result
 })
 
@@ -760,7 +773,8 @@ const makeAnOrder = async () => {
       message: 'Заказ успешно оформлен',
     })
     orderRepo.item = order
-  } catch {
+  } catch (e) {
+    console.log(e)
     cartRepo.arrangeLoading = false
     Notify.create({
       message: 'Ошибка при оформлении заказа',
@@ -791,7 +805,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
   try {
     await cartRepo.setParams({
       sales_point: res[0].salesPoint,
-      type: 'delivery',
+      type: CartType.DELIVERY,
       delivery_address: address.id,
     })
   } catch {

@@ -10,6 +10,8 @@ import { NewsType } from '../news/news'
 import { companyRepo } from '../company/companyRepo'
 import { customerRepo } from '../customer/customerRepo'
 import moment from 'moment'
+import { CartType } from 'src/models/carts/cart'
+import { authRepo } from 'src/models/authentication/authRepo'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -30,6 +32,9 @@ export class AppManager {
     const _value = LocalStorage.getItem('Company-Group')
     if (_value && !companyGroupId) companyGroupId = String(_value)
     if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
+    if (!authentication.user && store.tableMode) {
+      await authRepo.initAnonymousUser()
+    }
     await Promise.all([
       this.tryAuth(),
       this.getCurrentCompanyGroup(),
@@ -135,7 +140,7 @@ export class AppManager {
       if (store.qrData) {
         await cartRepo.setParams({
           sales_point: store.qrData.data?.salesPoint?.id,
-          type: 'table',
+          type: CartType.TABLE,
           pad: store.qrData.data?.pad?.id,
         })
       }
@@ -166,7 +171,10 @@ export class AppManager {
           newsRepo.promotions = res.items
         })
     }
-    if (authentication.user?.registeredAt === null) {
+    if (
+      authentication.user?.registeredAt === null &&
+      !authentication.user.isAnonymous
+    ) {
       store.registrationModal = true
     }
   }

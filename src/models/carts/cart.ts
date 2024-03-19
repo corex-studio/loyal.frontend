@@ -17,6 +17,13 @@ export enum CartType {
   TABLE = 'table',
 }
 
+export const cartTypeName = {
+  [CartType.BOOKING]: 'Бронь',
+  [CartType.PICKUP]: 'Самовывоз',
+  [CartType.DELIVERY]: 'Доставка',
+  [CartType.TABLE]: 'В стол',
+}
+
 export type WalletPaymentRaw = {
   active: boolean
   applied_sum: number
@@ -43,7 +50,7 @@ export type AvailableHours = {
 
 export type CartParams = {
   sales_point?: string
-  type?: string
+  type?: CartType
   pad?: string
   delivery_address?: string
   delivery_time?: string | null
@@ -176,19 +183,13 @@ export class Cart implements BaseModel {
   }
 
   get currentAddress() {
-    return this.type === 'delivery'
+    return this.type === CartType.DELIVERY
       ? this.deliveryAddress?.name
       : this.salesPoint.customAddress || this.salesPoint.address
   }
 
   get currentDeliveryType() {
-    return this.type === 'pickup'
-      ? 'Самовывоз'
-      : this.type === 'delivery'
-        ? 'Доставка'
-        : this.type === 'table'
-          ? 'В стол'
-          : 'Бронь'
+    return cartTypeName[this.type]
   }
 
   toJson(): Record<string, any> {

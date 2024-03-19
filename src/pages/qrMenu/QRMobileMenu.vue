@@ -1,7 +1,10 @@
 <template>
-  <div class="fixed-bottom">
+  <div class="fixed-bottom" style="z-index: 999">
     <div
-      v-if="$cart.item?.cartItems.length"
+      v-if="
+        $cart.item?.cartItems.length &&
+        $store.qrMenuData?.settings.waiter_calls_enabled
+      "
       class="row full-width justify-center mb-3"
     >
       <CButton
@@ -16,11 +19,16 @@
       />
     </div>
     <div
-      class="bordered row justify-between no-wrap full-width items-center bg-bottom-menu-color pa-5 pr-10"
+      :class="{
+        'pa-5 pr-10': $store.qrMenuData?.settings.waiter_calls_enabled,
+        'py-5 px-18': !$store.qrMenuData?.settings.waiter_calls_enabled,
+      }"
+      class="bordered row justify-between no-wrap full-width items-center bg-bottom-menu-color"
       style="z-index: 3005"
     >
       <CButton
-        class="col-grow"
+        v-if="$store.qrMenuData?.settings.waiter_calls_enabled"
+        class="col-grow helper-text"
         style="max-width: 220px"
         :color="
           $waiterCall.item?.status === WaiterCallStatus.CREATED ||
@@ -92,17 +100,18 @@
           </template>
         </div>
       </CButton>
-
       <CButton
         @click="
           $router.push({
             name: 'qrHome',
+            params: { padId: $route.params.padId || undefined },
           })
         "
         text-color="on-bottom-menu-color"
         color="transparent"
         height="50px"
         width="58px"
+        class="helper-text"
       >
         <div
           style="line-height: 8px"
@@ -117,6 +126,42 @@
         </div>
       </CButton>
       <CButton
+        v-if="!$store.qrMenuData?.settings.waiter_calls_enabled"
+        color="transparent"
+        height="50px"
+        class="helper-text"
+        text-color="on-bottom-menu-color"
+        width="58px"
+        @click="$store.cartDrawer = true"
+      >
+        <CBadge
+          v-if="$cart.item?.cartItems.length"
+          style="
+            position: absolute;
+            top: -23px;
+            left: 50%;
+            transform: translateX(-50%);
+          "
+          class="px-3"
+          height="20px"
+          no-padding
+        >
+          {{ $cart.item?.discountedTotalSum }} ₽</CBadge
+        >
+        <div
+          class="column no-wrap gap-3 bottom-bar-text"
+          style="line-height: 8px"
+        >
+          <CIcon
+            color="on-bottom-menu-color"
+            name="fa-light fa-shopping-cart"
+            size="22px"
+          />
+          <div>Корзина</div>
+        </div>
+      </CButton>
+      <CButton
+        class="helper-text"
         @click="
           $order.item
             ? $router.push({
@@ -143,7 +188,11 @@
             size="23px"
             name="fa-light fa-clipboard-list-check"
           />
-          <div>Мой счет</div>
+          <div>
+            {{
+              $store.qrMenuData?.settings.orders_bottom_bar_text || 'Мой счет'
+            }}
+          </div>
         </div>
       </CButton>
     </div>
@@ -164,6 +213,7 @@ import { padRepo } from 'src/models/pads/padRepo'
 import { beautifyNumber } from 'src/models/store'
 import { ref } from 'vue'
 import WaiterCallSuccessfullyCreated from './WaiterCallSuccessfullyCreated.vue'
+import CBadge from 'components/helpers/CBadge.vue'
 
 const callCreatedModal = ref(false)
 const setStatusLoading = ref(false)
@@ -192,6 +242,7 @@ const callSetStatus = async (status: WaiterCallStatus) => {
       message: 'Ошибка при смене статуса',
       color: 'danger',
     })
+    setStatusLoading.value = false
   }
 }
 
@@ -208,6 +259,7 @@ const createCall = async () => {
       message: 'Невозможно позвать официанта в данный момент',
       color: 'danger',
     })
+    waiterCallRepo.loadings.create = false
   }
 }
 </script>

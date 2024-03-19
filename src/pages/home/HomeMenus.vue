@@ -21,7 +21,7 @@
             :gap="$q.screen.gt.md ? '20px' : $q.screen.md ? '16px' : '8px'"
           >
             <template v-slot:item="{ item }">
-              <MenuItemCard :item="(item as MenuItem)" />
+              <MenuItemCard :item="item as MenuItem" />
             </template>
           </GridContainer>
         </div>

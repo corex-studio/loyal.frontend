@@ -6,6 +6,7 @@ import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import moment from 'moment'
 import { ImageRaw } from '../image/image'
 import { MenuModifierGroupRaw } from '../menu/menuModifierGroup/menuModifierGroup'
+import { CartType } from 'src/models/carts/cart'
 
 export type PaymentObjectType = {
   label: string
@@ -332,7 +333,7 @@ export class Order implements BaseModel {
   }
 
   get deliveryType() {
-    if (this.type === 'delivery') return 'Доставка'
+    if (this.type === CartType.DELIVERY) return 'Доставка'
     else return 'Самовывоз'
   }
 

@@ -2,7 +2,7 @@
   <template v-if="ready">
     <PrepareUiSettings />
     <q-layout class="bg-background-color relative-position" view="lHh Lpr lFf">
-      <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+      <QRHomePadInfo v-if="$store.tableMode" />
       <TopHeader v-if="$q.screen.gt.md" />
       <MainHeader />
 
@@ -73,7 +73,7 @@
 
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
-import { Screen, useQuasar } from 'quasar'
+import { LocalStorage, Screen, useQuasar } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
@@ -102,6 +102,13 @@ import { AppManager } from 'src/models/utils/appManager'
 import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { NewsType } from 'src/models/news/news'
+import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
+import { CartType } from 'src/models/carts/cart'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -160,80 +167,80 @@ const closeMenuItemModal = () => {
 }
 
 onMounted(async () => {
+  if (route.path.includes('qr_menu')) {
+    store.tableMode = true
+    document.body.style.paddingBottom = '100px'
+  }
   const manager = new AppManager({
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
     initMenuPage: true,
   })
   await manager.initApp()
   if (authentication.user) void orderReviewRepo.getOrderToReview()
+
+  salesPointRepo.menuLoading = true
+  if (!store.tableMode) {
+    // store.getCompanyGroup(String(route.params.companyGroup))
+    // await getCurrentCompanyGroup()
+    // changeFavicon(companyGroupRepo.item?.image?.thumbnail)
+    // await uiSettingsRepo.fetchSettings()
+    // await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
+    try {
+    } catch {
+      authentication.loading = false
+      ready.value = true
+      cartRepo.loading = false
+    }
+    if (!newsRepo.news.length) {
+      void newsRepo
+        .list({
+          company_group: companyGroupRepo.item?.id,
+          active: true,
+          type: NewsType.DEFAULT,
+        })
+        .then((res) => {
+          newsRepo.news = res.items
+        })
+    }
+    if (!newsRepo.promotions.length) {
+      void newsRepo
+        .list({
+          company_group: companyGroupRepo.item?.id,
+          active: true,
+          type: NewsType.PROMOTION,
+        })
+        .then((res) => {
+          newsRepo.promotions = res.items
+        })
+    }
+  } else {
+    void uiSettingsRepo.fetchSettings()
+    const group =
+      route.query.group || LocalStorage.getItem('Company-Group') || null
+    if (!group) return
+    const res = await qrMenuSettingsRepo.qrMenuData(String(group))
+    padRepo.item = res.pad
+    companyGroupRepo.item = res.company_group
+    store.qrMenuData = res
+    void cartRepo.setParams({
+      type: CartType.TABLE,
+      pad: padRepo.item.id,
+      sales_point: padRepo.item.salesPoint?.id,
+    })
+    store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
+    void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
+    // void waiterCallRepo
+    //   .list({
+    //     pad: padRepo.item.id,
+    //   })
+    //   .then(() => {
+    //     waiterCallRepo.item = waiterCallRepo.items[0]
+    //   })
+    // void orderRepo.current(padRepo.item)
+    // void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
+  }
+
   ready.value = true
-  // if (route.path.includes('qr_menu')) {
-  //   store.tableMode = true
-  // }
-  // salesPointRepo.menuLoading = true
-  // setBodyScrollClass()
-  // if (!store.tableMode) {
-  //   store.getCompanyGroup(String(route.params.companyGroup))
-  //   await getCurrentCompanyGroup()
-  //   changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-  //   await uiSettingsRepo.fetchSettings()
-  //   await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
-  //   try {
-
-  //   } catch {
-  //     authentication.loading = false
-  //     ready.value = true
-  //     cartRepo.loading = false
-  //   }
-  // if (!newsRepo.news.length) {
-  //   void newsRepo
-  //     .list({
-  //       company_group: companyGroupRepo.item?.id,
-  //       active: true,
-  //       type: NewsType.DEFAULT,
-  //     })
-  //     .then((res) => {
-  //       newsRepo.news = res.items
-  //     })
-  // }
-  // if (!newsRepo.promotions.length) {
-  //   void newsRepo
-  //     .list({
-  //       company_group: companyGroupRepo.item?.id,
-  //       active: true,
-  //       type: NewsType.PROMOTION,
-  //     })
-  //     .then((res) => {
-  //       newsRepo.promotions = res.items
-  //     })
-  // }
-
-  // } else {
-  //   Object.assign(api.defaults.headers, {
-  //     ['User-Role']: 'pad_manager',
-  //   })
-  //   Object.assign(api.defaults.headers, {
-  //     ['Company-Group']: route.params.companyGroup,
-  //   })
-  //   void uiSettingsRepo.fetchSettings()
-  //   await padRepo.retrieve(String(route.params.padId))
-  //   if (!padRepo.item?.companyGroup) return
-  //   await companyGroupRepo.retrieve(padRepo.item.companyGroup)
-  //   changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-  //   store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
-  //   void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
-  //   void waiterCallRepo
-  //     .list({
-  //       pad: padRepo.item.id,
-  //     })
-  //     .then(() => {
-  //       waiterCallRepo.item = waiterCallRepo.items[0]
-  //     })
-  //   void orderRepo.current(padRepo.item)
-  //   void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
-  // }
-
-  // ready.value = true
 })
 
 const companySelected = (v: Company | null) => {

@@ -2,7 +2,7 @@
   <div class="column gap-6 subtitle-text full-width">
     <div v-if="$cart.item" class="row full-width justify-between items-center">
       <div>Сумма за товары</div>
-      <div>{{ beautifyNumber($cart.item?.sum, true) }} ₽</div>
+      <div>{{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽</div>
     </div>
     <!--    <div-->
     <!--      v-if="$cart.item && $cart.item.deliveryPrice"-->

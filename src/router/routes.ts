@@ -1,4 +1,8 @@
 import { RouteRecordRaw } from 'vue-router'
+import {
+  arrangementRoutes,
+  arrangementRoutesInQrMenu,
+} from 'src/router/arrangementRoutes'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -82,32 +86,14 @@ const routes: RouteRecordRaw[] = [
         name: 'myQrPage',
         component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue'),
       },
-      {
-        path: 'arrangement',
-        name: 'arrangementPage',
-        component: () => import('src/pages/arrangement/ArrangementPage.vue'),
-        redirect: {
-          name: 'orderingPage',
-        },
-        children: [
-          {
-            path: 'ordering',
-            name: 'orderingPage',
-            component: () =>
-              import('src/pages/arrangement/ArrangementOrdering.vue'),
-          },
-          {
-            path: 'success_order/:orderId',
-            name: 'successOrderPage',
-            component: () =>
-              import('src/pages/arrangement/ArrangementSuccess.vue'),
-          },
-        ],
-      },
+      ...arrangementRoutes,
+      ...arrangementRoutesInQrMenu,
     ],
   },
+  /////////////////// NEW ////////////////////
+
   {
-    path: '/:companyGroup/qr_menu/:padId',
+    path: '/qr_menu/:padId?',
     component: () => import('src/layouts/MainLayout.vue'),
     children: [
       {
@@ -132,6 +118,34 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+
+  //////////////////
+  // {
+  //   path: '/:companyGroup/qr_menu/:padId',
+  //   component: () => import('src/layouts/MainLayout.vue'),
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'qrHome',
+  //       component: () => import('src/pages/qrMenu/home/QRHome.vue'),
+  //     },
+  //     {
+  //       path: 'menu_item/:menuItemId',
+  //       name: 'qrMenuItemPage',
+  //       component: () => import('src/pages/menuItem/MenuItemPage.vue'),
+  //     },
+  //     {
+  //       path: 'current_order',
+  //       name: 'currentOrderPage',
+  //       component: () => import('src/pages/qrMenu/order/QRCurrentOrder.vue'),
+  //     },
+  //     {
+  //       path: 'order_review',
+  //       name: 'orderReviewPage',
+  //       component: () => import('src/pages/qrMenu/order/QROrderReview.vue'),
+  //     },
+  //   ],
+  // },
   {
     path: '/:companyGroup/delete_account',
     name: 'deleteAccountPage',

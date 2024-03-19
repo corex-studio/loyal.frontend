@@ -7,6 +7,7 @@
     >
       <div class="column c-container">
         <div
+          v-if="!$store.tableMode"
           :style="`height: ${$q.screen.lt.md ? '66' : '72'}px`"
           class="row justify-between gap-lg-8 gap-xs-6 items-center no-wrap full-width"
         >
@@ -29,26 +30,7 @@
               class="mr-5 cursor-pointer"
               hover-color="primary"
             />
-            <img
-              v-if="
-                $company.item?.logo?.thumbnail ||
-                $company.item?.image?.thumbnail
-              "
-              @click="
-                $router.push({
-                  name: 'home',
-                })
-              "
-              :height="$q.screen.gt.md ? '52' : '48'"
-              class="border-radius cursor-pointer"
-              style="object-fit: contain; max-width: 230px"
-              :src="
-                $q.screen.lt.lg
-                  ? $company.item?.image?.thumbnail
-                  : $company.item?.logo?.thumbnail ||
-                    $company.item?.image?.thumbnail
-              "
-            />
+            <CompanyLogoView />
             <CButton
               v-if="
                 $companyGroup.item &&
@@ -211,82 +193,14 @@
           </div>
         </div>
         <!-- <q-separator color="divider-color" style="z-index: 10" /> -->
-        <BottomHeader v-if="$route.name === 'home'" />
+        <BottomHeader
+          v-if="
+            $route.matched.some((v) =>
+              ['qrHome', 'home'].includes(String(v.name)),
+            )
+          "
+        />
       </div>
-      <!-- <div class="c-container full-height column">
-        <div
-          v-if="$q.screen.gt.sm"
-          class="row no-wrap justify-between items-center pt-10 gap-xs-6 gap-lg-14"
-        >
-          <div
-            class="no-wrap row cursor-pointer items-center gap-xs-6 gap-lg-14 items-center"
-            @click="$router.push({ name: 'home' })"
-          >
-            <img
-              v-if="
-                $q.screen.gt.sm &&
-                ($company.item?.logo?.thumbnail ||
-                  $company.item?.image?.thumbnail)
-              "
-              :height="$q.screen.gt.md ? '48' : '44'"
-              class="border-radius"
-              style="object-fit: contain"
-              :src="
-                $company.item?.logo?.thumbnail ||
-                $company.item?.image?.thumbnail
-              "
-            />
-
-            <CButton
-              v-if="
-                $companyGroup.item &&
-                $companyGroup.item.companies.length > 1 &&
-                !$store.tableMode
-              "
-              @click="$store.selectCompanyModal = true"
-              :height="$q.screen.gt.md ? '48px' : '44px'"
-              :width="$q.screen.gt.md ? undefined : '44px'"
-              color="secondary-button-color"
-              text-color="on-secondary-button-color"
-            >
-              <div
-                v-if="$q.screen.gt.lg"
-                class="row no-wrap gap-3 items-center"
-              >
-                <div class="body">Изменить заведение</div>
-                <CIcon size="21px" name="fa-regular fa-angle-right" />
-              </div>
-              <CIcon v-else name="fa-regular fa-angle-down" size="20px" />
-            </CButton>
-          </div>
-          <div class="row gap-xs-6 gap-lg-14 no-wrap">
-            <div class="body">
-              <ServiceSettingsBlock v-if="authentication.user" />
-              <ServiceSettingsSkeleton v-if="authentication.loading" />
-            </div>
-            <CButton
-              v-if="!authentication.loading && !$store.tableMode"
-              @click="profileButtonClickHandler()"
-              :height="$q.screen.gt.md ? '48px' : '44px'"
-              :width="$q.screen.gt.md ? '160px' : '44px'"
-              color="secondary-button-color"
-              text-color="on-secondary-button-color"
-            >
-              <div
-                v-if="$q.screen.gt.md"
-                class="row items-center gap-3 no-wrap"
-              >
-                <CIcon size="19px" name="fa-regular fa-user" />
-                <div class="body">
-                  {{ authentication.user ? 'Профиль' : 'Войти' }}
-                </div>
-              </div>
-              <CIcon v-else name="fa-regular fa-user" size="19px" />
-            </CButton>
-          </div>
-        </div>
-        <MainHeaderMobile v-else />
-      </div> -->
     </q-header>
     <ArrangementHeader v-else-if="$q.screen.gt.sm" />
     <BonusesInDevModal v-model="$store.bonusesModal" />
@@ -301,9 +215,8 @@ import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettings
 import { store } from 'src/models/store'
 import { useRoute } from 'vue-router'
 // import ServiceSettingsSkeleton from 'src/components/serviceSettings/ServiceSettingsSkeleton.vue'
-import { ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
-import { computed, onMounted } from 'vue'
 import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
 // import MainHeaderMobile from './MainHeaderMobile.vue'
 import BottomHeader from './BottomHeader.vue'
@@ -311,6 +224,7 @@ import BottomHeader from './BottomHeader.vue'
 import BonusesInDevModal from 'src/components/template/dialogs/BonusesInDevModal.vue'
 import CitySelectorModal from 'src/components/template/dialogs/CitySelectorModal.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import CompanyLogoView from 'components/CompanyLogoView.vue'
 
 // const router = useRouter()
 

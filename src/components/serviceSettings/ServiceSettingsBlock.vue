@@ -49,6 +49,7 @@
       </template>
     </div>
     <CIcon
+      v-if="$cart.item?.type !== CartType.TABLE"
       size="22px"
       color="on-product-tile-color"
       name="fa-regular fa-angle-right"
@@ -61,8 +62,11 @@ import { store } from 'src/models/store'
 import CIcon from '../template/helpers/CIcon.vue'
 // import CustomIcon from '../template/helpers/CustomIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
+import { CartType } from 'src/models/carts/cart'
+import { cartRepo } from 'src/models/carts/cartRepo'
 
 const openDialog = () => {
+  if (cartRepo.item?.type === CartType.TABLE) return
   if (!authentication.user) {
     store.authModal = true
     return

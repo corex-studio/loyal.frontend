@@ -1,6 +1,11 @@
 <template>
   <div
-    v-if="$cart.item && $cart.item.cartItems.length && $q.screen.lt.lg"
+    v-if="
+      $cart.item &&
+      $cart.item.cartItems.length &&
+      $q.screen.lt.lg &&
+      !$store.tableMode
+    "
     class="parent-block"
   >
     <div
@@ -40,9 +45,9 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 
 .parent-block {
   position: fixed;
-  bottom: 30px;
   right: 16px;
   z-index: 51;
+  bottom: 30px;
 }
 
 .amount-chip {

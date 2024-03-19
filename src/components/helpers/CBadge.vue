@@ -1,6 +1,7 @@
 <template>
   <q-badge
-    class="px-6 py-3 rounded-10"
+    class="rounded-10"
+    :class="{ 'px-6 py-3': !noPadding }"
     :style="`height: ${height ? height : '25px'}; width: ${
       width ? width : 'min-content'
     };`"
@@ -24,5 +25,6 @@ defineProps<{
   rounded?: QBadgeProps['rounded']
   height?: string
   width?: string
+  noPadding?: boolean
 }>()
 </script>
