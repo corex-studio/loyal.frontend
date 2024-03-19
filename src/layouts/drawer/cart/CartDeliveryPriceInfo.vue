@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="deliverySteps.nextStep || deliverySteps.currentStep"
     :style="{
       '--bottom-border-width': progress,
     }"

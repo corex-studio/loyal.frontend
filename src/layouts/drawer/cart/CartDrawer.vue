@@ -238,7 +238,7 @@ const addToCartDisabledInfo = computed(() => {
     )
   )
     return 'Имеются недоступные позиции'
-  if (cartRepo.item?.deliveryAddress) {
+  if (cartRepo.item?.deliveryAddress && currentDeliverySettings.value?.length) {
     if (
       !currentDeliverySettings.value?.find(
         (v) => cartRepo.item && v.minimalOrderSum < cartRepo.item.totalSum,
