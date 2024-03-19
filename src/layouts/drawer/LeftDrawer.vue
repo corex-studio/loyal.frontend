@@ -36,7 +36,33 @@
           class="cursor-pointer"
         />
       </div>
-      <div class="column full-width gap-12 no-wrap mt-15 body">
+      <div
+        @click="openCitySelectorModal()"
+        style="width: fit-content"
+        class="row cursor-pointer gap-4 mt-9"
+      >
+        <CIcon
+          name="fa-regular fa-location-dot"
+          color="on-background-color"
+          size="22px"
+        />
+        <div class="column items-start">
+          <div class="header3 bold">
+            {{ $companyGroup.item?.cityData.current?.name || 'Калининград' }}
+          </div>
+          <CButton
+            v-if="
+              $companyGroup.item &&
+              $companyGroup.item?.cityData.results.length > 1
+            "
+            label="Сменить город"
+            text-button
+            text-color="secondary"
+          />
+        </div>
+      </div>
+      <q-separator color="divider-color" class="my-8" />
+      <div class="column full-width gap-12 no-wrap body">
         <CButton
           @click="el.click()"
           v-for="(el, index) in blocks"
@@ -50,7 +76,7 @@
       </div>
       <q-separator class="my-8" />
       <TopHeaderDeliveryInfo />
-      <TopHeaderSocials class="mt-12" />
+      <TopHeaderSocials class="mt-2" />
     </q-drawer>
   </div>
 </template>
@@ -63,6 +89,7 @@ import { computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const router = useRouter()
 
@@ -116,6 +143,13 @@ const blocks = computed(() => {
     },
   ]
 })
+
+const openCitySelectorModal = () => {
+  if (!companyGroupRepo.item) return
+  if (companyGroupRepo.item?.cityData.results.length > 1) {
+    store.citySelectorModal = true
+  }
+}
 
 const scrollToBlock = (v: string, tab?: string) => {
   if (route.name !== 'home') {

@@ -217,7 +217,7 @@ const loadAddressDataByCoords = async () => {
   if (!currentCoords.value) return
   const res = await utilsRepo.geolocate(
     currentCoords.value.lat,
-    currentCoords.value.lng
+    currentCoords.value.lng,
   )
   selectAddress(res, 13)
 }
@@ -246,7 +246,7 @@ const drawPoint = (zoom?: number) => {
     collection,
     null,
     `#${uiSettingsRepo.item?.primaryColor.color}`,
-    'home'
+    'home',
   )
 
   map.lmap.addLayer(layer)
@@ -297,7 +297,7 @@ onMounted(() => {
           ...res,
         }
         selectAddress(addressWithCorrectCoords)
-      }
+      },
     )
   }, 200)
 })
@@ -312,7 +312,7 @@ const createAddress = async () => {
       }
       const res = await deliveryAddressRepo.update(newAddress.value)
       const foundAddressIndex = deliveryAddressRepo.items.findIndex(
-        (v) => v.id === newAddress.value?.id
+        (v) => v.id === newAddress.value?.id,
       )
       if (foundAddressIndex > -1) {
         deliveryAddressRepo.items[foundAddressIndex] = res

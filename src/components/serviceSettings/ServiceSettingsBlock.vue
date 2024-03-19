@@ -52,6 +52,7 @@
       size="22px"
       color="on-product-tile-color"
       name="fa-regular fa-angle-right"
+      hover-color="primary"
     />
   </div>
 </template>
