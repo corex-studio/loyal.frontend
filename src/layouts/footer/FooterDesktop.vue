@@ -380,7 +380,7 @@
           >
             <img
               class="cursor-pointer"
-              src="assets/Apple.png"
+              src="/assets/Apple.png"
               style="object-fit: contain; width: 106px"
               @click="openLink($appSettings.linksData.ios_download_link)"
             />
@@ -391,7 +391,7 @@
           >
             <img
               class="cursor-pointer"
-              src="assets/Google.png"
+              src="/assets/Google.png"
               style="object-fit: contain; width: 111px"
               @click="openLink($appSettings.linksData.android_download_link)"
             />
@@ -400,7 +400,7 @@
       </div>
       <div class="row no-wrap items-center gap-3">
         <div>Работает на</div>
-        <q-img src="assets/loyalHeartWhite.png" style="width: 30px" />
+        <q-img src="/assets/loyalHeartWhite.png" style="width: 30px" />
         <a class="text-on-bottom-menu-color" href="https://corex.studio/loyal">
           Loyalhub</a
         >
