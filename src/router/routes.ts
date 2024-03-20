@@ -107,9 +107,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('src/pages/menuItem/MenuItemPage.vue'),
       },
       {
-        path: 'current_order',
-        name: 'currentOrderPage',
-        component: () => import('src/pages/qrMenu/order/QRCurrentOrder.vue'),
+        path: 'my_orders',
+        name: 'myQrMenuOrders',
+        component: () => import('pages/qrMenu/order/QRMyOrders.vue'),
       },
       {
         path: 'order_review',

@@ -8,6 +8,7 @@
       class="row full-width justify-center mb-3"
     >
       <CButton
+        v-if="$route.name !== 'orderingPage'"
         style="min-width: 200px"
         height="44px"
         @click="$store.cartDrawer = true"
@@ -162,14 +163,7 @@
       </CButton>
       <CButton
         class="helper-text"
-        @click="
-          $order.item
-            ? $router.push({
-                name: 'currentOrderPage',
-              })
-            : void 0
-        "
-        :style="$order.item ? '' : 'cursor: not-allowed'"
+        @click="$router.push({ name: 'myQrMenuOrders' })"
         :text-color="
           $order.item ? 'on-bottom-menu-color' : 'secondary-button-color'
         "

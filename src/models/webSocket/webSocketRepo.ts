@@ -10,6 +10,8 @@ import { authentication } from './../authentication/authentication'
 import { cartRepo } from './../carts/cartRepo'
 import { Cart, CartRaw } from 'src/models/carts/cart'
 import { Order, OrderRaw } from '../order/order'
+import { useEventBus } from '@vueuse/core'
+import { orderUpdatedKey } from 'src/services/eventBusKeys'
 export type WebSocketMessage = {
   type:
     | 'cart.updated'
@@ -38,7 +40,9 @@ export const handleMessage = (v: MessageEvent<string>) => {
     authentication.user = new Customer(response.data as CustomerRaw)
   }
   if (response.type === 'order.updated') {
-    orderRepo.item = new Order(response.data as OrderRaw)
+    const order = new Order(response.data as OrderRaw)
+    useEventBus(orderUpdatedKey).emit({ order })
+    orderRepo.item = order
   }
   if (response.type === 'waiter_call.updated') {
     waiterCallRepo.item = new WaiterCall(response.data as WaiterCallRaw)

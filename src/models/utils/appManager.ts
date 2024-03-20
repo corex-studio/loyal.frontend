@@ -153,6 +153,7 @@ export class AppManager {
           sales_point: store.qrData.data?.salesPoint?.id,
           type: CartType.TABLE,
           pad: store.qrData.data?.pad?.id,
+          comment: cartRepo.item?.comment || undefined,
         })
       }
       await cartRepo.current(undefined, store.qrData?.data?.pad?.id)

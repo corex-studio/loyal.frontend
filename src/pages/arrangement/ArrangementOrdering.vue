@@ -508,15 +508,15 @@ import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
-import { padRepo } from 'src/models/pads/padRepo'
 import { useRouter } from 'vue-router'
-import { orderRepo } from 'src/models/order/orderRepo'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
+import { padRepo } from 'src/models/pads/padRepo'
+import { orderRepo } from 'src/models/order/orderRepo'
 
 const currentDay = ref('Сегодня')
 
@@ -715,7 +715,9 @@ const makeAnOrder = async () => {
             .format('YYYY-MM-DD HH:mm:ss')
         : null,
       comment: cartRepo.item?.comment || undefined,
-      pad: store.qrData?.data?.pad?.id || undefined,
+      pad: store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined,
+      sales_point: store.qrMenuData?.pad.salesPoint?.id,
+      type: cartRepo.item?.type,
     })
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
@@ -750,13 +752,13 @@ const makeAnOrder = async () => {
         },
       })
     } else if (store.tableMode) {
+      void router.push({
+        name: 'myQrMenuOrders',
+      })
       await cartRepo.current(
         padRepo.item?.salesPoint?.id,
         padRepo.item?.id || undefined,
       )
-      void router.push({
-        name: 'currentOrderPage',
-      })
     } else {
       cartRepo.item = null
       void router.push({
