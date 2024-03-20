@@ -26,7 +26,7 @@
             ),
         }"
         :style="
-          $q.screen.lt.md
+          $q.screen.lt.md && !$store.tableMode
             ? 'padding-bottom: 50px'
             : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: 100px`
         "
@@ -169,7 +169,6 @@ const closeMenuItemModal = () => {
 onMounted(async () => {
   if (route.path.includes('qr_menu')) {
     store.tableMode = true
-    document.body.style.paddingBottom = '100px'
   }
   const manager = new AppManager({
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
