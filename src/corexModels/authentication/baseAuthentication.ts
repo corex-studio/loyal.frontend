@@ -8,7 +8,7 @@ import moment from 'moment'
 
 export class BaseAuthentication {
   user: Customer | null = null
-  tokens: BaseAuthenticationTokens
+  tokens!: BaseAuthenticationTokens
   loading = false
 
   tokensClass = BaseAuthenticationTokens
@@ -34,11 +34,16 @@ export class BaseAuthentication {
   }
 
   constructor() {
+    this.setTokensAndHeaders()
+  }
+
+  private setTokensAndHeaders() {
     this.tokens = this.tokensClass.getFromStorage()
     this.setApiHeader()
   }
 
   async me() {
+    this.setTokensAndHeaders()
     if (!this.tokens.accessIsValid) throw Error('Access token is not valid.')
     authentication.loading = true
     this.user = await this._loadUser()

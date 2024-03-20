@@ -11,7 +11,6 @@ import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
 import { QrData } from './utils/qrData/qrData'
-import { QrMenuSettings } from 'src/models/qrMenuSettings/qrMenuSettings'
 import { QRMenuData } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 
 type DeliveryAreaInfoDrawerData = {

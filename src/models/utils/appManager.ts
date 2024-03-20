@@ -42,10 +42,10 @@ export class AppManager {
       appSettingsRepo.getLinksSettings(),
       companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
-      if (companyGroupRepo.item?.externalId !== _value) {
-        LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
-        LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
-      }
+      // if (companyGroupRepo.item?.externalId !== _value) {
+      //   LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
+      //   LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
+      // }
 
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
