@@ -29,7 +29,7 @@
             <q-img
               class="border-radius"
               style="height: 80px; width: 80px"
-              src="assets/emptyMod.svg"
+              src="/assets/emptyMod.svg"
             ></q-img>
           </span>
         </template>

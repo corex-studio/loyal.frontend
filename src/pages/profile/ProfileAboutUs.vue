@@ -211,7 +211,7 @@
           </div>
           <div v-else class="row full-width justify-end">
             <q-img
-              src="assets/pinkHearts.png"
+              src="/assets/pinkHearts.png"
               height="87px"
               width="97px"
               fit="contain"

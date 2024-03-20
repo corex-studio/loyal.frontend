@@ -50,7 +50,7 @@ export class AppManager {
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
     })
-
+    this.checkSelectedCity()
     if (authentication.user) {
       void this.setDeviceMeta()
       void this.setOnline()
@@ -71,6 +71,17 @@ export class AppManager {
     if (q.platform.is.win) {
       const body = document.getElementsByTagName('body')
       if (body.length) body[0].classList.add('custom-scroll-bar')
+    }
+  }
+
+  checkSelectedCity() {
+    const city = localStorage.getItem('city')
+    if (
+      companyGroupRepo.item &&
+      !city &&
+      companyGroupRepo.item.cityData.results.length > 1
+    ) {
+      store.cityCheckModal = true
     }
   }
 

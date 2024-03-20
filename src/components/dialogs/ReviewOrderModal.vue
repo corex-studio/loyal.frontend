@@ -133,7 +133,7 @@
     </div>
     <div v-else class="column full-width pb-lg-15 pb-xs-10 pt-8">
       <div class="row full-width justify-center">
-        <q-img class="" src="assets/successReviewed.png" />
+        <q-img class="" src="/assets/successReviewed.png" />
       </div>
       <div
         class="column full-width gap-4 mt-10 px-xs-10 px-lg-15"

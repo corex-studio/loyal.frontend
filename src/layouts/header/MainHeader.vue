@@ -86,7 +86,9 @@
                 outlined
                 color="product-tile-color"
               >
-                <div class="row gap-4 no-wrap body text-on-product-tile-color">
+                <div
+                  class="row gap-4 items-center no-wrap body text-on-product-tile-color"
+                >
                   <!-- <CustomIcon width="22px" height="22px" name="city.svg" /> -->
                   <CIcon
                     size="22px"
@@ -100,6 +102,17 @@
                       'Калининград'
                     }}
                   </div>
+                  <CIcon
+                    v-if="
+                      $companyGroup.item &&
+                      $companyGroup.item?.cityData.results.length > 1
+                    "
+                    size="22px"
+                    class=""
+                    color="on-product-tile-color"
+                    hover-color="primary"
+                    name="fa-regular fa-angle-down"
+                  />
                 </div>
               </CButton>
               <ServiceSettingsBlock />
@@ -187,7 +200,7 @@
             v-else
             @click="$store.authModal = true"
             :style="`height: ${$q.screen.gt.sm ? '44' : '40'}px`"
-            class="auth-button cursor-pointer text-primary body bold row items-center px-sm-15 px-xs-10"
+            class="auth-button cursor-pointer text-primary body bold row items-center px-xs-10 px-lg-15"
           >
             Войти
           </div>
@@ -205,6 +218,7 @@
     <ArrangementHeader v-else-if="$q.screen.gt.sm" />
     <BonusesInDevModal v-model="$store.bonusesModal" />
     <CitySelectorModal v-model="$store.citySelectorModal" />
+    <CityCheckModal v-model="$store.cityCheckModal" />
   </div>
 </template>
 
@@ -225,6 +239,7 @@ import BonusesInDevModal from 'src/components/template/dialogs/BonusesInDevModal
 import CitySelectorModal from 'src/components/template/dialogs/CitySelectorModal.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CompanyLogoView from 'components/CompanyLogoView.vue'
+import CityCheckModal from 'src/components/template/dialogs/CityCheckModal.vue'
 
 // const router = useRouter()
 
