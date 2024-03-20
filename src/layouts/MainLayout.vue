@@ -28,7 +28,7 @@
         :style="
           $q.screen.lt.md && !$store.tableMode
             ? 'padding-bottom: 50px'
-            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: 100px`
+            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: ${$store.tableMode ? '120' : '100'}px`
         "
       >
         <router-view />
