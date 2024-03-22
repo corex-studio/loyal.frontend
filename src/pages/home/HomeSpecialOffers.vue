@@ -22,7 +22,6 @@
         </div>
       </div>
     </div>
-
     <SwiperContainer
       class="swiper"
       :initial-slide="1"
@@ -31,19 +30,20 @@
       :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
     >
       <template v-slot:item="{ item }">
+        <!--        height: ${-->
+        <!--        $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'-->
+        <!--        }-->
         <div
-          :style="`overflow: hidden; height: ${
-            $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'
-          } `"
+          :style="`overflow: hidden; height: ${q.screen.lt.md ? '150px;' : ''} width: ${$q.screen.lt.md ? '265.5px;' : ''}`"
           @click="goToItem(item)"
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mt-15"
         >
           <q-img
             :src="item.image?.thumbnail || $store.images.empty"
             :style="`border-radius:${getBorderRadius}; object-position: left 50%;`"
-            height="100%"
             position="left"
             fit="cover"
+            :ratio="16 / 9"
           >
             <template v-slot:error>
               <span>
