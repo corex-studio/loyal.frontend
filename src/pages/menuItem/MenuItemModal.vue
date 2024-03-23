@@ -194,7 +194,7 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { Notify, useQuasar } from 'quasar'
-import { useRoute, useRouter } from 'vue-router'
+// import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
@@ -220,9 +220,9 @@ const loading = ref(false)
 
 const q = useQuasar()
 
-const route = useRoute()
+// const route = useRoute()
 
-const router = useRouter()
+// const router = useRouter()
 
 const currentMenuRulesForAdding = computed(() => {
   if (!cartRepo.item) return
@@ -347,11 +347,11 @@ const addToCart = async () => {
       emit('update:modelValue', false)
     }
   }
-  if (q.screen.xs) {
-    void router.push({
-      name: route.name === 'menuItemPage' ? 'home' : 'qrHome',
-    })
-  }
+  // if (q.screen.xs) {
+  //   void router.push({
+  //     name: route.name === 'menuItemPage' ? 'home' : 'qrHome',
+  //   })
+  // }
 }
 </script>
 

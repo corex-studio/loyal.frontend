@@ -62,6 +62,7 @@ import { ref, watch } from 'vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { AppManager } from 'src/models/utils/appManager'
 import { useRoute } from 'vue-router'
+import { store } from 'src/models/store'
 
 const props = defineProps<{
   modelValue: boolean
@@ -100,5 +101,6 @@ const reRequest = async () => {
   await companyGroupRepo.current()
   manager.setDefaultCompany()
   await manager.loadMenuPage()
+  if (store.leftDrawer) store.leftDrawer = false
 }
 </script>
