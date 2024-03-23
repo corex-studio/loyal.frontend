@@ -73,9 +73,9 @@
 
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
-import { LocalStorage, Screen, useQuasar } from 'quasar'
+import { LocalStorage, Screen } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { store } from 'src/models/store'
 import AuthModal from 'src/pages/auth/AuthModal.vue'
 import { authentication } from 'src/models/authentication/authentication'
@@ -106,7 +106,6 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { NewsType } from 'src/models/news/news'
 import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { CartType } from 'src/models/carts/cart'
 
@@ -119,9 +118,7 @@ const routesWithoutContainerPaddings = [
   'menu_item',
 ]
 
-const q = useQuasar()
 const route = useRoute()
-const router = useRouter()
 const ready = ref(false)
 
 watch(
@@ -148,15 +145,6 @@ watch(
   },
 )
 
-watch(
-  () => q.screen.name,
-  () => {
-    if (route.name === 'menuPage' && q.screen.lt.md) {
-      void router.push({ name: 'testPage' })
-    }
-  },
-)
-
 const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
@@ -178,66 +166,6 @@ onMounted(async () => {
   if (authentication.user) void orderReviewRepo.getOrderToReview()
 
   salesPointRepo.menuLoading = true
-  if (!store.tableMode) {
-    // store.getCompanyGroup(String(route.params.companyGroup))
-    // await getCurrentCompanyGroup()
-    // changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-    // await uiSettingsRepo.fetchSettings()
-    // await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
-    try {
-    } catch {
-      authentication.loading = false
-      ready.value = true
-      cartRepo.loading = false
-    }
-    if (!newsRepo.news.length) {
-      void newsRepo
-        .list({
-          company_group: companyGroupRepo.item?.id,
-          active: true,
-          type: NewsType.DEFAULT,
-        })
-        .then((res) => {
-          newsRepo.news = res.items
-        })
-    }
-    if (!newsRepo.promotions.length) {
-      void newsRepo
-        .list({
-          company_group: companyGroupRepo.item?.id,
-          active: true,
-          type: NewsType.PROMOTION,
-        })
-        .then((res) => {
-          newsRepo.promotions = res.items
-        })
-    }
-  } else {
-    void uiSettingsRepo.fetchSettings()
-    const group =
-      route.query.group || LocalStorage.getItem('Company-Group') || null
-    if (!group) return
-    const res = await qrMenuSettingsRepo.qrMenuData(String(group))
-    padRepo.item = res.pad
-    companyGroupRepo.item = res.company_group
-    store.qrMenuData = res
-    void cartRepo.setParams({
-      type: CartType.TABLE,
-      pad: padRepo.item.id,
-      sales_point: padRepo.item.salesPoint?.id,
-    })
-    store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
-    void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
-    // void waiterCallRepo
-    //   .list({
-    //     pad: padRepo.item.id,
-    //   })
-    //   .then(() => {
-    //     waiterCallRepo.item = waiterCallRepo.items[0]
-    //   })
-    // void orderRepo.current(padRepo.item)
-    // void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
-  }
 
   ready.value = true
 })

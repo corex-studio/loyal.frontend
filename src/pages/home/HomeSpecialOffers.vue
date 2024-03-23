@@ -24,7 +24,7 @@
     </div>
     <SwiperContainer
       class="swiper"
-      :initial-slide="1"
+      :initial-slide="0"
       no-navigation
       :slides-per-view="slidesPerView"
       :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
@@ -156,7 +156,7 @@ const tabs = computed(() => {
 })
 
 const slidesPerView = computed(() => {
-  return q.screen.lt.md ? 1.2 : q.screen.lt.lg ? 2 : 4
+  return q.screen.lt.md ? 1.2 : q.screen.lt.lg ? 2 : 2.5
 
   // store.offersTab === 'Акции'
   //   ? 1
