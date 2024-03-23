@@ -73,7 +73,7 @@
 
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
-import { LocalStorage, Screen } from 'quasar'
+import { Screen } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { store } from 'src/models/store'
@@ -103,11 +103,6 @@ import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { cartRepo } from 'src/models/carts/cartRepo'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
-import { CartType } from 'src/models/carts/cart'
 
 const webSocket = ref<WebSocket | null>(null)
 
