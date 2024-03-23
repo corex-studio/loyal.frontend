@@ -76,11 +76,15 @@ export class AppManager {
 
   checkSelectedCity() {
     const city = localStorage.getItem('city')
-    if (
-      companyGroupRepo.item &&
-      !city &&
-      companyGroupRepo.item.cityData.results.length > 1
-    ) {
+    if ((companyGroupRepo.item?.cityData.results?.length || 0) <= 1) {
+      store.cityCheckModal = false
+      return
+    }
+    if (!city) {
+      store.cityCheckModal = true
+      return
+    }
+    if (!companyGroupRepo.item?.cityData.results.find((v) => v.uuid === city)) {
       store.cityCheckModal = true
     }
   }
