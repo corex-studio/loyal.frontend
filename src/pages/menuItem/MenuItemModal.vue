@@ -31,7 +31,6 @@
       </div>
       <q-img
         :ratio="1"
-        :class="{ dimmed: $menuItem.item?.isDead }"
         class="col"
         :style="`border-radius: ${getImageBorderRadius}; max-width: ${
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined

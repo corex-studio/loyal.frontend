@@ -12,6 +12,8 @@ import { customerRepo } from '../customer/customerRepo'
 import moment from 'moment'
 import { CartType } from 'src/models/carts/cart'
 import { authRepo } from 'src/models/authentication/authRepo'
+import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
+import { padRepo } from 'src/models/pads/padRepo'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -60,6 +62,24 @@ export class AppManager {
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
       await this.loadMenuPage()
+    }
+    if (store.tableMode) {
+      void uiSettingsRepo.fetchSettings()
+      const group =
+        this.config.companyGroupId ||
+        LocalStorage.getItem('Company-Group') ||
+        null
+      if (!group) return
+      const res = await qrMenuSettingsRepo.qrMenuData(String(group))
+      padRepo.item = res.pad
+      companyGroupRepo.item = res.company_group
+      store.qrMenuData = res
+      void cartRepo.setParams({
+        type: CartType.TABLE,
+        pad: padRepo.item.id,
+        sales_point: padRepo.item.salesPoint?.id,
+      })
+      store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
     }
   }
 
