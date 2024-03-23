@@ -22,11 +22,7 @@
       rel="stylesheet"
     />
 
-    <link
-      href="/favicon.ico"
-      rel="icon"
-      type="image/ico"
-    />
+    <link href="/favicon.ico" rel="icon" type="image/ico" />
     <!-- <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
@@ -87,7 +83,7 @@
           if (description) description.content = res.description || ''
           localStorage.setItem('siteDataResponse', JSON.stringify(res))
           window._metrikaKey = res.yandex_metrika_key
-          if (window.location.host === 'loyalhub.ru') {
+          if (window.location.host === 'app.loyalhub.ru') {
             const cachedFavicon = localStorage.getItem('faviconUrl')
             if (cachedFavicon) setFavicon(cachedFavicon)
             setFavicon(res.favicon)
