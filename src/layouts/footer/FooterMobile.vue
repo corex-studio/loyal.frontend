@@ -116,7 +116,7 @@
         text-button
         style="opacity: 0.7; width: fit-content"
         class="body"
-        label="Политика конфиденциальноости"
+        label="Политика конфиденциальности"
         @click="
           openLink(
             `https://loyalhub.ru/${String(
