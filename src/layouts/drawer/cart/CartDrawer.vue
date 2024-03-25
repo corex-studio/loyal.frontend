@@ -70,7 +70,6 @@
           class="mb-15"
           color="divider-color"
         />
-
         <div class="column full-width px-md-15 px-xs-8">
           <CartDeliveryInfo v-if="$cart.item" class="mb-md-15 mb-xs-10" />
           <template v-if="$cart.item?.cartItems.length">
@@ -198,7 +197,7 @@ import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import CartDeliveryInfo from './CartDeliveryInfo.vue'
 import CartTotalInfo from './CartTotalInfo.vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import CartBonuses from './CartBonuses.vue'
 import { PromoCodeMode } from 'src/models/salesPoint/salesPoint'
 import PromocodeModal from 'src/pages/arrangement/PromocodeModal.vue'
@@ -213,6 +212,7 @@ const selectPaymentType = ref(false)
 const acceptModal = ref(false)
 
 const router = useRouter()
+const route = useRoute()
 
 const loading = ref(false)
 
@@ -303,10 +303,14 @@ const applyBonuses = () => {
 }
 
 const arrange = () => {
+  if (['orderingPage'].includes(String(route.name))) {
+    store.cartDrawer = false
+    return
+  }
   if (addToCartDisabledInfo.value) return
   applyBonuses()
   void router.push({
-    name: 'arrangementPage',
+    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage',
   })
 }
 

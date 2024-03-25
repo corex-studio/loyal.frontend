@@ -65,7 +65,7 @@
       <div class="column full-width gap-12 no-wrap body">
         <CButton
           @click="el.click()"
-          v-for="(el, index) in blocks"
+          v-for="(el, index) in blocks.filter((v) => !v.hidden)"
           :key="index"
           text-button
           text-color="on-background-color"
@@ -99,7 +99,7 @@ const blocks = computed(() => {
   return [
     {
       label: 'Профиль',
-      hidden: !authentication.user,
+      hidden: !authentication.user || authentication.user.isAnonymous,
       click: () => {
         router.push({
           name: 'profilePage',
@@ -108,7 +108,7 @@ const blocks = computed(() => {
     },
     {
       label: 'Бонусы',
-      hidden: !authentication.user,
+      hidden: !authentication.user || authentication.user.isAnonymous,
       click: () => {
         store.bonusesModal = true
         store.leftDrawer = false

@@ -10,6 +10,10 @@ import { NewsType } from '../news/news'
 import { companyRepo } from '../company/companyRepo'
 import { customerRepo } from '../customer/customerRepo'
 import moment from 'moment'
+import { CartType } from 'src/models/carts/cart'
+import { authRepo } from 'src/models/authentication/authRepo'
+import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
+import { padRepo } from 'src/models/pads/padRepo'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -30,6 +34,9 @@ export class AppManager {
     const _value = LocalStorage.getItem('Company-Group')
     if (_value && !companyGroupId) companyGroupId = String(_value)
     if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
+    if (!authentication.user && store.tableMode) {
+      await authRepo.initAnonymousUser()
+    }
     await Promise.all([
       this.tryAuth(),
       this.getCurrentCompanyGroup(),
@@ -37,10 +44,10 @@ export class AppManager {
       appSettingsRepo.getLinksSettings(),
       companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
-      if (companyGroupRepo.item?.externalId !== _value) {
-        LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
-        LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
-      }
+      // if (companyGroupRepo.item?.externalId !== _value) {
+      //   LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
+      //   LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
+      // }
 
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
@@ -55,6 +62,24 @@ export class AppManager {
     this.setDefaultCompany()
     if (this.config.initMenuPage) {
       await this.loadMenuPage()
+    }
+    if (store.tableMode) {
+      void uiSettingsRepo.fetchSettings()
+      const group =
+        this.config.companyGroupId ||
+        LocalStorage.getItem('Company-Group') ||
+        null
+      if (!group) return
+      const res = await qrMenuSettingsRepo.qrMenuData(String(group))
+      padRepo.item = res.pad
+      companyGroupRepo.item = res.company_group
+      store.qrMenuData = res
+      void cartRepo.setParams({
+        type: CartType.TABLE,
+        pad: padRepo.item.id,
+        sales_point: padRepo.item.salesPoint?.id,
+      })
+      store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
     }
   }
 
@@ -71,11 +96,15 @@ export class AppManager {
 
   checkSelectedCity() {
     const city = localStorage.getItem('city')
-    if (
-      companyGroupRepo.item &&
-      !city &&
-      companyGroupRepo.item.cityData.results.length > 1
-    ) {
+    if ((companyGroupRepo.item?.cityData.results?.length || 0) <= 1) {
+      store.cityCheckModal = false
+      return
+    }
+    if (!city) {
+      store.cityCheckModal = true
+      return
+    }
+    if (!companyGroupRepo.item?.cityData.results.find((v) => v.uuid === city)) {
       store.cityCheckModal = true
     }
   }
@@ -146,8 +175,9 @@ export class AppManager {
       if (store.qrData) {
         await cartRepo.setParams({
           sales_point: store.qrData.data?.salesPoint?.id,
-          type: 'table',
+          type: CartType.TABLE,
           pad: store.qrData.data?.pad?.id,
+          comment: cartRepo.item?.comment || undefined,
         })
       }
       await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
@@ -177,7 +207,10 @@ export class AppManager {
           newsRepo.promotions = res.items
         })
     }
-    if (authentication.user?.registeredAt === null) {
+    if (
+      authentication.user?.registeredAt === null &&
+      !authentication.user.isAnonymous
+    ) {
       store.registrationModal = true
     }
   }

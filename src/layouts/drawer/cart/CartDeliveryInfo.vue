@@ -33,6 +33,7 @@ const cartDateInfo = computed(() => {
 })
 
 const openDialog = () => {
+  if (store.tableMode) return
   if (!authentication.user) {
     store.authModal = true
     return

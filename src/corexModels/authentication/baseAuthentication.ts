@@ -1,14 +1,14 @@
 import { authentication } from './../../models/authentication/authentication'
 import { Customer, CustomerRaw } from './../../models/customer/customer'
 import { api } from 'boot/axios'
-import { AxiosResponse } from 'axios'
+import { AxiosResponse, isAxiosError } from 'axios'
 
 import { BaseAuthenticationTokens, TokensRaw } from './baseAuthenticationTokens'
 import moment from 'moment'
 
 export class BaseAuthentication {
   user: Customer | null = null
-  tokens: BaseAuthenticationTokens
+  tokens!: BaseAuthenticationTokens
   loading = false
 
   tokensClass = BaseAuthenticationTokens
@@ -34,11 +34,16 @@ export class BaseAuthentication {
   }
 
   constructor() {
+    this.setTokensAndHeaders()
+  }
+
+  private setTokensAndHeaders() {
     this.tokens = this.tokensClass.getFromStorage()
     this.setApiHeader()
   }
 
   async me() {
+    this.setTokensAndHeaders()
     if (!this.tokens.accessIsValid) throw Error('Access token is not valid.')
     authentication.loading = true
     this.user = await this._loadUser()
@@ -49,7 +54,7 @@ export class BaseAuthentication {
   async refresh(): Promise<void> {
     const result: AxiosResponse<TokensRaw> = await api.post(
       this.settings.urls.refresh,
-      { refresh: this.tokens.refresh }
+      { refresh: this.tokens.refresh },
     )
     this.tokens = new this.tokensClass(result.data.access, result.data.refresh)
     this.setApiHeader()
@@ -58,10 +63,16 @@ export class BaseAuthentication {
   private async _loadUser(): Promise<Customer> {
     try {
       const response: AxiosResponse<CustomerRaw> = await api.get(
-        this.settings.urls.me
+        this.settings.urls.me,
       )
       return new Customer(response.data)
     } catch (e) {
+      if (isAxiosError(e)) {
+        if ([400, 401].includes(e.response?.status as number)) {
+          this.tokens.removeTokens()
+          window.location.reload()
+        }
+      }
       throw Error('Fail with load user.')
     }
   }
@@ -82,11 +93,11 @@ export class BaseAuthentication {
     try {
       const response: AxiosResponse<TokensRaw> = await api.post(
         this.settings.urls.login,
-        data
+        data,
       )
       this.tokens = new this.tokensClass(
         response.data.access,
-        response.data.refresh
+        response.data.refresh,
       )
       this.setApiHeader()
       this.user = await this._loadUser()

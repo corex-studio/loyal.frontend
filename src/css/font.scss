@@ -96,6 +96,11 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 19.6px;
+
+  .q-field__label,
+  &.q-btn div {
+    @extend .helper-text;
+  }
 }
 
 .secondary-text {

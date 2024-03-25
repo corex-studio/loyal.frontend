@@ -6,6 +6,7 @@ import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import moment from 'moment'
 import { ImageRaw } from '../image/image'
 import { MenuModifierGroupRaw } from '../menu/menuModifierGroup/menuModifierGroup'
+import { CartType } from 'src/models/carts/cart'
 
 export type PaymentObjectType = {
   label: string
@@ -192,6 +193,7 @@ export type OrderRaw = {
   applied_bonuses: number
   received_bonuses: number
   payment_url: string | null
+  comment?: string | null
 }
 
 export class Order implements BaseModel {
@@ -218,6 +220,7 @@ export class Order implements BaseModel {
   appliedBonuses: number
   receivedBonuses: number
   paymentUrl: string | null
+  comment: string | null
 
   constructor(raw: OrderRaw) {
     this.id = raw.uuid
@@ -248,6 +251,7 @@ export class Order implements BaseModel {
     this.appliedBonuses = raw.applied_bonuses
     this.receivedBonuses = raw.received_bonuses
     this.paymentUrl = raw.payment_url
+    this.comment = raw.comment || null
   }
 
   get getPaymentStatus() {
@@ -332,7 +336,7 @@ export class Order implements BaseModel {
   }
 
   get deliveryType() {
-    if (this.type === 'delivery') return 'Доставка'
+    if (this.type === CartType.DELIVERY) return 'Доставка'
     else return 'Самовывоз'
   }
 

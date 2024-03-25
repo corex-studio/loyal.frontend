@@ -2,7 +2,7 @@
   <template v-if="ready">
     <PrepareUiSettings />
     <q-layout class="bg-background-color relative-position" view="lHh Lpr lFf">
-      <QRHomePadInfo v-if="$store.tableMode && $route.name === 'qrHome'" />
+      <QRHomePadInfo v-if="$store.tableMode" />
       <TopHeader v-if="$q.screen.gt.md" />
       <MainHeader />
 
@@ -26,9 +26,9 @@
             ),
         }"
         :style="
-          $q.screen.lt.md
+          $q.screen.lt.md && !$store.tableMode
             ? 'padding-bottom: 50px'
-            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: 100px`
+            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: ${$store.tableMode ? '120' : '100'}px`
         "
       >
         <router-view />
@@ -73,9 +73,9 @@
 
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
-import { Screen, useQuasar } from 'quasar'
+import { Screen } from 'quasar'
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { store } from 'src/models/store'
 import AuthModal from 'src/pages/auth/AuthModal.vue'
 import { authentication } from 'src/models/authentication/authentication'
@@ -102,6 +102,12 @@ import { AppManager } from 'src/models/utils/appManager'
 import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+// import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+// import { cartRepo } from 'src/models/carts/cartRepo'
+// import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+// import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
+// import { CartType } from 'src/models/carts/cart'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -112,9 +118,7 @@ const routesWithoutContainerPaddings = [
   'menu_item',
 ]
 
-const q = useQuasar()
 const route = useRoute()
-const router = useRouter()
 const ready = ref(false)
 
 watch(
@@ -141,15 +145,6 @@ watch(
   },
 )
 
-watch(
-  () => q.screen.name,
-  () => {
-    if (route.name === 'menuPage' && q.screen.lt.md) {
-      void router.push({ name: 'testPage' })
-    }
-  },
-)
-
 const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
@@ -160,80 +155,19 @@ const closeMenuItemModal = () => {
 }
 
 onMounted(async () => {
+  if (route.path.includes('qr_menu')) {
+    store.tableMode = true
+  }
   const manager = new AppManager({
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
     initMenuPage: true,
   })
   await manager.initApp()
   if (authentication.user) void orderReviewRepo.getOrderToReview()
+
+  salesPointRepo.menuLoading = true
+
   ready.value = true
-  // if (route.path.includes('qr_menu')) {
-  //   store.tableMode = true
-  // }
-  // salesPointRepo.menuLoading = true
-  // setBodyScrollClass()
-  // if (!store.tableMode) {
-  //   store.getCompanyGroup(String(route.params.companyGroup))
-  //   await getCurrentCompanyGroup()
-  //   changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-  //   await uiSettingsRepo.fetchSettings()
-  //   await appSettingsRepo.getLinksSettings(String(route.params.companyGroup))
-  //   try {
-
-  //   } catch {
-  //     authentication.loading = false
-  //     ready.value = true
-  //     cartRepo.loading = false
-  //   }
-  // if (!newsRepo.news.length) {
-  //   void newsRepo
-  //     .list({
-  //       company_group: companyGroupRepo.item?.id,
-  //       active: true,
-  //       type: NewsType.DEFAULT,
-  //     })
-  //     .then((res) => {
-  //       newsRepo.news = res.items
-  //     })
-  // }
-  // if (!newsRepo.promotions.length) {
-  //   void newsRepo
-  //     .list({
-  //       company_group: companyGroupRepo.item?.id,
-  //       active: true,
-  //       type: NewsType.PROMOTION,
-  //     })
-  //     .then((res) => {
-  //       newsRepo.promotions = res.items
-  //     })
-  // }
-
-  // } else {
-  //   Object.assign(api.defaults.headers, {
-  //     ['User-Role']: 'pad_manager',
-  //   })
-  //   Object.assign(api.defaults.headers, {
-  //     ['Company-Group']: route.params.companyGroup,
-  //   })
-  //   void uiSettingsRepo.fetchSettings()
-  //   await padRepo.retrieve(String(route.params.padId))
-  //   if (!padRepo.item?.companyGroup) return
-  //   await companyGroupRepo.retrieve(padRepo.item.companyGroup)
-  //   changeFavicon(companyGroupRepo.item?.image?.thumbnail)
-  //   store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
-  //   void store.loadCatalog(padRepo.item?.salesPoint?.id || '')
-  //   void waiterCallRepo
-  //     .list({
-  //       pad: padRepo.item.id,
-  //     })
-  //     .then(() => {
-  //       waiterCallRepo.item = waiterCallRepo.items[0]
-  //     })
-  //   void orderRepo.current(padRepo.item)
-  //   void cartRepo.current(padRepo.item.salesPoint?.id, padRepo.item)
-  // }
-
-  // ready.value = true
 })
 
 const companySelected = (v: Company | null) => {

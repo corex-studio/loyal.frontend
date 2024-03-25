@@ -515,7 +515,7 @@ const confirmSelectedAddress = async () => {
     if (authentication.user)
       await cartRepo.setParams({
         sales_point: res[0].salesPoint,
-        type: 'delivery',
+        type: CartType.DELIVERY,
         delivery_address: selectedDeliveryAddress.value?.id,
       })
     store.qrData = null
@@ -529,7 +529,7 @@ const confirmSelectedAddress = async () => {
     if (authentication.user) {
       await cartRepo.setParams({
         sales_point: selectedPickupAddress.value.id,
-        type: 'pickup',
+        type: CartType.PICKUP,
       })
     }
     store.qrData = null

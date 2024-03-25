@@ -33,7 +33,6 @@
       :src="item.image?.thumbnail || $store.images.empty"
       fit="cover"
       class="border-radius"
-      :class="{ dimmed: item.isDead }"
       :ratio="1"
     >
       <template v-slot:error>

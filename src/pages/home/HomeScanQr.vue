@@ -45,6 +45,7 @@ import { store } from 'src/models/store'
 import { qrDataRepo } from 'src/models/utils/qrData/qrDataRepo'
 import { ref } from 'vue'
 import { QrStream } from 'vue3-qr-reader'
+import { CartType } from 'src/models/carts/cart'
 
 const startScanning = ref(false)
 
@@ -68,7 +69,7 @@ const onDecode = async (data: any) => {
       store.qrData = parsedData
       await cartRepo.setParams({
         sales_point: store.qrData.data?.salesPoint?.id,
-        type: 'table',
+        type: CartType.TABLE,
         pad: store.qrData.data?.pad?.id,
       })
       void cartRepo.current(undefined, store.qrData?.data?.pad?.id)

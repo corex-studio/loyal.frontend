@@ -11,6 +11,7 @@ import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
 import { QrData } from './utils/qrData/qrData'
+import { QRMenuData } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 
 type DeliveryAreaInfoDrawerData = {
   salesPoint: SalesPoint
@@ -24,6 +25,7 @@ export class Store {
   headerHeight = 0
   salesPoint = 'd253cd53-044b-468d-8881-232f43715f5e'
   tableMode = false
+  qrMenuData: QRMenuData | null = null
   companyGroup = 'corex_demo'
   institution = '4a1d27e8-281e-42c5-95cc-6331a2e4cffa'
   authModal = false

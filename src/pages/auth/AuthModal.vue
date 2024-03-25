@@ -125,6 +125,8 @@ import { ref, watch } from 'vue'
 import CodeComponent from './CodeComponent.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
+import { CartType } from 'src/models/carts/cart'
+import { authHelper } from 'src/services/authKeyManager'
 
 const props = defineProps<{
   modelValue: boolean
@@ -231,7 +233,7 @@ const auth = async () => {
       if (store.qrData) {
         await cartRepo.setParams({
           sales_point: store.qrData.data?.salesPoint?.id,
-          type: 'table',
+          type: CartType.TABLE,
           pad: store.qrData.data?.pad?.id,
         })
       }
@@ -243,7 +245,10 @@ const auth = async () => {
 
     currentStep.value = 1
     emit('update:modelValue', false)
-    if (authentication.user?.registeredAt === null) {
+    if (
+      authentication.user?.registeredAt === null &&
+      !authentication.user.isAnonymous
+    ) {
       store.registrationModal = true
     }
   } catch {
@@ -256,6 +261,7 @@ const auth = async () => {
 const sendSms = async () => {
   const res = await authentication.sendSms({
     phone: `7${data.value.phone}`,
+    key: await authHelper.getAuthKey(),
   })
   if (res) {
     Notify.create({

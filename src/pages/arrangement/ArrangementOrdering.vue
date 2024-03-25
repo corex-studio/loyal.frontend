@@ -9,7 +9,13 @@
             v-if="$q.screen.lt.md"
             @click="
               $router.push({
-                name: 'home',
+                name: $store.tableMode ? 'qrHome' : 'home',
+                params: {
+                  padId:
+                    $store.tableMode && $route.params.padId
+                      ? $route.params.padId
+                      : undefined,
+                },
               })
             "
             name="fa-regular fa-angle-left"
@@ -19,8 +25,7 @@
             class="cursor-pointer"
           />
           <div class="header bold">
-            Заказ на
-            {{ isDelivery ? 'доставку' : 'самовывоз' }}
+            {{ orderTypeText }}
           </div>
         </div>
         <div class="column gap-md-12 gap-xs-8 full-width">
@@ -29,8 +34,8 @@
             class="full-width mb-2"
             ref="timeBlockMobileSpot"
           ></div>
-
           <div
+            v-if="!$store.tableMode"
             :class="$q.screen.lt.md ? 'column' : 'row items-center'"
             class="body full-width gap-md-5 gap-xs-4"
           >
@@ -220,7 +225,10 @@
               </div>
             </div>
           </teleport>
-          <q-separator v-if="$q.screen.lt.md" color="divider-color" />
+          <q-separator
+            v-if="$q.screen.lt.md && !$store.tableMode"
+            color="divider-color"
+          />
           <div
             :class="$q.screen.lt.md ? 'column' : 'row'"
             class="body full-width gap-md-5 gap-xs-4"
@@ -500,15 +508,15 @@ import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
-import { padRepo } from 'src/models/pads/padRepo'
 import { useRouter } from 'vue-router'
-import { orderRepo } from 'src/models/order/orderRepo'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
+import { padRepo } from 'src/models/pads/padRepo'
+import { orderRepo } from 'src/models/order/orderRepo'
 
 const currentDay = ref('Сегодня')
 
@@ -554,6 +562,11 @@ const isDelivery = computed(() => {
   return cartRepo.item?.type === CartType.DELIVERY
 })
 
+const orderTypeText = computed(() => {
+  if (cartRepo.item?.type === CartType.TABLE) return 'Заказ в стол'
+  return `Заказ на ${isDelivery.value ? 'доставку' : 'самовывоз'}`
+})
+
 const availableTimes = computed(() => {
   return currentDay.value === 'Сегодня'
     ? availableHours.value?.today.flatMap((v) => {
@@ -582,44 +595,44 @@ const availableTimes = computed(() => {
 
 const paymentTypes = computed(() => {
   const result: PaymentObjectType[] = []
-  if (store.tableMode) {
+  // if (store.tableMode) {
+  //   result.push({
+  //     label: 'Внести в счет',
+  //     type: PaymentType.PAY_LATER,
+  //     class: 'bg-cash-button-color text-on-cash-button-color',
+  //     icon: 'fa-light fa-money-bill',
+  //   })
+  //   if (salesPointRepo.paymentSettings?.online_payment_enabled) {
+  //     result.push({
+  //       label: 'Онлайн',
+  //       type: PaymentType.ONLINE,
+  //       class: 'bg-cash-button-color text-on-cash-button-color',
+  //       icon: 'fa-light fa-ruble-sign',
+  //     })
+  //   }
+  // } else {
+  if (salesPointRepo.paymentSettings?.cash_enabled)
     result.push({
-      label: 'Внести в счет',
-      type: PaymentType.PAY_LATER,
+      label: 'Наличными при получении',
+      type: PaymentType.CASH,
       class: 'bg-cash-button-color text-on-cash-button-color',
       icon: 'fa-light fa-money-bill',
     })
-    if (salesPointRepo.paymentSettings?.online_payment_enabled) {
-      result.push({
-        label: 'Онлайн',
-        type: PaymentType.ONLINE,
-        class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-ruble-sign',
-      })
-    }
-  } else {
-    if (salesPointRepo.paymentSettings?.cash_enabled)
-      result.push({
-        label: 'Наличными при получении',
-        type: PaymentType.CASH,
-        class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-money-bill',
-      })
-    if (salesPointRepo.paymentSettings?.card_enabled)
-      result.push({
-        label: 'Картой при получении',
-        type: PaymentType.CARD,
-        class: 'bg-card-button-color text-on-card-button-color',
-        icon: 'fa-light fa-credit-card',
-      })
-    if (salesPointRepo.paymentSettings?.online_payment_enabled)
-      result.push({
-        label: 'Онлайн',
-        type: PaymentType.ONLINE,
-        class: 'bg-online-button-color text-on-online-button-color',
-        icon: 'fa-light fa-ruble-sign',
-      })
-  }
+  if (salesPointRepo.paymentSettings?.card_enabled)
+    result.push({
+      label: 'Картой при получении',
+      type: PaymentType.CARD,
+      class: 'bg-card-button-color text-on-card-button-color',
+      icon: 'fa-light fa-credit-card',
+    })
+  if (salesPointRepo.paymentSettings?.online_payment_enabled)
+    result.push({
+      label: 'Онлайн',
+      type: PaymentType.ONLINE,
+      class: 'bg-online-button-color text-on-online-button-color',
+      icon: 'fa-light fa-ruble-sign',
+    })
+  // }
   return result
 })
 
@@ -702,7 +715,9 @@ const makeAnOrder = async () => {
             .format('YYYY-MM-DD HH:mm:ss')
         : null,
       comment: cartRepo.item?.comment || undefined,
-      pad: store.qrData?.data?.pad?.id || undefined,
+      pad: store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined,
+      sales_point: store.qrMenuData?.pad.salesPoint?.id,
+      type: cartRepo.item?.type,
     })
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
@@ -737,13 +752,13 @@ const makeAnOrder = async () => {
         },
       })
     } else if (store.tableMode) {
+      void router.push({
+        name: 'myQrMenuOrders',
+      })
       await cartRepo.current(
         padRepo.item?.salesPoint?.id,
         padRepo.item?.id || undefined,
       )
-      void router.push({
-        name: 'currentOrderPage',
-      })
     } else {
       cartRepo.item = null
       void router.push({
@@ -760,7 +775,8 @@ const makeAnOrder = async () => {
       message: 'Заказ успешно оформлен',
     })
     orderRepo.item = order
-  } catch {
+  } catch (e) {
+    console.log(e)
     cartRepo.arrangeLoading = false
     Notify.create({
       message: 'Ошибка при оформлении заказа',
@@ -791,7 +807,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
   try {
     await cartRepo.setParams({
       sales_point: res[0].salesPoint,
-      type: 'delivery',
+      type: CartType.DELIVERY,
       delivery_address: address.id,
     })
   } catch {

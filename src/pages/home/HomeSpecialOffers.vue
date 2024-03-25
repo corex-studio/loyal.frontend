@@ -22,28 +22,28 @@
         </div>
       </div>
     </div>
-
     <SwiperContainer
       class="swiper"
-      :initial-slide="1"
+      :initial-slide="0"
       no-navigation
       :slides-per-view="slidesPerView"
       :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
     >
       <template v-slot:item="{ item }">
+        <!--        height: ${-->
+        <!--        $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'-->
+        <!--        }-->
         <div
-          :style="`overflow: hidden; height: ${
-            $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'
-          } `"
+          :style="`overflow: hidden; height: ${q.screen.lt.md ? ';' : ''} max-width: ${$q.screen.lt.md ? '100%;' : ''}`"
           @click="goToItem(item)"
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mt-15"
         >
           <q-img
             :src="item.image?.thumbnail || $store.images.empty"
             :style="`border-radius:${getBorderRadius}; object-position: left 50%;`"
-            height="100%"
             position="left"
             fit="cover"
+            :ratio="16 / 9"
           >
             <template v-slot:error>
               <span>
@@ -156,7 +156,7 @@ const tabs = computed(() => {
 })
 
 const slidesPerView = computed(() => {
-  return q.screen.lt.md ? 1.2 : q.screen.lt.lg ? 2 : 4
+  return q.screen.lt.md ? 1.2 : q.screen.lt.lg ? 2 : 2.5
 
   // store.offersTab === 'Акции'
   //   ? 1
