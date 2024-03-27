@@ -471,7 +471,7 @@
           :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
           class="col-grow body"
-          @click="makeAnOrder()"
+          @click="paymentUrl ? paymentModal=true : makeAnOrder()"
           :loading="loading"
           :disabled="!isArrangeAvailable"
         />
@@ -479,6 +479,9 @@
     </div>
   </div>
   <div v-else class="pt-20 header3 bold">Корзина пуста</div>
+  <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-10">
+    <CButton label="Открыть окно для оплаты заказа" @click="paymentModal=true"  />
+  </div>
   <SelectPaymentTypeModal
     :types="paymentTypes"
     v-model="selectedPaymentTypeModal"
@@ -489,6 +492,24 @@
     @address-selected="changeDeliveryAddress($event)"
     v-model="deliveryAddressesModal"
   />
+  <CDialog
+    v-model="paymentModal"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    width="900px"
+    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
+    no-backdrop-dismiss
+    :card-styles="`flex-direction: column; ${$q.screen.lt.md ? `height: ${$q.screen.height * 0.9}px;` : ''}`"
+    content-wrapper-styles="flex-grow:1; display: flex"
+  >
+    <div class="flex" style="flex-grow: 1">
+      <iframe
+        style="border: 0"
+        class="full-width full-height"
+        v-if="paymentModal && paymentUrl"
+        :src="paymentUrl"
+      ></iframe>
+    </div>
+  </CDialog>
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
@@ -497,18 +518,30 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { PaymentObjectType, PaymentType } from 'src/models/order/order'
+import {
+  Order,
+  PaymentObjectType,
+  PaymentStatusType,
+  PaymentType,
+} from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
   store,
   totalDayTimes,
 } from 'src/models/store'
-import { computed, onMounted, ref, watch } from 'vue'
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
@@ -517,6 +550,9 @@ import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
 import { padRepo } from 'src/models/pads/padRepo'
 import { orderRepo } from 'src/models/order/orderRepo'
+import CDialog from 'components/template/dialogs/CDialog.vue'
+import { useEventBus } from '@vueuse/core'
+import { orderUpdatedKey } from 'src/services/eventBusKeys'
 
 const currentDay = ref('Сегодня')
 
@@ -531,12 +567,33 @@ const selectedPaymentTypeModal = ref(false)
 const loading = ref(false)
 
 const router = useRouter()
+const route = useRoute()
 
 const deliveryAddressesModal = ref(false)
 
 const menu = ref(false)
 
 const menuRef = ref<HTMLDivElement | null>(null)
+
+const paymentUrl = ref<string | null>(null)
+const paymentModal = ref(false)
+
+const clearBeforeRouterResolve = router.beforeEach(() => {
+  checkOnPaymentUrlInPath()
+})
+
+const checkOnPaymentUrlInPath = () => {
+  if (route.query.paymentUrl) {
+    paymentUrl.value = String(route.query.paymentUrl)
+    void nextTick(() => {
+      paymentModal.value = true
+    })
+  }
+}
+
+onBeforeUnmount(() => {
+  if (clearBeforeRouterResolve) clearBeforeRouterResolve()
+})
 
 const mobileViewSelectedTime = computed(() => {
   if (!cartRepo.item) return
@@ -740,6 +797,32 @@ const makeAnOrder = async () => {
           ? store.qrData.data?.pad?.id
           : undefined,
     })
+    if (order.paymentUrl) {
+      await router.replace({
+        name: String(route.name),
+        query: { paymentUrl: order.paymentUrl },
+      })
+      paymentUrl.value = order.paymentUrl
+      paymentModal.value = true
+      // window.open(order.paymentUrl, '_blank')
+    } else {
+      void onOrderPaid(order)
+    }
+  } catch (e) {
+    console.log(e)
+    cartRepo.arrangeLoading = false
+    Notify.create({
+      message: 'Ошибка при оформлении заказа',
+      color: 'danger',
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const onOrderPaid = async (order: Order) => {
+  paymentModal.value = false
+  setTimeout(async () => {
     if (store.qrData && store.qrData.data?.pad) {
       await cartRepo.current(
         store.qrData.data?.salesPoint?.id,
@@ -768,23 +851,12 @@ const makeAnOrder = async () => {
         },
       })
     }
-    if (order.paymentUrl) {
-      window.open(order.paymentUrl, '_blank')
-    }
-    Notify.create({
-      message: 'Заказ успешно оформлен',
-    })
-    orderRepo.item = order
-  } catch (e) {
-    console.log(e)
-    cartRepo.arrangeLoading = false
-    Notify.create({
-      message: 'Ошибка при оформлении заказа',
-      color: 'danger',
-    })
-  } finally {
-    loading.value = false
-  }
+  }, 350)
+
+  Notify.create({
+    message: 'Заказ успешно оформлен',
+  })
+  orderRepo.item = order
 }
 
 const changeDeliveryAddress = async (address: DeliveryAddress) => {
@@ -838,6 +910,13 @@ watch(selectedPaymentTypeModal, async (v) => {
 })
 
 onMounted(async () => {
+  checkOnPaymentUrlInPath()
+  useEventBus(orderUpdatedKey).on(({ order }) => {
+    if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
+      paymentModal.value = false
+      onOrderPaid(order)
+    }
+  })
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
   })
