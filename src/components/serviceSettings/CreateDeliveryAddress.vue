@@ -6,7 +6,7 @@
   >
     <div
       v-if="newAddress"
-      :style="$q.screen.lt.md ? 'max-height: 65vh' : 'width: 47%'"
+      :style="$q.screen.lt.md ? 'max-height: 55vh' : 'width: 47%'"
       class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 py-xs-12 px-xs-8"
       style="overflow-y: auto"
     >
