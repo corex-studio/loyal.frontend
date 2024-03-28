@@ -68,6 +68,7 @@
           overflow: hidden;
           z-index: 1;
         "
+        class="border-radius"
       >
         <img
           width="130"
