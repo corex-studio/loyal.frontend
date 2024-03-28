@@ -110,7 +110,7 @@ const blocks = computed(() => {
       label: 'Бонусы',
       hidden: !authentication.user || authentication.user.isAnonymous,
       click: () => {
-        store.bonusesModal = true
+        store.bonusesDrawer = true
         store.leftDrawer = false
       },
     },

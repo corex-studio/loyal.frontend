@@ -19,7 +19,7 @@
         ]"
         :class="[
           selectedTab === tab.label
-            ? 'bg-selector-active-color text-on-selector-active-color'
+            ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
             : 'text-on-selector-color',
         ]"
         class="cursor-pointer border-radius2 col row items-center justify-center rounded-10 body relative-position bold"
@@ -65,12 +65,12 @@ const props = withDefaults(
     routerMethod: 'replace',
     width: '300px',
     height: '40px',
-  }
+  },
 )
 
 const localTabs = computed(() => {
   return props.tabs.map((el) =>
-    typeof el === 'string' ? { label: el, to: undefined } : el
+    typeof el === 'string' ? { label: el, to: undefined } : el,
   )
 })
 
@@ -103,7 +103,7 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) selectedTab.value = v
-  }
+  },
 )
 </script>
 
