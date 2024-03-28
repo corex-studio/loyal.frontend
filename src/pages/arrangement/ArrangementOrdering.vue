@@ -493,6 +493,7 @@
     v-model="deliveryAddressesModal"
   />
   <CDialog
+    :disable-overflow="$q.platform.is.safari"
     v-model="paymentModal"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     width="900px"

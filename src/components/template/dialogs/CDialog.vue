@@ -29,11 +29,11 @@
           !noPadding ? 'pb-md-15 pb-xs-12 px-md-15 px-xs-8' : dialogClass,
           noPadding ? '' : $slots.header ? 'pt-10' : 'pt-md-15 pt-xs-12',
         ]"
-        :style="`overflow-y:${noOverflow ? 'hidden' : 'auto'};
+        :style="`${disableOverflow? '' : `overflow-y:${noOverflow ? 'hidden' : 'auto'}; overflow-x: hidden;`}
           width: 100%;
           height: 100%;
           max-height: inherit;
-          overflow-x: hidden; ${contentWrapperStyles || ''}
+           ${contentWrapperStyles || ''}
           `"
       >
         <div
@@ -103,6 +103,7 @@ defineProps({
   maximize: Boolean,
   cardStyles: String,
   contentWrapperStyles: String,
+  disableOverflow: Boolean
 })
 defineEmits(['update:modelValue'])
 
