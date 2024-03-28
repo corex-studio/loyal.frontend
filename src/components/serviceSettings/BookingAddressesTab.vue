@@ -19,7 +19,7 @@
       style="overflow: scroll"
       :style="`height: ${
         $q.screen.lt.md ? '' : '374px !important'
-      }; max-height:${$q.screen.lt.md ? '45vh' : 'unset'}`"
+      }; max-height:${$q.screen.lt.md ? '35vh' : 'unset'}`"
     >
       <template v-if="availableBookingAddresses?.length">
         <div
@@ -69,7 +69,7 @@ defineEmits<{
 
 const availableBookingAddresses = computed(() => {
   return companyRepo.cartCompany?.salesPoints?.filter(
-    (v) => v.settings.booking_enabled
+    (v) => v.settings.booking_enabled,
   )
 })
 

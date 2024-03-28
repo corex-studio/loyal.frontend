@@ -155,7 +155,7 @@
                 <div class="bold">Корзина</div>
               </div>
               <div
-                @click="$store.bonusesModal = true"
+                @click="$store.bonusesDrawer = true"
                 class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
               >
                 <q-badge

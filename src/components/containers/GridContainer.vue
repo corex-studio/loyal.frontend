@@ -34,7 +34,7 @@ const props = withDefaults(
     lg: 4,
     xl: 5,
     xs: 2,
-  }
+  },
 )
 
 const columns = computed(() => {
