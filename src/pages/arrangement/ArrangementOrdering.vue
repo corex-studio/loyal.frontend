@@ -478,8 +478,30 @@
       </div>
     </div>
   </div>
-  <div v-else class="pt-20 header3 bold">Корзина пуста</div>
-  <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-10">
+  <div class="row items-center pt-20 gap-7" v-else>
+    <CIcon
+      v-if="$q.screen.lt.md"
+      @click="
+              $router.push({
+                name: $store.tableMode ? 'qrHome' : 'home',
+                params: {
+                  padId:
+                    $store.tableMode && $route.params.padId
+                      ? $route.params.padId
+                      : undefined,
+                },
+              })
+            "
+      name="fa-regular fa-angle-left"
+      size="24px"
+      color="on-background-color"
+      hover-color="primary"
+      class="cursor-pointer"
+    />
+    <div  class="header3 bold">Корзина пуста</div>
+  </div>
+
+  <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-15">
     <CButton label="Открыть окно для оплаты заказа" @click="paymentModal=true"  />
   </div>
   <SelectPaymentTypeModal
