@@ -578,7 +578,7 @@ const menuRef = ref<HTMLDivElement | null>(null)
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
 
-const clearBeforeRouterResolve = router.beforeEach(() => {
+const clearBeforeRouterResolve = router.afterEach(() => {
   checkOnPaymentUrlInPath()
 })
 
