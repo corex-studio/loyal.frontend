@@ -5,25 +5,7 @@
         <div
           class="row full-width items-center no-wrap gap-4 mb-md-12 mb-xs-10"
         >
-          <CIcon
-            v-if="$q.screen.lt.md"
-            @click="
-              $router.push({
-                name: $store.tableMode ? 'qrHome' : 'home',
-                params: {
-                  padId:
-                    $store.tableMode && $route.params.padId
-                      ? $route.params.padId
-                      : undefined,
-                },
-              })
-            "
-            name="fa-regular fa-angle-left"
-            size="24px"
-            color="on-background-color"
-            hover-color="primary"
-            class="cursor-pointer"
-          />
+          <ArrangementOrderingBackButton />
           <div class="header bold">
             {{ orderTypeText }}
           </div>
@@ -479,25 +461,7 @@
     </div>
   </div>
   <div class="row items-center pt-20 gap-7" v-else>
-    <CIcon
-      v-if="$q.screen.lt.md"
-      @click="
-              $router.push({
-                name: $store.tableMode ? 'qrHome' : 'home',
-                params: {
-                  padId:
-                    $store.tableMode && $route.params.padId
-                      ? $route.params.padId
-                      : undefined,
-                },
-              })
-            "
-      name="fa-regular fa-angle-left"
-      size="24px"
-      color="on-background-color"
-      hover-color="primary"
-      class="cursor-pointer"
-    />
+    <ArrangementOrderingBackButton />
     <div  class="header3 bold">Корзина пуста</div>
   </div>
 
@@ -576,6 +540,7 @@ import { orderRepo } from 'src/models/order/orderRepo'
 import CDialog from 'components/template/dialogs/CDialog.vue'
 import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
+import ArrangementOrderingBackButton from 'pages/arrangement/ArrangementOrderingBackButton.vue'
 
 const currentDay = ref('Сегодня')
 
