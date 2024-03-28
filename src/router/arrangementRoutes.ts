@@ -41,7 +41,7 @@ export const arrangementRoutesInQrMenu: RouteRecordRaw[] = [
       },
       {
         path: 'success_order/:orderId',
-        name: 'successOrderPage',
+        name: 'qrMenuSuccessOrderPage',
         component: () => import('src/pages/arrangement/ArrangementSuccess.vue'),
       },
     ],
