@@ -68,7 +68,12 @@
             style="opacity: 0.5"
             class="body"
           >
-            {{ currentSize?.characteristics.weight }}г
+            {{ currentSize?.characteristics.weight
+            }}{{
+              currentSize.characteristics.unit
+                ? unitTypeNamesShort[currentSize.characteristics.unit]
+                : 'г'
+            }}
           </div>
           <div
             v-if="$menuItem.item?.description?.length"
@@ -177,7 +182,7 @@
 <script lang="ts" setup>
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import MenuItemCharacteristics from './MenuItemCharacteristics.vue'
-import { ItemSize } from 'src/models/menu/menu'
+import { ItemSize, unitTypeNamesShort } from 'src/models/menu/menu'
 import { computed, ref, watch } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import ItemSizeSelector from './ItemSizeSelector.vue'
