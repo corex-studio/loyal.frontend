@@ -60,6 +60,10 @@ import { store, Store } from 'src/models/store'
 import { boot } from 'quasar/wrappers'
 import { PromotionsRepo } from 'src/models/promotion/promotionsRepo'
 import { MenuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import {
+  BalanceOperationRepo,
+  balanceOperationRepo,
+} from 'src/models/balanceOperation/balanceOperationRepo'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -86,6 +90,7 @@ declare module '@vue/runtime-core' {
     $waiterCall: WaiterCallRepo
     $orderReview: OrderReviewRepo
     $menuRulesForAdding: MenuRulesForAddingRepo
+    $balanceOperations: BalanceOperationRepo
   }
 }
 
@@ -113,4 +118,5 @@ export default boot(({ app }) => {
   app.config.globalProperties.$waiterCall = waiterCallRepo
   app.config.globalProperties.$orderReview = orderReviewRepo
   app.config.globalProperties.$menuRulesForAdding = menuRulesForAddingRepo
+  app.config.globalProperties.$balanceOperations = balanceOperationRepo
 })

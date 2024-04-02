@@ -18,7 +18,7 @@
       class="column no-wrap full-width gap-md-8 gap-xs-2 pb-md-10 pb-xs-12"
       style="overflow: scroll"
       :style="`height: ${$q.screen.lt.md ? 'unset' : '374px'}; max-height:${
-        $q.screen.lt.md ? '45vh' : 'unset'
+        $q.screen.lt.md ? '35vh' : 'unset'
       }`"
     >
       <template v-if="availablePickupAddresses?.length">
@@ -78,7 +78,7 @@ defineEmits<{
 
 const availablePickupAddresses = computed(() => {
   return companyRepo.cartCompany?.salesPoints?.filter(
-    (v) => v.settings.pickup_enabled
+    (v) => v.settings.pickup_enabled,
   )
 })
 

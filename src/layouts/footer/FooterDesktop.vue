@@ -49,7 +49,7 @@
           <div class="column gap-6 items-start">
             <CButton
               class="body"
-              label="Политика конфиденциальноости"
+              label="Политика конфиденциальности"
               style="opacity: 0.6"
               text-button
               text-color="on-bottom-menu-color"
@@ -187,7 +187,7 @@
           <div class="column gap-6 items-start">
             <CButton
               class="body"
-              label="Политика конфиденциальноости"
+              label="Политика конфиденциальности"
               style="opacity: 0.6"
               text-button
               text-color="on-bottom-menu-color"
@@ -405,70 +405,6 @@
           Loyalhub</a
         >
       </div>
-
-      <!-- <div class="row items-center gap-10">
-        <div
-          v-for="(el, index) in $company.item?.guestContacts.socials"
-          :key="index"
-        >
-          {{ el }}
-        </div>
-      </div> -->
-      <!-- <div :class="$q.screen.lt.lg ? 'reverse' : ''" class="column gap-10"> -->
-      <!-- <div class="row gap-7">
-          <div
-            v-for="(el, index) in groupLinks"
-            :key="index"
-            @click="el.click"
-            class="border-radius row justify-center items-center cursor-pointer"
-            style="background-color: #424242; width: 40px; height: 40px"
-          >
-            <CIcon color="white" :name="el.icon" />
-          </div>
-        </div> -->
-      <!-- <div class="row gap-8 items-baseline">
-          <div>© 2023 все права защищены</div>
-          <CButton
-            text-color="on-bottom-menu-color"
-            text-button
-            style="opacity: 0.8"
-            class="body"
-            label="Политика конфиденциальноости"
-            @click="
-              openLink(
-                `https://loyalhub.ru/${String(
-                  $companyGroup.item?.externalId
-                )}/policy`
-              )
-            "
-          />
-          <CButton
-            @click="
-              openLink(
-                `https://loyalhub.ru/${String(
-                  $companyGroup.item?.externalId
-                )}/terms_of_service`
-              )
-            "
-            class="body"
-            text-color="on-bottom-menu-color"
-            text-button
-            style="opacity: 0.8"
-            label="Условия использования"
-          />
-          <div class="row no-wrap gap-3">
-            <div style="opacity: 0.8">Работает на</div>
-            <q-img style="width: 30px" src="~assets/loyalHeart.svg" />
-            <a
-              style="opacity: 0.8"
-              class="text-on-bottom-menu-color"
-              href="https://corex.studio/loyal"
-            >
-              Loyalhub</a
-            >
-          </div>
-        </div> -->
-      <!-- </div> -->
     </div>
   </div>
 </template>

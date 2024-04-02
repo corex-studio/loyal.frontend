@@ -34,7 +34,7 @@
         <!--        $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'-->
         <!--        }-->
         <div
-          :style="`overflow: hidden; height: ${q.screen.lt.md ? '150px;' : ''} width: ${$q.screen.lt.md ? '265.5px;' : ''}`"
+          :style="`overflow: hidden; height: ${q.screen.lt.md ? ';' : ''} max-width: ${$q.screen.lt.md ? '100%;' : ''}`"
           @click="goToItem(item)"
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mt-15"
         >

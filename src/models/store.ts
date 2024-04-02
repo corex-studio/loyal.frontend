@@ -32,6 +32,7 @@ export class Store {
   registrationModal = false
   profileModal = false
   cartDrawer = false
+  bonusesDrawer = false
   deliveryAreaInfoDrawer = false
   deliveryAreaInfoDrawerData: DeliveryAreaInfoDrawerData | null = null
   leftDrawer = false

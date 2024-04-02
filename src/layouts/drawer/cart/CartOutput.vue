@@ -66,26 +66,7 @@
           label="Применить"
         />
       </div>
-      <!-- <CInput
-        :model-value="$cart.item.deliveryTime"
-        class="mt-10"
-        default
-        height="50px"
-        external-label="Время доставки"
-      >
-        <q-menu
-          ><q-time
-            :options="dateOptions"
-            :model-value="deliveryTyme"
-            @update:model-value="setDeliveryTime($event)"
-          >
-            <TabPicker
-              @update-tab="currentDay = $event"
-              :tabs="['Сегодня', 'Завтра']"
-              :model-value="currentDay"
-            /> </q-time
-        ></q-menu>
-      </CInput> -->
+
       <TimePicker
         v-if="!$store.tableMode"
         label="Время доставки"
@@ -202,7 +183,7 @@ watch(
         color: 'danger',
       })
     }
-  }
+  },
 )
 
 const paymentTypes = computed(() => {
@@ -384,7 +365,7 @@ onMounted(() => {
   if (cartRepo.item?.deliveryTime) {
     deliveryTyme.value = moment(
       cartRepo.item.deliveryTime,
-      'DD.MM.YYYY HH:mm:ss'
+      'DD.MM.YYYY HH:mm:ss',
     ).format('HH:mm')
   }
 })

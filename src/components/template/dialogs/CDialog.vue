@@ -5,13 +5,14 @@
     :persistent="persistent"
     :square="square"
     :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue')"
+    :no-backdrop-dismiss="noBackdropDismiss"
+    @update:modelValue="noClose ? void 0 : $emit('update:modelValue')"
     :class="{ 'maximize-modal': maximize }"
   >
     <q-card
       :style="`max-width: ${width}; min-height: ${height}; max-height: ${height}; height: ${heightPercent}; border-radius:${
         position === 'bottom' ? bottomBorderRadius() : ''
-      }`"
+      } ${cardStyles || ''}`"
       style="width: 100%; display: flex; transition: 0.2s"
       class="relative-position no-overflow column no-wrap no-shadow bg-background-color"
       :class="{ 'border-radius': position !== 'bottom' }"
@@ -28,14 +29,20 @@
           !noPadding ? 'pb-md-15 pb-xs-12 px-md-15 px-xs-8' : dialogClass,
           noPadding ? '' : $slots.header ? 'pt-10' : 'pt-md-15 pt-xs-12',
         ]"
-        :style="`overflow-y:${noOverflow ? 'hidden' : 'auto'};
+        :style="`${disableOverflow? '' : `overflow-y:${noOverflow ? 'hidden' : 'auto'}; overflow-x: hidden;`}
           width: 100%;
           height: 100%;
           max-height: inherit;
-          overflow-x: hidden
+           ${contentWrapperStyles || ''}
           `"
       >
-        <div style="position: absolute; top: -24px; right: -29px; z-index: 1">
+        <div
+          style="position: absolute; z-index: 1"
+          :style="{
+            top: $q.screen.gt.sm ? '-24px' : '-40px',
+            right: $q.screen.gt.sm ? '-29px' : '5px',
+          }"
+        >
           <CIcon
             v-if="!noClose"
             class="cursor-pointer"
@@ -83,6 +90,7 @@ defineProps({
     default: 'standard',
   },
   noClose: Boolean,
+  noBackdropDismiss: Boolean,
   persistent: Boolean,
   noPadding: Boolean,
   dialogClass: String,
@@ -93,6 +101,9 @@ defineProps({
   heightPercent: String,
   withOverflow: Boolean,
   maximize: Boolean,
+  cardStyles: String,
+  contentWrapperStyles: String,
+  disableOverflow: Boolean
 })
 defineEmits(['update:modelValue'])
 

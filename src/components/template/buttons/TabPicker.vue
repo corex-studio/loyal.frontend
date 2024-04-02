@@ -19,11 +19,21 @@
         ]"
         :class="[
           selectedTab === tab.label
-            ? 'bg-selector-active-color text-on-selector-active-color'
+            ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
             : 'text-on-selector-color',
         ]"
-        class="cursor-pointer border-radius2 col row items-center justify-center rounded-10 body relative-position bold"
+        class="cursor-pointer border-radius2 col row no-wrap gap-4 items-center justify-center rounded-10 body relative-position bold"
       >
+        <CIcon
+          v-if="tab.icon"
+          :color="
+            selectedTab === tab.label
+              ? 'on-selector-active-color'
+              : 'on-selector-color'
+          "
+          :name="tab.icon"
+          :size="tab.iconSize || '18px'"
+        />
         {{ tab.label }}
         <slot name="append"></slot>
       </div>
@@ -42,6 +52,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ArrayElement } from 'src/services/types'
+import CIcon from '../helpers/CIcon.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -54,6 +65,8 @@ const props = withDefaults(
           label: string
           to?: { name: string; [x: string]: any }
           [x: string]: any
+          icon?: string
+          iconSize?: string
         }[]
     modelValue?: string
     routerMethod?: 'replace' | 'push'
@@ -65,12 +78,12 @@ const props = withDefaults(
     routerMethod: 'replace',
     width: '300px',
     height: '40px',
-  }
+  },
 )
 
 const localTabs = computed(() => {
   return props.tabs.map((el) =>
-    typeof el === 'string' ? { label: el, to: undefined } : el
+    typeof el === 'string' ? { label: el, to: undefined } : el,
   )
 })
 
@@ -103,7 +116,7 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) selectedTab.value = v
-  }
+  },
 )
 </script>
 

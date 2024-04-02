@@ -29,7 +29,6 @@
     >
 
     <q-img
-      height="100%"
       :src="item.image?.thumbnail || $store.images.empty"
       fit="cover"
       class="border-radius"
@@ -46,18 +45,21 @@
         </span>
       </template>
     </q-img>
+    <!-- :style="`height: ${$q.screen.lt.md ? '165' : '188'}px`" -->
+
     <div
-      :style="`height: ${$q.screen.lt.md ? '165' : '188'}px`"
-      class="px-8 py-8 column no-wrap justify-between col-grow text-on-product-tile-color"
+      class="px-8 py-8 column gap-md-7 gap-lg-8 no-wrap justify-between col-grow text-on-product-tile-color"
     >
       <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
-          <div class="header3 bold ellipsis-2-lines">
+          <!-- ellipsis-2-lines -->
+          <div class="header3 bold">
             {{ item.name }}
           </div>
         </div>
 
         <div
+          v-if="item.description"
           style="opacity: 0.6"
           :class="$q.screen.lt.md ? 'ellipsis' : 'ellipsis-2-lines'"
           class="mt-3 body"
@@ -74,10 +76,6 @@
           ₽
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
-          <!-- background-color: ${lightColor(
-              buttonColor || '000',
-              '27'
-            )} !important; -->
           <CButton
             @click.capture.stop="toCartClickHandler()"
             :color="item.isDead ? 'secondary' : 'primary'"
@@ -89,12 +87,12 @@
             :width="$q.screen.lt.md ? '100%' : undefined"
           >
             <div :class="{ bold: $q.screen.lt.md }">
-              {{
-                $q.screen.lt.md ? `От ${item.sizes[0].price} ₽` : 'В корзину'
-              }}
+              {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
             </div>
           </CButton>
-          <CTooltip v-if="item.isDead">Товар недоступен</CTooltip>
+          <CTooltip v-if="item.isDead"
+            >{{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+          </CTooltip>
         </div>
       </div>
     </div>

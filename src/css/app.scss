@@ -138,7 +138,7 @@
   *::-webkit-scrollbar {
     width: 4px;
     height: 4px;
-    background-color: transparent;
+    background-color: var(--background-color);
   }
 
   &::-webkit-scrollbar-thumb,
@@ -216,5 +216,7 @@ li {
   -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
   border-radius: 10px;
-  animation: pulse 2s ease 3 normal, size 1s linear 1 alternate;
+  animation:
+    pulse 2s ease 3 normal,
+    size 1s linear 1 alternate;
 }

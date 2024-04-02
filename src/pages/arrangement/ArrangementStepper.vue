@@ -62,7 +62,10 @@ const route = useRoute()
 
 const currentStep = computed(() => {
   if (route.name === 'orderingPage') return 1
-  else if (route.name === 'successOrderPage') return 2
+  else if (
+    ['qrMenuSuccessOrderPage', 'successOrderPage'].includes(String(route.name))
+  )
+    return 2
   else return 0
 })
 
@@ -89,12 +92,12 @@ const getTitleStyle = (index: number): CSSProperties => {
       !index
         ? '15'
         : index === 1
-        ? '-47'
-        : index === 2
-        ? '-23'
-        : route.name === 'cart' || route.name === 'cartReview'
-        ? '0'
-        : '-40'
+          ? '-47'
+          : index === 2
+            ? '-23'
+            : route.name === 'cart' || route.name === 'cartReview'
+              ? '0'
+              : '-40'
     }px`,
   }
 }

@@ -5,25 +5,7 @@
         <div
           class="row full-width items-center no-wrap gap-4 mb-md-12 mb-xs-10"
         >
-          <CIcon
-            v-if="$q.screen.lt.md"
-            @click="
-              $router.push({
-                name: $store.tableMode ? 'qrHome' : 'home',
-                params: {
-                  padId:
-                    $store.tableMode && $route.params.padId
-                      ? $route.params.padId
-                      : undefined,
-                },
-              })
-            "
-            name="fa-regular fa-angle-left"
-            size="24px"
-            color="on-background-color"
-            hover-color="primary"
-            class="cursor-pointer"
-          />
+          <ArrangementOrderingBackButton />
           <div class="header bold">
             {{ orderTypeText }}
           </div>
@@ -286,21 +268,20 @@
             </div>
           </div>
 
-          <!-- <div
-            v-if="
-              $salesPoint.item?.settings.promo_codes !== PromoCodeMode.DISABLED
-            "
-            class="row full-width justify-center"
+          <div
+            v-if="$cart.item.salesPoint.settings.allow_pickup_orders_inside"
+            class="row full-width gap-md-5 gap-xs-4"
           >
-            <CButton
-              @click="promocodeModal = true"
-              text-button
-              label="У меня есть промокод"
-              class="body"
-              style="opacity: 0.9"
-              text-color="on-background-color"
-            />
-          </div> -->
+            <div v-if="$q.screen.gt.sm" class="col-md-4"></div>
+            <div class="col-grow">
+              <TabPicker
+                @update-tab="changeEatInside($event)"
+                :tabs="eatInsideTabs"
+                :model-value="currentEatInsideTab"
+                width="100%"
+              />
+            </div>
+          </div>
         </div>
         <div v-if="$q.screen.gt.md" class="row full-width gap-10 mt-25">
           <CButton
@@ -471,14 +452,24 @@
           :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
           class="col-grow body"
-          @click="makeAnOrder()"
+          @click="paymentUrl ? (paymentModal = true) : makeAnOrder()"
           :loading="loading"
           :disabled="!isArrangeAvailable"
         />
       </div>
     </div>
   </div>
-  <div v-else class="pt-20 header3 bold">Корзина пуста</div>
+  <div class="row items-center pt-20 gap-7" v-else>
+    <ArrangementOrderingBackButton />
+    <div class="header3 bold">Корзина пуста</div>
+  </div>
+
+  <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-15">
+    <CButton
+      label="Открыть окно для оплаты заказа"
+      @click="paymentModal = true"
+    />
+  </div>
   <SelectPaymentTypeModal
     :types="paymentTypes"
     v-model="selectedPaymentTypeModal"
@@ -489,6 +480,25 @@
     @address-selected="changeDeliveryAddress($event)"
     v-model="deliveryAddressesModal"
   />
+  <CDialog
+    :disable-overflow="$q.platform.is.safari"
+    v-model="paymentModal"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    width="900px"
+    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
+    no-backdrop-dismiss
+    :card-styles="`flex-direction: column; ${$q.screen.lt.md ? `height: ${$q.screen.height * 0.9}px;` : ''}`"
+    content-wrapper-styles="flex-grow:1; display: flex"
+  >
+    <div class="flex" style="flex-grow: 1">
+      <iframe
+        style="border: 0"
+        class="full-width full-height"
+        v-if="paymentModal && paymentUrl"
+        :src="paymentUrl"
+      ></iframe>
+    </div>
+  </CDialog>
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
@@ -497,18 +507,23 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { PaymentObjectType, PaymentType } from 'src/models/order/order'
+import {
+  Order,
+  PaymentObjectType,
+  PaymentStatusType,
+  PaymentType,
+} from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
   store,
   totalDayTimes,
 } from 'src/models/store'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
@@ -517,8 +532,25 @@ import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
 import { padRepo } from 'src/models/pads/padRepo'
 import { orderRepo } from 'src/models/order/orderRepo'
+import CDialog from 'components/template/dialogs/CDialog.vue'
+import { useEventBus } from '@vueuse/core'
+import { orderUpdatedKey } from 'src/services/eventBusKeys'
+import ArrangementOrderingBackButton from 'pages/arrangement/ArrangementOrderingBackButton.vue'
 
 const currentDay = ref('Сегодня')
+
+const eatInsideTabs = [
+  {
+    label: 'В зале',
+    icon: 'fa-regular fa-utensils',
+    iconSize: '20px',
+  },
+  {
+    label: 'С собой',
+    icon: 'fa-regular fa-person-walking-luggage',
+    iconSize: '20px',
+  },
+]
 
 const availableHours = ref<AvailableHours | null>(null)
 
@@ -531,12 +563,54 @@ const selectedPaymentTypeModal = ref(false)
 const loading = ref(false)
 
 const router = useRouter()
+const route = useRoute()
 
 const deliveryAddressesModal = ref(false)
 
 const menu = ref(false)
 
 const menuRef = ref<HTMLDivElement | null>(null)
+
+const paymentUrl = ref<string | null>(null)
+const paymentModal = ref(false)
+
+const currentEatInsideTab = computed(() => {
+  return cartRepo.item?.eatInside
+    ? eatInsideTabs[0].label
+    : eatInsideTabs[1].label
+})
+
+const clearBeforeRouterResolve = router.afterEach(() => {
+  checkOnPaymentUrlInPath()
+})
+
+const changeEatInside = async (val: string) => {
+  try {
+    if (!cartRepo.item) throw new Error('Object is null')
+    cartRepo.item.eatInside = val === 'В зале'
+    await cartRepo.setParams({
+      eat_inside: cartRepo.item.eatInside,
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при задании параметров корзины',
+      color: 'danger',
+    })
+  }
+}
+
+const checkOnPaymentUrlInPath = () => {
+  if (route.query.paymentUrl) {
+    paymentUrl.value = String(route.query.paymentUrl)
+    void nextTick(() => {
+      paymentModal.value = true
+    })
+  }
+}
+
+onBeforeUnmount(() => {
+  if (clearBeforeRouterResolve) clearBeforeRouterResolve()
+})
 
 const mobileViewSelectedTime = computed(() => {
   if (!cartRepo.item) return
@@ -577,40 +651,9 @@ const availableTimes = computed(() => {
       })
 })
 
-// const options = computed(() => {
-//   return currentDay.value === 'Сегодня'
-//     ? availableHours.value?.today.map((v) => {
-//         return {
-//           start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//           end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//         }
-//       })
-//     : availableHours.value?.tomorrow.map((v) => {
-//         return {
-//           start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//           end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//         }
-//       })
-// })
-
 const paymentTypes = computed(() => {
   const result: PaymentObjectType[] = []
-  // if (store.tableMode) {
-  //   result.push({
-  //     label: 'Внести в счет',
-  //     type: PaymentType.PAY_LATER,
-  //     class: 'bg-cash-button-color text-on-cash-button-color',
-  //     icon: 'fa-light fa-money-bill',
-  //   })
-  //   if (salesPointRepo.paymentSettings?.online_payment_enabled) {
-  //     result.push({
-  //       label: 'Онлайн',
-  //       type: PaymentType.ONLINE,
-  //       class: 'bg-cash-button-color text-on-cash-button-color',
-  //       icon: 'fa-light fa-ruble-sign',
-  //     })
-  //   }
-  // } else {
+
   if (salesPointRepo.paymentSettings?.cash_enabled)
     result.push({
       label: 'Наличными при получении',
@@ -632,7 +675,6 @@ const paymentTypes = computed(() => {
       class: 'bg-online-button-color text-on-online-button-color',
       icon: 'fa-light fa-ruble-sign',
     })
-  // }
   return result
 })
 
@@ -663,16 +705,6 @@ const selectClosestTime = async () => {
           .format('YYYY-MM-DD HH:mm:ss')
       : null,
   })
-  // if (availableHours.value?.today.length) {
-  //   cartRepo.item.deliveryTime = moment(
-  //     availableHours.value.today[0].start
-  //   ).format('DD.MM.YYYY HH:mm')
-  // } else {
-  //   cartRepo.item.deliveryTime =
-  //     moment(availableHours.value?.tomorrow[0].start).format(
-  //       'DD.MM.YYYY HH:mm'
-  //     ) || null
-  // }
 }
 
 const setDeliveryTime = async (v: string | null) => {
@@ -740,6 +772,31 @@ const makeAnOrder = async () => {
           ? store.qrData.data?.pad?.id
           : undefined,
     })
+    if (order.paymentUrl) {
+      await router.replace({
+        name: String(route.name),
+        query: { paymentUrl: order.paymentUrl },
+      })
+      paymentUrl.value = order.paymentUrl
+      paymentModal.value = true
+    } else {
+      void onOrderPaid(order)
+    }
+  } catch (e) {
+    console.log(e)
+    cartRepo.arrangeLoading = false
+    Notify.create({
+      message: 'Ошибка при оформлении заказа',
+      color: 'danger',
+    })
+  } finally {
+    loading.value = false
+  }
+}
+
+const onOrderPaid = async (order: Order) => {
+  paymentModal.value = false
+  setTimeout(async () => {
     if (store.qrData && store.qrData.data?.pad) {
       await cartRepo.current(
         store.qrData.data?.salesPoint?.id,
@@ -768,23 +825,12 @@ const makeAnOrder = async () => {
         },
       })
     }
-    if (order.paymentUrl) {
-      window.open(order.paymentUrl, '_blank')
-    }
-    Notify.create({
-      message: 'Заказ успешно оформлен',
-    })
-    orderRepo.item = order
-  } catch (e) {
-    console.log(e)
-    cartRepo.arrangeLoading = false
-    Notify.create({
-      message: 'Ошибка при оформлении заказа',
-      color: 'danger',
-    })
-  } finally {
-    loading.value = false
-  }
+  }, 350)
+
+  Notify.create({
+    message: 'Заказ успешно оформлен',
+  })
+  orderRepo.item = order
 }
 
 const changeDeliveryAddress = async (address: DeliveryAddress) => {
@@ -838,6 +884,13 @@ watch(selectedPaymentTypeModal, async (v) => {
 })
 
 onMounted(async () => {
+  checkOnPaymentUrlInPath()
+  useEventBus(orderUpdatedKey).on(({ order }) => {
+    if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
+      paymentModal.value = false
+      onOrderPaid(order)
+    }
+  })
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
   })

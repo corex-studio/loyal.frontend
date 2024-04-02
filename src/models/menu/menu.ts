@@ -10,6 +10,30 @@ import {
   MenuModifierGroupRaw,
 } from './menuModifierGroup/menuModifierGroup'
 
+export enum UnitType {
+  PC = 'pc',
+  KG = 'kg',
+  G = 'g',
+  ML = 'ml',
+  L = 'l',
+}
+
+export const unitTypeNames = {
+  [UnitType.PC]: 'Штука',
+  [UnitType.KG]: 'Килограмм',
+  [UnitType.G]: 'Грамм',
+  [UnitType.ML]: 'Миллилитр',
+  [UnitType.L]: 'Литр',
+}
+
+export const unitTypeNamesShort = {
+  [UnitType.PC]: 'шт',
+  [UnitType.KG]: 'кг',
+  [UnitType.G]: 'г',
+  [UnitType.ML]: 'мл',
+  [UnitType.L]: 'л',
+}
+
 export enum NutritionType {
   PORTION = 'portion',
   TOTAL = 'total',
@@ -45,7 +69,7 @@ export type ItemSizeRaw = {
   prices?: PriceRaw[]
   code?: string | number | null
   external_id?: string | number | null
-  characteristics?: { weight: number } | null
+  characteristics?: { weight: number; unit: UnitType | null } | null
   nutritions?: NotritionRaw[]
   created_at?: string
   updated_at?: string
@@ -83,7 +107,7 @@ export class ItemSize implements BaseModel {
   code: string | number | null
   isHidden: boolean
   externalId: string | number | null
-  characteristics: { weight: number }
+  characteristics: { weight: number; unit: UnitType | null }
   nutritions: NotritionRaw[]
   createdAt: string | null
   updatedAt: string | null
@@ -106,12 +130,12 @@ export class ItemSize implements BaseModel {
     this.prices = raw.prices
     this.code = raw.code || null
     this.externalId = raw.external_id || null
-    this.characteristics = raw.characteristics || { weight: 0 }
+    this.characteristics = raw.characteristics || { weight: 0, unit: null }
     this.nutritions = raw.nutritions || []
     this.createdAt = raw.created_at || null
     this.updatedAt = raw.updated_at || null
     this.modifierGroups = raw.modifier_groups?.map(
-      (v) => new MenuModifierGroup(v)
+      (v) => new MenuModifierGroup(v),
     )
     this.restrictions = raw.restrictions
     this.isHidden = raw.is_hidden || false

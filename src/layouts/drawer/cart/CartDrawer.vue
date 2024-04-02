@@ -92,6 +92,10 @@
                 />
               </template>
             </div>
+
+            <CartDrawerGuestsCount
+              v-if="$cart.item.salesPoint.settings.allow_set_guest_count"
+            />
             <CartFreeItems
               v-if="$cart.item.freeItems.filter((el) => !el.applied).length"
             />
@@ -206,6 +210,7 @@ import { deliveryAreaSettingsRepo } from 'src/models/deliveryAreas/deliveryAreaS
 import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import CartFreeItems from './CartFreeItems.vue'
+import CartDrawerGuestsCount from './CartDrawerGuestsCount.vue'
 
 const selectPaymentType = ref(false)
 
