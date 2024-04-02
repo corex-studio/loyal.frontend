@@ -268,21 +268,20 @@
             </div>
           </div>
 
-          <!-- <div
-            v-if="
-              $salesPoint.item?.settings.promo_codes !== PromoCodeMode.DISABLED
-            "
-            class="row full-width justify-center"
+          <div
+            v-if="$cart.item.salesPoint.settings.allow_pickup_orders_inside"
+            class="row full-width gap-md-5 gap-xs-4"
           >
-            <CButton
-              @click="promocodeModal = true"
-              text-button
-              label="У меня есть промокод"
-              class="body"
-              style="opacity: 0.9"
-              text-color="on-background-color"
-            />
-          </div> -->
+            <div v-if="$q.screen.gt.sm" class="col-md-4"></div>
+            <div class="col-grow">
+              <TabPicker
+                @update-tab="changeEatInside($event)"
+                :tabs="eatInsideTabs"
+                :model-value="currentEatInsideTab"
+                width="100%"
+              />
+            </div>
+          </div>
         </div>
         <div v-if="$q.screen.gt.md" class="row full-width gap-10 mt-25">
           <CButton
@@ -453,7 +452,7 @@
           :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
           class="col-grow body"
-          @click="paymentUrl ? paymentModal=true : makeAnOrder()"
+          @click="paymentUrl ? (paymentModal = true) : makeAnOrder()"
           :loading="loading"
           :disabled="!isArrangeAvailable"
         />
@@ -462,11 +461,14 @@
   </div>
   <div class="row items-center pt-20 gap-7" v-else>
     <ArrangementOrderingBackButton />
-    <div  class="header3 bold">Корзина пуста</div>
+    <div class="header3 bold">Корзина пуста</div>
   </div>
 
   <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-15">
-    <CButton label="Открыть окно для оплаты заказа" @click="paymentModal=true"  />
+    <CButton
+      label="Открыть окно для оплаты заказа"
+      @click="paymentModal = true"
+    />
   </div>
   <SelectPaymentTypeModal
     :types="paymentTypes"
@@ -517,14 +519,7 @@ import {
   store,
   totalDayTimes,
 } from 'src/models/store'
-import {
-  computed,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  ref,
-  watch,
-} from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
@@ -543,6 +538,19 @@ import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import ArrangementOrderingBackButton from 'pages/arrangement/ArrangementOrderingBackButton.vue'
 
 const currentDay = ref('Сегодня')
+
+const eatInsideTabs = [
+  {
+    label: 'В зале',
+    icon: 'fa-regular fa-utensils',
+    iconSize: '20px',
+  },
+  {
+    label: 'С собой',
+    icon: 'fa-regular fa-person-walking-luggage',
+    iconSize: '20px',
+  },
+]
 
 const availableHours = ref<AvailableHours | null>(null)
 
@@ -566,9 +574,30 @@ const menuRef = ref<HTMLDivElement | null>(null)
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
 
+const currentEatInsideTab = computed(() => {
+  return cartRepo.item?.eatInside
+    ? eatInsideTabs[0].label
+    : eatInsideTabs[1].label
+})
+
 const clearBeforeRouterResolve = router.afterEach(() => {
   checkOnPaymentUrlInPath()
 })
+
+const changeEatInside = async (val: string) => {
+  try {
+    if (!cartRepo.item) throw new Error('Object is null')
+    cartRepo.item.eatInside = val === 'В зале'
+    await cartRepo.setParams({
+      eat_inside: cartRepo.item.eatInside,
+    })
+  } catch {
+    Notify.create({
+      message: 'Ошибка при задании параметров корзины',
+      color: 'danger',
+    })
+  }
+}
 
 const checkOnPaymentUrlInPath = () => {
   if (route.query.paymentUrl) {
@@ -622,40 +651,9 @@ const availableTimes = computed(() => {
       })
 })
 
-// const options = computed(() => {
-//   return currentDay.value === 'Сегодня'
-//     ? availableHours.value?.today.map((v) => {
-//         return {
-//           start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//           end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//         }
-//       })
-//     : availableHours.value?.tomorrow.map((v) => {
-//         return {
-//           start: moment(v.start, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//           end: moment(v.end, 'YYYY-MM-DD HH:mm').format('HH:mm'),
-//         }
-//       })
-// })
-
 const paymentTypes = computed(() => {
   const result: PaymentObjectType[] = []
-  // if (store.tableMode) {
-  //   result.push({
-  //     label: 'Внести в счет',
-  //     type: PaymentType.PAY_LATER,
-  //     class: 'bg-cash-button-color text-on-cash-button-color',
-  //     icon: 'fa-light fa-money-bill',
-  //   })
-  //   if (salesPointRepo.paymentSettings?.online_payment_enabled) {
-  //     result.push({
-  //       label: 'Онлайн',
-  //       type: PaymentType.ONLINE,
-  //       class: 'bg-cash-button-color text-on-cash-button-color',
-  //       icon: 'fa-light fa-ruble-sign',
-  //     })
-  //   }
-  // } else {
+
   if (salesPointRepo.paymentSettings?.cash_enabled)
     result.push({
       label: 'Наличными при получении',
@@ -677,7 +675,6 @@ const paymentTypes = computed(() => {
       class: 'bg-online-button-color text-on-online-button-color',
       icon: 'fa-light fa-ruble-sign',
     })
-  // }
   return result
 })
 
@@ -708,16 +705,6 @@ const selectClosestTime = async () => {
           .format('YYYY-MM-DD HH:mm:ss')
       : null,
   })
-  // if (availableHours.value?.today.length) {
-  //   cartRepo.item.deliveryTime = moment(
-  //     availableHours.value.today[0].start
-  //   ).format('DD.MM.YYYY HH:mm')
-  // } else {
-  //   cartRepo.item.deliveryTime =
-  //     moment(availableHours.value?.tomorrow[0].start).format(
-  //       'DD.MM.YYYY HH:mm'
-  //     ) || null
-  // }
 }
 
 const setDeliveryTime = async (v: string | null) => {
@@ -792,7 +779,6 @@ const makeAnOrder = async () => {
       })
       paymentUrl.value = order.paymentUrl
       paymentModal.value = true
-      // window.open(order.paymentUrl, '_blank')
     } else {
       void onOrderPaid(order)
     }

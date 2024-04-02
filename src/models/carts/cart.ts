@@ -54,12 +54,15 @@ export type CartParams = {
   pad?: string
   delivery_address?: string
   delivery_time?: string | null
+
+  eat_inside?: boolean
   promo_code?: string
   applied_wallet_payments?: {
     wallet_payment: string
     applied_sum: number
   }[]
   comment?: string | null
+  guest_count?: number
 }
 
 export type CartRaw = {
@@ -99,6 +102,8 @@ export type CartRaw = {
     description: string | null
     title: string | null
   }[]
+  eat_inside: boolean
+  guest_count: number
 }
 
 export class Cart implements BaseModel {
@@ -134,6 +139,8 @@ export class Cart implements BaseModel {
     menuItem: MenuItem
     applied: boolean
   }[]
+  eatInside: boolean
+  guestCount: number
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -174,6 +181,8 @@ export class Cart implements BaseModel {
         applied: el.applied,
       }
     })
+    this.eatInside = raw.eat_inside
+    this.guestCount = raw.guest_count
   }
 
   get cartItemsQuantitySum() {

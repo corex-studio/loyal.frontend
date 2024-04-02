@@ -90,6 +90,7 @@ import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 const router = useRouter()
 
@@ -139,6 +140,13 @@ const blocks = computed(() => {
       label: 'Мобильное приложение',
       click: () => {
         scrollToBlock('footer')
+      },
+    },
+    {
+      label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
+      hidden: !uiSettingsRepo.item?.becomeFranchisee,
+      click: () => {
+        window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
       },
     },
   ]
