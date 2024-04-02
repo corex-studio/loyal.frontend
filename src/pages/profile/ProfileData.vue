@@ -31,7 +31,7 @@
       >
         <div class="body">Бонусы</div>
         <div class="subtitle-text bold">
-          {{ authentication.user?.wallets[0].balance }}
+          {{ authentication.user?.wallets[0]?.balance || 0 }}
         </div>
       </div>
     </div>

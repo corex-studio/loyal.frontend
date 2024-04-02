@@ -36,7 +36,7 @@
       class="column full-width bg-backing-color pt-12 pb-12 mt-sm-15 mt-xs-10 border-radius items-center text-on-backing-color"
     >
       <div class="row items-center header bold text-center">
-        У вас {{ authentication.user?.wallets[0].balance }}
+        У вас {{ authentication.user?.wallets[0]?.balance || 0 }}
         <q-img width="50px" src="/assets/bonusesCoins.png" />
       </div>
       <div class="body">Тратьте на любимые блюда</div>
