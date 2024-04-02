@@ -105,6 +105,7 @@ export type UiSettingsRaw = {
   } | null
   qr_arrangement_description: string | null
   show_menu_item_border: boolean
+  out_of_stock_text: string | null
 }
 
 export type BoxShadow = {
@@ -183,6 +184,7 @@ export class UiSetting implements BaseModel {
   } | null
   qrArrangementDescription: string | null
   showMenuItemBorder: boolean
+  outOfStockText: string | null
 
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
@@ -255,6 +257,7 @@ export class UiSetting implements BaseModel {
     this.becomeFranchisee = raw.become_franchisee
     this.qrArrangementDescription = raw.qr_arrangement_description
     this.showMenuItemBorder = raw.show_menu_item_border
+    this.outOfStockText = raw.out_of_stock_text
   }
 
   toJson() {

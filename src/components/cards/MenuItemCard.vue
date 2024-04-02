@@ -90,7 +90,9 @@
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
             </div>
           </CButton>
-          <CTooltip v-if="item.isDead">Товар недоступен</CTooltip>
+          <CTooltip v-if="item.isDead"
+            >{{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+          </CTooltip>
         </div>
       </div>
     </div>

@@ -41,6 +41,8 @@ export type SalesPointSettings = {
   allow_order_arrangement_without_delivery_time: boolean
   allow_arrange_from_qr: boolean
   promo_codes: PromoCodeMode
+  allow_set_guest_count: boolean
+  allow_pickup_orders_inside: boolean
 }
 
 export type AvailablePaymentType = {
