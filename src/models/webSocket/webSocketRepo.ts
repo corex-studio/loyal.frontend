@@ -12,6 +12,7 @@ import { Cart, CartRaw } from 'src/models/carts/cart'
 import { Order, OrderRaw } from '../order/order'
 import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
+import { orderReviewRepo } from '../order/orderReview/orderReviewRepo'
 export type WebSocketMessage = {
   type:
     | 'cart.updated'
@@ -43,6 +44,7 @@ export const handleMessage = (v: MessageEvent<string>) => {
     const order = new Order(response.data as OrderRaw)
     useEventBus(orderUpdatedKey).emit({ order })
     orderRepo.item = order
+    if (authentication.user) void orderReviewRepo.getOrderToReview()
   }
   if (response.type === 'waiter_call.updated') {
     waiterCallRepo.item = new WaiterCall(response.data as WaiterCallRaw)
