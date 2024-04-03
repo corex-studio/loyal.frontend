@@ -44,6 +44,7 @@
 </template>
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
+import { OrderType } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAdding'
 import { OrderStatusType } from 'src/models/order/order'
 import { orderRepo } from 'src/models/order/orderRepo'
 import { computed } from 'vue'
@@ -57,25 +58,33 @@ const currentStep = computed(() => {
     return 0
   else if (orderRepo.item?.status === OrderStatusType.COOKING) return 1
   else if (orderRepo.item?.status === OrderStatusType.ON_WAY) return 2
-  else if (orderRepo.item?.status === OrderStatusType.READY) return 3
+  else if (
+    orderRepo.item?.status === OrderStatusType.READY ||
+    orderRepo.item?.status === OrderStatusType.CLOSED
+  )
+    return orderRepo.item.type === OrderType.DELIVERY ? 3 : 2
   else return 0
 })
 
 const steps = computed(() => {
-  return [
+  const initialSteps = [
     {
       icon: 'fa-regular fa-check',
     },
     {
       icon: 'fa-regular fa-hat-chef',
     },
-    {
-      icon: 'fa-regular fa-moped',
-    },
+
     {
       icon: 'fa-regular fa-flag',
     },
   ]
+  if (orderRepo.item?.type === OrderType.DELIVERY) {
+    initialSteps.splice(2, 0, {
+      icon: 'fa-regular fa-moped',
+    })
+  }
+  return initialSteps
 })
 </script>
 
