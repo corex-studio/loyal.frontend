@@ -80,6 +80,8 @@ export class AppManager {
         sales_point: padRepo.item.salesPoint?.id,
       })
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
+    } else if (authentication.user?.isAnonymous) {
+      authentication.logout()
     }
   }
 
