@@ -42,9 +42,7 @@
           style="overflow: inherit !important"
         >
           <div class="rounded-separator"></div>
-          <div class="nowrap-content">
-            {{ $cart.item.currentAddress }}
-          </div>
+          <div class="nowrap-content">{{ $cart.item.currentAddress }}</div>
         </div>
       </template>
     </div>
