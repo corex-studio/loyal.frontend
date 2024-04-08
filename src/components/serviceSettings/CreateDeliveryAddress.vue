@@ -19,7 +19,7 @@
             hover-color="primary"
             name="fa-regular fa-angle-left"
             size="24px"
-            @click="backCallback()"
+            @click="backCallback ? backCallback() : void 0"
           />
           <div class="header3 bold">
             {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}

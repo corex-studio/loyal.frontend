@@ -336,6 +336,7 @@ watch(
     if (v) {
       void deliveryAddressRepo.list().then(() => {
         selectCurrentTab()
+        selectExistingAddress()
       })
     }
   },
@@ -440,7 +441,7 @@ const deliveryAddressCreateHandler = async (newAddress?: DeliveryAddress) => {
   void deliveryAddressRepo.list()
   if (newAddress) {
     selectedDeliveryAddress.value = newAddress
-    await confirmSelectedAddress()
+    await confirmSelectedAddress(true)
   }
 }
 
@@ -453,6 +454,20 @@ const navigationButtonClickHandler = () => {
     bookingMode.value === 'bookingInfo'
   )
     bookingMode.value = 'bookingList'
+}
+
+const selectExistingAddress = () => {
+  if (cartRepo.item) return
+  availablePickupAddresses.value
+  if (deliveryAddressRepo.items.length === 1) {
+    selectedDeliveryAddress.value = deliveryAddressRepo.items[0]
+  }
+  if (availablePickupAddresses.value?.length === 1) {
+    selectedPickupAddress.value = availablePickupAddresses.value[0]
+  }
+  // if (availableBookingAddresses.value?.length === 1) {
+  //   selectedSalesPoint.value = availableBookingAddresses.value[0]
+  // }
 }
 
 const selectCurrentTab = () => {
@@ -496,7 +511,7 @@ const openPreviousMenuItem = () => {
   }
 }
 
-const confirmSelectedAddress = async () => {
+const confirmSelectedAddress = async (noClose = false) => {
   if (
     selectedDeliveryAddress.value &&
     currentTab.value?.type === CartType.DELIVERY
@@ -521,7 +536,7 @@ const confirmSelectedAddress = async () => {
     store.qrData = null
     await store.loadCatalog(res[0].salesPoint)
     void openPreviousMenuItem()
-    emit('update:modelValue', false)
+    if (!noClose) emit('update:modelValue', false)
   } else if (
     currentTab.value?.type === CartType.PICKUP &&
     selectedPickupAddress.value

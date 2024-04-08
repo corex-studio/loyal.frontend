@@ -41,7 +41,9 @@
       </div>
       <div class="body">Тратьте на любимые блюда</div>
     </div>
-
+    <!-- <div class="text-red py-10">
+      {{ authentication.user?.loyaltyCard?.card_number }}
+    </div> -->
     <div
       class="mt-sm-15 mt-xs-10 border-radius row no-wrap relative-position px-8 py-8 gap-5"
       :class="{
@@ -59,6 +61,7 @@
         fit="contain"
         :src="$uiSettings.item?.loyaltyCardLogo?.thumbnail"
       />
+
       <div
         v-if="qrCode && authentication.user?.loyaltyCard?.card_number"
         style="
@@ -104,17 +107,19 @@ let qrCode: any = null
 
 // const currentTab = ref('Итория бонусов')
 
-if (authentication.user?.loyaltyCard?.card_number) {
-  qrCode = useQRCode(String(authentication.user?.loyaltyCard?.card_number), {
-    type: 'image/png',
-  })
-}
-
 watch(
   () => store.bonusesDrawer,
   (v) => {
     if (v) {
       void loadOperations()
+      if (authentication.user?.loyaltyCard?.card_number) {
+        qrCode = useQRCode(
+          String(authentication.user?.loyaltyCard?.card_number),
+          {
+            type: 'image/png',
+          },
+        )
+      }
     }
   },
 )
