@@ -22,7 +22,7 @@ export default configure((/* ctx */) => {
       // cache: false,
       // rawOptions: {},
       warnings: true,
-      errors: true,
+      errors: false,
     },
 
     // https://v2.quasar.dev/quasar-cli-webpack/prefetch-feature

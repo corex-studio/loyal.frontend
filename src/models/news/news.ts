@@ -17,6 +17,7 @@ export type NewsRaw = {
   title: string
   image?: ImageRaw
   images?: ImageRaw[]
+  desktop_image?: ImageRaw | null
   is_html?: boolean
   short_description?: string | null
   active: boolean
@@ -38,6 +39,7 @@ export class News implements BaseModel {
   title: string
   image?: ImageRaw
   images: ImageRaw[]
+  desktopImage: ImageRaw | null
   shortDescription: string
   active: boolean
   publishedAt: string
@@ -58,6 +60,7 @@ export class News implements BaseModel {
     this.title = raw.title
     this.image = raw.image
     this.images = raw.images || []
+    this.desktopImage = raw.desktop_image ?? null
     this.shortDescription = raw.short_description ? raw.short_description : ''
     this.active = raw.active
     this.publishedAt = raw.published_at

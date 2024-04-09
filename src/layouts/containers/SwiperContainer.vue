@@ -42,6 +42,7 @@
       :initial-slide="initialSlide"
       :modules="modules"
       navigation
+      :centered-slides="centeredSlides"
       :class="noNavigation ? 'no-navigation' : 'navigation'"
     >
       <swiper-slide
@@ -58,7 +59,9 @@
 <script setup lang="ts">
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Swiper as SwiperClass } from 'swiper'
-import { Pagination, Navigation, Mousewheel } from 'swiper'
+// import { Pagination, Navigation, Mousewheel } from 'swiper'
+import { Navigation, Pagination, Mousewheel } from 'swiper/modules';
+
 import 'swiper/css'
 import 'swiper/css/pagination'
 import 'swiper/css/navigation'
@@ -74,6 +77,7 @@ const props = defineProps<{
   useBullets?: boolean
   noNavigation?: boolean
   initialSlide?: number
+  centeredSlides?: boolean
 }>()
 
 let swiperInstance: SwiperClass | null = null

@@ -23,10 +23,13 @@
       </div>
     </div>
     <SwiperContainer
-      class="swiper"
+      :key="$store.offersTab"
+      :class="{'swiper': !isNewsDesktopView, 'px-20': _slidesPerView === 1 && $q.screen.gt.md}"
       :initial-slide="0"
+      :slides-per-view="_slidesPerView"
       no-navigation
-      :slides-per-view="slidesPerView"
+      :centered-slides="isNewsDesktopView"
+      :loop="isNewsDesktopView && $news.news.length > 2"
       :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
     >
       <template v-slot:item="{ item }">
@@ -34,16 +37,16 @@
         <!--        $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'-->
         <!--        }-->
         <div
-          :style="`overflow: hidden; height: ${q.screen.lt.md ? ';' : ''} max-width: ${$q.screen.lt.md ? '100%;' : ''}`"
+          :style="`overflow: hidden; max-height: ${isNewsDesktopView ? '400px;' : ''} max-width: ${$q.screen.lt.md ? '100%;' : ''}`"
           @click="goToItem(item)"
           class="cursor-pointer body border-radius column no-wrap bg-backing-color mt-15"
         >
           <q-img
-            :src="item.image?.thumbnail || $store.images.empty"
+            :src="getImage(item)"
             :style="`border-radius:${getBorderRadius}; object-position: left 50%;`"
             position="left"
             fit="cover"
-            :ratio="16 / 9"
+            :ratio="isNewsDesktopView ? undefined : 16 / 9"
           >
             <template v-slot:error>
               <span>
@@ -57,44 +60,6 @@
           </q-img>
         </div> </template
     ></SwiperContainer>
-    <!-- <SwiperContainer
-      v-else
-      class="swiper"
-      :initial-slide="1"
-      :slides-per-view="slidesPerView"
-      :items="banners"
-    >
-      <template v-slot:item="{ item }">
-        <div
-          style="overflow: hidden; height: 360px"
-          class="cursor-pointer body border-radius no-wrap bg-backing-color mb-20 mt-15 column justify-center"
-        >
-          <q-img
-            :src="getImage(item.image)"
-            height="360px"
-            class="border-radius"
-            fit="cover"
-            style="position: absolute"
-          >
-            <template v-slot:error>
-              <span>
-                <q-img
-                  fit="cover"
-                  height="100%"
-                  :src="$store.images.empty"
-                ></q-img>
-              </span>
-            </template>
-          </q-img>
-          <div
-            style="z-index: 10; padding-left: 10%; width: 45%"
-            class="text-white huge"
-          >
-            {{ item.text }}
-          </div>
-        </div></template
-      >
-    </SwiperContainer> -->
     <div
       v-if="$store.offersTab === 'Новости' && !$news.news.length"
       class="header3 pl-6 my-20 c-container"
@@ -121,38 +86,46 @@ import { newsRepo } from 'src/models/news/newsRepo'
 
 const q = useQuasar()
 
-// const banners = [
-//   {
-//     image: 'baner1.jpg',
-//     text: 'Натуральные лимонады Starbar Craft',
-//   },
-//   {
-//     image: 'baner2.jpg',
-//     text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
-//   },
-//   {
-//     image: 'baner1.jpg',
-//     text: 'Натуральные лимонады Starbar Craft',
-//   },
-//   {
-//     image: 'baner2.jpg',
-//     text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
-//   },
-//   {
-//     image: 'baner1.jpg',
-//     text: 'Натуральные лимонады Starbar Craft',
-//   },
-//   {
-//     image: 'baner2.jpg',
-//     text: 'Знаменитый тайский суп Том Ям — от 369 ₽',
-//   },
-// ]
-
 const tabs = computed(() => {
   const result = []
   result.push('Новости')
   result.push('Акции')
   return result
+})
+
+const getImage = (item: News) => {
+  if (isNewsDesktopView.value)
+    return item.desktopImage?.image || store.images.empty
+  return item.image?.image || store.images.empty
+}
+
+const isNewsDesktopView = computed(() => {
+  if (q.screen.lt.lg) return false
+  if (store.offersTab !== 'Новости') return false
+  console.log(newsRepo.news.filter((v) => !v.desktopImage).length)
+  return !newsRepo.news.filter((v) => !v.desktopImage).length
+})
+
+const _slidesPerView = computed(() => {
+  if (!isNewsDesktopView.value) return slidesPerView.value
+  const width = q.screen.width
+  if (width >= 960) {
+    const paddings: Record<string, number> = {
+      xl: 120,
+      lg: 80,
+    }
+    const currentPadding = q.screen.width <= 1560 ? paddings[q.screen.name] || 0 : 0
+    const container = 1290 - currentPadding
+    const res = Number((width / container).toFixed(2))
+    return res < 1 ? 1 : res
+  }
+  const sizes: Record<string, number> = {
+    xl: 1.8,
+    lg: 1.2,
+    md: 1.1,
+    sm: 1.1,
+  }
+  return sizes[q.screen.name] || 1.2
 })
 
 const slidesPerView = computed(() => {
@@ -182,14 +155,6 @@ const goToItem = (item: News) => {
 </script>
 
 <style lang="scss" scoped>
-// .swiper :deep(.swiper.swiper-initialized.swiper-horizontal) {
-//   @media (max-width: 1919px) {
-//     max-width: 1420px;
-//   }
-//   @media (min-width: 1919px) {
-//     max-width: 1480px;
-//   }
-// }
 body.screen--xl {
   .swiper :deep(.swiper.swiper-initialized.swiper-horizontal) {
     @media (max-width: 1560px) {
