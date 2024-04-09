@@ -23,10 +23,10 @@
       </div>
     </div>
     <SwiperContainer
-      :key="$store.offersTab"
-      :class="{'swiper': !isNewsDesktopView, 'px-20': _slidesPerView === 1 && $q.screen.gt.md}"
+      :key="`${$store.offersTab}${$q.screen.gt.md}`"
+      :class="{'swiper': !isNewsDesktopView, 'px-20': slidesPerView === 1 && $q.screen.gt.md}"
       :initial-slide="0"
-      :slides-per-view="_slidesPerView"
+      :slides-per-view="slidesPerView"
       no-navigation
       :centered-slides="isNewsDesktopView"
       :loop="isNewsDesktopView && $news.news.length > 2"
@@ -102,38 +102,27 @@ const getImage = (item: News) => {
 const isNewsDesktopView = computed(() => {
   if (q.screen.lt.lg) return false
   if (store.offersTab !== 'Новости') return false
-  console.log(newsRepo.news.filter((v) => !v.desktopImage).length)
   return !newsRepo.news.filter((v) => !v.desktopImage).length
 })
 
-const _slidesPerView = computed(() => {
-  if (!isNewsDesktopView.value) return slidesPerView.value
-  const width = q.screen.width
-  if (width >= 960) {
+const slidesPerView = computed(() => {
+  if (!isNewsDesktopView.value) return smallBannersSlidesPerView.value
+  if (q.screen.gt.md) {
     const paddings: Record<string, number> = {
       xl: 120,
       lg: 80,
     }
-    const currentPadding = q.screen.width <= 1560 ? paddings[q.screen.name] || 0 : 0
-    const container = 1290 - currentPadding
-    const res = Number((width / container).toFixed(2))
+    const width = q.screen.width
+    const currentPadding = width <= 1560 ? paddings[q.screen.name] || 0 : 0
+    const currentContainer = 1290 - currentPadding
+    const res = Number((width / currentContainer).toFixed(2))
     return res < 1 ? 1 : res
   }
-  const sizes: Record<string, number> = {
-    xl: 1.8,
-    lg: 1.2,
-    md: 1.1,
-    sm: 1.1,
-  }
-  return sizes[q.screen.name] || 1.2
+  return smallBannersSlidesPerView.value
 })
 
-const slidesPerView = computed(() => {
+const smallBannersSlidesPerView = computed(() => {
   return q.screen.lt.md ? 1.2 : q.screen.lt.lg ? 2 : 2.5
-
-  // store.offersTab === 'Акции'
-  //   ? 1
-  //   :
 })
 
 const getBorderRadius = computed(() => {
