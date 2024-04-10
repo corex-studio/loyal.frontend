@@ -96,7 +96,7 @@
 </template>
 <script lang="ts" setup>
 import CInput from 'src/components/template/inputs/CInput.vue'
-import { nextTick, onMounted, ref } from 'vue'
+import { nextTick, onMounted, Ref, ref } from 'vue'
 
 const props = defineProps<{
   code: {
@@ -116,7 +116,7 @@ const emit = defineEmits<{
       second: string | null
       third: string | null
       fourth: string | null
-    }
+    },
   ): void
   (evt: 'logIn', val: boolean): void
 }>()
@@ -168,7 +168,27 @@ const onPaste = (e: ClipboardEvent) => {
   }, 0)
 }
 
+const inputRefByNumber: Record<number, Ref<HTMLInputElement | null>> = {
+  1: firstInputRef,
+  2: secondInputRef,
+  3: thirdInputRef,
+  4: fourthInputRef,
+}
+
 const kek = (v: KeyboardEvent, inputNumber: number) => {
+  // todo сдедать нормально
+  if (!['Backspace', 'ArrowLeft', 'ArrowRight'].includes(v.key)) {
+    const inputRef = inputRefByNumber[inputNumber]
+    if (!inputRef) return
+    const inputValue = inputRef.value?.value || ''
+    if (inputValue.length) {
+      v.preventDefault()
+      if (inputNumber < 4) {
+        inputRefByNumber[inputNumber + 1].value?.focus()
+        inputRefByNumber[inputNumber + 1].value?.select()
+      }
+    }
+  }
   setTimeout(() => {
     if (v.key === 'Backspace' || v.key === 'ArrowLeft') {
       if (inputNumber === 4) {
@@ -186,11 +206,12 @@ const kek = (v: KeyboardEvent, inputNumber: number) => {
         inputNumber === 1
           ? (secondInputRef.value?.focus(), secondInputRef.value?.select())
           : inputNumber === 2
-          ? (thirdInputRef.value?.focus(), thirdInputRef.value?.select())
-          : inputNumber === 3
-          ? (fourthInputRef.value?.focus(), fourthInputRef.value?.select())
-          : void 0
+            ? (thirdInputRef.value?.focus(), thirdInputRef.value?.select())
+            : inputNumber === 3
+              ? (fourthInputRef.value?.focus(), fourthInputRef.value?.select())
+              : void 0
       })
+    } else {
     }
   }, 0)
 }
