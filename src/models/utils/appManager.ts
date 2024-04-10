@@ -187,28 +187,26 @@ export class AppManager {
     if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
     if (currentPoint) void store.loadCatalog(currentPoint)
 
-    if (!newsRepo.news.length) {
       void newsRepo
         .list({
           company_group: companyGroupRepo.item?.id,
           active: true,
           type: NewsType.DEFAULT,
+          city: localStorage.getItem('city') || companyGroupRepo.item?.cityData.current?.uuid
         })
         .then((res) => {
           newsRepo.news = res.items
         })
-    }
-    if (!newsRepo.promotions.length) {
       void newsRepo
         .list({
           company_group: companyGroupRepo.item?.id,
           active: true,
           type: NewsType.PROMOTION,
+          city: localStorage.getItem('city') || companyGroupRepo.item?.cityData.current?.uuid
         })
         .then((res) => {
           newsRepo.promotions = res.items
         })
-    }
     if (
       authentication.user?.registeredAt === null &&
       !authentication.user.isAnonymous
