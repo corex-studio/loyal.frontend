@@ -60,6 +60,7 @@
       <q-img
         fit="contain"
         :src="$uiSettings.item?.loyaltyCardLogo?.thumbnail"
+        style="max-height: 130px"
       />
 
       <div
