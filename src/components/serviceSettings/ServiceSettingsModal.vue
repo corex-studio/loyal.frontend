@@ -290,6 +290,7 @@ import YandexAggregatorTab from './YandexAggregatorTab.vue'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import DeliveryTypeSelector from './DeliveryTypeSelector.vue'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 export type TabRaw = {
   label: string | null
@@ -400,7 +401,10 @@ const availableCartTypes = computed(() => {
     companyRepo.cartCompany?.salesPoints?.some((v) => v.settings.pickup_enabled)
   ) {
     result.push({
-      label: 'Самовывоз',
+      label:
+        companyGroupRepo.item?.externalId === 'Onegin'
+          ? 'Заказ с собой'
+          : 'Самовывоз',
       type: CartType.PICKUP,
     })
   }
