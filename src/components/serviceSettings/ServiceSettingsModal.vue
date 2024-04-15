@@ -492,7 +492,10 @@ const selectExistingAddress = () => {
 }
 
 const selectCurrentTab = () => {
-  if (cartRepo.item) {
+  if (
+    cartRepo.item &&
+    companyRepo.cartCompany?.id === cartRepo.item.salesPoint.company
+  ) {
     if (cartRepo.item.type === CartType.DELIVERY) {
       selectedDeliveryAddress.value = cartRepo.item.deliveryAddress
       selectedPickupAddress.value = null
