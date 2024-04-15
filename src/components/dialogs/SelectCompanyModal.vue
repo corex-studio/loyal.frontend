@@ -5,7 +5,7 @@
     :width="'400px'"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
-    :no-close="$q.screen.lt.md || noClose"
+    :hide-close="$q.screen.lt.md || noClose"
   >
     <div class="column full-width">
       <div class="header bold mb-md-15 mb-xs-10">Выберите заведение</div>
@@ -63,7 +63,7 @@ watch(
   (v) => {
     if (v && props.selectedCompany)
       selectedCompany.value = props.selectedCompany
-  }
+  },
 )
 
 watch(
@@ -72,7 +72,7 @@ watch(
     if (v && companyRepo.item) {
       selectedCompany.value = companyRepo.item
     }
-  }
+  },
 )
 
 const selectCompany = (v: Company) => {

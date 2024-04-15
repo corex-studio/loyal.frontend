@@ -6,7 +6,7 @@
     no-padding
     :height="modalHeight"
     :maximize="$q.screen.lt.lg"
-    :no-close="$q.screen.lt.md"
+    :hide-close="$q.screen.lt.md"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
   >
     <template v-if="!newAddressMode">
@@ -47,6 +47,18 @@
               />
             </template>
           </ServiceModalHeader>
+          <CButton
+            v-if="
+              $companyGroup.item && $companyGroup.item?.companies.length > 1
+            "
+            @click="changeCompany"
+            text-button
+            label="Выбрать другое заведение"
+            class="mt-4 body"
+            text-color="secondary-text"
+            style="width: fit-content"
+          />
+
           <ServiceSettingsTabPicker
             class="mt-12 mb-13"
             @update-tab="currentTab = $event"
@@ -429,6 +441,11 @@ const availableCartTypes = computed(() => {
     })
   return result
 })
+
+const changeCompany = () => {
+  emit('update:modelValue', false)
+  store.selectCompanyModal = true
+}
 
 const addAddressHandler = () => {
   deliveryAddressToEdit.value = null
