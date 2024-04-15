@@ -462,7 +462,7 @@ const deliveryAddressCreateHandler = async (newAddress?: DeliveryAddress) => {
   void deliveryAddressRepo.list()
   if (newAddress) {
     selectedDeliveryAddress.value = newAddress
-    await confirmSelectedAddress(true)
+    // await confirmSelectedAddress(true)
   }
 }
 
@@ -541,21 +541,28 @@ const confirmSelectedAddress = async (noClose = false) => {
       selectedDeliveryAddress.value?.coords?.latitude || 0,
       selectedDeliveryAddress.value?.coords?.longitude || 0,
     ])
-    if (!res.length) {
+
+    const availableAreas = res.filter((el) =>
+      companyRepo.cartCompany?.salesPoints
+        ?.map((v) => v.id)
+        .includes(el.salesPoint),
+    )
+    if (!res.length || !availableAreas.length) {
       Notify.create({
         message: 'По данному адресу не осуществляется доставка',
         color: 'danger',
       })
       return
     }
-    if (authentication.user)
+    if (authentication.user) {
       await cartRepo.setParams({
-        sales_point: res[0].salesPoint,
+        sales_point: availableAreas[0].salesPoint,
         type: CartType.DELIVERY,
         delivery_address: selectedDeliveryAddress.value?.id,
       })
+    }
     store.qrData = null
-    await store.loadCatalog(res[0].salesPoint)
+    await store.loadCatalog(availableAreas[0].salesPoint)
     void openPreviousMenuItem()
     if (!noClose) emit('update:modelValue', false)
   } else if (
