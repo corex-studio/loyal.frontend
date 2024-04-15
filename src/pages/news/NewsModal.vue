@@ -7,7 +7,7 @@
     no-padding
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
-    :no-close="$q.screen.lt.md"
+    :hide-close="$q.screen.lt.md"
   >
     <div
       v-if="$q.screen.lt.md"

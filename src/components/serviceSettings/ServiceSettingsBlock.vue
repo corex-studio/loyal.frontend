@@ -63,6 +63,7 @@ import CIcon from '../template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
+import { companyRepo } from 'src/models/company/companyRepo'
 
 const openDialog = () => {
   if (cartRepo.item?.type === CartType.TABLE) return
@@ -72,10 +73,11 @@ const openDialog = () => {
   }
   if (!companyGroupRepo.item) return
   if (companyGroupRepo.item?.companies.length > 1) {
-    store.selectCompanyModal = true
-  } else {
-    store.serviceSettingsModal = true
+    companyRepo.cartCompany = companyRepo.item
   }
+  //  else {
+  store.serviceSettingsModal = true
+  // }
 }
 </script>
 

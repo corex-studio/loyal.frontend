@@ -29,7 +29,7 @@
           !noPadding ? 'pb-md-15 pb-xs-12 px-md-15 px-xs-8' : dialogClass,
           noPadding ? '' : $slots.header ? 'pt-10' : 'pt-md-15 pt-xs-12',
         ]"
-        :style="`${disableOverflow? '' : `overflow-y:${noOverflow ? 'hidden' : 'auto'}; overflow-x: hidden;`}
+        :style="`${disableOverflow ? '' : `overflow-y:${noOverflow ? 'hidden' : 'auto'}; overflow-x: hidden;`}
           width: 100%;
           height: 100%;
           max-height: inherit;
@@ -44,7 +44,7 @@
           }"
         >
           <CIcon
-            v-if="!noClose"
+            v-if="!noClose && !hideClose"
             class="cursor-pointer"
             hoverColor="primary"
             color="white"
@@ -90,6 +90,7 @@ defineProps({
     default: 'standard',
   },
   noClose: Boolean,
+  hideClose: Boolean,
   noBackdropDismiss: Boolean,
   persistent: Boolean,
   noPadding: Boolean,
@@ -103,7 +104,7 @@ defineProps({
   maximize: Boolean,
   cardStyles: String,
   contentWrapperStyles: String,
-  disableOverflow: Boolean
+  disableOverflow: Boolean,
 })
 defineEmits(['update:modelValue'])
 

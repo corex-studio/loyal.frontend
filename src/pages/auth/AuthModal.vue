@@ -5,7 +5,7 @@
     width="466px"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :maximize="$q.screen.lt.md"
-    :no-close="$q.screen.lt.md"
+    :hide-close="$q.screen.lt.md"
   >
     <div class="text-on-background-color">
       <div
