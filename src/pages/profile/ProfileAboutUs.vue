@@ -143,7 +143,10 @@
         </div>
       </div>
     </div>
-    <div class="c-container">
+    <div
+      v-if="$companyGroup.item?.externalId !== 'tochka_vkusa'"
+      class="c-container"
+    >
       <div
         :style="$q.screen.lt.md ? '' : 'overflow-x: auto'"
         :class="{ 'no-wrap': $q.screen.gt.sm }"
@@ -177,7 +180,14 @@
         </div>
       </div>
     </div>
-    <div class="bg-backing-color py-lg-32 pt-xs-15 pb-md-11">
+
+    <div
+      :class="{
+        'mt-lg-29 mt-md-25 mt-xs-10':
+          $companyGroup.item?.externalId === 'tochka_vkusa',
+      }"
+      class="bg-backing-color py-lg-32 pt-xs-15 pb-md-11"
+    >
       <div class="c-container">
         <div
           :class="$q.screen.gt.md ? 'no-wrap' : 'justify-center'"
