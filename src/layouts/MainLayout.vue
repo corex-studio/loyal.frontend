@@ -105,11 +105,7 @@ import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import BonusesDrawer from './drawer/bonuses/BonusesDrawer.vue'
-// import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-// import { cartRepo } from 'src/models/carts/cartRepo'
-// import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-// import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
-// import { CartType } from 'src/models/carts/cart'
+import { setMeta } from 'src/models/metaTags/metaTags'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -122,6 +118,22 @@ const routesWithoutContainerPaddings = [
 
 const route = useRoute()
 const ready = ref(false)
+// const router = useRouter()
+
+// router.afterEach((to) => {
+//   if (to.name === 'menuItemModal') {
+//     return false
+//   }
+// })
+
+watch(
+  () => route.name,
+  () => {
+    if (Object.keys(route.meta).length) {
+      setMeta(route.meta)
+    }
+  },
+)
 
 watch(
   () => authentication.user?.id,
@@ -165,10 +177,10 @@ onMounted(async () => {
     initMenuPage: true,
   })
   await manager.initApp()
-  if (authentication.user) void orderReviewRepo.getOrderToReview()
-
+  if (authentication.user) {
+    void orderReviewRepo.getOrderToReview()
+  }
   salesPointRepo.menuLoading = true
-
   ready.value = true
 })
 

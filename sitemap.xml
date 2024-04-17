@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+		<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+	<loc>https://app.loyalhub.ru/</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/arrangement</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/ordering</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/qr_menu/arrangement</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>0.8</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/successful_payment</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/profile</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/data</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/orders</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/addresses</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/about</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/menu</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/my_qr</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/my_orders</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/order_review</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+<url>
+	<loc>https://app.loyalhub.ru/404</loc>
+	<lastmod>2024-04-17T17:03:59+01:00</lastmod>
+	<priority>1.0</priority>
+</url>
+</urlset>

@@ -4,6 +4,8 @@
     class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
     :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
+    itemscope
+    itemtype="https://schema.org/Product"
   >
     <div
       v-if="$cart.isItemInCart(item.id)?.quantity"
@@ -33,6 +35,7 @@
       fit="cover"
       class="border-radius"
       :ratio="1"
+      itemprop="image"
     >
       <template v-slot:error>
         <span>
@@ -53,7 +56,7 @@
       <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
           <!-- ellipsis-2-lines -->
-          <div class="header3 bold">
+          <div itemprop="name" class="header3 bold">
             {{ item.name }}
           </div>
         </div>
@@ -63,6 +66,7 @@
           style="opacity: 0.6"
           :class="$q.screen.lt.md ? 'ellipsis' : 'ellipsis-2-lines'"
           class="mt-3 body"
+          itemprop="description"
         >
           {{ item.description }}
         </div>
@@ -70,10 +74,15 @@
       <div class="row no-wrap full-width justify-between items-center">
         <div
           v-if="$q.screen.gt.sm"
-          class="subtitle-text bold text-on-backgroun-color"
+          class="subtitle-text bold text-on-backgroun-color row gap-2 no-wrap"
+          itemprop="offers"
+          itemscope
+          itemtype="https://schema.org/Offer"
         >
-          {{ item.sizes[0].price }}
-          ₽
+          <div itemprop="price">
+            {{ item.sizes[0].price }}
+          </div>
+          <div itemprop="priceCurrency">₽</div>
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
@@ -116,6 +125,9 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+// import { useRouter } from 'vue-router'
+
+// const router = useRouter()
 
 const props = defineProps<{
   item: MenuItem
@@ -162,7 +174,14 @@ const toCartClickHandler = async () => {
 }
 
 const openMenuItem = async () => {
+  // void router.push({
+  //   name: 'menuItemModal',
+  //   params: {
+  //     menuItemId: props.item.id,
+  //   },
+  // })
   store.menuItemModal = true
+
   await menuItemRepo.retrieve(props.item.id, {
     sales_point: salesPointRepo.item?.id,
   })

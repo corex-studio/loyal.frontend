@@ -13,6 +13,8 @@
     :hide-close="$q.screen.lt.md"
   >
     <div
+      itemscope
+      itemtype="https://schema.org/Product"
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
       class="no-wrap full-width relative-position text-on-background-color"
     >
@@ -41,6 +43,7 @@
         :height="$q.screen.lt.lg ? '450px' : '100%'"
         style="width: 100%"
         :src="$menuItem.item?.image?.image || $store.images.empty"
+        itemprop="image"
       >
         <template v-slot:error>
           <span>
@@ -62,11 +65,14 @@
         }`"
       >
         <div class="column full-width">
-          <div class="huge3 bold mb-2">{{ $menuItem.item?.name }}</div>
+          <div itemprop="name" class="huge3 bold mb-2">
+            {{ $menuItem.item?.name }}
+          </div>
           <div
             v-if="currentSize?.characteristics.weight"
             style="opacity: 0.5"
             class="body"
+            itemprop="weight"
           >
             {{ currentSize?.characteristics.weight
             }}{{
@@ -78,6 +84,7 @@
           <div
             v-if="$menuItem.item?.description?.length"
             class="body mb-8 mt-2"
+            itemprop="description"
           >
             {{ $menuItem.item?.description }}
           </div>
@@ -144,12 +151,22 @@
                 :height="$q.screen.lt.lg ? '40px' : '48px'"
                 :loading="loading"
                 :disabled="isAddToCardDisabled"
-                :label="`Добавить ${
-                  currentPrice
-                    ? `за ${beautifyNumber(currentPrice, true)} ₽`
-                    : ''
-                }`"
               >
+                <div class="row gap-2 no-wrap">
+                  <div>{{ currentPrice ? 'Добавить за' : 'Добавить' }}</div>
+                  <div
+                    v-if="currentPrice"
+                    class="row gap-2 no-wrap"
+                    itemprop="offers"
+                    itemscope
+                    itemtype="https://schema.org/Offer"
+                  >
+                    <div itemprop="price">
+                      {{ beautifyNumber(currentPrice, true) }}
+                    </div>
+                    <div itemprop="priceCurrency">₽</div>
+                  </div>
+                </div>
               </CButton>
               <CTooltip v-if="$menuItem.item?.isDead"
                 >Товар недоступен</CTooltip
@@ -206,6 +223,7 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+// import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps<{
   modelValue: boolean
@@ -214,6 +232,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
+
+// const route = useRoute()
+// const router = useRouter()
 
 const touchSpot = ref<HTMLDivElement>()
 
@@ -224,6 +245,10 @@ const quantity = ref(1)
 const loading = ref(false)
 
 const q = useQuasar()
+
+// const _modelValue = computed(() => {
+//   return route.name === 'menuItemModal'
+// })
 
 // const route = useRoute()
 
@@ -293,6 +318,14 @@ const isAddToCardDisabled = computed(() => {
     !quantity.value
   )
 })
+
+// const closeModal = () => {
+//   const prevRoute = nth(route.matched, -2)
+
+//   void router.push({
+//     path: prevRoute?.path,
+//   })
+// }
 
 const addToCart = async () => {
   if (!authentication.user && !store.tableMode) {
