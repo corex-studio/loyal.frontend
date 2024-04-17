@@ -150,7 +150,7 @@ onMounted(() => {
   document.body.style.setProperty('--background-color', backgroundColor.value)
   document.body.style.setProperty(
     '--on-background-color',
-    onBackgroundColor.value
+    onBackgroundColor.value,
   )
   document.body.style.setProperty('--input-color', inputColor.value)
   document.body.style.setProperty('--on-input-color', onInputColor.value)
@@ -159,7 +159,7 @@ onMounted(() => {
   document.body.style.setProperty('--bottom-menu-color', bottomMenuColor.value)
   document.body.style.setProperty(
     '--on-bottom-menu-color',
-    onBottomMenuColor.value
+    onBottomMenuColor.value,
   )
   document.body.style.setProperty('--backing-color', backingColor.value)
   document.body.style.setProperty('--on-backing-color', onBackingColor.value)
@@ -171,21 +171,21 @@ onMounted(() => {
   document.body.style.setProperty('--on-gift-color', onGiftColor.value)
   document.body.style.setProperty(
     '--product-tile-color',
-    productTileColor.value
+    productTileColor.value,
   )
   document.body.style.setProperty(
     '--on-product-tile-color',
-    onProductTileColor.value
+    onProductTileColor.value,
   )
   document.body.style.setProperty('--selector-color', selectorColor.value)
   document.body.style.setProperty('--on-selector-color', onSelectorColor.value)
   document.body.style.setProperty(
     '--selector-active-color',
-    selectorActiveColor.value
+    selectorActiveColor.value,
   )
   document.body.style.setProperty(
     '--on-selector-active-color',
-    onSelectorActiveColor.value
+    onSelectorActiveColor.value,
   )
 
   document.body.style.setProperty('--button-color', buttonColor.value)
@@ -194,43 +194,43 @@ onMounted(() => {
 
   document.body.style.setProperty(
     '--secondary-button-color',
-    secondaryButtonColor.value
+    secondaryButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-secondary-button-color',
-    onSecondaryButtonColor.value
+    onSecondaryButtonColor.value,
   )
   document.body.style.setProperty(
     '--delivery-button-color',
-    deliveryButtonColor.value
+    deliveryButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-delivery-button-color',
-    onDeliveryButtonColor.value
+    onDeliveryButtonColor.value,
   )
   document.body.style.setProperty(
     '--pickup-button-color',
-    pickupButtonColor.value
+    pickupButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-pickup-button-color',
-    onPickupButtonColor.value
+    onPickupButtonColor.value,
   )
   document.body.style.setProperty(
     '--booking-button-color',
-    bookingButtonColor.value
+    bookingButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-booking-button-color',
-    onBookingButtonColor.value
+    onBookingButtonColor.value,
   )
   document.body.style.setProperty(
     '--modal-header-color',
-    modalHeaderColor.value
+    modalHeaderColor.value,
   )
   document.body.style.setProperty(
     '--on-modal-header-color',
-    onModalHeaderColor.value
+    onModalHeaderColor.value,
   )
   document.body.style.setProperty('--border-radius', borderRadius.value)
   document.body.style.setProperty('--border-radius2', borderRadius2.value)
@@ -239,30 +239,30 @@ onMounted(() => {
   document.body.style.setProperty('--cash-button-color', cashButtonColor.value)
   document.body.style.setProperty(
     '--on-cash-button-color',
-    onCashButtonColor.value
+    onCashButtonColor.value,
   )
   document.body.style.setProperty('--card-button-color', cardButtonColor.value)
   document.body.style.setProperty(
     '--on-card-button-color',
-    onCardButtonColor.value
+    onCardButtonColor.value,
   )
   document.body.style.setProperty(
     '--online-button-color',
-    onlineButtonColor.value
+    onlineButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-online-button-color',
-    onOnlineButtonColor.value
+    onOnlineButtonColor.value,
   )
   document.body.style.setProperty('--qr-color', qrColor.value)
   document.body.style.setProperty('--on-qr-color', onQrColor.value)
   document.body.style.setProperty(
     '--loyalty-card-background-color',
-    loyaltyCardBackgroundColor.value
+    loyaltyCardBackgroundColor.value,
   )
   document.body.style.setProperty(
     '--on-loyalty-card-background-color',
-    onLoyaltyCardBackgroundColor.value
+    onLoyaltyCardBackgroundColor.value,
   )
 })
 </script>

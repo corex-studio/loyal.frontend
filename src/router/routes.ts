@@ -19,6 +19,11 @@ const routes: RouteRecordRaw[] = [
         name: 'home',
         component: () => import('src/pages/home/Home.vue'),
       },
+      // {
+      //   path: 'product/:menuItemId',
+      //   name: 'menuItemModal',
+      //   component: () => import('src/pages/menuItem/MenuItemModal.vue'),
+      // },
       {
         path: 'profile',
         name: 'profilePage',
@@ -55,6 +60,11 @@ const routes: RouteRecordRaw[] = [
         path: 'about',
         name: 'aboutUs',
         component: () => import('src/pages/profile/ProfileAboutUs.vue'),
+        // meta: {
+        //   title: 'О нас',
+        //   description: 'Страница с данными о компании',
+        //   keywords: '',
+        // },
       },
       {
         path: 'menu',
