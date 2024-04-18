@@ -11,16 +11,32 @@ import { MenuItem } from '../menu/menuItem/menuItem'
 import { menuRepo } from '../menu/menuRepo'
 import { CartItem } from '../carts/cartItem/cartItem'
 import { cartRepo } from '../carts/cartRepo'
+import { Cart } from '../carts/cart'
 
 const metrika = useYandexMetrika()
 
-export const ecommerceImpressions = (data: EcommerceImpressions) => {
-  metrika.ecommerceImpressions(data)
+export const ecommerceImpressions = (items: MenuItem[]) => {
+  const data: EcommerceImpressions = {
+    currencyCode: 'RUB',
+    impressions: {
+      products: items.map((v) => {
+        return {
+          id: typeof v.product === 'string' ? v.product : v.product?.id || '',
+          name: v.name || '',
+          price: v.sizes[0].price || undefined,
+          category: menuRepo.item?.groups?.find((el) => el.id === v.group)
+            ?.name,
+          position: menuRepo.item?.groups
+            ?.find((el) => el.id === v.group)
+            ?.items.findIndex((el) => el.id === v.id),
+        }
+      }),
+    },
+  }
+  void metrika.ecommerceImpressions(data)
 }
 
 export const ecommerceClick = (item: MenuItem) => {
-  console.log(metrika)
-
   const data: EcommerceClick = {
     currencyCode: 'RUB',
     click: {
@@ -101,8 +117,6 @@ export const ecommerceRemove = (item: CartItem) => {
           id: item.id,
           name: item.size.name || '',
           price: item.discountedTotalSum || undefined,
-          // category: menuRepo.item?.groups?.find((el) => el.id === item.group)
-          //   ?.name,
           position: cartRepo.item?.cartItems.findIndex(
             (el) => el.id === item.id,
           ),
@@ -113,6 +127,22 @@ export const ecommerceRemove = (item: CartItem) => {
   void metrika.ecommerceRemove(data)
 }
 
-export const ecommercePurchase = (data: EcommercePurchase) => {
+export const ecommercePurchase = (item: Cart) => {
+  const data: EcommercePurchase = {
+    currencyCode: 'RUB',
+    click: {
+      purchase: {
+        id: item.id,
+      },
+      products: item.cartItems.map((v) => {
+        return {
+          id: v.id,
+          name: v.size.name || '',
+          price: v.discountedTotalSum || undefined,
+          position: item.cartItems.findIndex((el) => el.id === item.id),
+        }
+      }),
+    },
+  }
   metrika.ecommercePurchase(data)
 }

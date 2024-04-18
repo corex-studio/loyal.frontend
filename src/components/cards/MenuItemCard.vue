@@ -1,6 +1,7 @@
 <template>
   <div
     style="height: 100%; overflow: overlay; overflow-x: hidden"
+    v-intersection="onIntersection"
     class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
     :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
@@ -139,6 +140,19 @@ const props = defineProps<{
 }>()
 
 const loading = ref(false)
+
+const onIntersection = (entry: IntersectionObserverEntry) => {
+  if (entry.isIntersecting) {
+    menuItemRepo.visibleItems.push(props.item)
+  } else {
+    const foundIndex = menuItemRepo.visibleItems.findIndex(
+      (el) => el.id === props.item.id,
+    )
+    if (foundIndex > -1) {
+      menuItemRepo.visibleItems.splice(foundIndex, 1)
+    }
+  }
+}
 
 // const buttonColor = computed(() => {
 //   return props.item.isDead
