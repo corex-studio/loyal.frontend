@@ -125,6 +125,7 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import { ecommerceClick } from 'src/models/ecommerceEvents/ecommerceEvents'
 // import { useRouter } from 'vue-router'
 
 // const router = useRouter()
@@ -180,6 +181,7 @@ const openMenuItem = async () => {
   //     menuItemId: props.item.id,
   //   },
   // })
+  void ecommerceClick(props.item)
   store.menuItemModal = true
 
   await menuItemRepo.retrieve(props.item.id, {

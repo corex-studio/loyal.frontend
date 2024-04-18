@@ -223,6 +223,7 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import { ecommerceDetail } from 'src/models/ecommerceEvents/ecommerceEvents'
 // import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps<{
@@ -298,6 +299,10 @@ watch(
   () => menuItemRepo.item,
   () => {
     if (props.modelValue) {
+      if (menuItemRepo.item) {
+        void ecommerceDetail(menuItemRepo.item)
+      }
+
       quantity.value = 1
       currentSize.value = menuItemRepo.item?.sizes[0]
         ? menuItemRepo.item?.sizes[0]
