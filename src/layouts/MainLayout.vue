@@ -129,9 +129,7 @@ const ready = ref(false)
 watch(
   () => route.name,
   () => {
-    if (Object.keys(route.meta).length) {
-      setMeta(route.meta)
-    }
+    setMeta(route.meta)
   },
 )
 
@@ -182,6 +180,7 @@ onMounted(async () => {
   }
   salesPointRepo.menuLoading = true
   ready.value = true
+  setMeta(route.meta)
 })
 
 const companySelected = (v: Company | null) => {
