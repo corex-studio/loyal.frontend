@@ -125,7 +125,11 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
-import { ecommerceClick } from 'src/models/ecommerceEvents/ecommerceEvents'
+
+import {
+  ecommerceAdd,
+  ecommerceClick,
+} from 'src/models/ecommerceEvents/ecommerceEvents'
 // import { useRouter } from 'vue-router'
 
 // const router = useRouter()
@@ -235,6 +239,7 @@ const addToCart = async () => {
     } finally {
       cartRepo.loading = false
       loading.value = false
+      void ecommerceAdd(props.item)
     }
   }
 }

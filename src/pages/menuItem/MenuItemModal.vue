@@ -223,7 +223,10 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
-import { ecommerceDetail } from 'src/models/ecommerceEvents/ecommerceEvents'
+import {
+  ecommerceAdd,
+  ecommerceDetail,
+} from 'src/models/ecommerceEvents/ecommerceEvents'
 // import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps<{
@@ -388,13 +391,11 @@ const addToCart = async () => {
       loading.value = false
       cartRepo.loading = false
       emit('update:modelValue', false)
+      if (menuItemRepo.item) {
+        void ecommerceAdd(menuItemRepo.item)
+      }
     }
   }
-  // if (q.screen.xs) {
-  //   void router.push({
-  //     name: route.name === 'menuItemPage' ? 'home' : 'qrHome',
-  //   })
-  // }
 }
 </script>
 
