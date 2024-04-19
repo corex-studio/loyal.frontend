@@ -53,6 +53,7 @@ export class Store {
   cityCheckModal = false
   qrData: QrData | null = null
   reviewModal = false
+  initialMenuItem: string | null = null
 
   getCompanyGroup(externalId: string) {
     // LocalStorage.getItem('Company-Group')

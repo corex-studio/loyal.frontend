@@ -20,7 +20,7 @@
     >
       <div
         v-if="$q.screen.lt.md"
-        @click="$store.menuItemModal = false"
+        @click="$emit('update:modelValue', false)"
         class="close-button row box-shadow items-center justify-center cursor-pointer"
       >
         <CIcon
@@ -227,7 +227,8 @@ import {
   ecommerceAdd,
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
-// import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
+import { useMeta } from 'quasar'
 
 const props = defineProps<{
   modelValue: boolean
@@ -237,8 +238,7 @@ const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
-// const route = useRoute()
-// const router = useRouter()
+const route = useRoute()
 
 const touchSpot = ref<HTMLDivElement>()
 
@@ -249,14 +249,6 @@ const quantity = ref(1)
 const loading = ref(false)
 
 const q = useQuasar()
-
-// const _modelValue = computed(() => {
-//   return route.name === 'menuItemModal'
-// })
-
-// const route = useRoute()
-
-// const router = useRouter()
 
 const currentMenuRulesForAdding = computed(() => {
   if (!cartRepo.item) return
@@ -310,6 +302,30 @@ watch(
       currentSize.value = menuItemRepo.item?.sizes[0]
         ? menuItemRepo.item?.sizes[0]
         : null
+
+      if (menuItemRepo.item) {
+        history.pushState(
+          {},
+          '',
+          `${route.path === '/' ? '' : route.path + '/'}product/${menuItemRepo.item?.id}`,
+        )
+        const metaData = {
+          title: menuItemRepo.item.name || '',
+          titleTemplate: (title: any) => `${title}`,
+          meta: {
+            description: {
+              name: 'description',
+              content: menuItemRepo.item.description || '',
+            },
+            keywords: {
+              name: 'keywords',
+              content: '',
+            },
+          },
+        }
+
+        useMeta(metaData)
+      }
     }
   },
 )
