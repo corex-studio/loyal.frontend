@@ -131,9 +131,6 @@ import {
   ecommerceAdd,
   ecommerceClick,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
-// import { useRouter } from 'vue-router'
-
-// const router = useRouter()
 
 const props = defineProps<{
   item: MenuItem
@@ -193,12 +190,6 @@ const toCartClickHandler = async () => {
 }
 
 const openMenuItem = async () => {
-  // void router.push({
-  //   name: 'menuItemModal',
-  //   params: {
-  //     menuItemId: props.item.id,
-  //   },
-  // })
   void ecommerceClick(props.item)
   store.menuItemModal = true
 

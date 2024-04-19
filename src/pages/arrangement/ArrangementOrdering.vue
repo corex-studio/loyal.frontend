@@ -326,6 +326,7 @@
             <div class="row body full-width no-wrap py-3">
               <div class="row no-wrap gap-6 col-10 items-center">
                 <q-img
+                  @click="openMenuItemModal(item)"
                   :src="item.size.image?.thumbnail || $store.images.empty"
                   :height="
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
@@ -337,7 +338,7 @@
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   }`"
                   fit="cover"
-                  class="border-radius"
+                  class="border-radius cursor-pointer"
                   :class="{ dimmed: item.isDead }"
                 >
                   <template v-slot:error>
@@ -537,6 +538,9 @@ import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import ArrangementOrderingBackButton from 'pages/arrangement/ArrangementOrderingBackButton.vue'
 import { ecommercePurchase } from 'src/models/ecommerceEvents/ecommerceEvents'
+import { CartItem } from 'src/models/carts/cartItem/cartItem'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const currentDay = ref('Сегодня')
 
@@ -584,6 +588,18 @@ const currentEatInsideTab = computed(() => {
 const clearBeforeRouterResolve = router.afterEach(() => {
   checkOnPaymentUrlInPath()
 })
+
+const openMenuItemModal = async (item: CartItem) => {
+  if (!item.size.menu_item) return
+  store.menuItemModal = true
+
+  await menuItemRepo.retrieve(item.size.menu_item, {
+    sales_point: salesPointRepo.item?.id,
+  })
+  await menuRulesForAddingRepo.list({
+    menu_item: menuItemRepo.item?.id,
+  })
+}
 
 const changeEatInside = async (val: string) => {
   try {

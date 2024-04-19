@@ -106,6 +106,8 @@ import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import BonusesDrawer from './drawer/bonuses/BonusesDrawer.vue'
 import { setMeta } from 'src/models/metaTags/metaTags'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const webSocket = ref<WebSocket | null>(null)
 
@@ -161,7 +163,22 @@ const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
 
+const handleInitialMenuItem = async () => {
+  if (store.initialMenuItem) {
+    store.menuItemModal = true
+    await menuItemRepo.retrieve(store.initialMenuItem, {
+      sales_point: salesPointRepo.item?.id,
+    })
+    await menuRulesForAddingRepo.list({
+      menu_item: menuItemRepo.item?.id,
+    })
+    store.initialMenuItem = null
+  }
+}
+
 const closeMenuItemModal = () => {
+  history.pushState({}, '', `${route.path}`)
+  setMeta(route.meta)
   store.freeItem = null
   store.menuItemModal = false
 }
@@ -181,6 +198,7 @@ onMounted(async () => {
   salesPointRepo.menuLoading = true
   ready.value = true
   setMeta(route.meta)
+  void handleInitialMenuItem()
 })
 
 const companySelected = (v: Company | null) => {
