@@ -211,6 +211,7 @@ import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import CartFreeItems from './CartFreeItems.vue'
 import CartDrawerGuestsCount from './CartDrawerGuestsCount.vue'
+import { ecommerceRemove } from 'src/models/ecommerceEvents/ecommerceEvents'
 
 const selectPaymentType = ref(false)
 
@@ -289,6 +290,8 @@ const deleteCartItem = async (item: CartItem) => {
       message: 'Ошибка при удалении',
       color: 'danger',
     })
+  } finally {
+    void ecommerceRemove(item)
   }
 }
 

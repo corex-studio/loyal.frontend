@@ -55,6 +55,7 @@
               </div>
               <CIcon v-else name="fa-regular fa-angle-down" size="24px" />
             </CButton>
+
             <div
               v-if="
                 $companyGroup.item &&

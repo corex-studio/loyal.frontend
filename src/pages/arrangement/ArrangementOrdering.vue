@@ -536,6 +536,7 @@ import CDialog from 'components/template/dialogs/CDialog.vue'
 import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import ArrangementOrderingBackButton from 'pages/arrangement/ArrangementOrderingBackButton.vue'
+import { ecommercePurchase } from 'src/models/ecommerceEvents/ecommerceEvents'
 
 const currentDay = ref('Сегодня')
 
@@ -790,6 +791,9 @@ const makeAnOrder = async () => {
       color: 'danger',
     })
   } finally {
+    if (cartRepo.item) {
+      void ecommercePurchase(cartRepo.item)
+    }
     loading.value = false
   }
 }

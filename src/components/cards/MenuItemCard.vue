@@ -1,6 +1,7 @@
 <template>
   <div
     style="height: 100%; overflow: overlay; overflow-x: hidden"
+    v-intersection="onIntersection"
     class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
     :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
@@ -125,6 +126,11 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+
+import {
+  ecommerceAdd,
+  ecommerceClick,
+} from 'src/models/ecommerceEvents/ecommerceEvents'
 // import { useRouter } from 'vue-router'
 
 // const router = useRouter()
@@ -134,6 +140,19 @@ const props = defineProps<{
 }>()
 
 const loading = ref(false)
+
+const onIntersection = (entry: IntersectionObserverEntry) => {
+  if (entry.isIntersecting) {
+    menuItemRepo.visibleItems.push(props.item)
+  } else {
+    const foundIndex = menuItemRepo.visibleItems.findIndex(
+      (el) => el.id === props.item.id,
+    )
+    if (foundIndex > -1) {
+      menuItemRepo.visibleItems.splice(foundIndex, 1)
+    }
+  }
+}
 
 // const buttonColor = computed(() => {
 //   return props.item.isDead
@@ -180,6 +199,7 @@ const openMenuItem = async () => {
   //     menuItemId: props.item.id,
   //   },
   // })
+  void ecommerceClick(props.item)
   store.menuItemModal = true
 
   await menuItemRepo.retrieve(props.item.id, {
@@ -233,6 +253,7 @@ const addToCart = async () => {
     } finally {
       cartRepo.loading = false
       loading.value = false
+      void ecommerceAdd(props.item)
     }
   }
 }

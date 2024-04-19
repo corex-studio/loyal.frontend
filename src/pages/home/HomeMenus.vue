@@ -50,7 +50,22 @@
 import MenuItemCard from 'src/components/cards/MenuItemCard.vue'
 import MenuItemSkeleton from 'src/components/cards/MenuItemSkeleton.vue'
 import GridContainer from 'src/components/containers/GridContainer.vue'
+import { ecommerceImpressions } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { watch } from 'vue'
+
+let timeout: NodeJS.Timeout | null = null
+
+watch(
+  () => menuItemRepo.visibleItems.length,
+  () => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      void ecommerceImpressions(menuItemRepo.visibleItems)
+    }, 500)
+  },
+)
 </script>
 
 <style lang="scss" scoped>

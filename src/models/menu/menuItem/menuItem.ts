@@ -44,8 +44,8 @@ export class MenuItem implements BaseModel {
       typeof raw.product === 'string'
         ? raw.product
         : raw.product
-        ? new Product(raw.product)
-        : null
+          ? new Product(raw.product)
+          : null
     this.sku = raw.sku
     this.image = raw.image ? new Image(raw.image) : null
     this.images = raw.images?.map((v) => new Image(v))
