@@ -23,7 +23,11 @@
             v-for="(item, index) in $company.item?.guestContacts.emails"
             :key="index"
           >
-            <div style="opacity: 0.7" class="body">
+            <div
+              @click="openLink(item.link)"
+              style="opacity: 0.7"
+              class="body cursor-pointer"
+            >
               {{ item.value }}
             </div>
           </template>
@@ -31,7 +35,11 @@
             v-for="(item, index) in $company.item?.guestContacts.phones"
             :key="index"
           >
-            <div style="opacity: 0.7" class="body">
+            <div
+              @click="openLink(item.link)"
+              style="opacity: 0.7"
+              class="body cursor-pointer"
+            >
               {{ item.value }}
             </div>
           </template>
