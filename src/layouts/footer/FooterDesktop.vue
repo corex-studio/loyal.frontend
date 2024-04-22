@@ -402,7 +402,7 @@
         <div>Работает на</div>
         <q-img src="/assets/loyalHeartWhite.png" style="width: 30px" />
         <a class="text-on-bottom-menu-color" href="https://corex.studio/loyal">
-          Loyalhub</a
+          loyalhub.ru</a
         >
       </div>
     </div>
