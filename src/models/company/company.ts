@@ -84,7 +84,7 @@ export type CompanyRaw = {
   } | null
   guest_contacts: GuestContactRaw | null
   description?: string | null
-  delivery_aggregators: DeliveryAggregatorRaw[]
+  delivery_aggregators?: DeliveryAggregatorRaw[]
   created_at: string
   updated_at: string
 }
@@ -245,7 +245,7 @@ export class Company implements BaseModel {
         socials: [],
       },
     )
-    this.deliveryAggregators = raw.delivery_aggregators
+    this.deliveryAggregators = raw.delivery_aggregators || []
   }
 
   toJson(): Record<string, any> {
