@@ -153,9 +153,9 @@
         <a
           style="opacity: 0.7"
           class="text-on-bottom-menu-color"
-          href="https://corex.studio/loyal"
+          href="https://loyalhub.ru"
         >
-          loyalhub.ru</a
+          Loyalhub</a
         >
       </div>
     </div>
