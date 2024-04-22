@@ -48,6 +48,12 @@ export class AppManager {
       //   LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
       //   LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
       // }
+      if (companyGroupRepo.item?.externalId === 'tochka_vkusa' && !document.body.classList.contains('bebas-font')) {
+        document.body.classList.add('bebas-font')
+      }
+      if (companyGroupRepo.item?.id === '556af59a-eca0-49fc-b8d0-e22d4ad11d2f') {
+        void 0
+      }
 
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
