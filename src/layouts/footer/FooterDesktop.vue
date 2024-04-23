@@ -401,8 +401,8 @@
       <div class="row no-wrap items-center gap-3">
         <div>Работает на</div>
         <q-img src="/assets/loyalHeartWhite.png" style="width: 30px" />
-        <a class="text-on-bottom-menu-color" href="https://corex.studio/loyal">
-          loyalhub.ru</a
+        <a class="text-on-bottom-menu-color" href="https://loyalhub.ru">
+          Loyalhub</a
         >
       </div>
     </div>
