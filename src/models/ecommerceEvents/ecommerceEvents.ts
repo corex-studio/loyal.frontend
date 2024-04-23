@@ -12,7 +12,6 @@ import { menuRepo } from '../menu/menuRepo'
 import { CartItem } from '../carts/cartItem/cartItem'
 import { cartRepo } from '../carts/cartRepo'
 import { Cart } from '../carts/cart'
-import { isUndefined } from 'lodash'
 
 const metrika = useYandexMetrika()
 
