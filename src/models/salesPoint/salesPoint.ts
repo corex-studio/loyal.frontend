@@ -180,19 +180,10 @@ export class SalesPoint implements BaseModel {
       code: this.code,
       settings: this.settings,
       active: this.active,
-      // payment_settings: this.payment_settings,
-      // external_id: this.external_id,
-      // address: this.address,
       custom_address: this.customAddress,
-      // coords: this.coords,
       company: this.company,
       company_group: this.companyGroup,
-      // test_settings: this.test_settings,
-      // test_payment_settings: this.test_payment_settings,
-      // active: this.active,
       visible: this.visible,
-      // created_at: this.created_at,
-      // updated_at: this.updated_at,
       contacts: {
         active: this.contacts.active,
         contact_phone: this.contacts.contact_phone,
@@ -201,7 +192,6 @@ export class SalesPoint implements BaseModel {
         updated_at: this.contacts.updated_at,
       },
       menu: this.menu,
-      // price: this.price,
     }
   }
 }

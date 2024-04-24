@@ -18,30 +18,6 @@
         color="primary"
       ></q-toggle>
     </div>
-    <!-- <div
-      class="row bg-selector-color text-on-selector-color no-wrap full-width border-radius pa-1 body"
-    >
-      <div
-        @click="discard()"
-        :class="{
-          'bg-selector-active-color bold text-on-selector-active-color':
-            currentChoice === 1,
-        }"
-        class="col py-5 cursor-pointer row justify-center border-radius"
-      >
-        Не списывать
-      </div>
-      <div
-        @click="applyClickHandler()"
-        :class="{
-          'bg-selector-active-color bold text-on-selector-active-color':
-            currentChoice === 2,
-        }"
-        class="col row py-5 cursor-pointer justify-center border-radius"
-      >
-        Списать {{ maxSum }}
-      </div>
-    </div> -->
   </div>
 </template>
 <script lang="ts" setup>

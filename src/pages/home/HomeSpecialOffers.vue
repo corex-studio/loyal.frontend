@@ -36,10 +36,6 @@
       :items="$store.offersTab === 'Новости' ? $news.news : $news.promotions"
     >
       <template v-slot:item="{ item }">
-        <!--        height: ${-->
-        <!--        $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'-->
-        <!--        }-->
-
         <div
           :style="`overflow: hidden; max-height: ${isNewsDesktopView ? '400px;' : ''} max-width: ${$q.screen.lt.md ? '100%;' : ''}`"
           @click="goToItem(item)"
@@ -134,14 +130,6 @@ const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 })
 
-// const getImage = (link: string) => {
-//   try {
-//     return require('assets/' + link) as string
-//   } catch {
-//     return store.images.empty
-//   }
-// }
-
 const goToItem = (item: News) => {
   void newsRepo.retrieve(item.id)
   store.newsModal = true
@@ -155,7 +143,6 @@ body.screen--xl {
       padding-left: calc((100vw - (1170px)) / 2);
       padding-right: calc((100vw - (1170px)) / 2);
     }
-
     @media (min-width: 1560px) {
       padding-left: calc((100vw - (1290px)) / 2);
       padding-right: calc((100vw - (1290px)) / 2);

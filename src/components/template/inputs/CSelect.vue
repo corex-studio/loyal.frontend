@@ -60,7 +60,6 @@
           class="cursor-pointer"
         />
       </template>
-
       <template v-if="useRadio" v-slot:option="scope">
         <q-item v-bind="scope.itemProps">
           <q-radio
@@ -165,7 +164,7 @@ const _bgColor = computed(() => {
 
 const filterFn = (
   search: string,
-  update: (func: () => void, refFunc: (ref: QSelect) => void) => void
+  update: (func: () => void, refFunc: (ref: QSelect) => void) => void,
 ) => {
   update(
     () => {
@@ -177,7 +176,7 @@ const filterFn = (
     (ref: QSelect) => {
       ref.setOptionIndex(-1)
       ref.moveOptionSelection(1, true)
-    }
+    },
   )
 }
 </script>
@@ -194,10 +193,6 @@ const filterFn = (
 .q-select .q-field__native {
   color: var(--on-input-color);
 }
-
-// .q-select .q-field__native {
-//   padding-left: 10px;
-// }
 
 .q-select:not(.q-file).q-field--float .q-field__label {
   transform: translate(0, -50%) scale(0.85) !important;

@@ -65,7 +65,6 @@ export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
       action: 'app_settings',
       id,
     })
-
     return res
   }
 }

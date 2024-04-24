@@ -93,7 +93,6 @@ import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 const router = useRouter()
-
 const route = useRoute()
 
 const blocks = computed(() => {
@@ -130,12 +129,6 @@ const blocks = computed(() => {
         scrollToBlock('footer')
       },
     },
-    // {
-    //   label: 'Разработчик',
-    //   click: () => {
-    //     window.open('https://corex.studio/', '_blank')
-    //   },
-    // },
     {
       label: 'Мобильное приложение',
       click: () => {
@@ -169,7 +162,6 @@ const scrollToBlock = (v: string, tab?: string) => {
     }, 300)
   } else {
     const groupElement = document.getElementById(v)
-
     if (groupElement) {
       if (tab) store.offersTab = tab
       const y = groupElement.getBoundingClientRect().top + window.scrollY - 120

@@ -6,11 +6,9 @@ import { Image, ImageRaw } from '../image/image'
 import { MenuItem, MenuItemRaw } from './menuItem/menuItem'
 
 export class MenuRepo extends BaseRepo<Menu> {
-  // currentProduct: MenuItem | null = null
   getMenuItemsLoading = false
   item_: Menu | null = null
   api = menuApi
-
   filters: MenuFilters = {
     search: '',
   }
@@ -25,7 +23,7 @@ export class MenuRepo extends BaseRepo<Menu> {
   async setMenuItemImage(
     item: MenuItem,
     image: string | Blob,
-    isMain = true
+    isMain = true,
   ): Promise<ImageRaw> {
     const formData: FormData = new FormData()
     formData.append('image', image)
@@ -47,7 +45,7 @@ export class MenuRepo extends BaseRepo<Menu> {
   async setItemSizeImage(
     item: ItemSize,
     image: string | Blob,
-    isMain = true
+    isMain = true,
   ): Promise<ImageRaw> {
     const formData: FormData = new FormData()
     formData.append('image', image)

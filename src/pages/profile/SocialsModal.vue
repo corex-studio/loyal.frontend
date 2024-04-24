@@ -38,14 +38,12 @@ defineEmits<{
 
 const getImage = (link: LinkType | null) => {
   let fileName: string | null = null
-
   try {
     if (link === LinkType.MAPS) fileName = 'yandexMaps.png'
     if (link === LinkType.OK) fileName = 'okLogo.png'
     if (link === LinkType.TELEGRAM) fileName = 'telegramLogo.png'
     if (link === LinkType.VK) fileName = 'VKLogo.png'
     if (link === LinkType.WEBSITE) fileName = 'websiteIcon.png'
-
     return `assets/${fileName}`
   } catch {
     return store.images.empty

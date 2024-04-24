@@ -11,8 +11,6 @@ import {
 
 export class AuthenticationRepo extends BaseRepo<Authentication> {
   api = authenticationApi
-  // availableCustomers: Customer[] = []
-  // currentUser: Customer = this.availableCustomers[0]
 
   async register(data?: Record<string, any>) {
     const result: CustomerRaw = await this.api.send({

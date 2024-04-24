@@ -22,8 +22,6 @@ import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { computed } from 'vue'
 
-// 'phones' | 'emails' | 'messages'
-
 const props = defineProps<{
   modelValue: boolean
   contact: {
@@ -35,10 +33,6 @@ const props = defineProps<{
 defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
-
-// const currentHeader = computed(() => {
-//   if (props.type === 'emails') return 'Почты'
-// })
 
 const contactByField = computed(() => {
   if (!props.contact) return

@@ -179,27 +179,9 @@ export class Customer implements BaseModel {
     return {
       id: this.id,
       first_name: this.firstName,
-      // middle_name: this.middle_name,
       last_name: this.lastName,
-      // birthday: this.birthday,
       sex: this.sex,
       email: this.email,
-      // receive_promo: this.receive_promo,
-      // username: this.username,
-      // company_group: this.company_group,
-      // referrer: this.referrer,
-      // external_id: this.external_id,
-      // loyalty_cards: this.loyalty_cards,
-      // categories: this.categories,
-      // wallets: this.wallets,
-      // loyalty_system: this.loyalty_system,
-      // active: this.active,
-      // user: this.user,
-      // phone: this.phone,
-      // last_authorization: this.last_authorization,
-      // registered_at: this.registered_at,
-      // description: this.description,
-      // technical_information: this.technical_information,
     }
   }
 }

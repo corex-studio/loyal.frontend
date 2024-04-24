@@ -91,8 +91,6 @@ export type CartRaw = {
     menu_item: MenuItemRaw
     applied: boolean
   }[]
-  // wallet_payments: [];
-  // tables: [];
   calculation_status: string
   delivery_area: string | null
   current_delivery_settings: string | null
@@ -202,8 +200,6 @@ export class Cart implements BaseModel {
   }
 
   toJson(): Record<string, any> {
-    return {
-      // id: this.id,
-    }
+    return {}
   }
 }

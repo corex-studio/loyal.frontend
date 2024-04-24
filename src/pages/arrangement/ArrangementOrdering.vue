@@ -115,7 +115,6 @@
                     </div>
                   </template>
                 </div>
-
                 <div
                   v-if="
                     !$salesPoint.item?.settings
@@ -227,7 +226,6 @@
             />
           </div>
           <q-separator v-if="$q.screen.lt.md" color="divider-color" />
-
           <div
             :class="$q.screen.lt.md ? 'column' : 'row items-center'"
             class="body full-width gap-md-5 gap-xs-4"
@@ -267,7 +265,6 @@
               />
             </div>
           </div>
-
           <div
             v-if="$cart.item.salesPoint.settings.allow_pickup_orders_inside"
             class="row full-width gap-md-5 gap-xs-4"
@@ -397,7 +394,6 @@
           <q-separator color="divider-color" />
           <div class="row full-width justify-between">
             <div class="body bold">Сумма заказа</div>
-
             <div class="body bold">
               {{ beautifyNumber($cart.item?.totalSum, true) }} ₽
             </div>
@@ -464,7 +460,6 @@
     <ArrangementOrderingBackButton />
     <div class="header3 bold">Корзина пуста</div>
   </div>
-
   <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-15">
     <CButton
       label="Открыть окно для оплаты заказа"
@@ -543,7 +538,6 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const currentDay = ref('Сегодня')
-
 const eatInsideTabs = [
   {
     label: 'В зале',
@@ -556,26 +550,16 @@ const eatInsideTabs = [
     iconSize: '20px',
   },
 ]
-
 const availableHours = ref<AvailableHours | null>(null)
-
 const timeBlockMobileSpot = ref<HTMLDivElement>()
-
 const selectedPaymentType = ref<PaymentObjectType | null>(null)
-
 const selectedPaymentTypeModal = ref(false)
-
 const loading = ref(false)
-
 const router = useRouter()
 const route = useRoute()
-
 const deliveryAddressesModal = ref(false)
-
 const menu = ref(false)
-
 const menuRef = ref<HTMLDivElement | null>(null)
-
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
 
@@ -729,7 +713,6 @@ const setDeliveryTime = async (v: string | null) => {
   if (v && !availableTimes.value?.includes(v)) return
   const today = moment().format('DD.MM.YYYY')
   const tomorrow = moment().add(1, 'day').format('DD.MM.YYYY')
-
   if (currentDay.value === 'Сегодня') {
     cartRepo.item.deliveryTime = [today, v].join(' ')
   } else {
@@ -756,7 +739,6 @@ const makeAnOrder = async () => {
       })
       return
     }
-
     await cartRepo.setParams({
       delivery_time: cartRepo.item?.deliveryTime
         ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
@@ -915,7 +897,6 @@ onMounted(async () => {
     availableHours.value = res
   })
   void deliveryAddressRepo.list()
-
   await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
   const foundOnlinePaymentType = paymentTypes.value.find(
     (v) => v.type === PaymentType.ONLINE,

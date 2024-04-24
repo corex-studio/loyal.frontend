@@ -86,11 +86,8 @@ import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
 import { Notify } from 'quasar'
 
 const deliveryAddressModal = ref(false)
-
 const addressToEdit = ref<DeliveryAddress | null>(null)
-
 const addressToDelete = ref<DeliveryAddress | null>(null)
-
 const deleteModal = ref(false)
 
 const deliveryAddressCreated = async () => {
@@ -124,7 +121,7 @@ const deleteAddress = async () => {
     deleteModal.value = false
     await deliveryAddressRepo.delete(addressToDelete.value)
     const foundAddressIndex = deliveryAddressRepo.items.findIndex(
-      (el) => el.id === addressToDelete.value?.id
+      (el) => el.id === addressToDelete.value?.id,
     )
     if (foundAddressIndex > -1) {
       deliveryAddressRepo.items.splice(foundAddressIndex, 1)
@@ -148,7 +145,7 @@ const loadAddresses = async (page = 1, appendItems = false) => {
       page: page ? page : deliveryAddressRepo.pagination.page,
       appendItems: appendItems,
       pageSize: 10,
-    }
+    },
   )
 }
 

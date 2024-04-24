@@ -44,14 +44,15 @@ export class AppManager {
       appSettingsRepo.getLinksSettings(),
       companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
-      // if (companyGroupRepo.item?.externalId !== _value) {
-      //   LocalStorage.set('Favicon', companyGroupRepo.item?.image?.thumbnail)
-      //   LocalStorage.set('Website-Name', companyGroupRepo.item?.name)
-      // }
-      if (companyGroupRepo.item?.externalId === 'tochka_vkusa' && !document.body.classList.contains('bebas-font')) {
+      if (
+        companyGroupRepo.item?.externalId === 'tochka_vkusa' &&
+        !document.body.classList.contains('bebas-font')
+      ) {
         document.body.classList.add('bebas-font')
       }
-      if (companyGroupRepo.item?.id === '556af59a-eca0-49fc-b8d0-e22d4ad11d2f') {
+      if (
+        companyGroupRepo.item?.id === '556af59a-eca0-49fc-b8d0-e22d4ad11d2f'
+      ) {
         void 0
       }
 
@@ -193,26 +194,30 @@ export class AppManager {
     if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
     if (currentPoint) void store.loadCatalog(currentPoint)
 
-      void newsRepo
-        .list({
-          company_group: companyGroupRepo.item?.id,
-          active: true,
-          type: NewsType.DEFAULT,
-          city: localStorage.getItem('city') || companyGroupRepo.item?.cityData.current?.uuid
-        })
-        .then((res) => {
-          newsRepo.news = res.items
-        })
-      void newsRepo
-        .list({
-          company_group: companyGroupRepo.item?.id,
-          active: true,
-          type: NewsType.PROMOTION,
-          city: localStorage.getItem('city') || companyGroupRepo.item?.cityData.current?.uuid
-        })
-        .then((res) => {
-          newsRepo.promotions = res.items
-        })
+    void newsRepo
+      .list({
+        company_group: companyGroupRepo.item?.id,
+        active: true,
+        type: NewsType.DEFAULT,
+        city:
+          localStorage.getItem('city') ||
+          companyGroupRepo.item?.cityData.current?.uuid,
+      })
+      .then((res) => {
+        newsRepo.news = res.items
+      })
+    void newsRepo
+      .list({
+        company_group: companyGroupRepo.item?.id,
+        active: true,
+        type: NewsType.PROMOTION,
+        city:
+          localStorage.getItem('city') ||
+          companyGroupRepo.item?.cityData.current?.uuid,
+      })
+      .then((res) => {
+        newsRepo.promotions = res.items
+      })
     if (
       authentication.user?.registeredAt === null &&
       !authentication.user.isAnonymous

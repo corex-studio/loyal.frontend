@@ -43,7 +43,6 @@ import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 
 const router = useRouter()
-
 const route = useRoute()
 
 const blocks = computed(() => {
@@ -66,12 +65,6 @@ const blocks = computed(() => {
         scrollToBlock('footer')
       },
     },
-    // {
-    //   label: 'Разработчик',
-    //   click: () => {
-    //     window.open('https://corex.studio/', '_blank')
-    //   },
-    // },
     {
       label: 'Мобильное приложение',
       visible:

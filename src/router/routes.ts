@@ -19,11 +19,6 @@ const routes: RouteRecordRaw[] = [
         name: 'home',
         component: () => import('src/pages/home/Home.vue'),
       },
-      // {
-      //   path: 'product/:menuItemId',
-      //   name: 'menuItemModal',
-      //   component: () => import('src/pages/menuItem/MenuItemModal.vue'),
-      // },
       {
         path: 'profile',
         name: 'profilePage',
@@ -67,30 +62,11 @@ const routes: RouteRecordRaw[] = [
         // },
       },
       {
-        path: 'menu',
-        name: 'menuPage',
-        component: () => import('src/pages/MenuPage.vue'),
-      },
-      {
-        path: 'category/:categoryId',
-        name: 'categoryPage',
-        component: () => import('src/pages/CategoryMenu.vue'),
-      },
-      {
         path: 'news/:newsId',
         name: 'newsPage',
         component: () => import('src/pages/news/NewsPage.vue'),
       },
-      {
-        path: 'promotion/:promotionId',
-        name: 'promotionPage',
-        component: () => import('src/pages/promotion/PromotionPage.vue'),
-      },
-      {
-        path: 'menu_item/:menuItemId',
-        name: 'menuItemPage',
-        component: () => import('src/pages/menuItem/MenuItemPage.vue'),
-      },
+
       {
         path: 'my_qr',
         name: 'myQrPage',
@@ -100,8 +76,6 @@ const routes: RouteRecordRaw[] = [
       ...arrangementRoutesInQrMenu,
     ],
   },
-  /////////////////// NEW ////////////////////
-
   {
     path: '/qr_menu/:padId?',
     component: () => import('src/layouts/MainLayout.vue'),
@@ -110,11 +84,6 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'qrHome',
         component: () => import('src/pages/qrMenu/home/QRHome.vue'),
-      },
-      {
-        path: 'menu_item/:menuItemId',
-        name: 'qrMenuItemPage',
-        component: () => import('src/pages/menuItem/MenuItemPage.vue'),
       },
       {
         path: 'my_orders',
@@ -128,34 +97,6 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-
-  //////////////////
-  // {
-  //   path: '/:companyGroup/qr_menu/:padId',
-  //   component: () => import('src/layouts/MainLayout.vue'),
-  //   children: [
-  //     {
-  //       path: '',
-  //       name: 'qrHome',
-  //       component: () => import('src/pages/qrMenu/home/QRHome.vue'),
-  //     },
-  //     {
-  //       path: 'menu_item/:menuItemId',
-  //       name: 'qrMenuItemPage',
-  //       component: () => import('src/pages/menuItem/MenuItemPage.vue'),
-  //     },
-  //     {
-  //       path: 'current_order',
-  //       name: 'currentOrderPage',
-  //       component: () => import('src/pages/qrMenu/order/QRCurrentOrder.vue'),
-  //     },
-  //     {
-  //       path: 'order_review',
-  //       name: 'orderReviewPage',
-  //       component: () => import('src/pages/qrMenu/order/QROrderReview.vue'),
-  //     },
-  //   ],
-  // },
   {
     path: '/:companyGroup/delete_account',
     name: 'deleteAccountPage',
@@ -172,11 +113,6 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/pages/404page.vue'),
   },
 
-  {
-    path: '/:externalId/stores',
-    name: 'storesPage',
-    component: () => import('pages/StoresPage.vue'),
-  },
   {
     path: '/:externalId/policy',
     name: 'policyPage',

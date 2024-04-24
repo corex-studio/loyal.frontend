@@ -85,14 +85,12 @@
                   class="my-md-10 my-xs-8"
                   color="divider-color"
                 />
-
                 <CartDrawerItemRow
                   @delete="deleteCartItem(item)"
                   :item="item"
                 />
               </template>
             </div>
-
             <CartDrawerGuestsCount
               v-if="$cart.item.salesPoint.settings.allow_set_guest_count"
             />
@@ -103,7 +101,6 @@
           <div v-else class="subtitle-text">Корзина пуста</div>
         </div>
       </div>
-
       <div
         v-if="$cart.item?.cartItems.length || $cart.arrangeLoading"
         class="row full-width justify-center bg-background-color px-15 py-13"
@@ -213,16 +210,11 @@ import CartDrawerGuestsCount from './CartDrawerGuestsCount.vue'
 import { ecommerceRemove } from 'src/models/ecommerceEvents/ecommerceEvents'
 
 const selectPaymentType = ref(false)
-
 const acceptModal = ref(false)
-
 const router = useRouter()
 const route = useRoute()
-
 const loading = ref(false)
-
 const promocodeModal = ref(false)
-
 const currentDeliverySettings = ref<DeliveryAreaSettings[] | undefined>()
 
 watch(

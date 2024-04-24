@@ -28,14 +28,6 @@
         height="48px"
         v-model="data.lastName"
       />
-      <!-- <CInput
-        external-label="Ваш телефон"
-        input-class="body"
-        height="48px"
-        mask="+7 (###) ###-##-##"
-        :rules="[(v: string | null) => getPhone(v) && getPhone(v)!.length < 11 ? 'Введите корректный телефон' : true]"
-        v-model="data.phone"
-      /> -->
       <CInput
         v-if="!$companyGroup.requiredFields?.email.hidden"
         external-label="Ваш email"
@@ -138,8 +130,8 @@ const isSendingAvailable = computed(() => {
       ? !!data.value.email?.length &&
         typeof rules.email(data.value.email) !== 'string'
       : !!data.value.email?.length
-      ? typeof rules.email(data.value.email) !== 'string'
-      : true) &&
+        ? typeof rules.email(data.value.email) !== 'string'
+        : true) &&
     (companyGroupRepo.requiredFields?.birthday.required
       ? !!data.value.birthday
       : true)
@@ -149,15 +141,6 @@ const isSendingAvailable = computed(() => {
 const getDateOptions = (date: string) => {
   return date < moment().format('YYYY/MM/DD')
 }
-
-// const getPhone = (v: string | null) => {
-//   if (!v) return
-//   const data = []
-//   for (const el of v) {
-//     if (!Number.isNaN(Number(el)) && el !== ' ') data.push(el)
-//   }
-//   return data.join('')
-// }
 
 const register = async () => {
   try {

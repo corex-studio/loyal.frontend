@@ -106,17 +106,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row full-width gap-7 mt-25">
-      <div
-        v-for="(el, index) in developersLinks"
-        :key="index"
-        @click="el.click"
-        class="border-radius row justify-center items-center cursor-pointer"
-        style="background-color: #424242; width: 40px; height: 40px"
-      >
-        <CIcon color="white" :name="el.icon" />
-      </div>
-    </div> -->
     <div class="column mt-10 full-width gap-6 body mt-15">
       <div>© 2023 все права защищены</div>
       <CButton
@@ -163,7 +152,6 @@
 </template>
 
 <script setup lang="ts">
-// import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
@@ -171,12 +159,9 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-// import * as qr from 'qr-ts'
 
 const route = useRoute()
-
 const router = useRouter()
-
 let qrCode: any = null
 
 const infoBlocks = computed(() => {

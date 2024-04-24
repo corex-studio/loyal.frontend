@@ -91,8 +91,6 @@
             />
           </div>
         </div>
-
-        <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
         <div
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
           style="max-width: 336px"
@@ -118,7 +116,6 @@
               {{ item.value }}
             </div>
           </div>
-
           <div
             v-if="$company.item?.guestContacts.emails.length"
             class="column gap-6"
@@ -215,9 +212,6 @@
             />
           </div>
         </div>
-
-        <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
-
         <div class="column gap-10 bold subtitle-text" style="max-width: 336px">
           <div
             v-if="$company.item?.guestContacts.phones.length"
@@ -240,7 +234,6 @@
               {{ item.value }}
             </div>
           </div>
-
           <div
             v-if="$company.item?.guestContacts.emails.length"
             class="column gap-6"
@@ -348,33 +341,9 @@ import { store } from 'src/models/store'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-// import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 
 const route = useRoute()
 const router = useRouter()
-
-// let qrCode: any = null
-
-// const groupLinks = [
-//   {
-//     icon: 'fa-solid fa-paper-plane',
-//     click: () => {
-//       void 0
-//     },
-//   },
-//   {
-//     icon: 'fa-solid fa-envelope',
-//     click: () => {
-//       void 0
-//     },
-//   },
-//   {
-//     icon: 'fa-brands fa-youtube',
-//     click: () => {
-//       void 0
-//     },
-//   },
-// ]
 
 const infoBlocks = computed(() => {
   return [
@@ -408,70 +377,6 @@ const infoBlocks = computed(() => {
   ]
 })
 
-// const navigation = computed(() => {
-//   return [
-//     {
-//       label: 'Новости',
-//       hidden: !!!newsRepo.items.length,
-//       click: () => {
-//         scrollToBlock('offers', 'Новости')
-//       },
-//     },
-//     {
-//       label: 'Акции',
-//       hidden: !promotionsRepo.items.length,
-//       click: () => {
-//         scrollToBlock('offers', 'Акции')
-//       },
-//     },
-//     {
-//       label: 'О разработчике',
-//       click: () => {
-//         openLink('https://corex.studio/')
-//       },
-//     },
-//     {
-//       label: 'Политика конфиденциальности',
-//       click: () => {
-// openLink(
-//   `https://loyalhub.ru/${String(route.params.companyGroup)}/policy`
-// )
-//       },
-//     },
-//     {
-//       label: 'Пользовательское соглашение',
-//       click: () => {
-// openLink(
-//   `https://loyalhub.ru/${String(
-//     route.params.companyGroup
-//   )}/terms_of_service`
-// )
-//       },
-//     },
-//     // {
-//     //   label: 'cookie',
-//     //   click: void 0,
-//     // },
-//   ]
-// })
-
-// const showContacts = computed(() => {
-//   return (
-//     !!companyRepo.item?.guestContacts.emails.length ||
-//     !!companyRepo.item?.guestContacts.phones.length ||
-//     !!companyRepo.item?.guestContacts.socials.length
-//   )
-// })
-
-// const scrollToGroup = (v: MenuGroup) => {
-//   const groupElement = document.getElementById(v.id)
-//   if (groupElement) {
-//     const y = groupElement.getBoundingClientRect().top + window.scrollY - 100
-
-//     window.scrollTo({ top: y, behavior: 'smooth' })
-//   }
-// }
-
 const scrollToBlock = (v: string, tab?: string) => {
   if (route.name !== 'home') {
     void router.push({
@@ -494,15 +399,6 @@ const openLink = (link: string) => {
   window.open(link, '_blank')
 }
 
-// if (appSettingsRepo.linksData?.app_redirect_link) {
-//   qrCode = useQRCode(appSettingsRepo.linksData?.app_redirect_link, {
-//     type: 'image/png',
-//     color: {
-//       light: '#424242',
-//       dark: '#fff',
-//     },
-//   })
-// }
 </script>
 
 <style lang="scss" scoped>

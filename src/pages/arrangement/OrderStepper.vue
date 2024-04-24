@@ -74,7 +74,6 @@ const steps = computed(() => {
     {
       icon: 'fa-regular fa-hat-chef',
     },
-
     {
       icon: 'fa-regular fa-flag',
     },
@@ -96,7 +95,6 @@ const steps = computed(() => {
 }
 
 .devider {
-  // min-width: 119px;
   height: 0.5px !important;
 }
 
@@ -108,8 +106,4 @@ body.screen--sm {
     border-radius: 50%;
   }
 }
-
-// .unselected-step {
-//   border: 1px var(--on-background-color) solid;
-// }
 </style>

@@ -31,7 +31,6 @@
           </ol>
         </div>
       </div>
-
       <div class="row">
         <div class="column gap-5">
           <h6 class="mt-0 mb-0 bold">
@@ -56,7 +55,6 @@
           </div>
         </div>
       </div>
-
       <div>
         <h6 class="my-0 bold">Документы:</h6>
         <div class="col no-wrap items-center gap-5 mt-10">
@@ -87,11 +85,10 @@
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="column gap-5">
           <h6 class="mt-0 mb-10 bold">Политика безопастности платежей</h6>
-          <!-- v-if="!isBest2Pay" -->
+
           <template v-if="false">
             <div>Банковской картой</div>
             <div>
@@ -119,7 +116,6 @@
                 style="object-fit: contain"
                 width="150px "
               />
-
               <img
                 src="assets/psJCB.svg"
                 style="object-fit: contain"
@@ -157,7 +153,6 @@
           <BestToPay v-else />
         </div>
       </div>
-
       <div class="row">
         <div class="row full-width">
           <h6 class="mt-0 mb-10 bold">Реквизиты:</h6>
