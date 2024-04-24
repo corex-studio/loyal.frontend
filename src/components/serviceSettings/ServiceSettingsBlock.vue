@@ -13,7 +13,6 @@
         class="row no-wrap gap-4 items-center"
         style="overflow: inherit"
       >
-        <!-- <CustomIcon width="28px" height="28px" name="bagOnTime.svg" /> -->
         <CIcon
           name="fa-regular fa-bag-shopping"
           color="on-product-tile-color"
@@ -27,7 +26,6 @@
       </div>
       <template v-else>
         <div class="row no-wrap gap-md-4 gap-xs-2 items-center">
-          <!-- <CustomIcon width="28px" height="28px" name="bagOnTime.svg" /> -->
           <CIcon
             name="fa-regular fa-bag-shopping"
             color="on-product-tile-color"
@@ -59,7 +57,6 @@
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
 import CIcon from '../template/helpers/CIcon.vue'
-// import CustomIcon from '../template/helpers/CustomIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
@@ -75,9 +72,7 @@ const openDialog = () => {
   if (companyGroupRepo.item?.companies.length > 1) {
     companyRepo.cartCompany = companyRepo.item
   }
-  //  else {
   store.serviceSettingsModal = true
-  // }
 }
 </script>
 
@@ -86,8 +81,6 @@ const openDialog = () => {
   border-radius: 100px !important;
   max-width: 430px;
   border: 1px solid var(--secondary);
-  // width: inherit;
-  // width: 100% !important;
 }
 
 .rounded-separator {
@@ -104,6 +97,5 @@ const openDialog = () => {
   overflow: hidden;
   width: fit-content;
   text-overflow: ellipsis;
-  // text-size-adjust: 10%;
 }
 </style>

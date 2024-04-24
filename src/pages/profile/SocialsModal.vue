@@ -47,7 +47,6 @@ const getImage = (link: LinkType | null) => {
     if (link === LinkType.WEBSITE) fileName = 'websiteIcon.png'
 
     return `assets/${fileName}`
-    // return String(new URL('../../assets/' + fileName, import.meta.url))
   } catch {
     return store.images.empty
   }

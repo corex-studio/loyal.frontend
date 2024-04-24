@@ -7,6 +7,7 @@
         ? $company.item?.image?.thumbnail
         : $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
     "
+    alt="Логотип"
     class="border-radius cursor-pointer"
     style="object-fit: contain; max-width: 230px"
     @click="

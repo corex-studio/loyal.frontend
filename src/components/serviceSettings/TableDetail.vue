@@ -21,7 +21,6 @@
         </div> </template
     ></SwiperContainer>
     <div class="subtitle-text mt-10 bold">Стол № {{ table.number }}</div>
-
     <div class="body mt-8" v-if="table.description">
       {{ table.description }}
     </div>
@@ -95,21 +94,5 @@ const infoFields = [
     value: props.table.capacity + ' чел.',
     color: undefined,
   },
-  // {
-  //   icon: 'fa-light fa-wallet',
-  //   label: 'Стоимость стола',
-  //   value: '-',
-  // },
-  // {
-  //   icon: 'fa-light fa-clock',
-  //   label: 'Период бронирования',
-  //   value: '-',
-  // },
-  // {
-  //   icon: 'fa-light fa-lock',
-  //   label: 'Стол забронирован',
-  //   value: '-',
-  //   color: 'red',
-  // },
 ]
 </script>

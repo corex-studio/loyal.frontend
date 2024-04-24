@@ -3,7 +3,6 @@
     <div class="full-width header3 bold mb-5">Баллы</div>
     <div class="row full-width items-center gap-5s justify-between">
       <div class="row items-center gap-7 no-wrap">
-        <!-- <q-img src="~assets/rubleIcon.png" height="44px" width="44px"></q-img> -->
         <c-icon
           name="fa-light fa-coin-vertical"
           size="44px"

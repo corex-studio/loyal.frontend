@@ -40,7 +40,7 @@ watch(
     })
     drawPoints()
     map.lmap.addControl(initDraw())
-  }
+  },
 )
 
 watch(
@@ -52,10 +52,10 @@ watch(
           lat: v.coords.latitude,
           lng: v.coords.longitude,
         },
-        14
+        14,
       )
     }
-  }
+  },
 )
 
 const getBorderRadius = computed(() => {
@@ -81,7 +81,6 @@ const drawPoints = () => {
         coords: el.coords,
       })
   }
-
   const collection = map.pointCollection(values)
   const layer = map.pointLayer(
     collection,
@@ -93,9 +92,8 @@ const drawPoints = () => {
     },
     undefined,
     undefined,
-    companyRepo.cartCompany?.image?.thumbnail || store.images.empty
+    companyRepo.cartCompany?.image?.thumbnail || store.images.empty,
   )
-
   map.lmap.addLayer(layer)
   if (props.addresses.length)
     map.lmap.fitBounds(layer.getBounds(), { maxZoom: 11 })

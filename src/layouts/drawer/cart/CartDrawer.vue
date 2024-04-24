@@ -109,7 +109,6 @@
         class="row full-width justify-center bg-background-color px-15 py-13"
         style="position: sticky; bottom: 0"
       >
-        <!-- <q-separator color="divider-color" class="mb-12 full-width" /> -->
         <CartBonuses
           v-if="$cart.item?.walletPayments.length"
           class="mb-md-12 mb-xs-8"
@@ -257,7 +256,9 @@ const addToCartDisabledInfo = computed(() => {
 })
 
 const clearCart = async () => {
+  if (!cartRepo.item) throw new Error('Object is null')
   try {
+    void ecommerceRemove(cartRepo.item)
     cartRepo.item = await cartRepo.clear()
     Notify.create({
       message: 'Корзина очищена',

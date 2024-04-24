@@ -206,7 +206,6 @@
             Войти
           </div>
         </div>
-        <!-- <q-separator color="divider-color" style="z-index: 10" /> -->
         <BottomHeader
           v-if="
             $route.matched.some((v) =>
@@ -229,7 +228,6 @@ import { authentication } from 'src/models/authentication/authentication'
 import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue'
 import { store } from 'src/models/store'
 import { useRoute } from 'vue-router'
-// import ServiceSettingsSkeleton from 'src/components/serviceSettings/ServiceSettingsSkeleton.vue'
 import { computed, onMounted, ref } from 'vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'

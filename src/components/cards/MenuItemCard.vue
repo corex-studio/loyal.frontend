@@ -36,6 +36,7 @@
       fit="cover"
       class="border-radius"
       :ratio="1"
+      :alt="item.name || 'Продукт'"
       itemprop="image"
     >
       <template v-slot:error>
@@ -49,19 +50,15 @@
         </span>
       </template>
     </q-img>
-    <!-- :style="`height: ${$q.screen.lt.md ? '165' : '188'}px`" -->
-
     <div
       class="px-8 py-8 column gap-md-7 gap-lg-8 no-wrap justify-between col-grow text-on-product-tile-color"
     >
       <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
-          <!-- ellipsis-2-lines -->
           <div itemprop="name" class="header3 bold">
             {{ item.name }}
           </div>
         </div>
-
         <div
           v-if="item.description"
           style="opacity: 0.6"
@@ -122,11 +119,9 @@ import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { ref } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
-// import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
-
 import {
   ecommerceAdd,
   ecommerceClick,
@@ -135,7 +130,6 @@ import {
 const props = defineProps<{
   item: MenuItem
 }>()
-
 const loading = ref(false)
 
 const onIntersection = (entry: IntersectionObserverEntry) => {
@@ -150,12 +144,6 @@ const onIntersection = (entry: IntersectionObserverEntry) => {
     }
   }
 }
-
-// const buttonColor = computed(() => {
-//   return props.item.isDead
-//     ? uiSettingsRepo.item?.backgroundColor.on_color
-//     : uiSettingsRepo.item?.primaryColor.color
-// })
 
 const toCartClickHandler = async () => {
   if (props.item.isDead) return
@@ -192,7 +180,6 @@ const toCartClickHandler = async () => {
 const openMenuItem = async () => {
   void ecommerceClick(props.item)
   store.menuItemModal = true
-
   await menuItemRepo.retrieve(props.item.id, {
     sales_point: salesPointRepo.item?.id,
   })
@@ -212,7 +199,6 @@ const addToCart = async () => {
         ? salesPointRepo.item.company
         : salesPointRepo.item.company?.id || '',
     )
-
     store.serviceSettingsModal = true
   } else if (cartRepo.item && props.item.sizes[0]) {
     try {

@@ -14,7 +14,6 @@
       >
         {{ getDateName(el) }}
       </div>
-
       <div
         class="date-element border-radius px-9 pb-1 gap-4 cursor-pointer row items-center"
         :class="{ 'date-element-selected': isAdditionalDateSelected }"
@@ -60,7 +59,6 @@ const previewDates = computed(() => {
     const current = moment().add(el, 'day').format('YYYY-MM-DD')
     res.push(current)
   })
-
   return res
 })
 

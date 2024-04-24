@@ -24,7 +24,10 @@
     </div>
     <SwiperContainer
       :key="`${$store.offersTab}${$q.screen.gt.md}`"
-      :class="{'swiper': !isNewsDesktopView, 'px-20': slidesPerView === 1 && $q.screen.gt.md}"
+      :class="{
+        swiper: !isNewsDesktopView,
+        'px-20': slidesPerView === 1 && $q.screen.gt.md,
+      }"
       :initial-slide="0"
       :slides-per-view="slidesPerView"
       no-navigation
@@ -36,6 +39,7 @@
         <!--        height: ${-->
         <!--        $q.screen.gt.md ? '190px' : $q.screen.lt.md ? '150px' : '300px'-->
         <!--        }-->
+
         <div
           :style="`overflow: hidden; max-height: ${isNewsDesktopView ? '400px;' : ''} max-width: ${$q.screen.lt.md ? '100%;' : ''}`"
           @click="goToItem(item)"
@@ -46,6 +50,7 @@
             :style="`border-radius:${getBorderRadius}; object-position: left 50%;`"
             position="left"
             fit="cover"
+            :alt="item.title"
             :ratio="isNewsDesktopView ? undefined : 16 / 9"
           >
             <template v-slot:error>

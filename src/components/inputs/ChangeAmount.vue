@@ -26,22 +26,15 @@
         fullWidth
           ? ''
           : small
-          ? 'mx-6'
-          : extraSmall
-          ? 'mx-3'
-          : noPadding
-          ? 'mx-6'
-          : 'mx-6'
+            ? 'mx-6'
+            : extraSmall
+              ? 'mx-3'
+              : noPadding
+                ? 'mx-6'
+                : 'mx-6'
       "
     >
       <div ref="inputWrapper">
-        <!-- <q-input
-          :model-value="modelValue"
-          @update:modelValue="setInputValue"
-          @focus=";(inputValue = modelValue), (focused = true)"
-          @blur="changeOnBlur"
-          :height="inputHeight ? inputHeight : extraSmall ? 'unset' : '42px'"
-        /> -->
         <CInput
           currency
           :filled="false"
@@ -95,7 +88,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ProductUnit } from 'src/models/productUnit/productUnit'
 import { computed, ref, onBeforeUnmount, nextTick, onMounted } from 'vue'
 import CIconButton from '../template/buttons/CIconButton.vue'
 import CInput from '../template/inputs/CInput.vue'
@@ -166,7 +158,7 @@ const setInputRef = () => {
 const customFormattedValue = computed(() =>
   !props.denominator
     ? props.modelValue
-    : `${props.modelValue} / ${props.denominator}`
+    : `${props.modelValue} / ${props.denominator}`,
 )
 
 onMounted(() => {
@@ -222,22 +214,6 @@ const updateInput = (val: number) => {
     emit('update:modelValue', unitQuantity.value)
     setInputValue(unitQuantity.value)
   } else {
-    // if (props.availableUnits?.length) {
-    //   const found = props.availableUnits.find((el) => val % el.quantity === 0)
-    //   if (found) emit('update:modelValue', val)
-    //   else {
-    //     const remainder = Math.min(
-    //       ...props.availableUnits.map((el) => val % el.quantity)
-    //     )
-    //     const unit = props.availableUnits.find(
-    //       (el) => val % el.quantity === remainder
-    //     )
-    //     if (!unit) return
-    //     emit('update:modelValue', val + (unit.quantity - (val % unit.quantity)))
-    //     return
-    //   }
-    // }
-
     emit('update:modelValue', val)
   }
   inputKey.value += 1
@@ -264,10 +240,7 @@ const widthInput = computed(() => {
 
 <style scoped lang="scss">
 :deep(.change-amount) {
-  // text-align: center;
-
   .q-field__control::before {
-    // position: absolute;
     top: 0;
     right: 0;
     bottom: 8px;
