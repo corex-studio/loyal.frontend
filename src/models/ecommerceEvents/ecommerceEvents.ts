@@ -19,16 +19,14 @@ export const ecommerceImpressions = (items: MenuItem[]) => {
   const data: EcommerceImpressions = {
     currencyCode: 'RUB',
     impressions: {
-      products: items.map((v) => {
+      products: items.map((v, index) => {
         return {
           id: typeof v.product === 'string' ? v.product : v.product?.id || '',
           name: v.name || '',
           price: v.sizes[0].price || undefined,
           category: menuRepo.item?.groups?.find((el) => el.id === v.group)
             ?.name,
-          position: menuRepo.item?.groups
-            ?.find((el) => el.id === v.group)
-            ?.items.findIndex((el) => el.id === v.id),
+          position: index + 1,
         }
       }),
     },
@@ -37,6 +35,11 @@ export const ecommerceImpressions = (items: MenuItem[]) => {
 }
 
 export const ecommerceClick = (item: MenuItem) => {
+  const index =
+    menuRepo.item?.groups
+      ?.find((el) => el.id === item.group)
+      ?.items.findIndex((el) => el.id === item.id) || -1
+
   const data: EcommerceClick = {
     currencyCode: 'RUB',
     click: {
@@ -50,9 +53,7 @@ export const ecommerceClick = (item: MenuItem) => {
           price: item.sizes[0].price || undefined,
           category: menuRepo.item?.groups?.find((el) => el.id === item.group)
             ?.name,
-          position: menuRepo.item?.groups
-            ?.find((el) => el.id === item.group)
-            ?.items.findIndex((el) => el.id === item.id),
+          position: index > -1 ? index + 1 : undefined,
         },
       ],
     },
@@ -61,6 +62,9 @@ export const ecommerceClick = (item: MenuItem) => {
 }
 
 export const ecommerceDetail = (item: MenuItem) => {
+  const index = menuRepo.item?.groups
+      ?.find((el) => el.id === item.group)
+      ?.items.findIndex((el) => el.id === item.id) || -1
   const data: EcommerceDetail = {
     currencyCode: 'RUB',
     detail: {
@@ -74,9 +78,7 @@ export const ecommerceDetail = (item: MenuItem) => {
           price: item.sizes[0].price || undefined,
           category: menuRepo.item?.groups?.find((el) => el.id === item.group)
             ?.name,
-          position: menuRepo.item?.groups
-            ?.find((el) => el.id === item.group)
-            ?.items.findIndex((el) => el.id === item.id),
+          position: index > -1 ? index + 1 : undefined
         },
       ],
     },
@@ -147,16 +149,17 @@ export const ecommerceRemove = (item: CartItem | Cart) => {
 export const ecommercePurchase = (item: Cart) => {
   const data: EcommercePurchase = {
     currencyCode: 'RUB',
-    click: {
-      purchase: {
+    purchase: {
+      actionField: {
         id: item.id,
       },
-      products: item.cartItems.map((v) => {
+      products: item.cartItems.map((v, index) => {
         return {
           id: v.id,
           name: v.size.name || '',
-          price: v.discountedTotalSum || undefined,
-          position: item.cartItems.findIndex((el) => el.id === item.id),
+          price: v.discountedTotalSum / v.quantity || undefined,
+          quantity: v.quantity,
+          position: index + 1,
         }
       }),
     },
