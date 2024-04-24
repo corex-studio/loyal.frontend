@@ -38,18 +38,6 @@
         label="Готово"
       />
     </div>
-    <!-- <div class="column mt-15 items-center gap-13 full-width">
-      <div class="header3">Хотите сделать предзаказ блюд?</div>
-      <div class="row full-width gap-5 no-wrap">
-        <CButton
-          class="col"
-          color="secondary-button-color"
-          text-color="on-secondary-button-color"
-          label="Нет"
-        />
-        <CButton class="col" label="Да" />
-      </div>
-    </div> -->
   </div>
 </template>
 <script lang="ts" setup>

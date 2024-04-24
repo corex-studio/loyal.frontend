@@ -58,8 +58,6 @@ import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
-// const currentStep = ref(0)
-
 const currentStep = computed(() => {
   if (route.name === 'orderingPage') return 1
   else if (
@@ -111,7 +109,6 @@ const getTitleStyle = (index: number): CSSProperties => {
 }
 
 .devider {
-  // min-width: 119px;
   height: 0.5px !important;
 }
 

@@ -41,13 +41,6 @@
               {{ el.customAddress || el.address }}
             </div>
           </div>
-          <!-- <CIcon
-          class="cursor-pointer"
-          hover-color="primary"
-          size="22px"
-          name="fa-light fa-pen"
-          color="secondary-button-color"
-        /> -->
         </div>
       </template>
       <div v-else class="subtitle-text">Адреса заведения не указаны</div>

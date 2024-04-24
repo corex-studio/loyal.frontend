@@ -14,7 +14,6 @@
       >
         Вход на сайт
       </div>
-
       <div v-if="currentStep === 1" class="column mt-4">
         <div class="column full-width">
           <div
@@ -95,7 +94,6 @@
           }}
         </div>
       </div>
-
       <CButton
         @click="nextStepHandler()"
         height="50px"
@@ -134,11 +132,8 @@ const props = defineProps<{
 
 const delay = ref(30)
 let interval: NodeJS.Timeout | null = null
-
 const codeError = ref(false)
-
 const loading = ref(false)
-
 const data = ref<{
   phone: string
   sms: {
@@ -158,7 +153,6 @@ const data = ref<{
   },
   agreement: false,
 })
-
 const currentStep = ref(1)
 
 const openPolicy = () => {
@@ -215,7 +209,6 @@ const nextStepHandler = async () => {
     loading.value = false
   } else {
     await auth()
-
     loading.value = false
   }
 }
@@ -223,7 +216,6 @@ const nextStepHandler = async () => {
 const auth = async () => {
   try {
     loading.value = true
-
     await authentication.login({
       phone: `7${data.value.phone}`,
       code: `${data.value.sms.first}${data.value.sms.second}${data.value.sms.third}${data.value.sms.fourth}`,
@@ -242,7 +234,6 @@ const auth = async () => {
         void store.loadCatalog(store.qrData.data?.salesPoint?.id)
       }
     }
-
     currentStep.value = 1
     emit('update:modelValue', false)
     if (

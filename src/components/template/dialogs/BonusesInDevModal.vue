@@ -10,7 +10,6 @@
       <div class="row full-width justify-center">
         <q-img src="/assets/bonuses.png" width="325px" />
       </div>
-
       <div class="huge3 bold mt-15">Этот блок находится в разработке!</div>
       <div class="body mt-6">
         К сожалению, блок с бонусами все еще находится в процессе разработки, и

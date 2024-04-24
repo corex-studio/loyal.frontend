@@ -61,7 +61,6 @@ import CIcon from '../template/helpers/CIcon.vue'
 import { TableRaw } from 'src/models/sections/tables/table'
 
 const selectedSection = ref<Section | null>(null)
-
 const canvas = ref<HTMLCanvasElement | null>(null)
 
 defineProps<{
@@ -93,10 +92,9 @@ const parseAlphaColorsFromCorrect = (str: string) => {
 const drawMarks = () => {
   if (!canvas.value) return
   const sortedFiguresByZIndex = sectionRepo.item?.scheme?.figures.sort(
-    (a, b) => a.z - b.z
+    (a, b) => a.z - b.z,
   )
   const context = canvas.value.getContext('2d')
-
   sortedFiguresByZIndex
     ?.filter((v) => v.type === 'mark')
     ?.forEach((figure) => {
@@ -106,7 +104,7 @@ const drawMarks = () => {
         context.fillText(
           figure.text || '',
           figure.x,
-          figure.y + (figure.height - 7)
+          figure.y + (figure.height - 7),
         )
       }
     })
@@ -115,10 +113,9 @@ const drawMarks = () => {
 const drawFigures = () => {
   if (!canvas.value) return
   const sortedFiguresByZIndex = sectionRepo.item?.scheme?.figures.sort(
-    (a, b) => a.z - b.z
+    (a, b) => a.z - b.z,
   )
   const context = canvas.value.getContext('2d')
-
   sortedFiguresByZIndex?.forEach((figure) => {
     if (!context) return
     context.fillStyle = parseAlphaColorsFromCorrect(figure.color)
@@ -134,7 +131,7 @@ const drawFigures = () => {
         figure.height / 2,
         0,
         0,
-        2 * Math.PI
+        2 * Math.PI,
       )
       context.fill()
     }
@@ -148,7 +145,7 @@ const drawFigures = () => {
           figure.x,
           figure.y,
           figure.width,
-          figure.height
+          figure.height,
         )
       }
     }
@@ -158,18 +155,11 @@ const drawFigures = () => {
 const drawCanvas = () => {
   if (!canvas.value || !sectionRepo.item || !sectionRepo.item.scheme) return
   const context = canvas.value.getContext('2d')
-
-  // const scaleCoeff = 410 / sectionRepo.item.scheme.height;
-  // context?.clearRect(0, 0, canvas.value.width, canvas.value.height);
-  // context?.scale(scaleCoeff, scaleCoeff);
-
   canvas.value.width = sectionRepo.item.scheme.width
   canvas.value.height = sectionRepo.item.scheme.height
-
   if (sectionRepo.item.scheme.image?.image) {
     const image = new Image()
     image.src = sectionRepo.item.scheme.image?.image
-
     image.onload = () => {
       if (!canvas.value) return
       context?.drawImage(image, 0, 0, canvas.value.width, canvas.value.height)
@@ -195,7 +185,6 @@ const handleClick = (event: MouseEvent) => {
   if (clickedObject) {
     emit('openTableDetail', clickedObject)
     sectionRepo.lastViewed = selectedSection.value
-    // tableDetailModal.value = true;
   }
 }
 
@@ -203,7 +192,6 @@ const findClickedObject = (x: number, y: number) => {
   const foundOnClick = sectionRepo.item?.scheme?.figures.filter((v) => {
     const objectX = v.x
     const objectY = v.y
-
     if (
       x >= objectX &&
       x <= objectX + v.width &&

@@ -110,21 +110,38 @@ export const ecommerceAdd = (item: MenuItem) => {
   void metrika.ecommerceAdd(data)
 }
 
-export const ecommerceRemove = (item: CartItem) => {
-  const index = cartRepo.item?.cartItems.findIndex(
-    (el) => el.id === item.id) || -1
-  const data: EcommerceRemove = {
-    currencyCode: 'RUB',
-    remove: {
-      products: [
-        {
-          id: item.id,
-          name: item.size.name || '',
-          price: item.discountedTotalSum || undefined,
-          position: index > -1 ? index + 1 : undefined
-        },
-      ],
-    },
+export const ecommerceRemove = (item: CartItem | Cart) => {
+  let data: EcommerceRemove | null = null
+  if ('cartItems' in item) {
+    data = {
+      currencyCode: 'RUB',
+      remove: {
+        products: item.cartItems.map((el, index) => {
+          return {
+            id: el.id,
+            name: el.size.name || '',
+            price: el.discountedTotalSum || undefined,
+            position: index,
+          }
+        }),
+      },
+    }
+  } else {
+    data = {
+      currencyCode: 'RUB',
+      remove: {
+        products: [
+          {
+            id: item.id,
+            name: item.size.name || '',
+            price: item.discountedTotalSum || undefined,
+            position: cartRepo.item?.cartItems.findIndex(
+              (el) => el.id === item.id,
+            ),
+          },
+        ],
+      },
+    }
   }
   void metrika.ecommerceRemove(data)
 }

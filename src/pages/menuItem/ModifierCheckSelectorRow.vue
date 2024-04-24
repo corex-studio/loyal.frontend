@@ -12,7 +12,6 @@
         +{{ item.price }} ₽
       </div>
     </div>
-
     <c-check-box
       @click="$emit('select', item)"
       :model-value="!!item.quantity"

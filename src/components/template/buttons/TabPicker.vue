@@ -3,7 +3,6 @@
     <div v-if="externalLabel" class="helper-text bold mb-2">
       {{ externalLabel }}
     </div>
-
     <div
       :style="`max-width: ${width}; height: ${height}`"
       class="body bg-selector-color border-radius2 row full-width no-wrap pa-1"
@@ -38,14 +37,6 @@
         <slot name="append"></slot>
       </div>
     </div>
-    <!-- <CButton
-      v-for="tab in localTabs"
-      :key="tab.label"
-      :label="tab.label"
-      :color="tab.label === selectedTab ? 'primary' : 'gray-light'"
-      :text-color="tab.label === selectedTab ? 'white' : 'black'"
-      @click="selectTabHandler(tab)"
-    /> -->
   </div>
 </template>
 <script lang="ts" setup>

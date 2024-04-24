@@ -53,7 +53,6 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 .amount-chip {
   position: absolute;
   background-color: var(--on-primary);
-  //   border-radius: 50%;
   top: -4px;
   right: -6px;
   width: fit-content;

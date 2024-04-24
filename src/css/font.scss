@@ -1,4 +1,4 @@
-@import "bebasNeueFont";
+@import 'bebasNeueFont';
 
 @font-face {
   font-family: 'Gilroy';
@@ -19,15 +19,8 @@ body.bebas-font {
     font-family: 'Bebas Neue Pro Expanded', 'Gilroy', sans-serif;
   }
 
-
   .bold {
     font-weight: 600 !important;
-  //  .q-field__label {
-  //    @extend .bold;
-  //  }
-  //  &.q-btn div {
-  //    @extend .bold;
-  //  }
   }
 }
 
@@ -44,9 +37,7 @@ body.bebas-font {
 }
 
 body:not(.bebas-font) {
-
   .bold {
-    //font-weight: 600 !important;
     font-family: 'Gilroy-Bold' !important;
     .q-field__label {
       @extend .bold;
@@ -55,9 +46,7 @@ body:not(.bebas-font) {
       @extend .bold;
     }
   }
-
 }
-
 
 .big-bold {
   font-weight: 600 !important;
@@ -355,7 +344,3 @@ body.screen--xs {
     }
   }
 }
-
-// .text-negative {
-//   color: $accent !important;
-// }

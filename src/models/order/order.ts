@@ -343,24 +343,6 @@ export class Order implements BaseModel {
   toJson(): Record<string, any> {
     return {
       id: this.id,
-      // sales_point: this.sales_point,
-      // type: this.type,
-      // customer: this.customer,
-      // status: this.status,
-      // external_status: this.external_status,
-      // external_id: this.external_id,
-      // payment_status: this.payment_status,
-      // payment_type: this.payment_type,
-      // active: this.active,
-      // total_sum: this.total_sum,
-      // review: this.review,
-      // number: this.number,
-      // delivery_time: moment
-      //   .utc(this.delivery_time)
-      //   .format('YYYY-MM-DD HH:mm:ss'),
-      // sum: this.sum,
-      // created_at: this.created_at,
-      // updated_at: this.updated_at,
     }
   }
 }

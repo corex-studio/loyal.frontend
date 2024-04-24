@@ -153,15 +153,10 @@ const emit = defineEmits<{
 }>()
 
 const drawnItems = new L.FeatureGroup()
-
 const newAddress = ref<DeliveryAddress | null>(null)
-
 const isPrivateHouse = ref(false)
-
 const geoloading = ref(false)
-
 const q = useQuasar()
-
 let map: CorexLeafletMap
 
 const isSaveAvailable = computed(() => {
@@ -190,27 +185,6 @@ const geolocate = async () => {
     })
   }
   geoloading.value = false
-  // if (!newAddress.value) throw new Error('Объект адреса не может быть пустым')
-  // resume()
-  // const res = await utilsRepo.geolocate(
-  //   coords.value.latitude,
-  //   coords.value.longitude
-
-  // )
-  // const addressWithCorrectCoords: Address = {
-  //   ...res,
-  //   coords: [res.coords[1], res.coords[0]],
-  // }
-  // selectAddress(addressWithCorrectCoords)
-  // } catch {
-  //   Notify.create({
-  //     message: 'Ошибка при получении вашего положения',
-  //     color: 'danger',
-  //   })
-  // } finally {
-  //   geoloading.value = false
-  //   // pause()
-  // }
 }
 
 const loadAddressDataByCoords = async () => {
@@ -240,7 +214,6 @@ const drawPoint = (zoom?: number) => {
       id: newAddress.value.id,
       coords: newAddress.value.coords,
     })
-
   const collection = map.pointCollection(values)
   const layer = map.pointLayer(
     collection,
@@ -248,7 +221,6 @@ const drawPoint = (zoom?: number) => {
     `#${uiSettingsRepo.item?.primaryColor.color}`,
     'home',
   )
-
   map.lmap.addLayer(layer)
   if (values.length)
     map.lmap.fitBounds(layer.getBounds(), {
@@ -291,7 +263,6 @@ onMounted(() => {
           latitude: v.latlng.lat,
           longitude: v.latlng.lng,
         }
-
         const res = await utilsRepo.geolocate(v.latlng.lat, v.latlng.lng)
         const addressWithCorrectCoords: Address = {
           ...res,
@@ -345,14 +316,12 @@ const createAddress = async () => {
 
 const selectAddress = (v: Address, zoom?: number) => {
   if (!newAddress.value) return
-
   newAddress.value.address = v.address
   newAddress.value.city = v.city
   newAddress.value.coords = {
     latitude: v.coords[1],
     longitude: v.coords[0],
   }
-
   newAddress.value.flat = v.flat
   newAddress.value.street = v.street
   newAddress.value.house = v.house

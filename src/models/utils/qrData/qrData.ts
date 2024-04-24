@@ -50,8 +50,6 @@ export class QrData implements BaseModel {
   }
 
   toJson(): Record<string, any> {
-    return {
-      // id: this.id,
-    }
+    return {}
   }
 }

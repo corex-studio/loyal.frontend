@@ -25,7 +25,6 @@
             width="32px"
             src="assets/mir.svg"
           />
-
           <div class="column gap-8">
             <div class="body">{{ el.type }} ···· {{ el.endsWith }}</div>
           </div>
@@ -62,14 +61,7 @@
       </div>
     </div>
   </div>
-  <!-- <Pagination
-    :loading="$paymentCard.loadings.list"
-    class="px-10 mt-15 full-width"
-    @update:modelValue="setPage($event)"
-    @appendItems="setPage($event, true)"
-    :page="$paymentCard.pagination.page"
-    :last-page="$paymentCard.pagination.last_page"
-  ></Pagination> -->
+
   <AcceptModal
     :model-value="acceptModal"
     @update:model-value="acceptModal = false"
@@ -89,7 +81,6 @@ import { Notify } from 'quasar'
 import { authentication } from 'src/models/authentication/authentication'
 
 const acceptModal = ref(false)
-
 const cardToDelete = ref<PaymentCard | null>(null)
 
 const currentCards = computed(() => {
@@ -108,10 +99,6 @@ const loadCards = async (page = 1, appendItems = false) => {
     },
   )
 }
-
-// const setPage = async (page = 1, appendItems = false) => {
-//   await loadCards(page, appendItems)
-// }
 
 onMounted(() => {
   if (!authentication.user) return

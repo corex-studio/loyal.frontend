@@ -9,7 +9,6 @@
         <router-view />
       </div>
     </div>
-
     <q-spinner-puff
       v-if="
         $order.loadings.list ||

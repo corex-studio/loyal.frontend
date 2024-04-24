@@ -48,7 +48,6 @@ import { QrStream } from 'vue3-qr-reader'
 import { CartType } from 'src/models/carts/cart'
 
 const startScanning = ref(false)
-
 const dataFromQr = ref<string | null>(null)
 
 const startScan = () => {

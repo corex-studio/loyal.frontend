@@ -31,7 +31,6 @@
           </ol>
         </div>
       </div>
-
       <div class="row">
         <div class="column gap-5">
           <h6 class="mt-0 mb-0 bold">
@@ -56,11 +55,9 @@
           </div>
         </div>
       </div>
-
       <div>
         <h6 class="my-0 bold">Документы:</h6>
         <div class="col no-wrap items-center gap-5 mt-10">
-          <!-- <q-icon size="26px" name="fal fa-file-powerpoint" /> -->
           <div>
             <a
               :href="linkToPolicy"
@@ -88,11 +85,10 @@
           </div>
         </div>
       </div>
-
       <div class="row">
         <div class="column gap-5">
           <h6 class="mt-0 mb-10 bold">Политика безопастности платежей</h6>
-          <!-- v-if="!isBest2Pay" -->
+
           <template v-if="false">
             <div>Банковской картой</div>
             <div>
@@ -120,7 +116,6 @@
                 style="object-fit: contain"
                 width="150px "
               />
-
               <img
                 src="assets/psJCB.svg"
                 style="object-fit: contain"
@@ -137,7 +132,6 @@
               проведения платежа также может потребоваться ввод специального
               пароля.
             </div>
-            <!-- ООО "ПЭЙСЕЛЕКШН" -->
             <div class="mb-10">
               Настоящий сайт поддерживает 256-битное шифрование.
               Конфиденциальность сообщаемой персональной информации
@@ -159,7 +153,6 @@
           <BestToPay v-else />
         </div>
       </div>
-
       <div class="row">
         <div class="row full-width">
           <h6 class="mt-0 mb-10 bold">Реквизиты:</h6>
@@ -259,12 +252,6 @@ const linkToOffer = computed(() => {
   )}/offer`
 })
 
-// const isBest2Pay = computed(() => {
-//   if (info.value?.bank) {
-//     return info.value.bank.bank ? info.value.bank.bank === 'best2pay' : true
-//   } else return true
-// })
-
 const getLegalEntity = (v: SalesPointRaw) => {
   return info.value?.legal_entities.find((val) =>
     val.sales_points.map((el) => el.uuid).includes(v.uuid),
@@ -287,14 +274,6 @@ onMounted(async () => {
   info.value = await companyGroupRepo.getTermsOfServiceInfo(
     String(route.params.externalId),
   )
-  // const headers = {
-  //   'Company-Group': route.params.externalId,
-  // }
-  //
-  // await companyGroupRepo.current(headers)
-  // if (companyGroupRepo.item && companyGroupRepo.item?.companies.length < 2) {
-  //   companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
-  // }
 
   loading.value = false
 })

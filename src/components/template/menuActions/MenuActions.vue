@@ -1,22 +1,4 @@
 <template>
-  <!-- <CIcon
-    size="20px"
-    class="cursor-pointer"
-    hover-color="accent"
-    :name="icon ? icon : 'fa-light fa-ellipsis-v'"
-    @click.capture.stop="menu = !menu"
-    :style="[
-      `height: ${height ? height : '27px'}`,
-      `width: ${width ? width : '27px'}`,
-      iconOnly
-        ? ''
-        : 'box-shadow: 0px 0px 13px rgba(65, 39, 130, 0.2);border-radius: 4px; background-color: white',
-      useHover && !hover && !menu && $q.screen.gt.md
-        ? 'visibility: hidden; opacity: 0; transition: visibility 0s linear 100ms, opacity 150ms'
-        : '',
-    ]"
-  ></CIcon> -->
-
   <CIconButton
     @click.capture.stop="menu = !menu"
     :color="iconOnly ? 'transparent' : 'secondary-button-color'"
@@ -87,7 +69,6 @@ import { ref } from 'vue'
 import CIconButton from '../buttons/CIconButton.vue'
 import CButton from '../buttons/CButton.vue'
 import { MenuActionItems } from './menuActionsServices'
-// import CIcon from '../buttons/CIcon.vue'
 
 defineProps<{
   structure: MenuActionItems[]

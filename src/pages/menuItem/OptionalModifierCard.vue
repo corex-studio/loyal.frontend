@@ -34,7 +34,6 @@
           </span>
         </template>
       </q-img>
-      <!-- {{ modifier.image?.thumbnail }} -->
       <template v-if="modifier.quantity === 0">
         <div
           class="mt-4 ellipsis-2-lines"

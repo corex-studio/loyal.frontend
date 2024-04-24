@@ -62,9 +62,7 @@ export class CorexLeafletMap {
       zoom: this.zoom,
       layers: [tiles[this.tiles[0].name]],
     })
-
     this.lmap.options.crs = L.CRS.EPSG3395
-
     L.control.layers(tiles).addTo(this.lmap)
   }
 
@@ -72,7 +70,7 @@ export class CorexLeafletMap {
     values: Array<{
       id: number | string | undefined
       coords: Position[][]
-    }> = []
+    }> = [],
   ) {
     const geoJson = this.getFutureCollection()
     values.forEach((value) => {
@@ -100,7 +98,7 @@ export class CorexLeafletMap {
         longitude: number | null
       }
       instance?: T
-    }>
+    }>,
   ) {
     const geoJson = this.getFutureCollection()
     values.forEach((value) => {
@@ -130,7 +128,7 @@ export class CorexLeafletMap {
         latitude: number | null
         longitude: number | null
       }
-    }> = []
+    }> = [],
   ) {
     const styles = {
       weight: 2,
@@ -161,7 +159,7 @@ export class CorexLeafletMap {
     onClick: ((feature: Feature, layer: L.Layer) => void) | null = null,
     color: ((feature: Feature | null) => string) | string | null = null,
     icon: ((feature: Feature | null) => string) | string | null = null,
-    image: ((feature: Feature | null) => string) | string | null = null
+    image: ((feature: Feature | null) => string) | string | null = null,
   ) {
     return L.geoJSON(geojson, {
       onEachFeature: (feature: Feature, layer: L.Layer) => {
@@ -174,7 +172,7 @@ export class CorexLeafletMap {
   }
   polygonLayer(
     geojson: FeatureCollection,
-    onClick: ((feature: Feature, layer: L.Layer) => void) | null = null
+    onClick: ((feature: Feature, layer: L.Layer) => void) | null = null,
   ) {
     return L.geoJSON(geojson, {
       onEachFeature: (feature: Feature, layer: L.Layer) => {
@@ -191,7 +189,7 @@ export class CorexLeafletMap {
     color: ((feature: Feature | null) => string) | string | null = null,
     icon: ((feature: Feature | null) => string) | string | null = null,
     image: ((feature: Feature | null) => string) | string | null = null,
-    feature: Feature | null = null
+    feature: Feature | null = null,
   ) {
     const draw_icon = this.createIcon(color, icon, image, feature)
     return new L.Marker(coords, { icon: draw_icon })
@@ -201,7 +199,7 @@ export class CorexLeafletMap {
     color: ((feature: Feature | null) => string) | string | null,
     icon: ((feature: Feature | null) => string) | string | null,
     image: ((feature: Feature | null) => string) | string | null = null,
-    feature: Feature | null = null
+    feature: Feature | null = null,
   ) {
     if (image)
       return new L.Icon({
@@ -227,13 +225,6 @@ export class CorexLeafletMap {
       duration: 0.5,
     })
   }
-  // setMapBounds(layer: L.Layer) {
-  //   // try {
-  //   //   this.lmap.flyToBounds(layer.getBounds(), {
-  //   //     duration: 0.5,
-  //   //   })
-  //   // } catch (e) {}
-  // }
 
   getFutureCollection(): FeatureCollection {
     return { type: 'FeatureCollection', features: [] }

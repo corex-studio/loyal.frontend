@@ -27,7 +27,6 @@
         {{ 'Обязательно' }}
       </q-chip>
     </div>
-
     <div class="column full-width no-wrap">
       <div
         v-if="group.restrictions && group.restrictions.max_quantity > 1"
@@ -38,7 +37,6 @@
             group.restrictions?.max_quantity
           }}
         </div>
-
         <CIcon
           v-if="group.items.some((v) => v.quantity)"
           @click="clearSelection()"
@@ -57,7 +55,6 @@
             :item="el"
           />
         </template>
-
         <template v-if="modifierViewType === 'check'">
           <ModifierCheckSelectorRow
             v-for="(el, index) in currentModifiers"
@@ -74,7 +71,6 @@
             :group="group"
           />
         </template>
-
         <div v-if="modifierViewType === 'card'" class="row full-width">
           <GridContainer
             :items="currentModifiers"
@@ -114,7 +110,7 @@ const props = defineProps<{
 
 const currentModifiers = computed(() => {
   return props.group.items.filter(
-    (v) => !v.is_hidden && (v.reserve === null || v.reserve > 0)
+    (v) => !v.is_hidden && (v.reserve === null || v.reserve > 0),
   )
 })
 

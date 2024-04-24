@@ -37,10 +37,6 @@
         class="row caption-text items-center"
         :class="`justify-${$q.screen.lt.md ? 'center' : 'end'}`"
       >
-        <!-- <div class="text-secondary" v-if="!$q.screen.lg && $q.screen.gt.sm">
-          {{ 'Страницы' }}
-        </div> -->
-
         <q-pagination
           color="secondary"
           active-color="primary"
@@ -53,7 +49,6 @@
           :max-pages="5"
           :boundary-numbers="false"
         />
-
         <div class="row ml-15" v-if="$q.screen.gt.sm">
           <CIconButton
             color="transparent"
@@ -76,28 +71,6 @@
               icon-size="16px"
               icon-color="secondary"
             />
-            <!-- <CButton
-              v-if="page !== 1"
-              icon="fa-regular fa-angle-left"
-              icon-size="16px"
-              class="body"
-              text-button
-              no-padding
-              text-color="secondary"
-              icon-color="secondary"
-              @click="$emit('update:modelValue', page - 1)"
-            /> -->
-            <!-- <CButton
-              v-if="page !== lastPage"
-              icon-right="fa-regular fa-angle-right"
-              icon-size="18px"
-              class="body"
-              text-button
-              no-padding
-              text-color="secondary"
-              icon-color="secondary"
-              @click="$emit('update:modelValue', page + 1)"
-            /> -->
             <CIconButton
               color="transparent"
               v-if="page !== lastPage"
@@ -109,7 +82,6 @@
               icon-color="secondary"
             />
           </div>
-
           <CIconButton
             color="transparent"
             v-if="page !== lastPage"
@@ -122,7 +94,6 @@
           />
         </div>
       </div>
-
       <CIconButton
         v-if="$q.screen.lt.md"
         color="transparent"

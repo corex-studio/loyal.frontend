@@ -20,9 +20,6 @@
             ? `№ ${$order.orderToReview?.number}`
             : 'б/н'
         }}
-        <!-- <template v-if="$order.orderToReview?.deliveryTime">
-          • доставлен {{ getDeliveryDate($order.orderToReview?.deliveryTime) }}
-        </template> -->
       </div>
       <div
         class="row full-width no-wrap items-center gap-md-7 gap-xs-5 mt-10 px-xs-10 px-lg-15"
@@ -47,10 +44,6 @@
         <div class="column">
           <div class="subtitle-text bold">
             {{ getCurrentCompany()?.name }}
-            <!-- {{ $order.orderToReview?.salesPoint.company }} -->
-            <!-- // $order.orderToReview?.salesPoint.name || //
-            $order.orderToReview?.salesPoint.customAddress || //
-            $order.orderToReview?.salesPoint.address -->
           </div>
           <div class="body">
             Сумма заказа:
@@ -152,7 +145,6 @@
   </CDialog>
 </template>
 <script lang="ts" setup>
-// import moment from 'moment'
 import CDialog from '../template/dialogs/CDialog.vue'
 import { beautifyNumber } from 'src/models/store'
 import { ref, watch } from 'vue'
@@ -173,9 +165,7 @@ defineEmits<{
 }>()
 
 const item = ref<OrderReview | null>(null)
-
 const success = ref(false)
-
 const loading = ref(false)
 
 watch(
@@ -195,12 +185,6 @@ const getCurrentCompany = () => {
     (el) => el.id === orderRepo.orderToReview?.salesPoint.company,
   )
 }
-
-// const getDeliveryDate = (date: string | null | undefined) => {
-//   return date
-//     ? moment(date, 'DD.MM.YYYY HH:mm').locale('ru').format('DD MMMM HH:mm')
-//     : '-'
-// }
 
 const createReview = async () => {
   try {

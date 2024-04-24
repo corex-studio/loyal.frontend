@@ -37,13 +37,9 @@ import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { store } from 'src/models/store'
 
 const groupElement = ref()
-
 const route = useRoute()
-
 const router = useRouter()
-
 const hover = ref(false)
-
 let timeout: NodeJS.Timeout | null = null
 
 const props = defineProps<{
@@ -60,7 +56,7 @@ watch(
         startScrollMonitoring()
       }, 500)
     }
-  }
+  },
 )
 
 const clickHandler = (v: MenuGroup) => {
@@ -82,16 +78,15 @@ const scrollToGroup = (v: MenuGroup) => {
       groupElement.value.getBoundingClientRect().top + window.scrollY - 100
     menuGroupRepo.scrollingToGroup = true
     window.scrollTo({ top: y, behavior: 'smooth' })
-
     setTimeout(() => {
       const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
-        (el) => el === props.item.id
+        (el) => el === props.item.id,
       )
       if (elementIndex > -1)
         menuGroupRepo.elementsInViewport = [
           menuGroupRepo.elementsInViewport[elementIndex],
           ...menuGroupRepo.elementsInViewport.filter(
-            (_, index) => index !== elementIndex
+            (_, index) => index !== elementIndex,
           ),
         ]
       menuGroupRepo.scrollingToGroup = false
@@ -112,7 +107,7 @@ const startScrollMonitoring = () => {
           menuGroupRepo.elementsInViewport.push(props.item.id)
       } else {
         const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
-          (el) => el === props.item.id
+          (el) => el === props.item.id,
         )
         if (elementIndex > -1)
           menuGroupRepo.elementsInViewport.splice(elementIndex, 1)
@@ -120,31 +115,12 @@ const startScrollMonitoring = () => {
     },
     {
       rootMargin: '-100px',
-    }
+    },
   )
 }
 
 onMounted(() => {
   groupElement.value = document.getElementById(props.item.id)
-
   startScrollMonitoring()
-
-  // visible.value = useElementVisibility(groupElement)
-
-  // const observer = new window.IntersectionObserver(
-  //   ([entry]) => {
-  //     if (entry.isIntersecting) {
-  //       menuGroupRepo.elementInViewport = groupElement.value?.id || null
-  //       return
-  //     }
-  //   },
-  //   {
-  //     root: null,
-  //     threshold: 0.4,
-  //     rootMargin: '0px',
-  //   }
-  // )
-
-  // if (groupElement.value) observer.observe(groupElement.value)
 })
 </script>
