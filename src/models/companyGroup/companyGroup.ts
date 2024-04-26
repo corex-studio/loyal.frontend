@@ -29,7 +29,7 @@ export type LegalEntityRaw = {
   uuid: string
   code: number | string | null
   registration_code: string | number | null
-  state_registration_number: string | number | null
+  state_registration_number: string | null
   legal_address: string | null
   contact_phone: string | null
   contact_email: string | null
