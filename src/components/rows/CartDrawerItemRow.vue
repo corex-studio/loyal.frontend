@@ -45,7 +45,6 @@
                   .join(', ')
               }}
             </div>
-
             <div v-if="!cartItem.freeItem" class="row gap-4 no-wrap body">
               <div class="bold">
                 {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
@@ -89,7 +88,6 @@
             @click="openItemModal(el.size.menu_item)"
             class="row full-width body items-center no-wrap gap-6 cursor-pointer"
           >
-            <!-- <div :style="$q.screen.lt.md ? 'width: 64px' : 'width: 90px'"></div> -->
             <div class="row col-grow no-wrap items-center jusify-between">
               <div class="items-center no-wrap row gap-5">
                 <q-img

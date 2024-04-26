@@ -9,17 +9,6 @@
         width="24px"
         :model-value="!!item.quantity"
       />
-      <!-- <div
-        :class="!!item.quantity ? 'radio-selected' : 'radio'"
-        style="height: 24px; width: 24px; border-radius: 50%"
-        class="row items-center justify-center"
-      >
-        <div
-          v-if="!!item.quantity"
-          class="bg-primary"
-          style="height: 10px; width: 10px; border-radius: 50%"
-        ></div>
-      </div> -->
       <div :class="{ 'text-primary': item.quantity }">
         {{ item.name }}
       </div>

@@ -43,11 +43,6 @@
               ко&nbsp;всей информации, которую Оператор может получить
               о&nbsp;пользователях мобильного приложения
               {{ $uiSettings.item?.companyGroup.name }}
-              <!-- <span
-                class="link mark owner-site-url-field"
-                data-scroll-to="#owner-site-url-field"
-                >https://loyalhub.ru</span
-              >. -->
             </div>
           </div>
         </div>

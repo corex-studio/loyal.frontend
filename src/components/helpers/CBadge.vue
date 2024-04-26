@@ -45,7 +45,6 @@ const _textColor = computed(() => {
     const r = Number(rgbValues[0])
     const g = Number(rgbValues[1])
     const b = Number(rgbValues[2])
-
     const yiq = 0.299 * r + 0.587 * g + 0.114 * b
     console.log(yiq)
     return yiq >= 160 ? 'black' : 'white'

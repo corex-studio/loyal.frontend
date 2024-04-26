@@ -50,7 +50,7 @@
                   text-color="primary"
                   :style="`background-color: ${lightColor(
                     $uiSettings.item?.primaryColor.color || '000',
-                    '27'
+                    '27',
                   )} !important`"
                   :height="$q.screen.lt.md ? '40px' : '48px'"
                 >
@@ -77,7 +77,6 @@
             :available-hours="availableHours"
             :time="time"
           />
-
           <q-separator class="my-2" color="divider-color" />
           <CInput
             v-model="currentBooking.comment"
@@ -86,7 +85,6 @@
             placeholder="Оставьте пожелания к бронированию"
           />
         </div>
-
         <div class="row full-width justify-center gap-6 mt-10">
           <CButton
             v-if="$q.screen.gt.sm"
@@ -172,15 +170,10 @@ const emit = defineEmits<{
 }>()
 
 const availableHours = ref<AvailableHours | null>(null)
-
 const currentBooking = ref<BookingRequest | null>(null)
-
 const date = ref<string | null>(null)
-
 const time = ref<string | null>(null)
-
 const tableToOpen = ref<TableRaw | null>(null)
-
 const selectedTables = ref<TableRaw[]>([])
 
 watch(
@@ -191,7 +184,7 @@ watch(
       .then((res) => {
         availableHours.value = res
       })
-  }
+  },
 )
 
 const isContinueAvailable = computed(() => {
@@ -235,11 +228,9 @@ const createBooking = async () => {
   try {
     currentBooking.value.tables = selectedTables.value.map((v) => new Table(v))
     currentBooking.value.date = `${date.value} ${time.value}`
-
     bookingRequestRepo.item = await bookingRequestRepo.create(
-      currentBooking.value
+      currentBooking.value,
     )
-
     emit('changeBookingMode', 'successBooked')
   } catch {
     Notify.create({

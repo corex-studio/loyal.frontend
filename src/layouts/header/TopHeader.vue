@@ -44,7 +44,6 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
 
 const router = useRouter()
-
 const route = useRoute()
 
 const blocks = computed(() => {
@@ -67,12 +66,6 @@ const blocks = computed(() => {
         scrollToBlock('footer')
       },
     },
-    // {
-    //   label: 'Разработчик',
-    //   click: () => {
-    //     window.open('https://corex.studio/', '_blank')
-    //   },
-    // },
     {
       label: 'Мобильное приложение',
       visible:

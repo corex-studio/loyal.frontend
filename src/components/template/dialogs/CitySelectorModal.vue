@@ -17,7 +17,6 @@
           :key="index"
         >
           <q-separator v-if="index && $q.screen.lt.md" color="divider-color" />
-
           <div
             @click="currentCity = item"
             class="row full-width items-center no-wrap justify-between border-radius cursor-pointer py-md-6 px-md-6 gap-6"

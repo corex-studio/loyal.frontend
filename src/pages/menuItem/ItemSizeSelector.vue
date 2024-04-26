@@ -4,7 +4,6 @@
     style="height: fit-content; flex-wrap: wrap"
     class="full-width row pa-1 gap-5"
   >
-    <!-- min-width: 31.5%; max-width: 31.5% -->
     <div
       v-for="(size, index) in currentSizes"
       :key="index"

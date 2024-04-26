@@ -33,9 +33,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-
 const route = useRoute()
-
 let interval: NodeJS.Timeout
 
 const initMetrika = () => {

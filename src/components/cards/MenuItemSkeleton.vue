@@ -27,9 +27,6 @@
             </div>
             <q-skeleton type="text" height="30px" width="80px" class="mt-8" />
           </q-item-label>
-          <!-- <q-item-label>
-            <q-skeleton type="text" width="80%" class="mb-2 mb-md-10" />
-          </q-item-label> -->
         </q-item-section>
       </q-item>
     </q-card>

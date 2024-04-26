@@ -6,9 +6,7 @@
     class="text-on-background-color"
     :position="$q.screen.lt.md ? 'bottom' : undefined"
   >
-    <!-- <template v-slot:header> Промокод </template> -->
     <div class="header3 bold mb-8">Промокод</div>
-
     <template v-if="$cart.item">
       <CInput
         height="48px"
@@ -55,7 +53,7 @@ watch(
     if (!v && !cartRepo.promocodeError) {
       emit('update:modelValue', false)
     }
-  }
+  },
 )
 
 const apply = async () => {

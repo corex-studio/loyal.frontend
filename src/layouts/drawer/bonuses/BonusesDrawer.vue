@@ -41,9 +41,6 @@
       </div>
       <div class="body">Тратьте на любимые блюда</div>
     </div>
-    <!-- <div class="text-red py-10">
-      {{ authentication.user?.loyaltyCard?.card_number }}
-    </div> -->
     <div
       class="mt-sm-15 mt-xs-10 border-radius row no-wrap relative-position px-8 py-8 gap-5"
       :class="{

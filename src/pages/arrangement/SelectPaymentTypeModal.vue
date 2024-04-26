@@ -16,7 +16,6 @@
           <q-icon color="on-background-color" :name="el.icon" size="20px" />
           {{ el.label }}
         </div>
-        <!-- <div style="width: 24px; height: "></div> -->
         <RoundedSelector
           check
           height="26px"

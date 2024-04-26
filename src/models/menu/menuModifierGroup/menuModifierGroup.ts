@@ -81,12 +81,7 @@ export class MenuModifierGroupItem implements BaseModel {
   }
 
   toJson(): Record<string, any> {
-    return {
-      // id: this.id,
-      // external_id: this.externalId,
-      // menu: this.menu,
-      // is_hidden: this.isHidden,
-    }
+    return {}
   }
 }
 

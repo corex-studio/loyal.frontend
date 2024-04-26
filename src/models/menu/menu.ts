@@ -178,15 +178,9 @@ export class Menu implements BaseModel {
 
   toJson(): Record<string, any> {
     return {
-      // uuid: this.id,
       name: this.name,
       company: this.company.id,
       description: this.description || undefined,
-      // external_id: this.external_id,
-      // image: this.image,
-      // items: this.items,
-      // created_at: this.created_at,
-      // updated_at: this.updated_at,
     }
   }
 }

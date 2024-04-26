@@ -89,7 +89,6 @@
             {{ $menuItem.item?.description }}
           </div>
           <MenuItemCharacteristics v-if="currentSize" :size="currentSize" />
-
           <MenuItemRelatedItems
             v-if="
               $cart.item &&
@@ -98,7 +97,6 @@
             "
             :items="currentMenuRulesForAdding"
           />
-
           <div
             v-if="$menuItem.item && $menuItem.item.sizes.length > 1"
             class="relative-position mt-8"
@@ -216,7 +214,6 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { Notify, useQuasar } from 'quasar'
-// import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
@@ -239,15 +236,10 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
-
 const touchSpot = ref<HTMLDivElement>()
-
 const currentSize = ref<ItemSize | null>(null)
-
 const quantity = ref(1)
-
 const loading = ref(false)
-
 const q = useQuasar()
 
 const currentMenuRulesForAdding = computed(() => {
@@ -297,12 +289,10 @@ watch(
       if (menuItemRepo.item) {
         void ecommerceDetail(menuItemRepo.item)
       }
-
       quantity.value = 1
       currentSize.value = menuItemRepo.item?.sizes[0]
         ? menuItemRepo.item?.sizes[0]
         : null
-
       if (menuItemRepo.item) {
         history.pushState(
           {},
@@ -323,7 +313,6 @@ watch(
             },
           },
         }
-
         useMeta(metaData)
       }
     }
@@ -342,14 +331,6 @@ const isAddToCardDisabled = computed(() => {
     !quantity.value
   )
 })
-
-// const closeModal = () => {
-//   const prevRoute = nth(route.matched, -2)
-
-//   void router.push({
-//     path: prevRoute?.path,
-//   })
-// }
 
 const addToCart = async () => {
   if (!authentication.user && !store.tableMode) {

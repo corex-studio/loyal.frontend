@@ -202,15 +202,6 @@ const _iconSize = computed(() => {
   color: var(--primary) !important;
 }
 
-// .borderedButton:hover:before {
-//   // border: 1px solid $accent4;
-//   transition: 0.3s;
-// }
-
-// .q-btn--outline:before {
-//   // border: 1px solid $secondary;
-// }
-
 body.screen--sm {
   .q-badge {
     position: absolute;

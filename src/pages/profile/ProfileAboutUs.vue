@@ -44,7 +44,6 @@
                   {{ el.customAddress || el.address }}
                 </div>
               </div>
-
               <CIcon
                 v-if="company.salesPoints.length > 2"
                 name="fa-regular fa-angle-down"
@@ -67,7 +66,6 @@
             </template>
             <div v-else class="row items-center gap-3">
               <div class="subtitle-text">Адреса:</div>
-
               <CIcon
                 v-if="company.salesPoints.length"
                 name="fa-regular fa-angle-down"
@@ -180,7 +178,6 @@
         </div>
       </div>
     </div>
-
     <div
       :class="{
         'mt-lg-29 mt-md-25 mt-xs-10':
@@ -360,7 +357,6 @@ import ContactsModal from './ContactsModal.vue'
 import { useRouter } from 'vue-router'
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-// import { store } from 'src/models/store'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import moment from 'moment'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
@@ -370,9 +366,7 @@ import { selectCompanyKey } from 'src/services/eventBusKeys'
 import { daysNames } from 'src/services/daysEnum'
 
 const socialsModal = ref(false)
-
 const concatsModal = ref(false)
-
 const router = useRouter()
 
 const days = Object.keys(daysNames).map((key) => {
@@ -442,7 +436,6 @@ const features = computed(() => {
       icon: 'fa-regular fa-table-picnic',
     })
   }
-
   return result
 })
 
@@ -484,7 +477,6 @@ const contacts = computed(() => {
       values: [v],
     })
   })
-
   return result
 })
 
@@ -493,12 +485,7 @@ const companySelected = (v: Company | null) => {
 }
 
 const getImage = (v: string) => {
-  // try {
   return 'assets/' + v
-
-  // } catch {
-  //   return store.images.empty
-  // }
 }
 
 const company = computed(() => {
@@ -533,8 +520,6 @@ onMounted(() => {
 }
 
 .glassed-block {
-  /* From https://css.glass */
-  /* From https://css.glass */
   background: rgba(53, 53, 53, 0.274);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

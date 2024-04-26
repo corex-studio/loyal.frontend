@@ -9,7 +9,6 @@
         <div class="body bold">
           {{ $salesPoint.item?.contacts.contact_phone }}
         </div>
-        <!-- <div style="opacity: 0.6" class="body">Номер доставки</div> -->
       </div>
     </div>
   </div>

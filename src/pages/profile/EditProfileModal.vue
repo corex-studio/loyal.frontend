@@ -36,7 +36,10 @@
         v-model="item.phone"
         height="48px"
         mask="+# (###) ###-##-##"
-        :rules="[(v: string | null) => v && v!.length < 11 ? 'Введите корректный телефон' : true]"
+        :rules="[
+          (v: string | null) =>
+            v && v!.length < 11 ? 'Введите корректный телефон' : true,
+        ]"
         unmasked-value
       />
       <CInput
@@ -110,11 +113,8 @@ const emit = defineEmits<{
 }>()
 
 const sexTabs = ['М', 'Ж']
-
 const sex = ref<string | null>(null)
-
 const item = ref<Customer | null>(null)
-
 const loading = ref(false)
 
 const isSaveAvailable = computed(() => {
@@ -135,7 +135,7 @@ watch(
       item.value = cloneDeep(authentication.user)
       sex.value = item.value?.sex === SexType.MALE ? 'М' : 'Ж'
     }
-  }
+  },
 )
 
 const changeSex = (v: string) => {

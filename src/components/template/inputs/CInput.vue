@@ -196,13 +196,6 @@ const _blurInput = () => {
   emit('blur')
 }
 
-// const _outlined = computed(() => {
-//   if (!props.outlined && (props.textArea || props.default)) {
-//     return true;
-//   }
-//   return props.outlined;
-// });
-
 const _color = computed(() => {
   if (props.color) return props.color
   else return 'primary'
@@ -221,13 +214,6 @@ const _standout = computed(() => {
 
 const _bgColor = computed(() => {
   return props.bgColor ? props.bgColor : 'input-color'
-
-  // if (!props.bgColor && (props.default || props.textArea)) {
-  //   return 'secondary2';
-  // } else if (!props.bgColor && !props.default) {
-  //   return 'white';
-  // }
-  // return props.bgColor;
 })
 
 const _noIcon = computed(() => {
@@ -299,10 +285,6 @@ watchEffect(() => {
 </script>
 
 <style lang="scss">
-// .readonly-label {
-//   opacity: 0.5;
-// }
-
 body.screen--sm {
   .q-field {
     max-width: unset !important;
@@ -391,10 +373,6 @@ textarea + .q-field__label {
   padding-bottom: 10px !important;
 }
 
-// .q-input :deep(.q-field__native .q-placeholder) {
-//   padding-top: 10px !important;
-// }
-
 .q-field__native .q-placeholder {
   padding: 10px;
 }
@@ -402,10 +380,6 @@ textarea + .q-field__label {
 .q-input .q-field__label {
   color: var(--on-input-color) !important;
 }
-
-// .default-input .q-field__control {
-//   padding: 0 5px 0 10px;
-// }
 
 .rounded-text-area .q-field__control {
   border-radius: 15px !important;

@@ -5,7 +5,6 @@
       <QRHomePadInfo v-if="$store.tableMode" />
       <TopHeader v-if="$q.screen.gt.md" />
       <MainHeader />
-
       <div v-if="$q.screen.lt.md" class="full-width">
         <QRMobileMenu
           v-if="
@@ -40,7 +39,6 @@
           v-if="$order.orderToReview && $route.name === 'home'"
         />
       </q-page-container>
-
       <q-footer v-if="!$store.tableMode">
         <CFooter class="full-width" style="bottom: 0; z-index: 2100" />
       </q-footer>
@@ -66,7 +64,6 @@
       :model-value="$store.newsModal"
       @update:model-value="closeNewsModal()"
     />
-
     <RegistrationModal v-model="$store.registrationModal" />
     <ReviewOrderModal v-model="$store.reviewModal" />
   </template>
@@ -110,23 +107,14 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const webSocket = ref<WebSocket | null>(null)
-
 const routesWithoutContainerPaddings = [
   'promotion',
   'current_order',
   'order_review',
   'menu_item',
 ]
-
 const route = useRoute()
 const ready = ref(false)
-// const router = useRouter()
-
-// router.afterEach((to) => {
-//   if (to.name === 'menuItemModal') {
-//     return false
-//   }
-// })
 
 watch(
   () => route.name,

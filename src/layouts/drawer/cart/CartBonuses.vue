@@ -3,7 +3,6 @@
     <div class="full-width header3 bold mb-5">Баллы</div>
     <div class="row full-width items-center gap-5s justify-between">
       <div class="row items-center gap-7 no-wrap">
-        <!-- <q-img src="~assets/rubleIcon.png" height="44px" width="44px"></q-img> -->
         <c-icon
           name="fa-light fa-coin-vertical"
           size="44px"
@@ -19,30 +18,6 @@
         color="primary"
       ></q-toggle>
     </div>
-    <!-- <div
-      class="row bg-selector-color text-on-selector-color no-wrap full-width border-radius pa-1 body"
-    >
-      <div
-        @click="discard()"
-        :class="{
-          'bg-selector-active-color bold text-on-selector-active-color':
-            currentChoice === 1,
-        }"
-        class="col py-5 cursor-pointer row justify-center border-radius"
-      >
-        Не списывать
-      </div>
-      <div
-        @click="applyClickHandler()"
-        :class="{
-          'bg-selector-active-color bold text-on-selector-active-color':
-            currentChoice === 2,
-        }"
-        class="col row py-5 cursor-pointer justify-center border-radius"
-      >
-        Списать {{ maxSum }}
-      </div>
-    </div> -->
   </div>
 </template>
 <script lang="ts" setup>

@@ -63,7 +63,7 @@ const props = withDefaults(
     loadingColor?: string
     placeholder?: string
   }>(),
-  { inputColor: 'secondary2', type: 'delivery' }
+  { inputColor: 'secondary2', type: 'delivery' },
 )
 
 const currentAddress = ref('')
@@ -72,9 +72,6 @@ const currentFullAddress = ref<Address | null>(null)
 
 onMounted(() => {
   currentAddress.value = props.address
-  // if (props.address.length) {
-  // void loadAddresses(props.address)
-  // }
 })
 
 const propsAddress = computed(() => props.address)

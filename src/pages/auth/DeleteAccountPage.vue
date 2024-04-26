@@ -5,7 +5,6 @@
     class="column full-width items-center justify-center bg-background-color text-on-background-color"
   >
     <PrepareUiSettings />
-
     <div
       v-if="!deleted"
       style="max-width: 400px; width: 100%"
@@ -71,13 +70,6 @@
           >Далее</CButton
         >
       </div>
-
-      <!-- <img
-        v-if="$uiSettings.item?.logo?.thumbnail"
-        height="42"
-        style="object-fit: contain"
-        :src="$uiSettings.item?.logo?.thumbnail"
-      /> -->
     </div>
     <div v-else class="header">Ваш аккаунт был успешно удален</div>
   </div>
@@ -103,15 +95,10 @@ import { useRoute } from 'vue-router'
 import { customerRepo } from 'src/models/customer/customerRepo'
 
 const route = useRoute()
-
 const ready = ref(false)
-
 const step = ref(1)
-
 const deleted = ref(false)
-
 const loading = ref(false)
-
 const data = ref<{
   phone: string | null
   code: string | null

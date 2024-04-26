@@ -23,7 +23,6 @@
       >
         <slot name="header"></slot>
       </div>
-
       <div
         :class="[
           !noPadding ? 'pb-md-15 pb-xs-12 px-md-15 px-xs-8' : dialogClass,
@@ -53,7 +52,6 @@
             v-close-popup
           />
         </div>
-
         <slot></slot>
         <q-card-actions
           :align="alignActions"

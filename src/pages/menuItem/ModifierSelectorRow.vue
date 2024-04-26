@@ -10,7 +10,6 @@
         +{{ item.price ? item.price * item.quantity : 0 }} ₽
       </div>
     </div>
-
     <ChangeAmount
       small
       :model-value="item.quantity"

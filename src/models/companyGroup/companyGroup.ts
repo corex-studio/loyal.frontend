@@ -29,7 +29,7 @@ export type LegalEntityRaw = {
   uuid: string
   code: number | string | null
   registration_code: string | number | null
-  state_registration_number: string | number | null
+  state_registration_number: string | null
   legal_address: string | null
   contact_phone: string | null
   contact_email: string | null
@@ -104,50 +104,6 @@ export type CompanyGroupAppSettings = {
 
 export type TermsOfServiceInfo = {
   sales_points: SalesPointRaw[]
-  //  {
-  //   uuid: string
-  //   name: string
-  //   code: string | null
-  //   external_id: string
-  //   address: string
-  //   custom_address: string
-
-  //   settings: {
-  //     delivery_enabled: boolean
-  //     pickup_enabled: boolean
-  //     table_orders_enabled: boolean
-  //     booking_enabled: boolean
-  //     cart_enabled: boolean
-  //     promo_codes: string | null
-  //   }
-  //   payment_settings: {
-  //     cash_enabled: boolean
-  //     card_enabled: boolean
-  //     online_payment_enabled: boolean
-  //     bonus_using_enabled: boolean
-  //     payment_types_mapping: {
-  //       bonus: string
-  //       cash: string
-  //       card: string
-  //       online: string
-  //     }
-  //     update_on_parent_change: boolean
-  //   }
-  //   coords: {
-  //     latitude: number
-  //     longitude: number
-  //   }
-  //   company: string
-  //   company_group: string
-  //   contacts: {
-  //     uuid: string
-  //     active: boolean
-  //     emails: string[]
-  //     contact_phone: number | null
-  //   }
-  //   active: boolean
-  //   visible: boolean
-  // }[]
   legal_entities: LegalEntityRaw[]
   bank: {
     uuid: string | null
