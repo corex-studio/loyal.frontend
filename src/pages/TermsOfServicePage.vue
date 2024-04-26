@@ -166,6 +166,16 @@
               <div>{{ el.name || ' -' }}</div>
               <div>ИНН: {{ el.code || ' -' }}</div>
               <div>КПП: {{ el.registration_code || ' -' }}</div>
+              <div>
+                {{
+                  el.state_registration_number
+                    ? el.state_registration_number.length > 13
+                      ? 'ОГРНИП'
+                      : 'ОГРН'
+                    : 'ОГРН / ОГРНИП'
+                }}
+                : {{ el.state_registration_number || ' -' }}
+              </div>
               <div>Юридический адрес: {{ el.legal_address || ' -' }}</div>
               <div>Тел.: {{ el.contact_phone || ' -' }}</div>
               <div>Email: {{ el.contact_email || ' -' }}</div>
