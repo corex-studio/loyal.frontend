@@ -28,7 +28,7 @@
         <ContactsHeader class="col ml-10" />
       </div>
       <!--      <TopHeaderDeliveryInfo />-->
-      <TopHeaderSocials />
+      <TopHeaderSocials header-mode />
     </div>
     <q-separator color="divider-color" />
   </div>

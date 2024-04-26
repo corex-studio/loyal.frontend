@@ -77,8 +77,8 @@
       <q-separator class="my-8" />
       <ContactsHeader style="gap: 10px !important; flex-direction: column !important;" />
       <q-separator class="my-8" />
-      <TopHeaderDeliveryInfo />
-      <TopHeaderSocials class="mt-2" />
+<!--      <TopHeaderDeliveryInfo />-->
+      <TopHeaderSocials header-mode />
     </q-drawer>
   </div>
 </template>

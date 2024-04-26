@@ -32,7 +32,9 @@ const guestContacts = computed(() => {
   const company = (companyGroupRepo.item?.companies || [])[0]
   const results: typeof company.guestContacts.emails = []
   if (!company) return results
-  for (const values of Object.values(company.guestContacts)) {
+  for (const [key, values] of Object.entries(company.guestContacts)) {
+    console.log(key)
+    if (['socials',].includes(key)) continue
     if (!Array.isArray(values)) continue
     for (const item of values) {
       if (!item.foreground) continue

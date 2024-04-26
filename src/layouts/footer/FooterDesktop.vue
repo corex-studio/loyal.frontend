@@ -10,7 +10,7 @@
             $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
           "
           :src="$company.item.logo?.thumbnail || $company.item.image?.thumbnail"
-          :style="$q.screen.gt.md ? 'width: 100%' : ''"
+          :style="$q.screen.gt.md ? 'width: auto' : ''"
           class="border-radius cursor-pointer"
           height="46"
           style="object-fit: contain; max-width: 230px"
@@ -95,26 +95,31 @@
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
           style="max-width: 336px"
         >
+          <TopHeaderSocials icon-size="24px" />
           <div
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
           >
-            <div class="subtitle-text bold">
-              {{
-                $company.item?.guestContacts.phones.length > 1
-                  ? 'Контактные телефоны'
-                  : 'Контактный телефон'
-              }}
-            </div>
-            <div
+            <template
               v-for="(item, index) in $company.item?.guestContacts.phones"
               :key="index"
-              class="cursor-pointer body"
-              style="opacity: 0.6"
-              @click="openLink(item.link)"
             >
-              {{ item.value }}
-            </div>
+              <div class="subtitle-text bold">
+                <!--              {{-->
+                <!--                $company.item?.guestContacts.phones.length > 1-->
+                <!--                  ? 'Контактные телефоны'-->
+                <!--                  : 'Контактный телефон'-->
+                <!--              }}-->
+                {{ item.name }}
+              </div>
+              <div
+                class="cursor-pointer body"
+                style="opacity: 0.6"
+                @click="openLink(item.link)"
+              >
+                {{ item.value }}
+              </div>
+            </template>
           </div>
           <div
             v-if="$company.item?.guestContacts.emails.length"
@@ -341,6 +346,7 @@ import { store } from 'src/models/store'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import TopHeaderSocials from 'layouts/header/TopHeaderSocials.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -398,7 +404,6 @@ const scrollToBlock = (v: string, tab?: string) => {
 const openLink = (link: string) => {
   window.open(link, '_blank')
 }
-
 </script>
 
 <style lang="scss" scoped>
