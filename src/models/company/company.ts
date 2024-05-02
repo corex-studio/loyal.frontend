@@ -1,6 +1,6 @@
 import { SalesPoint } from './../salesPoint/salesPoint'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
-import { ImageRaw, Image } from '../image/image'
+import { Image, ImageRaw } from '../image/image'
 import { PaymentSettings, SalesPointRaw } from '../salesPoint/salesPoint'
 
 export enum LinkType {
@@ -32,24 +32,39 @@ export type GuestContactRaw = {
     name?: string
     link: string
     link_type: string | null
+    foreground: boolean
+    image: string | null
   }[]
   phones: {
     value?: string
     name?: string
     link: string
     link_type: string | null
+    foreground: boolean
+    image: string | null
   }[]
   emails: {
     value?: string
     name?: string
     link: string
     link_type: string | null
+    foreground: boolean
+    image: string | null
   }[]
   socials: {
     value?: string
     name?: string
     link: string
     link_type: LinkType
+    foreground: boolean
+    image: string | null
+  }[]
+  others: {
+    value?: string
+    name?: string
+    link: string
+    link_type: LinkType | null
+    foreground: boolean
   }[]
 }
 
@@ -96,24 +111,39 @@ export class GuestContact {
     name?: string
     link: string
     link_type: string | null
+    foreground: boolean
+    image: string | null
   }[]
   phones: {
     value?: string
     name?: string
     link: string
     link_type: string | null
+    foreground: boolean
+    image: string | null
   }[]
   emails: {
     value?: string
     name?: string
     link: string
     link_type: string | null
+    foreground: boolean
+    image: string | null
   }[]
   socials: {
     value?: string
     name?: string
     link: string
     link_type: LinkType | null
+    foreground: boolean
+    image: string | null
+  }[]
+  others: {
+    value?: string
+    name?: string
+    link: string
+    link_type: LinkType | null
+    foreground: boolean
   }[]
 
   constructor(raw: GuestContactRaw) {
@@ -122,6 +152,7 @@ export class GuestContact {
     this.phones = raw.phones
     this.emails = raw.emails
     this.socials = raw.socials
+    this.others = raw.others
   }
 
   toJson(): Record<string, any> {
@@ -133,6 +164,8 @@ export class GuestContact {
           name: v.name,
           link: v.link,
           link_type: v.link_type,
+          foreground: v.foreground,
+          image: v.image
         }
       }),
       phones: this.phones.map((v) => {
@@ -141,6 +174,8 @@ export class GuestContact {
           name: v.name,
           link: v.link,
           link_type: v.link_type,
+          foreground: v.foreground,
+          image: v.image
         }
       }),
       emails: this.emails.map((v) => {
@@ -149,6 +184,8 @@ export class GuestContact {
           name: v.name,
           link: v.link,
           link_type: v.link_type,
+          foreground: v.foreground,
+          image: v.image
         }
       }),
       socials: this.socials.map((v) => {
@@ -157,6 +194,8 @@ export class GuestContact {
           name: v.name,
           link: v.link,
           link_type: v.link_type,
+          foreground: v.foreground,
+          image: v.image
         }
       }),
     }
@@ -243,6 +282,7 @@ export class Company implements BaseModel {
         messages: [],
         phones: [],
         socials: [],
+        others: [],
       },
     )
     this.deliveryAggregators = raw.delivery_aggregators || []

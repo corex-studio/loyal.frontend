@@ -75,8 +75,10 @@
         />
       </div>
       <q-separator class="my-8" />
-      <TopHeaderDeliveryInfo />
-      <TopHeaderSocials class="mt-2" />
+      <ContactsHeader style="gap: 10px !important; flex-direction: column !important;" />
+      <q-separator class="my-8" />
+<!--      <TopHeaderDeliveryInfo />-->
+      <TopHeaderSocials header-mode />
     </q-drawer>
   </div>
 </template>
@@ -91,6 +93,7 @@ import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import ContactsHeader from 'layouts/header/ContactsHeader.vue'
 
 const router = useRouter()
 const route = useRoute()

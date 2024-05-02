@@ -4,7 +4,7 @@
     class="c-container"
   >
     <div class="row justify-between items-center bg-background-color py-6">
-      <div class="row items-center gap-10">
+      <div class="row items-center gap-10 col">
         <div
           v-for="(el, index) in blocks.filter((el) => el.visible)"
           :key="index"
@@ -22,12 +22,13 @@
             class="bg-secondary"
           ></div>
           <CButton @click="el.click()" text-button text-color="secondary-text">
-            <div class="body bold">{{ el.label }}</div></CButton
-          >
+            <div class="body bold">{{ el.label }}</div>
+          </CButton>
         </div>
+        <ContactsHeader class="col ml-10" />
       </div>
-      <TopHeaderDeliveryInfo />
-      <TopHeaderSocials />
+      <!--      <TopHeaderDeliveryInfo />-->
+      <TopHeaderSocials header-mode />
     </div>
     <q-separator color="divider-color" />
   </div>
@@ -38,9 +39,9 @@ import { store } from 'src/models/store'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from './TopHeaderSocials.vue'
-import TopHeaderDeliveryInfo from './TopHeaderDeliveryInfo.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
+import ContactsHeader from 'layouts/header/ContactsHeader.vue'
 
 const router = useRouter()
 const route = useRoute()

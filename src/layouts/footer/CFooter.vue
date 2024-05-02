@@ -1,7 +1,7 @@
 <template>
   <div ref="footer" class="bg-bottom-menu-color">
     <q-separator v-if="!$q.screen.xs" />
-    <div class="pb-md-30 pb-xs-5" style="bottom: 0; z-index: 2100">
+    <div class="pb-md-15 pb-xs-5" style="bottom: 0; z-index: 2100">
       <div class="c-container" v-if="$q.screen.gt.sm">
         <div class="footer-wrap row items-center pt-15">
           <FooterDesktop />

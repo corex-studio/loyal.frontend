@@ -1,13 +1,13 @@
 <template>
   <div class="row items-center gap-10">
     <div
-      v-for="(el, index) in $company.item?.guestContacts.socials"
+      v-for="(el, index) in items"
       :key="index"
       class="social-button row items-center text-on-secondary-button-color justify-center"
     >
       <CIcon
         @click="openLink(el.link)"
-        size="32px"
+        :size="iconSize || '26px'"
         class="cursor-pointer"
         color="secondary"
         hover-color="primary"
@@ -19,7 +19,18 @@
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { LinkType } from 'src/models/company/company'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
+
+const props = defineProps<{
+  iconSize?: string
+  headerMode?: boolean
+}>()
+
+const items = computed(() => {
+  const vals = companyRepo.item?.guestContacts.socials
+  return props.headerMode ? vals?.filter((v) => v.foreground) : vals
+})
 
 const socialsTypes = ref([
   {
