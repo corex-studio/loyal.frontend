@@ -11,7 +11,7 @@
           "
           :src="$company.item.logo?.thumbnail || $company.item.image?.thumbnail"
           :style="$q.screen.gt.md ? 'width: auto' : ''"
-          class="border-radius cursor-pointer"
+          class="cursor-pointer"
           height="46"
           style="object-fit: contain; max-width: 230px"
           @click="
