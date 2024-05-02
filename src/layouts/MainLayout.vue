@@ -5,7 +5,6 @@
       <QRHomePadInfo v-if="$store.tableMode" />
       <TopHeader v-if="$q.screen.gt.md" />
       <MainHeader />
-
       <div v-if="$q.screen.lt.md" class="full-width">
         <QRMobileMenu
           v-if="
@@ -40,7 +39,6 @@
           v-if="$order.orderToReview && $route.name === 'home'"
         />
       </q-page-container>
-
       <q-footer v-if="!$store.tableMode">
         <CFooter class="full-width" style="bottom: 0; z-index: 2100" />
       </q-footer>
@@ -66,7 +64,6 @@
       :model-value="$store.newsModal"
       @update:model-value="closeNewsModal()"
     />
-
     <RegistrationModal v-model="$store.registrationModal" />
     <ReviewOrderModal v-model="$store.reviewModal" />
   </template>
@@ -105,23 +102,26 @@ import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import BonusesDrawer from './drawer/bonuses/BonusesDrawer.vue'
-// import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-// import { cartRepo } from 'src/models/carts/cartRepo'
-// import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-// import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
-// import { CartType } from 'src/models/carts/cart'
+import { setMeta } from 'src/models/metaTags/metaTags'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 const webSocket = ref<WebSocket | null>(null)
-
 const routesWithoutContainerPaddings = [
   'promotion',
   'current_order',
   'order_review',
   'menu_item',
 ]
-
 const route = useRoute()
 const ready = ref(false)
+
+watch(
+  () => route.name,
+  () => {
+    setMeta(route.meta)
+  },
+)
 
 watch(
   () => authentication.user?.id,
@@ -151,7 +151,22 @@ const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
 })
 
+const handleInitialMenuItem = async () => {
+  if (store.initialMenuItem) {
+    store.menuItemModal = true
+    await menuItemRepo.retrieve(store.initialMenuItem, {
+      sales_point: salesPointRepo.item?.id,
+    })
+    await menuRulesForAddingRepo.list({
+      menu_item: menuItemRepo.item?.id,
+    })
+    store.initialMenuItem = null
+  }
+}
+
 const closeMenuItemModal = () => {
+  history.pushState({}, '', `${route.path}`)
+  setMeta(route.meta)
   store.freeItem = null
   store.menuItemModal = false
 }
@@ -165,11 +180,13 @@ onMounted(async () => {
     initMenuPage: true,
   })
   await manager.initApp()
-  if (authentication.user) void orderReviewRepo.getOrderToReview()
-
+  if (authentication.user) {
+    void orderReviewRepo.getOrderToReview()
+  }
   salesPointRepo.menuLoading = true
-
   ready.value = true
+  setMeta(route.meta)
+  void handleInitialMenuItem()
 })
 
 const companySelected = (v: Company | null) => {

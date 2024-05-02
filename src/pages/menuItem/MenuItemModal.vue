@@ -13,12 +13,14 @@
     :hide-close="$q.screen.lt.md"
   >
     <div
+      itemscope
+      itemtype="https://schema.org/Product"
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
       class="no-wrap full-width relative-position text-on-background-color"
     >
       <div
         v-if="$q.screen.lt.md"
-        @click="$store.menuItemModal = false"
+        @click="$emit('update:modelValue', false)"
         class="close-button row box-shadow items-center justify-center cursor-pointer"
       >
         <CIcon
@@ -41,6 +43,7 @@
         :height="$q.screen.lt.lg ? '450px' : '100%'"
         style="width: 100%"
         :src="$menuItem.item?.image?.image || $store.images.empty"
+        itemprop="image"
       >
         <template v-slot:error>
           <span>
@@ -62,11 +65,14 @@
         }`"
       >
         <div class="column full-width">
-          <div class="huge3 bold mb-2">{{ $menuItem.item?.name }}</div>
+          <div itemprop="name" class="huge3 bold mb-2">
+            {{ $menuItem.item?.name }}
+          </div>
           <div
             v-if="currentSize?.characteristics.weight"
             style="opacity: 0.5"
             class="body"
+            itemprop="weight"
           >
             {{ currentSize?.characteristics.weight
             }}{{
@@ -78,11 +84,11 @@
           <div
             v-if="$menuItem.item?.description?.length"
             class="body mb-8 mt-2"
+            itemprop="description"
           >
             {{ $menuItem.item?.description }}
           </div>
           <MenuItemCharacteristics v-if="currentSize" :size="currentSize" />
-
           <MenuItemRelatedItems
             v-if="
               $cart.item &&
@@ -91,7 +97,6 @@
             "
             :items="currentMenuRulesForAdding"
           />
-
           <div
             v-if="$menuItem.item && $menuItem.item.sizes.length > 1"
             class="relative-position mt-8"
@@ -144,12 +149,22 @@
                 :height="$q.screen.lt.lg ? '40px' : '48px'"
                 :loading="loading"
                 :disabled="isAddToCardDisabled"
-                :label="`Добавить ${
-                  currentPrice
-                    ? `за ${beautifyNumber(currentPrice, true)} ₽`
-                    : ''
-                }`"
               >
+                <div class="row gap-2 no-wrap">
+                  <div>{{ currentPrice ? 'Добавить за' : 'Добавить' }}</div>
+                  <div
+                    v-if="currentPrice"
+                    class="row gap-2 no-wrap"
+                    itemprop="offers"
+                    itemscope
+                    itemtype="https://schema.org/Offer"
+                  >
+                    <div itemprop="price">
+                      {{ beautifyNumber(currentPrice, true) }}
+                    </div>
+                    <div itemprop="priceCurrency">₽</div>
+                  </div>
+                </div>
               </CButton>
               <CTooltip v-if="$menuItem.item?.isDead"
                 >Товар недоступен</CTooltip
@@ -199,13 +214,18 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { Notify, useQuasar } from 'quasar'
-// import { useRoute, useRouter } from 'vue-router'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import {
+  ecommerceAdd,
+  ecommerceDetail,
+} from 'src/models/ecommerceEvents/ecommerceEvents'
+import { useRoute } from 'vue-router'
+import { useMeta } from 'quasar'
 
 const props = defineProps<{
   modelValue: boolean
@@ -215,19 +235,12 @@ const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
+const route = useRoute()
 const touchSpot = ref<HTMLDivElement>()
-
 const currentSize = ref<ItemSize | null>(null)
-
 const quantity = ref(1)
-
 const loading = ref(false)
-
 const q = useQuasar()
-
-// const route = useRoute()
-
-// const router = useRouter()
 
 const currentMenuRulesForAdding = computed(() => {
   if (!cartRepo.item) return
@@ -273,10 +286,35 @@ watch(
   () => menuItemRepo.item,
   () => {
     if (props.modelValue) {
+      if (menuItemRepo.item) {
+        void ecommerceDetail(menuItemRepo.item)
+      }
       quantity.value = 1
       currentSize.value = menuItemRepo.item?.sizes[0]
         ? menuItemRepo.item?.sizes[0]
         : null
+      if (menuItemRepo.item) {
+        history.pushState(
+          {},
+          '',
+          `${route.path === '/' ? '' : route.path + '/'}product/${menuItemRepo.item?.id}`,
+        )
+        const metaData = {
+          title: menuItemRepo.item.name || '',
+          titleTemplate: (title: any) => `${title}`,
+          meta: {
+            description: {
+              name: 'description',
+              content: menuItemRepo.item.description || '',
+            },
+            keywords: {
+              name: 'keywords',
+              content: '',
+            },
+          },
+        }
+        useMeta(metaData)
+      }
     }
   },
 )
@@ -350,13 +388,11 @@ const addToCart = async () => {
       loading.value = false
       cartRepo.loading = false
       emit('update:modelValue', false)
+      if (menuItemRepo.item) {
+        void ecommerceAdd(menuItemRepo.item)
+      }
     }
   }
-  // if (q.screen.xs) {
-  //   void router.push({
-  //     name: route.name === 'menuItemPage' ? 'home' : 'qrHome',
-  //   })
-  // }
 }
 </script>
 

@@ -35,7 +35,6 @@
         ]"
       >
         <div>Еще</div>
-
         <CIcon
           :color="
             isAdditionalTabSelected
@@ -73,7 +72,7 @@ const props = withDefaults(
   }>(),
   {
     routerMethod: 'replace',
-  }
+  },
 )
 
 const emit = defineEmits<{
@@ -81,7 +80,6 @@ const emit = defineEmits<{
 }>()
 
 const selectedTab = ref<TabRaw | null>(null)
-
 const q = useQuasar()
 
 const previewTabs = computed(() => {
@@ -114,7 +112,7 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) selectedTab.value = v
-  }
+  },
 )
 </script>
 

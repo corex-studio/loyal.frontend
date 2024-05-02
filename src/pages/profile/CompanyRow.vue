@@ -5,8 +5,8 @@
       $q.screen.lt.md
         ? ''
         : selected
-        ? `outline: 2px #${$uiSettings.item?.primaryColor.color} solid`
-        : `outline: 1px #${$uiSettings.item?.secondaryColor.color} solid`
+          ? `outline: 2px #${$uiSettings.item?.primaryColor.color} solid`
+          : `outline: 1px #${$uiSettings.item?.secondaryColor.color} solid`
     "
   >
     <q-img
@@ -32,7 +32,6 @@
     ></q-img>
     <div class="header3 bold row justify-between col-grow">
       {{ item.name }}
-
       <RoundedSelector
         :model-value="selected"
         check

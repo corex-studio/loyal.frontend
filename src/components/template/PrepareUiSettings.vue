@@ -4,18 +4,13 @@ import { onMounted, ref } from 'vue'
 
 const borderRadius = ref<string>('15px')
 const borderRadius2 = ref<string>('10px')
-
 const primaryColor = ref<string>('#000')
 const onPrimaryColor = ref<string>('#000')
-
 const secondaryColor = ref<string>('#f8f8f8')
 const onSecondaryColor = ref<string>('#000')
-
 const secondaryTextColor = ref<string>('#f8f8f8')
-
 const accentColor = ref<string>('#fdffb7')
 const onAccentColor = ref<string>('#000')
-
 const backgroundColor = ref<string>('#f8f8f8')
 const onBackgroundColor = ref<string>('#000')
 const inputColor = ref<string>('#ed772f')
@@ -27,54 +22,37 @@ const backingColor = ref<string>('#f8f8f8')
 const onBackingColor = ref<string>('#000')
 const bonusColor = ref<string>('#ffddc9')
 const onBonusColor = ref<string>('#000')
-
 const saleColor = ref<string>('#fdffb7')
 const onSaleColor = ref<string>('#000')
-
 const giftColor = ref<string>('#dc1818')
 const onGiftColor = ref<string>('#000')
-
 const productTileColor = ref<string>('#fff')
 const onProductTileColor = ref<string>('#000')
-
 const selectorColor = ref<string>('#fff')
 const onSelectorColor = ref<string>('#000')
-
 const selectorActiveColor = ref<string>('#f5e24f3e')
 const onSelectorActiveColor = ref<string>('#000')
-
 const buttonColor = ref<string>('#ed772f')
 const onButtonColor = ref<string>('#fff')
-
 const secondaryButtonColor = ref<string>('#e9e9e9')
 const onSecondaryButtonColor = ref<string>('#000')
-
 const deliveryButtonColor = ref<string>('#fff')
 const onDeliveryButtonColor = ref<string>('#000')
-
 const pickupButtonColor = ref<string>('#fff')
 const onPickupButtonColor = ref<string>('#000')
-
 const bookingButtonColor = ref<string>('#fff')
 const onBookingButtonColor = ref<string>('#000')
-
 const modalHeaderColor = ref<string>('#e9e9e9')
 const onModalHeaderColor = ref<string>('#000')
-
 const boxShadow = ref<string>('0px 0px 13px 0px rgba(0, 0, 0, 0.06)')
-
 const cashButtonColor = ref<string>('#fff')
 const onCashButtonColor = ref<string>('#000')
-
 const cardButtonColor = ref<string>('#fff')
 const onCardButtonColor = ref<string>('#000')
-
 const onlineButtonColor = ref<string>('#fff')
 const onOnlineButtonColor = ref<string>('#000')
-
 const qrColor = ref<string>('#fff')
 const onQrColor = ref<string>('#000')
-
 const loyaltyCardBackgroundColor = ref<string>('#e9e9e9')
 const onLoyaltyCardBackgroundColor = ref<string>('#000')
 
@@ -136,30 +114,24 @@ onMounted(() => {
   }
   document.body.style.setProperty('--primary', primaryColor.value)
   document.body.style.setProperty('--on-primary', onPrimaryColor.value)
-
   document.body.style.setProperty('--secondary', secondaryColor.value)
   document.body.style.setProperty('--on-secondary', onSecondaryColor.value)
-
   document.body.style.setProperty('--secondary-text', secondaryTextColor.value)
-
   document.body.style.setProperty('--q-primary', primaryColor.value)
-
   document.body.style.setProperty('--accent', accentColor.value)
   document.body.style.setProperty('--on-accent', onAccentColor.value)
-
   document.body.style.setProperty('--background-color', backgroundColor.value)
   document.body.style.setProperty(
     '--on-background-color',
-    onBackgroundColor.value
+    onBackgroundColor.value,
   )
   document.body.style.setProperty('--input-color', inputColor.value)
   document.body.style.setProperty('--on-input-color', onInputColor.value)
-
   document.body.style.setProperty('--divider-color', dividerColor.value)
   document.body.style.setProperty('--bottom-menu-color', bottomMenuColor.value)
   document.body.style.setProperty(
     '--on-bottom-menu-color',
-    onBottomMenuColor.value
+    onBottomMenuColor.value,
   )
   document.body.style.setProperty('--backing-color', backingColor.value)
   document.body.style.setProperty('--on-backing-color', onBackingColor.value)
@@ -171,98 +143,94 @@ onMounted(() => {
   document.body.style.setProperty('--on-gift-color', onGiftColor.value)
   document.body.style.setProperty(
     '--product-tile-color',
-    productTileColor.value
+    productTileColor.value,
   )
   document.body.style.setProperty(
     '--on-product-tile-color',
-    onProductTileColor.value
+    onProductTileColor.value,
   )
   document.body.style.setProperty('--selector-color', selectorColor.value)
   document.body.style.setProperty('--on-selector-color', onSelectorColor.value)
   document.body.style.setProperty(
     '--selector-active-color',
-    selectorActiveColor.value
+    selectorActiveColor.value,
   )
   document.body.style.setProperty(
     '--on-selector-active-color',
-    onSelectorActiveColor.value
+    onSelectorActiveColor.value,
   )
-
   document.body.style.setProperty('--button-color', buttonColor.value)
-
   document.body.style.setProperty('--on-button-color', onButtonColor.value)
-
   document.body.style.setProperty(
     '--secondary-button-color',
-    secondaryButtonColor.value
+    secondaryButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-secondary-button-color',
-    onSecondaryButtonColor.value
+    onSecondaryButtonColor.value,
   )
   document.body.style.setProperty(
     '--delivery-button-color',
-    deliveryButtonColor.value
+    deliveryButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-delivery-button-color',
-    onDeliveryButtonColor.value
+    onDeliveryButtonColor.value,
   )
   document.body.style.setProperty(
     '--pickup-button-color',
-    pickupButtonColor.value
+    pickupButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-pickup-button-color',
-    onPickupButtonColor.value
+    onPickupButtonColor.value,
   )
   document.body.style.setProperty(
     '--booking-button-color',
-    bookingButtonColor.value
+    bookingButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-booking-button-color',
-    onBookingButtonColor.value
+    onBookingButtonColor.value,
   )
   document.body.style.setProperty(
     '--modal-header-color',
-    modalHeaderColor.value
+    modalHeaderColor.value,
   )
   document.body.style.setProperty(
     '--on-modal-header-color',
-    onModalHeaderColor.value
+    onModalHeaderColor.value,
   )
   document.body.style.setProperty('--border-radius', borderRadius.value)
   document.body.style.setProperty('--border-radius2', borderRadius2.value)
   document.body.style.setProperty('--box-shadow', boxShadow.value)
-
   document.body.style.setProperty('--cash-button-color', cashButtonColor.value)
   document.body.style.setProperty(
     '--on-cash-button-color',
-    onCashButtonColor.value
+    onCashButtonColor.value,
   )
   document.body.style.setProperty('--card-button-color', cardButtonColor.value)
   document.body.style.setProperty(
     '--on-card-button-color',
-    onCardButtonColor.value
+    onCardButtonColor.value,
   )
   document.body.style.setProperty(
     '--online-button-color',
-    onlineButtonColor.value
+    onlineButtonColor.value,
   )
   document.body.style.setProperty(
     '--on-online-button-color',
-    onOnlineButtonColor.value
+    onOnlineButtonColor.value,
   )
   document.body.style.setProperty('--qr-color', qrColor.value)
   document.body.style.setProperty('--on-qr-color', onQrColor.value)
   document.body.style.setProperty(
     '--loyalty-card-background-color',
-    loyaltyCardBackgroundColor.value
+    loyaltyCardBackgroundColor.value,
   )
   document.body.style.setProperty(
     '--on-loyalty-card-background-color',
-    onLoyaltyCardBackgroundColor.value
+    onLoyaltyCardBackgroundColor.value,
   )
 })
 </script>

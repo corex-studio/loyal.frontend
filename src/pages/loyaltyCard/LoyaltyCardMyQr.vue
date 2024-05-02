@@ -44,32 +44,4 @@
 <script lang="ts" setup>
 import { authentication } from 'src/models/authentication/authentication'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
-
-// const createQrs = () => {
-//   let code: HTMLCanvasElement | null = null
-//   code = qr.renderOnCanvas(
-//     qr.generate(String(authentication.user?.loyaltyCard?.card_number)),
-//     'qrCode'
-//   )
-
-//   const qrElement = document.getElementById('qrCode')
-
-//   if (code && qrElement) {
-//     code.style.height = '210px'
-//     qrElement.replaceWith(code)
-//   }
-// }
-
-// watch(
-//   () => authentication.user,
-//   (v) => {
-//     if (v) {
-//       createQrs()
-//     }
-//   }
-// )
-
-// onMounted(() => {
-//   createQrs()
-// })
 </script>

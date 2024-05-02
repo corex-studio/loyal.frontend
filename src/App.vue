@@ -5,11 +5,27 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useQuasar } from 'quasar'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getYandexMetrikaDefaultConfig } from 'src/services/yandexMetrikaConfig'
 import { updateYandexMerikaByConfig } from 'yandex-metrika-vue3'
+import { useYandexMetrika } from 'yandex-metrika-vue3'
+import { store } from './models/store'
+
+const metrika = useYandexMetrika()
+
+const storeInitialProduct = () => {
+  if (window.location.href.includes('product/')) {
+    const regex = /\/product\/(\w+-\w+-\w+-\w+-\w+)/
+    const match = window.location.href.match(regex)
+    if (match && match[1]) {
+      store.initialMenuItem = match[1]
+    }
+  }
+}
 
 onMounted(() => {
+  storeInitialProduct()
+
   if (useQuasar().platform.is.safari) {
     document.body.classList.add('safari')
   }
@@ -17,7 +33,7 @@ onMounted(() => {
 })
 
 const router = useRouter()
-
+const route = useRoute()
 let interval: NodeJS.Timeout
 
 const initMetrika = () => {
@@ -29,6 +45,7 @@ const initMetrika = () => {
         const cfg = getYandexMetrikaDefaultConfig(router)
         cfg.id = value
         updateYandexMerikaByConfig(cfg as any)
+        metrika.hit(route.fullPath)
       }
     }
   }, 100)

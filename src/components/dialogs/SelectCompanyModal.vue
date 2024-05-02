@@ -22,7 +22,6 @@
           />
         </template>
       </div>
-
       <CButton
         @click="emitSelectedCompany"
         :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"

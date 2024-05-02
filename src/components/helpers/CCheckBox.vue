@@ -24,7 +24,6 @@ defineEmits<{
 <style lang="scss" scoped>
 .q-checkbox :deep(.q-checkbox__bg) {
   border-radius: 6px;
-  //   border: 2px var(--secondary-button-color) solid;
 }
 
 .q-checkbox :deep(.q-checkbox__inner--falsy) {

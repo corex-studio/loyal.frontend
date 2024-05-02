@@ -1,3 +1,5 @@
+@import 'bebasNeueFont';
+
 @font-face {
   font-family: 'Gilroy';
   src: local('Gilroy'), url(src/fonts/Gilroy/Gilroy-Medium.ttf);
@@ -12,6 +14,16 @@
   font-family: 'Gilroy', sans-serif;
 }
 
+body.bebas-font {
+  *:not(i) {
+    font-family: 'Bebas Neue Pro Expanded', 'Gilroy', sans-serif;
+  }
+
+  .bold {
+    font-weight: 600 !important;
+  }
+}
+
 .ellipsis-4-lines {
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -24,14 +36,15 @@
   line-height: 19px;
 }
 
-.bold {
-  // font-weight: 600 !important;
-  font-family: 'Gilroy-Bold' !important;
-  .q-field__label {
-    @extend .bold;
-  }
-  &.q-btn div {
-    @extend .bold;
+body:not(.bebas-font) {
+  .bold {
+    font-family: 'Gilroy-Bold' !important;
+    .q-field__label {
+      @extend .bold;
+    }
+    &.q-btn div {
+      @extend .bold;
+    }
   }
 }
 
@@ -326,7 +339,3 @@ body.screen--xs {
     }
   }
 }
-
-// .text-negative {
-//   color: $accent !important;
-// }

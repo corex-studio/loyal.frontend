@@ -1,7 +1,6 @@
 <template>
   <div class="column full-width gap-8 pl-1">
     <div class="subtitle-text">Время</div>
-
     <div class="row full-width gap-md-8 gap-xs-6 body">
       <div
         v-for="(el, index) in availableTimes?.slice(0, 3)"
@@ -32,7 +31,6 @@
           size="20px"
           hover-color="primary"
         ></CIcon>
-
         <q-menu
           v-model="menu"
           :fit="$q.screen.gt.sm"
@@ -77,7 +75,6 @@ const emit = defineEmits<{
 }>()
 
 const menuRef = ref<HTMLElement | null>()
-
 const menu = ref(false)
 
 watch(
@@ -87,14 +84,14 @@ watch(
       setTimeout(() => {
         if (!availableTimes.value || !menuRef.value) return
         const foundTimeElement = menuRef.value.getElementsByClassName(
-          availableTimes.value[0]
+          availableTimes.value[0],
         )
         if (foundTimeElement) {
           foundTimeElement[0].scrollIntoView()
         }
       }, 0)
     }
-  }
+  },
 )
 
 const selectTime = (v: string) => {

@@ -52,20 +52,10 @@
         </div>
         <div v-else v-html="$news.item?.fullDescription"></div>
       </div>
-      <!-- <div>
-          <CButton
-            class="body"
-            height="48px"
-            width="320px"
-            label="К покупкам"
-            @click="$emit('update:modelValue', false)"
-          />
-        </div> -->
     </div>
   </CDialog>
 </template>
 <script lang="ts" setup>
-// import CButton from 'src/components/template/buttons/CButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'

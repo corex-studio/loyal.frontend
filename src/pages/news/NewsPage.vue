@@ -10,7 +10,6 @@
     >
       <div class="column col-sm-6 col-xs-12" style="overflow-x: hidden">
         <div class="header mb-sm-15 mb-xs-10">{{ $news.item.title }}</div>
-
         <div
           v-if="$news.item.fullDescription"
           v-html="$news.item.fullDescription"
@@ -48,7 +47,6 @@
           :items="$news.item.images"
         >
           <template v-slot:item="{ item }">
-            <!-- :style="`border-radius:${getBorderRadius}`" -->
             <q-img
               class="border-radius"
               :src="item.thumbnail || $store.images.empty"

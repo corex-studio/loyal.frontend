@@ -50,7 +50,6 @@
                   size="21px"
                   name="fa-regular fa-angle-left"
                 />
-
                 <div class="body bold mt-1">Все заведения</div>
               </div>
               <CIcon v-else name="fa-regular fa-angle-down" size="24px" />
@@ -89,13 +88,11 @@
                 <div
                   class="row gap-4 items-center no-wrap body text-on-product-tile-color"
                 >
-                  <!-- <CustomIcon width="22px" height="22px" name="city.svg" /> -->
                   <CIcon
                     size="22px"
                     color="on-product-tile-color"
                     name="fa-regular fa-city"
                   />
-
                   <div class="mt-1 bold">
                     {{
                       $companyGroup.item?.cityData.current?.name ||
@@ -118,7 +115,6 @@
               <ServiceSettingsBlock />
             </div>
           </teleport>
-
           <div
             v-if="authentication.user"
             class="row no-wrap items-center gap-lg-8 gap-xs-6 mt-md-2 mt-xs-8 secondary-text"
@@ -145,11 +141,6 @@
                     color="on-background-color"
                     name="fa-regular fa-basket-shopping"
                   />
-                  <!-- <CustomIcon
-                    width="28px"
-                    height="28px"
-                    name="shoppingBasket.svg"
-                  /> -->
                 </template>
                 <q-spinner v-else color="on-background-color" size="23px" />
                 <div class="bold">Корзина</div>
@@ -169,7 +160,6 @@
                   size="23px"
                   name="fa-regular fa-gift"
                 />
-                <!-- <CustomIcon width="28px" height="28px" name="gift.svg" /> -->
                 <div class="bold">Бонусы</div>
               </div>
             </template>
@@ -187,12 +177,6 @@
                 :size="$q.screen.gt.sm ? '23px' : '32px'"
                 name="fa-regular fa-face-smile"
               />
-              <!-- <CustomIcon
-                :width="$q.screen.gt.sm ? '28px' : '38px'"
-                :height="$q.screen.gt.sm ? '28px' : '38px'"
-                name="squareFace.svg"
-              /> -->
-
               <div v-if="$q.screen.gt.sm" class="bold">Профиль</div>
             </div>
           </div>
@@ -205,7 +189,6 @@
             Войти
           </div>
         </div>
-        <!-- <q-separator color="divider-color" style="z-index: 10" /> -->
         <BottomHeader
           v-if="
             $route.matched.some((v) =>
@@ -228,25 +211,18 @@ import { authentication } from 'src/models/authentication/authentication'
 import ServiceSettingsBlock from 'src/components/serviceSettings/ServiceSettingsBlock.vue'
 import { store } from 'src/models/store'
 import { useRoute } from 'vue-router'
-// import ServiceSettingsSkeleton from 'src/components/serviceSettings/ServiceSettingsSkeleton.vue'
 import { computed, onMounted, ref } from 'vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import ArrangementHeader from 'src/pages/arrangement/ArrangementHeader.vue'
-// import MainHeaderMobile from './MainHeaderMobile.vue'
 import BottomHeader from './BottomHeader.vue'
-// import CustomIcon from 'src/components/template/helpers/CustomIcon.vue'
 import BonusesInDevModal from 'src/components/template/dialogs/BonusesInDevModal.vue'
 import CitySelectorModal from 'src/components/template/dialogs/CitySelectorModal.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CompanyLogoView from 'components/CompanyLogoView.vue'
 import CityCheckModal from 'src/components/template/dialogs/CityCheckModal.vue'
 
-// const router = useRouter()
-
 const route = useRoute()
-
 const header = ref<HTMLDivElement>()
-
 const multipleCompaniesSpot = ref<HTMLDivElement>()
 
 const isArrangementPage = computed(() => {
@@ -260,20 +236,6 @@ const previewBalance = computed(() => {
     : authentication.user.wallets[0].balance
 })
 
-// const profileButtonClickHandler = () => {
-//   if (authentication.user) {
-//     void router.push({ name: 'profilePage' })
-//   } else {
-//     store.authModal = true
-//   }
-// }
-
-// const selectCompany = async (v: Company) => {
-//   selectCompanyModal.value = false
-//   companyRepo.cartCompany = v
-//   serviceModal.value = true
-// }
-
 const openCitySelectorModal = () => {
   if (!companyGroupRepo.item) return
   if (companyGroupRepo.item?.cityData.results.length > 1) {
@@ -283,7 +245,6 @@ const openCitySelectorModal = () => {
 
 onMounted(() => {
   store.headerHeight = header.value?.clientHeight || 0
-
   setTimeout(() => {
     document.addEventListener('resize', () => {
       store.headerHeight = header.value?.clientHeight || 0

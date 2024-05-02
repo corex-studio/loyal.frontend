@@ -53,23 +53,12 @@ export class Store {
   cityCheckModal = false
   qrData: QrData | null = null
   reviewModal = false
+  initialMenuItem: string | null = null
 
   getCompanyGroup(externalId: string) {
-    // LocalStorage.getItem('Company-Group')
     const currentCompanyGroup = externalId
-
-    // const foundAvailableCompany = authRepo.availableCustomers.find(
-    //   (v) => v.companyGroup.externalId === companyGroup
-    // );
-    // if (foundAvailableCompany)
-    //   authentication.setCompanyGroupHeader(
-    //     foundAvailableCompany.companyGroup.externalId
-    //   );
     if (currentCompanyGroup)
       authentication.setCompanyGroupHeader(String(currentCompanyGroup))
-    else {
-      // authentication.setCompanyGroupHeader(this.companyGroup)
-    }
   }
 
   log(...v: any) {
@@ -122,14 +111,6 @@ export const parseAlphaColorsFromCorrect = (str: string) => {
     return res
   } else return str
 }
-
-// export const parseAlphaColorsToCorrect = (str: string) => {
-//   if (str.length === 8) {
-//     const lastTwo = str.substr(-2)
-//     const res = str.charAt(0) + lastTwo + str.substr(1, str.length - 3)
-//     return res
-//   } else return str
-// }
 
 export const addHash = (v: string) => {
   if (first(v) !== '#') return '#' + v

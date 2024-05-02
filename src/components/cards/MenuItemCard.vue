@@ -1,9 +1,12 @@
 <template>
   <div
     style="height: 100%; overflow: overlay; overflow-x: hidden"
+    v-intersection="onIntersection"
     class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     @click="openMenuItem()"
     :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
+    itemscope
+    itemtype="https://schema.org/Product"
   >
     <div
       v-if="$cart.isItemInCart(item.id)?.quantity"
@@ -33,6 +36,8 @@
       fit="cover"
       class="border-radius"
       :ratio="1"
+      :alt="item.name || 'Продукт'"
+      itemprop="image"
     >
       <template v-slot:error>
         <span>
@@ -45,24 +50,21 @@
         </span>
       </template>
     </q-img>
-    <!-- :style="`height: ${$q.screen.lt.md ? '165' : '188'}px`" -->
-
     <div
       class="px-8 py-8 column gap-md-7 gap-lg-8 no-wrap justify-between col-grow text-on-product-tile-color"
     >
       <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
-          <!-- ellipsis-2-lines -->
-          <div class="header3 bold">
+          <div itemprop="name" class="header3 bold">
             {{ item.name }}
           </div>
         </div>
-
         <div
           v-if="item.description"
           style="opacity: 0.6"
           :class="$q.screen.lt.md ? 'ellipsis' : 'ellipsis-2-lines'"
           class="mt-3 body"
+          itemprop="description"
         >
           {{ item.description }}
         </div>
@@ -70,10 +72,15 @@
       <div class="row no-wrap full-width justify-between items-center">
         <div
           v-if="$q.screen.gt.sm"
-          class="subtitle-text bold text-on-backgroun-color"
+          class="subtitle-text bold text-on-backgroun-color row gap-2 no-wrap"
+          itemprop="offers"
+          itemscope
+          itemtype="https://schema.org/Offer"
         >
-          {{ item.sizes[0].price }}
-          ₽
+          <div itemprop="price">
+            {{ item.sizes[0].price }}
+          </div>
+          <div itemprop="priceCurrency">₽</div>
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
@@ -112,22 +119,31 @@ import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { ref } from 'vue'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
-// import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import {
+  ecommerceAdd,
+  ecommerceClick,
+} from 'src/models/ecommerceEvents/ecommerceEvents'
 
 const props = defineProps<{
   item: MenuItem
 }>()
-
 const loading = ref(false)
 
-// const buttonColor = computed(() => {
-//   return props.item.isDead
-//     ? uiSettingsRepo.item?.backgroundColor.on_color
-//     : uiSettingsRepo.item?.primaryColor.color
-// })
+const onIntersection = (entry: IntersectionObserverEntry) => {
+  if (entry.isIntersecting) {
+    menuItemRepo.visibleItems.push(props.item)
+  } else {
+    const foundIndex = menuItemRepo.visibleItems.findIndex(
+      (el) => el.id === props.item.id,
+    )
+    if (foundIndex > -1) {
+      menuItemRepo.visibleItems.splice(foundIndex, 1)
+    }
+  }
+}
 
 const toCartClickHandler = async () => {
   if (props.item.isDead) return
@@ -162,6 +178,7 @@ const toCartClickHandler = async () => {
 }
 
 const openMenuItem = async () => {
+  void ecommerceClick(props.item)
   store.menuItemModal = true
   await menuItemRepo.retrieve(props.item.id, {
     sales_point: salesPointRepo.item?.id,
@@ -182,7 +199,6 @@ const addToCart = async () => {
         ? salesPointRepo.item.company
         : salesPointRepo.item.company?.id || '',
     )
-
     store.serviceSettingsModal = true
   } else if (cartRepo.item && props.item.sizes[0]) {
     try {
@@ -214,6 +230,7 @@ const addToCart = async () => {
     } finally {
       cartRepo.loading = false
       loading.value = false
+      void ecommerceAdd(props.item)
     }
   }
 }

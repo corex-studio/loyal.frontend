@@ -43,16 +43,12 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
   }
 
   async setPaymentSettings(data: PaymentSettings) {
-    // const res =
     await this.api.send({
       method: 'POST',
       action: 'set_payment_settings',
       id: this.item?.id,
       data,
     })
-
-    // this.paymentTypes = res.result
-    // return res.result
   }
   async setSchedule(data: ScheduleDay[]): Promise<Schedule> {
     const res: ScheduleRaw = await this.api.send({

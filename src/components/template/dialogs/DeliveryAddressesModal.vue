@@ -24,13 +24,6 @@
             :loading="$cart.setParamsLoading || $store.catalogLoading"
             class="col body"
           />
-          <!-- <CButton
-            label="Добавить адрес"
-            height="48px"
-            color="secondary-button-color"
-            class="col subtitle-text"
-            text-color="on-secondary-button-color"
-          /> -->
         </div>
       </template>
     </DeliveryAddressesTab>
@@ -63,7 +56,7 @@ watch(
         currentAddress.value = cartRepo.item.deliveryAddress
       }
     }
-  }
+  },
 )
 
 const select = () => {

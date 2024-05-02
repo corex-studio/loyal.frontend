@@ -19,6 +19,7 @@ export const getYandexMetrikaDefaultConfig = (router: Router): Cfg => {
       trackLinks: true,
       accurateTrackBounce: true,
       defer: true,
+      ecommerce: true,
     },
   }
 }

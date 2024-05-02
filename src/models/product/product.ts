@@ -71,8 +71,6 @@ export class Product implements BaseModel {
   }
 
   toJson(): Record<string, any> {
-    return {
-      // id: this.id,
-    }
+    return {}
   }
 }

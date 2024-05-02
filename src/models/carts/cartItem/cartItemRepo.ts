@@ -6,7 +6,6 @@ import { reactive } from 'vue'
 
 export class CartItemRepo extends BaseRepo<CartItem> {
   api = cartItemApi
-
   async createCartItem(data: {
     size: string
     cart: string

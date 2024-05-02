@@ -58,7 +58,6 @@
             text-color="secondary-text"
             style="width: fit-content"
           />
-
           <ServiceSettingsTabPicker
             class="mt-12 mb-13"
             @update-tab="currentTab = $event"
@@ -326,21 +325,13 @@ export type BookingModes =
   | 'successBooked'
 
 const currentTab = ref<TabRaw | null>(null)
-
 const mobileViewTypeConfirmed = ref(false)
-
 const newAddressMode = ref(false)
-
 const selectedDeliveryAddress = ref<DeliveryAddress | null>(null)
-
 const selectedPickupAddress = ref<SalesPoint | null>(null)
-
 const selectedSalesPoint = ref<SalesPoint | null>(null)
-
 const bookingMode = ref<BookingModes>('bookingList')
-
 const deliveryAddressToEdit = ref<DeliveryAddress | null>(null)
-
 const q = useQuasar()
 
 watch(
@@ -462,7 +453,6 @@ const deliveryAddressCreateHandler = async (newAddress?: DeliveryAddress) => {
   void deliveryAddressRepo.list()
   if (newAddress) {
     selectedDeliveryAddress.value = newAddress
-    await confirmSelectedAddress(true)
   }
 }
 
@@ -486,13 +476,13 @@ const selectExistingAddress = () => {
   if (availablePickupAddresses.value?.length === 1) {
     selectedPickupAddress.value = availablePickupAddresses.value[0]
   }
-  // if (availableBookingAddresses.value?.length === 1) {
-  //   selectedSalesPoint.value = availableBookingAddresses.value[0]
-  // }
 }
 
 const selectCurrentTab = () => {
-  if (cartRepo.item) {
+  if (
+    cartRepo.item &&
+    companyRepo.cartCompany?.id === cartRepo.item.salesPoint.company
+  ) {
     if (cartRepo.item.type === CartType.DELIVERY) {
       selectedDeliveryAddress.value = cartRepo.item.deliveryAddress
       selectedPickupAddress.value = null
@@ -541,21 +531,27 @@ const confirmSelectedAddress = async (noClose = false) => {
       selectedDeliveryAddress.value?.coords?.latitude || 0,
       selectedDeliveryAddress.value?.coords?.longitude || 0,
     ])
-    if (!res.length) {
+    const availableAreas = res.filter((el) =>
+      companyRepo.cartCompany?.salesPoints
+        ?.map((v) => v.id)
+        .includes(el.salesPoint),
+    )
+    if (!res.length || !availableAreas.length) {
       Notify.create({
         message: 'По данному адресу не осуществляется доставка',
         color: 'danger',
       })
       return
     }
-    if (authentication.user)
+    if (authentication.user) {
       await cartRepo.setParams({
-        sales_point: res[0].salesPoint,
+        sales_point: availableAreas[0].salesPoint,
         type: CartType.DELIVERY,
         delivery_address: selectedDeliveryAddress.value?.id,
       })
+    }
     store.qrData = null
-    await store.loadCatalog(res[0].salesPoint)
+    await store.loadCatalog(availableAreas[0].salesPoint)
     void openPreviousMenuItem()
     if (!noClose) emit('update:modelValue', false)
   } else if (

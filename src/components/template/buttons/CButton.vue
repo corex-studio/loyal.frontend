@@ -273,10 +273,6 @@ const clickHandler = () => {
   filter: contrast(70%);
 }
 
-// .c-btn.outlined {
-//   border: 1px var(--secondary-button-color) solid;
-// }
-
 .c-btn.underline:after {
   content: '';
   display: block;

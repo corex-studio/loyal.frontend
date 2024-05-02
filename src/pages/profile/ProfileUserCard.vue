@@ -70,7 +70,6 @@ defineEmits<{
 
 <style lang="scss" scoped>
 .card-element {
-  // background: linear-gradient(90deg, var(--accent) 50%, var(--primary) 100%);
   border: 2px var(--primary) solid;
 }
 </style>

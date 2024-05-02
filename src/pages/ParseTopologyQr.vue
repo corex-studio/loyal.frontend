@@ -27,24 +27,6 @@ onMounted(async () => {
       const companyGroupAppSettings = await companyGroupRepo.getAppSettings(
         parsedData.data.salesPoint.companyGroup,
       )
-
-      // if (
-      //   route.query.type === 'pad' &&
-      //   parsedData.data.companyGroup?.externalId === 'ResidenceOfKings' &&
-      //   q.platform.is.ios
-      // ) {
-      //   store.qrData = parsedData
-      //   // window.location.replace(
-      //   //   `http://${window.location.host}/?group=${parsedData.data.companyGroup?.externalId}&padId=${parsedData.data.pad?.id}`,
-      //   // )
-      //   void router.push({
-      //     path: '/',
-      //     query: {
-      //       group: parsedData.data.companyGroup?.externalId,
-      //     },
-      //   })
-      //   return
-      // } else
       if (companyGroupAppSettings.app_redirect_link) {
         window.location.replace(companyGroupAppSettings.app_redirect_link)
         correctUrl = true

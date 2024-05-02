@@ -29,11 +29,7 @@ export class Schedule implements BaseModel {
   }
 
   toJson(): Record<string, any> {
-    return {
-      // uuid: this.uuid,
-      // day: this.day,
-      // times: this.times,
-    }
+    return {}
   }
 }
 

@@ -12,7 +12,6 @@ export class BaseAuthentication {
   loading = false
 
   tokensClass = BaseAuthenticationTokens
-  // userClass = Customer;
 
   settings = {
     urls: {

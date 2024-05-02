@@ -91,8 +91,6 @@
             />
           </div>
         </div>
-
-        <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
         <div
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
           style="max-width: 336px"
@@ -118,7 +116,6 @@
               {{ item.value }}
             </div>
           </div>
-
           <div
             v-if="$company.item?.guestContacts.emails.length"
             class="column gap-6"
@@ -215,9 +212,6 @@
             />
           </div>
         </div>
-
-        <!-- <div class="bold header3 mb-10 text-on-bottom-menu-color">Контакты</div> -->
-
         <div class="column gap-10 bold subtitle-text" style="max-width: 336px">
           <div
             v-if="$company.item?.guestContacts.phones.length"
@@ -240,7 +234,6 @@
               {{ item.value }}
             </div>
           </div>
-
           <div
             v-if="$company.item?.guestContacts.emails.length"
             class="column gap-6"
@@ -281,71 +274,6 @@
           </div>
         </div>
       </div>
-      <!-- <div class="col-shrink text-on-bottom-menu-color">
-        <template
-          v-if="
-            $appSettings.linksData &&
-            ($appSettings.linksData.app_redirect_link ||
-              $appSettings.linksData.android_download_link ||
-              $appSettings.linksData.ios_download_link)
-          "
-        >
-          <div class="header3 bold mb-lg-15 mb-xs-10">
-            Скачать мобильное приложение
-          </div>
-          <div
-            :class="
-              $q.screen.lt.lg ? 'row reverse justify-end' : 'row items-center'
-            "
-            class="gap-lg-12 gap-xs-8 text-black3"
-          >
-            <div
-              v-if="qrCode && $appSettings.linksData?.app_redirect_link"
-              class="border-radius"
-              style="width: 82px; height: 82px; overflow: hidden"
-            >
-              <img
-                width="82"
-                height="82"
-                style="min-width: 82px"
-                :src="qrCode"
-                alt="QR Code"
-              />
-            </div>
-
-            <div
-              :class="$q.screen.gt.md ? 'row' : 'column'"
-              class="gap-lg-12 gap-xs-8"
-            >
-              <img
-                v-if="$appSettings.linksData.ios_download_link"
-                @click="openLink($appSettings.linksData.ios_download_link)"
-                class="cursor-pointer"
-                style="
-                  height: 46px;
-                  background-color: #2e2e2e;
-                  object-fit: contain;
-                  border-radius: 7px;
-                "
-                src="~assets/Apple.svg"
-              />
-
-              <img
-                v-if="$appSettings.linksData.android_download_link"
-                @click="openLink($appSettings.linksData.android_download_link)"
-                class="cursor-pointer"
-                style="
-                  height: 46px;
-                  background-color: #2e2e2e;
-                  object-fit: contain;
-                  border-radius: 7px;
-                "
-                src="~assets/Google.svg"
-              />
-            </div>
-          </div>
-        </template>
-      </div> -->
     </div>
     <q-separator
       class="full-width mt-lg-25 mb-lg-15 my-xs-15"
@@ -356,11 +284,7 @@
       :class="{ 'justify-between': $q.screen.gt.md }"
       class="row full-width body text-on-bottom-menu-color gap-xs-8"
     >
-      <!-- <div class="column gap-5"> -->
       <div>© Все права защищены 2024</div>
-      <!-- </div> -->
-      <!-- <TopHeaderSocials /> -->
-
       <div
         v-if="
           $appSettings.linksData &&
@@ -379,6 +303,7 @@
             class="app-link-block items-center justify-center row border-radius2"
           >
             <img
+              alt="Apple download link"
               class="cursor-pointer"
               src="/assets/Apple.png"
               style="object-fit: contain; width: 106px"
@@ -392,6 +317,7 @@
             <img
               class="cursor-pointer"
               src="/assets/Google.png"
+              alt="Google download link"
               style="object-fit: contain; width: 111px"
               @click="openLink($appSettings.linksData.android_download_link)"
             />
@@ -401,7 +327,7 @@
       <div class="row no-wrap items-center gap-3">
         <div>Работает на</div>
         <q-img src="/assets/loyalHeartWhite.png" style="width: 30px" />
-        <a class="text-on-bottom-menu-color" href="https://corex.studio/loyal">
+        <a class="text-on-bottom-menu-color" href="https://loyalhub.ru">
           Loyalhub</a
         >
       </div>
@@ -415,33 +341,9 @@ import { store } from 'src/models/store'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-// import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 
 const route = useRoute()
 const router = useRouter()
-
-// let qrCode: any = null
-
-// const groupLinks = [
-//   {
-//     icon: 'fa-solid fa-paper-plane',
-//     click: () => {
-//       void 0
-//     },
-//   },
-//   {
-//     icon: 'fa-solid fa-envelope',
-//     click: () => {
-//       void 0
-//     },
-//   },
-//   {
-//     icon: 'fa-brands fa-youtube',
-//     click: () => {
-//       void 0
-//     },
-//   },
-// ]
 
 const infoBlocks = computed(() => {
   return [
@@ -475,70 +377,6 @@ const infoBlocks = computed(() => {
   ]
 })
 
-// const navigation = computed(() => {
-//   return [
-//     {
-//       label: 'Новости',
-//       hidden: !!!newsRepo.items.length,
-//       click: () => {
-//         scrollToBlock('offers', 'Новости')
-//       },
-//     },
-//     {
-//       label: 'Акции',
-//       hidden: !promotionsRepo.items.length,
-//       click: () => {
-//         scrollToBlock('offers', 'Акции')
-//       },
-//     },
-//     {
-//       label: 'О разработчике',
-//       click: () => {
-//         openLink('https://corex.studio/')
-//       },
-//     },
-//     {
-//       label: 'Политика конфиденциальности',
-//       click: () => {
-// openLink(
-//   `https://loyalhub.ru/${String(route.params.companyGroup)}/policy`
-// )
-//       },
-//     },
-//     {
-//       label: 'Пользовательское соглашение',
-//       click: () => {
-// openLink(
-//   `https://loyalhub.ru/${String(
-//     route.params.companyGroup
-//   )}/terms_of_service`
-// )
-//       },
-//     },
-//     // {
-//     //   label: 'cookie',
-//     //   click: void 0,
-//     // },
-//   ]
-// })
-
-// const showContacts = computed(() => {
-//   return (
-//     !!companyRepo.item?.guestContacts.emails.length ||
-//     !!companyRepo.item?.guestContacts.phones.length ||
-//     !!companyRepo.item?.guestContacts.socials.length
-//   )
-// })
-
-// const scrollToGroup = (v: MenuGroup) => {
-//   const groupElement = document.getElementById(v.id)
-//   if (groupElement) {
-//     const y = groupElement.getBoundingClientRect().top + window.scrollY - 100
-
-//     window.scrollTo({ top: y, behavior: 'smooth' })
-//   }
-// }
-
 const scrollToBlock = (v: string, tab?: string) => {
   if (route.name !== 'home') {
     void router.push({
@@ -557,35 +395,10 @@ const scrollToBlock = (v: string, tab?: string) => {
   }
 }
 
-// const getImage = (link: LinkType | null) => {
-//   let fileName: string | null = null
-
-//   try {
-//     if (link === LinkType.MAPS) fileName = 'yandexMaps.png'
-//     if (link === LinkType.OK) fileName = 'okLogo.png'
-//     if (link === LinkType.TELEGRAM) fileName = 'telegramLogo.png'
-//     if (link === LinkType.VK) fileName = 'VKLogo.png'
-//     if (link === LinkType.WEBSITE) fileName = 'websiteIcon.png'
-
-//     return require('assets/' + fileName) as string
-//   } catch {
-//     return store.images.empty
-//   }
-// }
-
 const openLink = (link: string) => {
   window.open(link, '_blank')
 }
 
-// if (appSettingsRepo.linksData?.app_redirect_link) {
-//   qrCode = useQRCode(appSettingsRepo.linksData?.app_redirect_link, {
-//     type: 'image/png',
-//     color: {
-//       light: '#424242',
-//       dark: '#fff',
-//     },
-//   })
-// }
 </script>
 
 <style lang="scss" scoped>

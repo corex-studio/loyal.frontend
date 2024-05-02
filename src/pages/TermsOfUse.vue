@@ -105,11 +105,6 @@
             </div>
             <div class="li">
               2.10. Пользователь&nbsp;— любой посетитель сайта
-              <!-- <span
-                class="link mark owner-site-url-field"
-                data-scroll-to="#owner-site-url-field"
-                >{{ linkToTerms }}</span
-              >. -->
             </div>
             <div class="li">
               2.11. Предоставление персональных данных&nbsp;— действия,
@@ -490,7 +485,6 @@
 </template>
 <script lang="ts" setup>
 import { authentication } from 'src/models/authentication/authentication'
-// import { CompanyGroup } from 'src/models/companyGroup/companyGroup'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { onMounted, ref } from 'vue'
@@ -500,12 +494,6 @@ const externalId = ref()
 
 const route = useRoute()
 const loader = ref(false)
-
-// const linkToTerms = computed(() => {
-//   return `https://${window.location.host}/${String(
-//     route.params.externalId
-//   )}/policy`
-// })
 
 onMounted(async () => {
   loader.value = true

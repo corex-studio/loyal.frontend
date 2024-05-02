@@ -14,7 +14,7 @@ export class CompanyRepo extends BaseRepo<Company> {
   async addImage(
     company: Company,
     image: File,
-    isMain = false
+    isMain = false,
   ): Promise<ImageRaw> {
     const data = new FormData()
     data.append('image', image)
@@ -38,10 +38,6 @@ export class CompanyRepo extends BaseRepo<Company> {
   }
 
   async setGuestContacts(data: GuestContact) {
-    // data.phones.forEach((v) => (v.link = `tel:${v.value}`))
-    // data.emails.forEach((v) => (v.link = `mailto:${v.value}`))
-    // data.messages.forEach((v) => (v.link = `sms:${v.value}`))
-
     return await this.api.send({
       method: 'POST',
       action: 'set_guest_contacts',

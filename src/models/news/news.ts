@@ -105,7 +105,6 @@ export class News implements BaseModel {
         ? this.shortDescription
         : null,
       active: this.active,
-      // published_at: this.published_at,'
       company_group: this.companyGroup,
       full_description: this.fullDescription.length
         ? this.fullDescription
@@ -119,10 +118,6 @@ export class News implements BaseModel {
             .utc()
             .format('YYYY-MM-DD HH:mm:ss')
         : null,
-      // start_date: this.start_date,
-      // created_at: this.created_at,
-      // updated_at: this.updated_at,
-      // sales_points: this.sales_points,
     }
   }
 }

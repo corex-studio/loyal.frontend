@@ -1,25 +1,29 @@
 <template>
   <div
-      style="height: 100vh; width: 100vw"
-      class="main-background row justify-center items-center"
+    style="height: 100vh; width: 100vw"
+    class="main-background row justify-center items-center"
   >
     <div
-        style="border-radius: 30px"
-        class="content-block bg-white column no-wrap justify-center items-center"
+      style="border-radius: 30px"
+      class="content-block bg-white column no-wrap justify-center items-center"
     >
-      <div class="gradient-bg pa-10 flex flex-center text-white mb-20" style="border-radius: 50%; " :style="$q.screen.xs ? 'width: 70px; height: 70px;' : 'width: 100px; height: 100px'" >
-
+      <div
+        class="gradient-bg pa-10 flex flex-center text-white mb-20"
+        style="border-radius: 50%"
+        :style="
+          $q.screen.xs
+            ? 'width: 70px; height: 70px;'
+            : 'width: 100px; height: 100px'
+        "
+      >
         <q-icon name="fas fa-check" :size="$q.screen.xs ? '30px' : '50px'" />
       </div>
       <div class="title-payment-text text-uppercase mb-7">Успешная оплата</div>
-      <div class="subtitle-payment-text">
-        Спасибо за заказ
-      </div>
+      <div class="subtitle-payment-text">Спасибо за заказ</div>
     </div>
   </div>
 </template>
-<script lang="ts" setup>
-</script>
+<script lang="ts" setup></script>
 
 <style lang="scss" scoped>
 body.screen--xl {
@@ -169,28 +173,23 @@ body.screen--xs {
 }
 .gradient-bg {
   background-image: linear-gradient(to right, #62e5f6, #d726fb);
-  //background-clip: text;
-  //-webkit-text-fill-color: transparent;
 }
 .main-background {
   background: hsla(186, 33%, 94%, 1);
-
   background: linear-gradient(
-          90deg,
-          hsla(186, 33%, 94%, 1) 0%,
-          hsla(216, 41%, 79%, 1) 100%
+    90deg,
+    hsla(186, 33%, 94%, 1) 0%,
+    hsla(216, 41%, 79%, 1) 100%
   );
-
   background: -moz-linear-gradient(
-          90deg,
-          hsla(186, 33%, 94%, 1) 0%,
-          hsla(216, 41%, 79%, 1) 100%
+    90deg,
+    hsla(186, 33%, 94%, 1) 0%,
+    hsla(216, 41%, 79%, 1) 100%
   );
-
   background: -webkit-linear-gradient(
-          90deg,
-          hsla(186, 33%, 94%, 1) 0%,
-          hsla(216, 41%, 79%, 1) 100%
+    90deg,
+    hsla(186, 33%, 94%, 1) 0%,
+    hsla(216, 41%, 79%, 1) 100%
   );
 }
 </style>

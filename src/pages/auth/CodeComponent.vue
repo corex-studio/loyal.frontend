@@ -122,18 +122,13 @@ const emit = defineEmits<{
 }>()
 
 const block = ref<HTMLDivElement>()
-
 const firstInputRef = ref<HTMLInputElement | null>(null)
-
 const secondInputRef = ref<HTMLInputElement | null>(null)
-
 const thirdInputRef = ref<HTMLInputElement | null>(null)
-
 const fourthInputRef = ref<HTMLInputElement | null>(null)
 
 const setInputRef = () => {
   const inputs = block.value?.getElementsByTagName('input')
-
   if (inputs?.length) {
     firstInputRef.value = inputs[0]
     secondInputRef.value = inputs[1]
