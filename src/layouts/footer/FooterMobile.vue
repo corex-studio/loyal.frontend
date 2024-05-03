@@ -35,13 +35,16 @@
             v-for="(item, index) in $company.item?.guestContacts.phones"
             :key="index"
           >
-            <div
+            <a class="body" style="opacity: 0.7" :href="item.link">
+              {{ item.value }}
+            </a>
+            <!-- <div
               @click="openLink(item.link)"
               style="opacity: 0.7"
               class="body cursor-pointer"
             >
               {{ item.value }}
-            </div>
+            </div> -->
           </template>
           <template
             v-for="(item, index) in $company.item?.guestContacts.socials"

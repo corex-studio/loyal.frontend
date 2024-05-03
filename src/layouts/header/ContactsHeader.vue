@@ -16,9 +16,13 @@
       />
       <div class="column">
         <div class="row body items-center">
-          <a :href="item.link" class="body bold text-on-background-color">{{ item.value }}</a>
+          <a :href="item.link" class="body bold text-on-background-color">{{
+            item.value
+          }}</a>
         </div>
-        <div class="row helper-text text-on-background-color">{{ item.name }}</div>
+        <div class="row helper-text text-on-background-color">
+          {{ item.name }}
+        </div>
       </div>
     </div>
   </div>
@@ -34,7 +38,7 @@ const guestContacts = computed(() => {
   if (!company) return results
   for (const [key, values] of Object.entries(company.guestContacts)) {
     console.log(key)
-    if (['socials',].includes(key)) continue
+    if (['socials'].includes(key)) continue
     if (!Array.isArray(values)) continue
     for (const item of values) {
       if (!item.foreground) continue

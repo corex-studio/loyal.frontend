@@ -303,16 +303,27 @@
           <div class="column gap-4 col pb-6">
             <div class="header3 bold">{{ item.label }}</div>
             <div class="column col gap-3">
-              <CButton
-                v-for="(el, index) in item.values"
-                :key="index"
-                @click="openLink(el.link)"
-                class="subtitle-text"
-                text-button
-                :label="el.value"
-                text-color="on-background-color"
-                style="width: fit-content"
-              />
+              <template v-if="item.field === 'phones'">
+                <a
+                  v-for="(el, index) in item.values"
+                  :key="index"
+                  :href="el.link"
+                  class="subtitle-text text-on-background-color"
+                  >{{ el.value }}</a
+                >
+              </template>
+              <template v-else>
+                <CButton
+                  v-for="(el, index) in item.values"
+                  :key="index"
+                  @click="openLink(el.link)"
+                  class="subtitle-text"
+                  text-button
+                  :label="el.value"
+                  text-color="on-background-color"
+                  style="width: fit-content"
+                />
+              </template>
             </div>
           </div>
           <q-img

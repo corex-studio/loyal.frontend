@@ -3,6 +3,11 @@
 @import 'adaptive';
 @import 'spacing';
 
+a {
+  color: inherit;
+  text-decoration: unset;
+}
+
 * {
   box-sizing: border-box;
 }
