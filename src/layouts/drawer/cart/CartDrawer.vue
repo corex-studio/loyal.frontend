@@ -94,6 +94,7 @@
             <CartDrawerGuestsCount
               v-if="$cart.item.salesPoint.settings.allow_set_guest_count"
             />
+
             <CartFreeItems
               v-if="$cart.item.freeItems.filter((el) => !el.applied).length"
             />
