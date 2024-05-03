@@ -2,6 +2,7 @@ import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { Image, ImageRaw } from 'src/models/image/image'
 import { Product, ProductRaw } from 'src/models/product/product'
 import { ItemSize, ItemSizeRaw } from '../menu'
+import { menuRepo } from '../menuRepo'
 
 export type MenuItemRaw = {
   uuid: string
@@ -60,6 +61,12 @@ export class MenuItem implements BaseModel {
 
   get isDead() {
     return this.reserve === null ? false : this.reserve <= 0
+  }
+
+  get isItemInMenu(): boolean {
+    return !!menuRepo.item?.groups
+      ?.flatMap((v) => v.items)
+      .find((el) => el.id === this.id)
   }
 
   toJson(): Record<string, any> {

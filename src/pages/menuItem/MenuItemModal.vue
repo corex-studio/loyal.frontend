@@ -320,7 +320,11 @@ watch(
 )
 
 const isAddToCardDisabled = computed(() => {
-  if (menuItemRepo.item?.isDead) return true
+  if (
+    menuItemRepo.item?.isDead ||
+    (!menuItemRepo.item?.isItemInMenu && !store.freeItem)
+  )
+    return true
   return (
     (store.tableMode && !padRepo.item?.settings.orders_enabled) ||
     currentSize.value?.modifierGroups?.some(
