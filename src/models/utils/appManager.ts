@@ -14,6 +14,9 @@ import { CartType } from 'src/models/carts/cart'
 import { authRepo } from 'src/models/authentication/authRepo'
 import { qrMenuSettingsRepo } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { padRepo } from 'src/models/pads/padRepo'
+import { menuItemRepo } from '../menu/menuItem/menuItemRepo'
+import { salesPointRepo } from '../salesPoint/salesPointRepo'
+import { menuRulesForAddingRepo } from '../menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -89,6 +92,19 @@ export class AppManager {
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
     } else if (authentication.user?.isAnonymous) {
       authentication.logout()
+    }
+  }
+
+  handleInitialMenuItem = async () => {
+    if (store.initialMenuItem) {
+      store.menuItemModal = true
+      await menuItemRepo.retrieve(store.initialMenuItem, {
+        sales_point: salesPointRepo.item?.id,
+      })
+      await menuRulesForAddingRepo.list({
+        menu_item: menuItemRepo.item?.id,
+      })
+      store.initialMenuItem = null
     }
   }
 
@@ -192,7 +208,11 @@ export class AppManager {
       await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
     }
     if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
-    if (currentPoint) void store.loadCatalog(currentPoint)
+    if (currentPoint) {
+      void store.loadCatalog(currentPoint).then(() => {
+        void this.handleInitialMenuItem()
+      })
+    }
 
     void newsRepo
       .list({
