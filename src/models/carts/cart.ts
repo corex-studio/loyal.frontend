@@ -102,6 +102,7 @@ export type CartRaw = {
   }[]
   eat_inside: boolean
   guest_count: number
+  closest_time_text?: string | null
 }
 
 export class Cart implements BaseModel {
@@ -139,6 +140,7 @@ export class Cart implements BaseModel {
   }[]
   eatInside: boolean
   guestCount: number
+  closestTimeText: string | null
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -181,6 +183,7 @@ export class Cart implements BaseModel {
     })
     this.eatInside = raw.eat_inside
     this.guestCount = raw.guest_count
+    this.closestTimeText = raw.closest_time_text || null
   }
 
   get cartItemsQuantitySum() {

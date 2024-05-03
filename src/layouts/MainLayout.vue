@@ -100,7 +100,7 @@ import { AppManager } from 'src/models/utils/appManager'
 import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
-import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+// import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import BonusesDrawer from './drawer/bonuses/BonusesDrawer.vue'
 import { setMeta } from 'src/models/metaTags/metaTags'
 
@@ -168,7 +168,7 @@ onMounted(async () => {
   if (authentication.user) {
     void orderReviewRepo.getOrderToReview()
   }
-  salesPointRepo.menuLoading = true
+  // salesPointRepo.menuLoading = true
   ready.value = true
   setMeta(route.meta)
 })
