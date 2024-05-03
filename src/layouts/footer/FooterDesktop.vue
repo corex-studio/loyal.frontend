@@ -105,20 +105,18 @@
               :key="index"
             >
               <div class="subtitle-text bold">
-                <!--              {{-->
-                <!--                $company.item?.guestContacts.phones.length > 1-->
-                <!--                  ? 'Контактные телефоны'-->
-                <!--                  : 'Контактный телефон'-->
-                <!--              }}-->
                 {{ item.name }}
               </div>
-              <div
+              <a class="body" style="opacity: 0.6" :href="item.link">
+                {{ item.value }}
+              </a>
+              <!-- <div
                 class="cursor-pointer body"
                 style="opacity: 0.6"
                 @click="openLink(item.link)"
               >
                 {{ item.value }}
-              </div>
+              </div> -->
             </template>
           </div>
           <div
@@ -229,7 +227,16 @@
                   : 'Контактный телефон'
               }}
             </div>
-            <div
+            <a
+              v-for="(item, index) in $company.item?.guestContacts.phones"
+              :key="index"
+              class="body"
+              style="opacity: 0.6"
+              :href="item.link"
+            >
+              {{ item.value }}
+            </a>
+            <!-- <div
               v-for="(item, index) in $company.item?.guestContacts.phones"
               :key="index"
               class="cursor-pointer body"
@@ -237,7 +244,7 @@
               @click="openLink(item.link)"
             >
               {{ item.value }}
-            </div>
+            </div> -->
           </div>
           <div
             v-if="$company.item?.guestContacts.emails.length"
