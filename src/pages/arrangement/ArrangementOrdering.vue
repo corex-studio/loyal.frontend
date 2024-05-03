@@ -38,7 +38,7 @@
               class="bg-input-color border-radius2 text-on-input-color row justify-between px-6 py-5 row no-wrap col gap-10"
             >
               <div>{{ $cart.item?.currentAddress }}</div>
-              <template v-if="isDelivery">
+              <!-- <template v-if="isDelivery">
                 <CButton
                   v-if="$q.screen.gt.sm"
                   @click="deliveryAddressesModal = true"
@@ -56,7 +56,7 @@
                   hover-color="primary"
                   class="cursor-pointer"
                 />
-              </template>
+              </template> -->
             </div>
           </div>
           <teleport
@@ -85,14 +85,19 @@
                       : { 'bordered-block': $q.screen.lt.md },
                     $q.screen.lt.md
                       ? 'column gap-8'
-                      : 'row justify-between  items-center gap-10',
+                      : 'row justify-between   gap-10',
                   ]"
                   style="min-height: 48px; height: inherit"
                   @click="selectClosestTime()"
                   class="border-radius2 cursor-pointer bg-input-color px-6 py-5 row no-wrap col"
                 >
                   <template v-if="$q.screen.gt.sm">
-                    <div>Ближайшая</div>
+                    <div class="column gap-2">
+                      <div>Ближайшая</div>
+                      <div>
+                        {{ $cart.item.closestTimeText }}
+                      </div>
+                    </div>
                     <CIcon
                       class="cursor-pointer"
                       name="fa-regular fa-clock"
@@ -110,7 +115,7 @@
                     <div class="column full-width gap-2">
                       <div class="bold body">Как можно скорее</div>
                       <div class="body">
-                        <span class="bold body">~</span>через 10 минут
+                        {{ $cart.item.closestTimeText }}
                       </div>
                     </div>
                   </template>
@@ -134,12 +139,17 @@
                       : { 'bordered-block': $q.screen.lt.md },
                     $q.screen.lt.md
                       ? 'column gap-8'
-                      : 'row justify-between items-center  gap-10',
+                      : 'row justify-between  gap-10',
                   ]"
                   class="border-radius2 cursor-pointer bg-input-color px-6 py-5 no-wrap col"
                 >
                   <template v-if="$q.screen.gt.sm">
-                    <div>{{ $cart.item.deliveryTime || 'Ко времени' }}</div>
+                    <div class="column gap-2">
+                      <div>{{ 'Ко времени' }}</div>
+                      <div>
+                        {{ $cart.item.deliveryTime || 'Выберите время' }}
+                      </div>
+                    </div>
                     <CIcon
                       class="cursor-pointer"
                       name="fa-regular fa-calendar-clock"
@@ -156,7 +166,9 @@
                     />
                     <div class="column full-width gap-2">
                       <div class="bold body">Ко времени</div>
-                      <div class="body">Выберите время</div>
+                      <div class="body">
+                        {{ $cart.item.deliveryTime || 'Выберите время' }}
+                      </div>
                     </div>
                   </template>
                   <q-menu
@@ -266,7 +278,11 @@
             </div>
           </div>
           <div
-            v-if="$cart.item.salesPoint.settings.allow_pickup_orders_inside"
+            v-if="
+              $cart.item.type !== CartType.TABLE &&
+              $cart.item.type !== CartType.DELIVERY &&
+              $cart.item.salesPoint.settings.allow_pickup_orders_inside
+            "
             class="row full-width gap-md-5 gap-xs-4"
           >
             <div v-if="$q.screen.gt.sm" class="col-md-4"></div>
@@ -395,7 +411,7 @@
           <div class="row full-width justify-between">
             <div class="body bold">Сумма заказа</div>
             <div class="body bold">
-              {{ beautifyNumber($cart.item?.totalSum, true) }} ₽
+              {{ beautifyNumber($cart.item.discountedSum, true) }} ₽
             </div>
           </div>
           <div
@@ -441,9 +457,9 @@
           <div class="header3 bold">
             {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
           </div>
-          <div>
+          <!-- <div>
             {{ mobileViewSelectedTime }}
-          </div>
+          </div> -->
         </div>
         <CButton
           :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
@@ -613,14 +629,14 @@ onBeforeUnmount(() => {
   if (clearBeforeRouterResolve) clearBeforeRouterResolve()
 })
 
-const mobileViewSelectedTime = computed(() => {
-  if (!cartRepo.item) return
-  return cartRepo.item.deliveryTime
-    ? cartRepo.item.deliveryTime.slice(0, 5) +
-        ' ' +
-        cartRepo.item.deliveryTime.slice(11, 16)
-    : '~ 10 мин'
-})
+// const mobileViewSelectedTime = computed(() => {
+//   if (!cartRepo.item) return
+//   return cartRepo.item.deliveryTime
+//     ? cartRepo.item.deliveryTime.slice(0, 5) +
+//         ' ' +
+//         cartRepo.item.deliveryTime.slice(11, 16)
+//     : '~ 10 мин'
+// })
 
 const isArrangeAvailable = computed(() => {
   return (

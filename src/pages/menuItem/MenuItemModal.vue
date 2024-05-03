@@ -169,6 +169,10 @@
               <CTooltip v-if="$menuItem.item?.isDead"
                 >Товар недоступен</CTooltip
               >
+              <CTooltip
+                v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem"
+                >Недоступно к заказу</CTooltip
+              >
             </div>
           </div>
         </teleport>

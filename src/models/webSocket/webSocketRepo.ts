@@ -24,6 +24,7 @@ export type WebSocketMessage = {
 
 export const handleMessage = (v: MessageEvent<string>) => {
   const response = JSON.parse(v.data) as WebSocketMessage
+
   if (response.type === 'cart.updated') {
     cartRepo.item = new Cart(response.data as CartRaw)
     cartRepo.item.errors.forEach((error) => {

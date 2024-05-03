@@ -1,9 +1,11 @@
 import { CartItem } from './cartItem/cartItem'
 import { OrderRaw, Order } from './../order/order'
-import { Cart, CartParams, CartRaw, AvailableHours } from './cart'
+import { Cart, CartParams, CartRaw, AvailableHours, CartType } from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { cartApi } from './cartApi'
 import { reactive } from 'vue'
+import { store } from '../store'
+import { padRepo } from '../pads/padRepo'
 
 export class CartRepo extends BaseRepo<Cart> {
   api = cartApi
@@ -24,6 +26,10 @@ export class CartRepo extends BaseRepo<Cart> {
     this.setParamsLoading = true
     if (!data.sales_point && this.item?.salesPoint?.id) {
       data.sales_point = this.item.salesPoint.id
+    }
+    if (store.tableMode) {
+      data.type ? void 0 : (data.type = CartType.TABLE)
+      data.pad ? void 0 : (data.pad = padRepo.item?.id)
     }
     const res: CartRaw = await this.api.send({
       method: 'PUT',
