@@ -160,7 +160,7 @@ const q = useQuasar()
 let map: CorexLeafletMap
 
 const isSaveAvailable = computed(() => {
-  return !!newAddress.value?.name?.length && !!newAddress.value.address.length
+  return !!newAddress.value?.address.length
 })
 
 const getBorderRadius = computed(() => {
@@ -236,7 +236,7 @@ onMounted(() => {
   resume()
   newAddress.value = new DeliveryAddress({
     uuid: props.address?.id || undefined,
-    name: props.address?.name || '',
+    name: props.address?.name || null,
     address: props.address?.address || '',
     coords: props.address?.coords || null,
     city: props.address?.city || '',
