@@ -270,6 +270,16 @@ export class UiSetting implements BaseModel {
     this.uiElements = raw.ui_elements
   }
 
+  get useBonuses() {
+    return this.uiElements
+      .filter(
+        (el) =>
+          el.semantic_label === 'main_page_header_wallets' ||
+          el.semantic_label === 'main_page_wallets',
+      )
+      .some((v) => !!v.active)
+  }
+
   toJson() {
     return
   }

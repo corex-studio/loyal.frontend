@@ -92,7 +92,7 @@ import { store } from 'src/models/store'
 import { computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from '../header/TopHeaderSocials.vue'
-import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
+// import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
@@ -116,7 +116,7 @@ const blocks = computed(() => {
       hidden:
         !authentication.user ||
         authentication.user.isAnonymous ||
-        !showBonuses.value,
+        !uiSettingsRepo.item?.useBonuses,
       click: () => {
         store.bonusesDrawer = true
         store.leftDrawer = false
@@ -151,16 +151,6 @@ const blocks = computed(() => {
       },
     },
   ]
-})
-
-const showBonuses = computed(() => {
-  return uiSettingsRepo.item?.uiElements
-    .filter(
-      (el) =>
-        el.semantic_label === 'main_page_header_wallets' ||
-        el.semantic_label === 'main_page_wallets',
-    )
-    .some((v) => !!v.active)
 })
 
 const openCitySelectorModal = () => {
