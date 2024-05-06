@@ -75,9 +75,11 @@
         />
       </div>
       <q-separator class="my-8" />
-      <ContactsHeader style="gap: 10px !important; flex-direction: column !important;" />
+      <ContactsHeader
+        style="gap: 10px !important; flex-direction: column !important"
+      />
       <q-separator class="my-8" />
-<!--      <TopHeaderDeliveryInfo />-->
+      <!--      <TopHeaderDeliveryInfo />-->
       <TopHeaderSocials header-mode />
     </q-drawer>
   </div>
@@ -111,7 +113,10 @@ const blocks = computed(() => {
     },
     {
       label: 'Бонусы',
-      hidden: !authentication.user || authentication.user.isAnonymous,
+      hidden:
+        !authentication.user ||
+        authentication.user.isAnonymous ||
+        !showBonuses.value,
       click: () => {
         store.bonusesDrawer = true
         store.leftDrawer = false
@@ -146,6 +151,16 @@ const blocks = computed(() => {
       },
     },
   ]
+})
+
+const showBonuses = computed(() => {
+  return uiSettingsRepo.item?.uiElements
+    .filter(
+      (el) =>
+        el.semantic_label === 'main_page_header_wallets' ||
+        el.semantic_label === 'main_page_wallets',
+    )
+    .some((v) => !!v.active)
 })
 
 const openCitySelectorModal = () => {

@@ -16,7 +16,6 @@
             $company.item?.image?.thumbnail || $company.item?.logo?.thumbnail
           "
           :height="$q.screen.lt.lg ? '48' : '52'"
-          class="border-radius"
           style="object-fit: contain"
           :src="
             $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail

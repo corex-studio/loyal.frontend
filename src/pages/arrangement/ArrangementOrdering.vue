@@ -60,11 +60,15 @@
             </div>
           </div>
           <teleport
+            v-if="
+              $cart.item.type !== CartType.TABLE &&
+              !$salesPoint.item?.settings
+                .allow_order_arrangement_without_delivery_time
+            "
             :disabled="$q.screen.gt.sm || !timeBlockMobileSpot"
             :to="timeBlockMobileSpot"
           >
             <div
-              v-if="$cart.item.type !== CartType.TABLE"
               :class="$q.screen.lt.md ? 'column' : 'row items-center'"
               class="body full-width gap-5"
             >

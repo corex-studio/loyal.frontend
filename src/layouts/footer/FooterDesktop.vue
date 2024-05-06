@@ -75,6 +75,7 @@
                 )
               "
             />
+
             <CButton
               class="body"
               label="Публичная оферта"
@@ -83,7 +84,7 @@
               text-color="on-bottom-menu-color"
               @click="
                 openLink(
-                  `https://loyalhub.ru/${String(
+                  `https://${currentHost}/${String(
                     $companyGroup.item?.externalId,
                   )}/offer`,
                 )
@@ -388,6 +389,10 @@ const infoBlocks = computed(() => {
       },
     },
   ]
+})
+
+const currentHost = computed(() => {
+  return window.location.host
 })
 
 const scrollToBlock = (v: string, tab?: string) => {

@@ -146,6 +146,7 @@
                 <div class="bold">Корзина</div>
               </div>
               <div
+                v-if="showBonuses"
                 @click="$store.bonusesDrawer = true"
                 class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
               >
@@ -220,6 +221,7 @@ import CitySelectorModal from 'src/components/template/dialogs/CitySelectorModal
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CompanyLogoView from 'components/CompanyLogoView.vue'
 import CityCheckModal from 'src/components/template/dialogs/CityCheckModal.vue'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 const route = useRoute()
 const header = ref<HTMLDivElement>()
@@ -227,6 +229,16 @@ const multipleCompaniesSpot = ref<HTMLDivElement>()
 
 const isArrangementPage = computed(() => {
   return route.path.includes('arrangement')
+})
+
+const showBonuses = computed(() => {
+  return uiSettingsRepo.item?.uiElements
+    .filter(
+      (el) =>
+        el.semantic_label === 'main_page_header_wallets' ||
+        el.semantic_label === 'main_page_wallets',
+    )
+    .some((v) => !!v.active)
 })
 
 const previewBalance = computed(() => {

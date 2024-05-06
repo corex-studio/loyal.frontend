@@ -19,6 +19,13 @@ export type BottomBarElementRaw = {
   uuid: string
 }
 
+export type UIElementRaw = {
+  uuid?: string
+  semantic_label: string
+  active: boolean
+  title?: string
+}
+
 export type ColorRaw = {
   color: string
   on_color: string
@@ -106,6 +113,7 @@ export type UiSettingsRaw = {
   qr_arrangement_description: string | null
   show_menu_item_border: boolean
   out_of_stock_text: string | null
+  ui_elements: UIElementRaw[]
 }
 
 export type BoxShadow = {
@@ -185,6 +193,7 @@ export class UiSetting implements BaseModel {
   qrArrangementDescription: string | null
   showMenuItemBorder: boolean
   outOfStockText: string | null
+  uiElements: UIElementRaw[]
 
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
@@ -258,6 +267,7 @@ export class UiSetting implements BaseModel {
     this.qrArrangementDescription = raw.qr_arrangement_description
     this.showMenuItemBorder = raw.show_menu_item_border
     this.outOfStockText = raw.out_of_stock_text
+    this.uiElements = raw.ui_elements
   }
 
   toJson() {
