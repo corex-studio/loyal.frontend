@@ -39,9 +39,9 @@
               :model-value="el.id === currentAddress?.id"
             />
             <div class="column gap-4 body">
-              <div class="bold ellipsis-2-lines">
+              <!-- <div v-if="el.name" class="bold ellipsis-2-lines">
                 {{ el.name }}
-              </div>
+              </div> -->
               <div class="ellipsis-2-lines">
                 {{ el.address }}
               </div>
