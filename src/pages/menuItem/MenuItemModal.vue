@@ -42,7 +42,7 @@
         fit="cover"
         :height="$q.screen.lt.lg ? '450px' : '100%'"
         style="width: 100%"
-        :src="$menuItem.item?.image?.image || $store.images.empty"
+        :src="currentImage"
         itemprop="image"
       >
         <template v-slot:error>
@@ -245,6 +245,14 @@ const currentSize = ref<ItemSize | null>(null)
 const quantity = ref(1)
 const loading = ref(false)
 const q = useQuasar()
+
+const currentImage = computed(() => {
+  return menuItemRepo.loadings.retrieve
+    ? store.menuItemImage?.thumbnail || store.images.empty
+    : menuItemRepo.item?.image?.image ||
+        store.menuItemImage?.thumbnail ||
+        store.images.empty
+})
 
 const currentMenuRulesForAdding = computed(() => {
   if (!cartRepo.item) return

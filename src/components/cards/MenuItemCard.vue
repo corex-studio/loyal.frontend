@@ -180,6 +180,7 @@ const toCartClickHandler = async () => {
 const openMenuItem = async () => {
   void ecommerceClick(props.item)
   store.menuItemModal = true
+  store.menuItemImage = props.item.image
   await menuItemRepo.retrieve(props.item.id, {
     sales_point: salesPointRepo.item?.id,
   })

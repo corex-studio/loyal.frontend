@@ -12,6 +12,7 @@ import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSetti
 import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
 import { QrData } from './utils/qrData/qrData'
 import { QRMenuData } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
+import { Image } from './image/image'
 
 type DeliveryAreaInfoDrawerData = {
   salesPoint: SalesPoint
@@ -54,6 +55,7 @@ export class Store {
   qrData: QrData | null = null
   reviewModal = false
   initialMenuItem: string | null = null
+  menuItemImage: Image | null = null
 
   getCompanyGroup(externalId: string) {
     const currentCompanyGroup = externalId
