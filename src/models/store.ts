@@ -56,6 +56,7 @@ export class Store {
   reviewModal = false
   initialMenuItem: string | null = null
   menuItemImage: Image | null = null
+  groupDragged = false
 
   getCompanyGroup(externalId: string) {
     const currentCompanyGroup = externalId

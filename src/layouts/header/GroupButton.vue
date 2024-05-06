@@ -60,6 +60,10 @@ watch(
 )
 
 const clickHandler = (v: MenuGroup) => {
+  if (store.groupDragged) {
+    store.groupDragged = false
+    return
+  }
   if (route.name === 'home' || route.name === 'qrHome') {
     void scrollToGroup(v)
   } else {

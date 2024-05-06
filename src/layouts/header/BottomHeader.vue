@@ -11,8 +11,11 @@
       >
         <div
           class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
-          style="overflow-x: scroll; scroll-behavior: smooth"
+          style="overflow-x: scroll"
           ref="scrollArea"
+          v-dragscroll
+          @dragscrollstart="onDragStart"
+          @dragscrollend="onDragEnd"
         >
           <div
             v-if="categories && !$salesPoint.menuLoading"
@@ -48,6 +51,10 @@ import GroupButton from './GroupButton.vue'
 import { useRoute } from 'vue-router'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import { dragscroll } from 'vue-dragscroll'
+import { store } from 'src/models/store'
+
+const vDragscroll = dragscroll
 
 const bottomHeader = ref<Element | null>(null)
 const key = ref(0)
@@ -73,8 +80,12 @@ watch(
       foundElementIndex > -1 &&
       scrollArea.value
     ) {
-      scrollArea.value.scrollLeft =
-        groupButtons.value[foundElementIndex].offsetLeft
+      scrollArea.value.scrollTo({
+        left: groupButtons.value[foundElementIndex].offsetLeft,
+        behavior: 'smooth',
+      })
+      // scrollArea.value.scrollLeft =
+      //   groupButtons.value[foundElementIndex].offsetLeft
     }
   },
 )
@@ -87,4 +98,18 @@ watch(
     }
   },
 )
+let dragTimeout: NodeJS.Timeout | null = null
+
+const onDragStart = () => {
+  if (dragTimeout) clearTimeout(dragTimeout)
+  store.groupDragged = false
+  dragTimeout = setTimeout(() => {
+    store.groupDragged = true
+  }, 100)
+}
+
+const onDragEnd = () => {
+  if (dragTimeout) clearTimeout(dragTimeout)
+  setTimeout(() => (store.groupDragged = false))
+}
 </script>
