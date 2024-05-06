@@ -25,13 +25,19 @@
             {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
           </div>
         </div>
-        <CInput
+        <!-- <CInput
           v-model="newAddress.name"
           external-label="Название адреса"
           height="48px"
           placeholder="Название"
-        />
+        /> -->
         <div class="column full-width gap-md-6 gap-xs-4">
+          <AddressSearch
+            :address="newAddress.address"
+            label="Укажите адрес"
+            placeholder="Город, улица, дом"
+            @update="selectAddress($event, 15)"
+          />
           <CButton
             :loading="geoloading"
             icon="fa-regular fa-location-dot"
@@ -43,12 +49,6 @@
           >
             <div class="body bold">Определить адрес автоматически</div>
           </CButton>
-          <AddressSearch
-            :address="newAddress.address"
-            label="Укажите адрес"
-            placeholder="Город, улица, дом"
-            @update="selectAddress($event, 15)"
-          />
         </div>
         <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
           <CInput
