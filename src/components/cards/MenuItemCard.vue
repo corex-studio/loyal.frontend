@@ -126,11 +126,16 @@ import {
   ecommerceAdd,
   ecommerceClick,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
+import { useYandexMetrika } from 'yandex-metrika-vue3'
+import { useRoute } from 'vue-router'
 
 const props = defineProps<{
   item: MenuItem
 }>()
+
+const metrika = useYandexMetrika()
 const loading = ref(false)
+const route = useRoute()
 
 const onIntersection = (entry: IntersectionObserverEntry) => {
   if (entry.isIntersecting) {
@@ -179,6 +184,7 @@ const toCartClickHandler = async () => {
 
 const openMenuItem = async () => {
   void ecommerceClick(props.item)
+  metrika.hit(route.fullPath)
   store.menuItemModal = true
   store.menuItemImage = props.item.image
   await menuItemRepo.retrieve(props.item.id, {

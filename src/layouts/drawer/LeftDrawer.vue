@@ -75,9 +75,11 @@
         />
       </div>
       <q-separator class="my-8" />
-      <ContactsHeader style="gap: 10px !important; flex-direction: column !important;" />
+      <ContactsHeader
+        style="gap: 10px !important; flex-direction: column !important"
+      />
       <q-separator class="my-8" />
-<!--      <TopHeaderDeliveryInfo />-->
+      <!--      <TopHeaderDeliveryInfo />-->
       <TopHeaderSocials header-mode />
     </q-drawer>
   </div>
@@ -90,7 +92,7 @@ import { store } from 'src/models/store'
 import { computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from '../header/TopHeaderSocials.vue'
-import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
+// import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
@@ -111,7 +113,10 @@ const blocks = computed(() => {
     },
     {
       label: 'Бонусы',
-      hidden: !authentication.user || authentication.user.isAnonymous,
+      hidden:
+        !authentication.user ||
+        authentication.user.isAnonymous ||
+        !uiSettingsRepo.item?.useBonuses,
       click: () => {
         store.bonusesDrawer = true
         store.leftDrawer = false

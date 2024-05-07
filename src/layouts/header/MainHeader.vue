@@ -145,7 +145,9 @@
                 <q-spinner v-else color="on-background-color" size="23px" />
                 <div class="bold">Корзина</div>
               </div>
+
               <div
+                v-if="$uiSettings.item?.useBonuses"
                 @click="$store.bonusesDrawer = true"
                 class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
               >

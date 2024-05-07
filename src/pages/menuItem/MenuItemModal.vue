@@ -74,7 +74,10 @@
             class="body"
             itemprop="weight"
           >
-            {{ currentSize?.characteristics.weight
+            {{
+              currentSize.characteristics.unit
+                ? currentSize?.characteristics.weight
+                : currentSize?.characteristics.weight * 1000
             }}{{
               currentSize.characteristics.unit
                 ? unitTypeNamesShort[currentSize.characteristics.unit]

@@ -108,7 +108,9 @@
         style="position: sticky; bottom: 0"
       >
         <CartBonuses
-          v-if="$cart.item?.walletPayments.length"
+          v-if="
+            $cart.item?.walletPayments.length && $uiSettings.item?.useBonuses
+          "
           class="mb-md-12 mb-xs-8"
         />
         <div

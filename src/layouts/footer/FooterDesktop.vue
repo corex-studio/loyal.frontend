@@ -55,7 +55,7 @@
               text-color="on-bottom-menu-color"
               @click="
                 openLink(
-                  `https://loyalhub.ru/${String(
+                  `https://${currentHost}/${String(
                     $companyGroup.item?.externalId,
                   )}/policy`,
                 )
@@ -69,12 +69,13 @@
               text-color="on-bottom-menu-color"
               @click="
                 openLink(
-                  `https://loyalhub.ru/${String(
+                  `https://${currentHost}/${String(
                     $companyGroup.item?.externalId,
                   )}/terms_of_service`,
                 )
               "
             />
+
             <CButton
               class="body"
               label="Публичная оферта"
@@ -83,7 +84,7 @@
               text-color="on-bottom-menu-color"
               @click="
                 openLink(
-                  `https://loyalhub.ru/${String(
+                  `https://${currentHost}/${String(
                     $companyGroup.item?.externalId,
                   )}/offer`,
                 )
@@ -193,7 +194,7 @@
               text-color="on-bottom-menu-color"
               @click="
                 openLink(
-                  `https://loyalhub.ru/${String(
+                  `https://${currentHost}/${String(
                     $companyGroup.item?.externalId,
                   )}/policy`,
                 )
@@ -207,9 +208,23 @@
               text-color="on-bottom-menu-color"
               @click="
                 openLink(
-                  `https://loyalhub.ru/${String(
+                  `https://${currentHost}/${String(
                     $companyGroup.item?.externalId,
                   )}/terms_of_service`,
+                )
+              "
+            />
+            <CButton
+              class="body"
+              label="Публичная оферта"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
+              @click="
+                openLink(
+                  `https://${currentHost}/${String(
+                    $companyGroup.item?.externalId,
+                  )}/offer`,
                 )
               "
             />
@@ -388,6 +403,10 @@ const infoBlocks = computed(() => {
       },
     },
   ]
+})
+
+const currentHost = computed(() => {
+  return window.location.host
 })
 
 const scrollToBlock = (v: string, tab?: string) => {

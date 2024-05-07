@@ -1,6 +1,6 @@
 <template>
   <div class="row full-width no-wrap justify-between items-center">
-    <div class="row items-center gap-6">
+    <div class="row items-center no-wrap gap-6">
       <div
         class="mark-block bg-secondary border-radius2 row items-center justify-center"
       >
@@ -11,7 +11,7 @@
         />
       </div>
       <div class="body">
-        {{ item.name }}
+        {{ item.address }}
       </div>
     </div>
     <MenuActions :structure="structure" icon-only />

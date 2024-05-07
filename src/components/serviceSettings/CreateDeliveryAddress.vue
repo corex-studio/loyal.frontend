@@ -50,18 +50,25 @@
             <div class="body bold">Определить адрес автоматически</div>
           </CButton>
         </div>
-        <div v-if="!isPrivateHouse" class="row gap-5 no-wrap">
+        <div class="row gap-5 no-wrap">
+          <CInput
+            v-model="newAddress.flat"
+            class="col"
+            external-label="Квартира"
+            height="48px"
+            placeholder="Номер"
+          />
           <CInput
             v-model="newAddress.entrance"
-            :readonly="isPrivateHouse"
             class="col"
             external-label="Подъезд"
             height="48px"
             placeholder="Номер"
           />
+        </div>
+        <div class="row gap-5 no-wrap">
           <CInput
             v-model="newAddress.floor"
-            :readonly="isPrivateHouse"
             class="col"
             external-label="Этаж"
             height="48px"
@@ -70,9 +77,8 @@
           />
           <CInput
             v-model="newAddress.intercom"
-            :readonly="isPrivateHouse"
             class="col"
-            external-label="Код двери"
+            external-label="Домофон"
             height="48px"
             placeholder="Номер"
           />
@@ -86,13 +92,13 @@
         />
       </div>
       <div class="mt-md-15 mt-xs-8 column full-width gap-12">
-        <CCheckBox
+        <!-- <CCheckBox
           :model-value="isPrivateHouse"
           class="body"
           label="У меня частный дом"
           size="50px"
           @click="privateHouseClickHandler()"
-        />
+        /> -->
         <CButton
           :disabled="!isSaveAvailable"
           :loading="
@@ -132,7 +138,6 @@ import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import L, { Layer } from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
-import CCheckBox from '../helpers/CCheckBox.vue'
 import { useGeolocation } from '@vueuse/core'
 import { utilsRepo } from 'src/models/utils/utilsRepo'
 
@@ -154,7 +159,6 @@ const emit = defineEmits<{
 
 const drawnItems = new L.FeatureGroup()
 const newAddress = ref<DeliveryAddress | null>(null)
-const isPrivateHouse = ref(false)
 const geoloading = ref(false)
 const q = useQuasar()
 let map: CorexLeafletMap
@@ -196,10 +200,10 @@ const loadAddressDataByCoords = async () => {
   selectAddress(res, 13)
 }
 
-const privateHouseClickHandler = () => {
-  if (!newAddress.value) return
-  isPrivateHouse.value = !isPrivateHouse.value
-}
+// const privateHouseClickHandler = () => {
+//   if (!newAddress.value) return
+//   isPrivateHouse.value = !isPrivateHouse.value
+// }
 
 const drawPoint = (zoom?: number) => {
   const values: {
@@ -276,11 +280,11 @@ onMounted(() => {
 const createAddress = async () => {
   try {
     if (props.address) {
-      if (isPrivateHouse.value && newAddress.value) {
-        newAddress.value.entrance = null
-        newAddress.value.floor = null
-        newAddress.value.intercom = null
-      }
+      // if (isPrivateHouse.value && newAddress.value) {
+      //   newAddress.value.entrance = null
+      //   newAddress.value.floor = null
+      //   newAddress.value.intercom = null
+      // }
       const res = await deliveryAddressRepo.update(newAddress.value)
       const foundAddressIndex = deliveryAddressRepo.items.findIndex(
         (v) => v.id === newAddress.value?.id,
