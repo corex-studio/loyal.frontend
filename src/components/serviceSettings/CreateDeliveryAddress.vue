@@ -256,7 +256,7 @@ onMounted(() => {
     map = new CorexLeafletMap()
     if (!map) return
     map.lmap.addLayer(drawnItems)
-    void geolocate()
+    if (!props.address) void geolocate()
     drawPoint(13)
     map.lmap.invalidateSize()
     map.lmap.on(
