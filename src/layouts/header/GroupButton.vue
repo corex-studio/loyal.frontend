@@ -21,7 +21,7 @@
     ]"
   >
     <div
-      class="ellipsis bold text-uppercase"
+      class="ellipsis bold"
       :class="{ 'text-on-background-color': additional }"
     >
       {{ item.name }}
