@@ -1,6 +1,8 @@
 <template>
   <div>
-    <template v-if="!$salesPoint.menuLoading && $menu.item?.groups">
+    <template
+      v-if="(!$salesPoint.menuLoading || $menu.item) && $menu.item?.groups"
+    >
       <div
         v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
         :key="index"

@@ -194,7 +194,7 @@ export class Cart implements BaseModel {
 
   get currentAddress() {
     return this.type === CartType.DELIVERY
-      ? this.deliveryAddress?.name || this.deliveryAddress?.address
+      ? this.deliveryAddress?.address
       : this.salesPoint.customAddress || this.salesPoint.address
   }
 

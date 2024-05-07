@@ -18,7 +18,7 @@
           @dragscrollend="onDragEnd"
         >
           <div
-            v-if="categories && !$salesPoint.menuLoading"
+            v-if="categories && (!$salesPoint.menuLoading || $menu.item)"
             class="gap-lg-7 gap-xs-6 gap-md-8 no-wrap items-center no-scrollbar row"
             style="transition: 0.25s all ease"
           >
@@ -30,7 +30,7 @@
               <GroupButton :key="key" :item="el" />
             </div>
           </div>
-          <template v-if="$salesPoint.menuLoading">
+          <template v-if="$salesPoint.menuLoading && !$menu.item">
             <q-skeleton
               v-for="(el, index) in [1, 2, 3, 4, 5, 6, 7]"
               :key="index"

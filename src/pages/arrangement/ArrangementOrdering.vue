@@ -35,7 +35,7 @@
                   : ''
               "
               style="min-height: 48px"
-              class="bg-input-color border-radius2 text-on-input-color row justify-between px-6 py-5 row no-wrap col gap-10"
+              class="bg-input-color border-radius2 items-center text-on-input-color row justify-between px-6 py-5 row no-wrap col gap-10"
             >
               <div>{{ $cart.item?.currentAddress }}</div>
               <!-- <template v-if="isDelivery">
@@ -674,13 +674,12 @@ const availableTimes = computed(() => {
 
 const paymentTypes = computed(() => {
   const result: PaymentObjectType[] = []
-
-  if (salesPointRepo.paymentSettings?.cash_enabled)
+  if (salesPointRepo.paymentSettings?.online_payment_enabled)
     result.push({
-      label: 'Наличными при получении',
-      type: PaymentType.CASH,
-      class: 'bg-cash-button-color text-on-cash-button-color',
-      icon: 'fa-light fa-money-bill',
+      label: 'Онлайн',
+      type: PaymentType.ONLINE,
+      class: 'bg-online-button-color text-on-online-button-color',
+      icon: 'fa-light fa-ruble-sign',
     })
   if (salesPointRepo.paymentSettings?.card_enabled)
     result.push({
@@ -689,13 +688,14 @@ const paymentTypes = computed(() => {
       class: 'bg-card-button-color text-on-card-button-color',
       icon: 'fa-light fa-credit-card',
     })
-  if (salesPointRepo.paymentSettings?.online_payment_enabled)
+  if (salesPointRepo.paymentSettings?.cash_enabled)
     result.push({
-      label: 'Онлайн',
-      type: PaymentType.ONLINE,
-      class: 'bg-online-button-color text-on-online-button-color',
-      icon: 'fa-light fa-ruble-sign',
+      label: 'Наличными при получении',
+      type: PaymentType.CASH,
+      class: 'bg-cash-button-color text-on-cash-button-color',
+      icon: 'fa-light fa-money-bill',
     })
+
   return result
 })
 
