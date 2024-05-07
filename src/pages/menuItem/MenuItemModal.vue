@@ -31,7 +31,7 @@
           size="24px"
         />
       </div>
-      <q-img
+      <img
         :ratio="1"
         class="col"
         :style="`border-radius: ${getImageBorderRadius}; max-width: ${
@@ -44,8 +44,8 @@
         style="width: 100%"
         :src="currentImage"
         itemprop="image"
-      >
-        <template v-slot:error>
+      />
+      <!-- <template v-slot:error>
           <span>
             <q-img
               :ratio="1"
@@ -55,7 +55,8 @@
               :src="$store.images.empty"
             ></q-img>
           </span> </template
-      ></q-img>
+      > -->
+
       <div
         v-if="!$menuItem.loadings.retrieve"
         style="overflow-x: auto; width: -webkit-fill-available"
