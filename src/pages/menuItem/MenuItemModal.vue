@@ -38,9 +38,8 @@
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
         }; min-width: ${
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
-        }; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}`"
+        }; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}; height: ${$q.screen.lt.lg ? '450px' : '100%'}`"
         fit="cover"
-        :height="$q.screen.lt.lg ? '450px' : '100%'"
         style="width: 100%"
         :src="currentImage"
         itemprop="image"
@@ -183,7 +182,7 @@
       </div>
       <div
         v-else
-        class="column justify-between full-width px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0"
+        class="column justify-between full-width px-md-15 px-xs-8 pt-md-15 mt-xs-18 mt-md-0 pb-xs-50 pb-lg-0"
       >
         <div>
           <q-skeleton height="30px" width="80%" class="mb-5" />
