@@ -114,6 +114,7 @@ export type UiSettingsRaw = {
   show_menu_item_border: boolean
   out_of_stock_text: string | null
   ui_elements: UIElementRaw[]
+  guest_count_setter_text?: string | null
 }
 
 export type BoxShadow = {
@@ -194,6 +195,7 @@ export class UiSetting implements BaseModel {
   showMenuItemBorder: boolean
   outOfStockText: string | null
   uiElements: UIElementRaw[]
+  guestCountSetterText: string | null
 
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
@@ -268,6 +270,7 @@ export class UiSetting implements BaseModel {
     this.showMenuItemBorder = raw.show_menu_item_border
     this.outOfStockText = raw.out_of_stock_text
     this.uiElements = raw.ui_elements
+    this.guestCountSetterText = raw.guest_count_setter_text || null
   }
 
   get useBonuses() {
