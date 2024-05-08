@@ -11,10 +11,11 @@
 </template>
 <script lang="ts" setup>
 import HomeSpecialOffers from './HomeSpecialOffers.vue'
-import { onMounted } from 'vue'
+import { defineAsyncComponent, onMounted } from 'vue'
 import HomeMenus from './HomeMenus.vue'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import HomeScanQr from './HomeScanQr.vue'
+
+const HomeScanQr = defineAsyncComponent(() => import('./HomeScanQr.vue'))
 
 onMounted(() => {
   menuGroupRepo.elementsInViewport = []

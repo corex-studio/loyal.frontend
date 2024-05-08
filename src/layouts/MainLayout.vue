@@ -72,37 +72,38 @@
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
 import { Screen } from 'quasar'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { store } from 'src/models/store'
-import AuthModal from 'src/pages/auth/AuthModal.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
 import { handleMessage } from 'src/models/webSocket/webSocketRepo'
 import { newsRepo } from 'src/models/news/newsRepo'
 import { promotionsRepo } from 'src/models/promotion/promotionsRepo'
-import CartDrawer from './drawer/cart/CartDrawer.vue'
-import ServiceSettingsModal from 'src/components/serviceSettings/ServiceSettingsModal.vue'
-import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
 import { Company } from 'src/models/company/company'
 import { companyRepo } from 'src/models/company/companyRepo'
 import CFooter from './footer/CFooter.vue'
 import { padRepo } from 'src/models/pads/padRepo'
-import QRMobileMenu from 'src/pages/qrMenu/QRMobileMenu.vue'
-import QRHomePadInfo from 'src/pages/qrMenu/home/QRHomePadInfo.vue'
-import MenuItemModal from 'src/pages/menuItem/MenuItemModal.vue'
-import NewsModal from 'src/pages/news/NewsModal.vue'
-import RegistrationModal from 'src/pages/auth/RegistrationModal.vue'
-import CartOverlayButton from './drawer/cart/CartOverlayButton.vue'
 import TopHeader from './header/TopHeader.vue'
-import LeftDrawer from './drawer/LeftDrawer.vue'
 import { AppManager } from 'src/models/utils/appManager'
-import ReviewOrderModal from 'src/components/dialogs/ReviewOrderModal.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
-import OrderToReviewOverlay from 'src/components/cards/OrderToReviewOverlay.vue'
-// import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import BonusesDrawer from './drawer/bonuses/BonusesDrawer.vue'
 import { setMeta } from 'src/models/metaTags/metaTags'
+
+const ServiceSettingsModal = defineAsyncComponent(() => import('src/components/serviceSettings/ServiceSettingsModal.vue'))
+const SelectCompanyModal = defineAsyncComponent(() => import('src/components/dialogs/SelectCompanyModal.vue'))
+const QRMobileMenu = defineAsyncComponent(() => import('src/pages/qrMenu/QRMobileMenu.vue'))
+const QRHomePadInfo = defineAsyncComponent(() => import('src/pages/qrMenu/home/QRHomePadInfo.vue'))
+const MenuItemModal = defineAsyncComponent(() => import('src/pages/menuItem/MenuItemModal.vue'))
+const NewsModal = defineAsyncComponent(() => import('src/pages/news/NewsModal.vue'))
+const ReviewOrderModal = defineAsyncComponent(() => import('src/components/dialogs/ReviewOrderModal.vue'))
+const RegistrationModal = defineAsyncComponent(() => import('src/pages/auth/RegistrationModal.vue'))
+const LeftDrawer = defineAsyncComponent(() => import('./drawer/LeftDrawer.vue'))
+const CartOverlayButton = defineAsyncComponent(() => import('./drawer/cart/CartOverlayButton.vue'))
+const OrderToReviewOverlay = defineAsyncComponent(() => import('src/components/cards/OrderToReviewOverlay.vue'))
+const BonusesDrawer = defineAsyncComponent(() => import('./drawer/bonuses/BonusesDrawer.vue'))
+const AuthModal = defineAsyncComponent(() => import('src/pages/auth/AuthModal.vue'))
+const CartDrawer = defineAsyncComponent(() => import('./drawer/cart/CartDrawer.vue'))
+
 
 const webSocket = ref<WebSocket | null>(null)
 const routesWithoutContainerPaddings = [

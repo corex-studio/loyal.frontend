@@ -77,13 +77,14 @@
 </template>
 
 <script setup lang="ts">
-import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
 import { News } from 'src/models/news/news'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { useQuasar } from 'quasar'
 import { store } from 'src/models/store'
 import { newsRepo } from 'src/models/news/newsRepo'
+
+const SwiperContainer = defineAsyncComponent(() => import('src/layouts/containers/SwiperContainer.vue'))
 
 const q = useQuasar()
 
