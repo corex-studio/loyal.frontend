@@ -74,10 +74,7 @@
             class="body"
             itemprop="weight"
           >
-            {{
-              currentSize.characteristics.unit
-                ? currentSize?.characteristics.weight
-                : currentSize?.characteristics.weight * 1000
+            {{ currentWeight
             }}{{
               currentSize.characteristics.unit
                 ? unitTypeNamesShort[currentSize.characteristics.unit]
@@ -88,6 +85,7 @@
             v-if="$menuItem.item?.description?.length"
             class="body mb-8 mt-2"
             itemprop="description"
+            style="white-space: pre-line"
           >
             {{ $menuItem.item?.description }}
           </div>
@@ -248,6 +246,13 @@ const currentSize = ref<ItemSize | null>(null)
 const quantity = ref(1)
 const loading = ref(false)
 const q = useQuasar()
+
+const currentWeight = computed(() => {
+  const roundedWeight = currentSize.value?.characteristics.weight.toFixed(3)
+  return currentSize.value?.characteristics.unit
+    ? roundedWeight
+    : (Number(roundedWeight) || 0) * 1000
+})
 
 const currentImage = computed(() => {
   return menuItemRepo.loadings.retrieve
