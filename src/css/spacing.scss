@@ -7,7 +7,7 @@ $breakpoints: (
 );
 
 @media (min-width: 0px) {
-  @for $index from 0 through 500 {
+  @for $index from 0 through 60 {
     .ma-#{$index} {
       margin: #{$index * 2}px !important;
     }
