@@ -393,9 +393,9 @@ textarea + .q-field__label {
   display: none;
 }
 
-body.safari {
-  .q-field--outlined .q-field__control:after {
-    height: var(--input-height) !important;
-  }
-}
+//body.safari { // todo вернуть, если в сафари будет неправильная подсветка инпутов
+//  .q-field--outlined .q-field__control:after {
+//    height: var(--input-height) !important;
+//  }
+//}
 </style>
