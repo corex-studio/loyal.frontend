@@ -141,7 +141,7 @@ const props = defineProps<{
 const emit = defineEmits(['delete'])
 
 const openItemModal = async (menuItemId: string | null) => {
-  store.menuItemModal = true
+  store.openMenuItemModal()
   await menuItemRepo.retrieve(menuItemId || '', {
     sales_point: salesPointRepo.item?.id,
   })

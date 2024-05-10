@@ -22,6 +22,7 @@ type DeliveryAreaInfoDrawerData = {
 }
 
 export class Store {
+  scrollPositionBeforeOpenProductModal = 0
   footerHeight = 0
   headerHeight = 0
   salesPoint = 'd253cd53-044b-468d-8881-232f43715f5e'
@@ -42,7 +43,6 @@ export class Store {
   selectCompanyModal = false
   verticalScroll = 0
   offersTab = 'Новости'
-  menuItemModal = false
   freeItem: string | null = null
   newsModal = false
   images = {
@@ -57,6 +57,20 @@ export class Store {
   initialMenuItem: string | null = null
   menuItemImage: Image | null = null
   groupDragged = false
+  private _menuItemModal = false
+
+  get menuItemModal() {
+    return this._menuItemModal
+  }
+
+  openMenuItemModal() {
+    store.scrollPositionBeforeOpenProductModal = window.scrollY
+    this._menuItemModal = true
+  }
+
+  closeMenuItemModal() {
+    this._menuItemModal = false
+  }
 
   getCompanyGroup(externalId: string) {
     const currentCompanyGroup = externalId

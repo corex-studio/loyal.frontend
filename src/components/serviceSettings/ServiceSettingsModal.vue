@@ -517,7 +517,7 @@ const openPreviousMenuItem = () => {
     menuRepo.item?.allMenuItems?.map((v) => v.id).includes(store.storedMenuItem)
   ) {
     void menuItemRepo.retrieve(store.storedMenuItem)
-    store.menuItemModal = true
+    store.openMenuItemModal()
     store.storedMenuItem = null
   }
 }

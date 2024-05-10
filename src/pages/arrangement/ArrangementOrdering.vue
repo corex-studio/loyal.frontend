@@ -595,7 +595,7 @@ const clearBeforeRouterResolve = router.afterEach(() => {
 
 const openMenuItemModal = async (item: CartItem) => {
   if (!item.size.menu_item) return
-  store.menuItemModal = true
+  store.openMenuItemModal()
 
   await menuItemRepo.retrieve(item.size.menu_item, {
     sales_point: salesPointRepo.item?.id,

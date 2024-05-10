@@ -97,7 +97,7 @@ export class AppManager {
 
   handleInitialMenuItem = async () => {
     if (store.initialMenuItem) {
-      store.menuItemModal = true
+      store.openMenuItemModal()
       await menuItemRepo.retrieve(store.initialMenuItem, {
         sales_point: salesPointRepo.item?.id,
       })

@@ -168,12 +168,12 @@
                 </div>
               </CButton>
               <CTooltip v-if="$menuItem.item?.isDead"
-                >Товар недоступен</CTooltip
-              >
+                >Товар недоступен
+              </CTooltip>
               <CTooltip
                 v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem"
-                >Недоступно к заказу</CTooltip
-              >
+                >Недоступно к заказу
+              </CTooltip>
             </div>
           </div>
         </teleport>
@@ -218,7 +218,7 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
-import { Notify, useQuasar } from 'quasar'
+import { Notify, useMeta, useQuasar } from 'quasar'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
@@ -230,7 +230,6 @@ import {
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { useRoute } from 'vue-router'
-import { useMeta } from 'quasar'
 
 const props = defineProps<{
   modelValue: boolean

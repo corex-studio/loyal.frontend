@@ -48,7 +48,7 @@ const props = defineProps<{
 }>()
 
 const openFreeItem = async () => {
-  store.menuItemModal = true
+  store.openMenuItemModal()
   store.freeItem = props.item.uuid
   await menuItemRepo.retrieve(props.item.menuItem.id || '', {
     sales_point: salesPointRepo.item?.id,
