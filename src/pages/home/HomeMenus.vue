@@ -12,6 +12,7 @@
         <div class="header bold mb-lg-15 mb-md-15 mb-xs-8">
           {{ el.name }}
         </div>
+
         <div v-if="el.items.length" class="row full-width">
           <GridContainer
             :items="el.items"
