@@ -72,7 +72,14 @@
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
 import { Screen } from 'quasar'
-import { computed, defineAsyncComponent, nextTick, onMounted, ref, watch } from 'vue'
+import {
+  computed,
+  defineAsyncComponent,
+  nextTick,
+  onMounted,
+  ref,
+  watch,
+} from 'vue'
 import { useRoute } from 'vue-router'
 import { store } from 'src/models/store'
 import { authentication } from 'src/models/authentication/authentication'
@@ -177,7 +184,7 @@ const footerAndHeaderHeight = computed(() => {
 
 const setScroll = () => {
   void nextTick(() => {
-  if (store.scrollPositionBeforeOpenProductModal)
+    if (store.scrollPositionBeforeOpenProductModal)
       window.scrollTo(0, store.scrollPositionBeforeOpenProductModal)
   })
 }
