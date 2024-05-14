@@ -183,7 +183,7 @@
         'mt-lg-29 mt-md-25 mt-xs-10':
           $companyGroup.item?.externalId === 'tochka_vkusa',
       }"
-      class="bg-backing-color py-lg-32 pt-xs-15 pb-md-11"
+      class="bg-backing-color py-lg-30 pt-xs-15 pb-md-11"
     >
       <div class="c-container">
         <div
@@ -282,7 +282,7 @@
         fit="cover"
         @click="socialsModal = true"
         width="100%"
-        class="border-radius cursor-pointer mt-lg-62 mt-md-25 mt-xs-15"
+        class="border-radius cursor-pointer mt-lg-60 mt-md-25 mt-xs-15"
         :src="$uiSettings.item?.socialButtonImage?.image"
       >
       </q-img>
@@ -337,7 +337,7 @@
     </div>
     <ProfileAddressesOnMap
       :key="$company.companyForProfile?.id"
-      class="c-container mt-lg-33 mt-md-25 mt-xs-15"
+      class="c-container mt-lg-30 mt-md-25 mt-xs-15"
     />
   </div>
   <div v-else>

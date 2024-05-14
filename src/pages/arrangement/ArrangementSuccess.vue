@@ -168,7 +168,7 @@
       color="secondary-button-color"
       text-color="on-secondary-button-color"
       width="100%"
-      class="body mt-lg-40 mt-xs-20"
+      class="body mt-lg-30 mt-xs-20"
       :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
   </div>

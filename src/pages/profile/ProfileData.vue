@@ -1,7 +1,7 @@
 <template>
   <div
     :style="`max-width: ${$q.screen.lt.lg ? '' : '520px'}; width: 100%`"
-    class="text-on-background-color column mb-xs-40 mb-lg-0"
+    class="text-on-background-color column mb-xs-30 mb-lg-0"
   >
     <div
       v-if="$q.screen.lt.lg"

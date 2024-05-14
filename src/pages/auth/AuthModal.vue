@@ -102,7 +102,7 @@
         :label="currentStep === 1 ? 'Выслать код' : 'Войти'"
         class="subtitle-text"
         :class="
-          $q.screen.lt.md ? (currentStep === 2 ? 'mt-6' : 'mt-36') : 'mt-15'
+          $q.screen.lt.md ? (currentStep === 2 ? 'mt-6' : 'mt-30') : 'mt-15'
         "
         color="primary"
         text-color="on-primary"
