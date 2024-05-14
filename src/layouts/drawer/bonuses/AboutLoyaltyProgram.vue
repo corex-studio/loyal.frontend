@@ -1,6 +1,7 @@
 <template>
-  <div class="mt-sm-15 mt-xs-10 body">
+  <div style="white-space: pre-line" class="mt-sm-15 mt-xs-10 body">
     {{ $uiSettings.item?.qrCodeDescription }}
+
     <!-- <div class="header3 bold">Как получать больше бонусов</div>
     <ul class="mt-8 pl-8">
       <li>Заполните ваш профиль всей необходимой информацией</li>
