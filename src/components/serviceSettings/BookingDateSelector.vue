@@ -17,6 +17,7 @@
       <div
         class="date-element border-radius px-9 pb-1 gap-4 cursor-pointer row items-center"
         :class="{ 'date-element-selected': isAdditionalDateSelected }"
+        :style="`height: ${$q.screen.lt.md ? '40px' : '48px'}`"
       >
         <div v-if="isAdditionalDateSelected" class="mt-2">
           {{ getDateName(date) }}

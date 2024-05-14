@@ -9,7 +9,7 @@
     dialog-class="no-scrollbar"
     no-padding
     :position="$q.screen.lt.md ? 'bottom' : undefined"
-    :maximize="$q.screen.lt.md"
+    :maximize="$q.screen.lt.xl"
     :hide-close="$q.screen.lt.md"
   >
     <div
@@ -44,22 +44,11 @@
         :src="currentImage"
         itemprop="image"
       />
-      <!-- <template v-slot:error>
-          <span>
-            <q-img
-              :ratio="1"
-              fit="cover"
-              height="100%"
-              width="600px"
-              :src="$store.images.empty"
-            ></q-img>
-          </span> </template
-      > -->
 
       <div
         v-if="!$menuItem.loadings.retrieve"
-        style="overflow-x: auto; width: -webkit-fill-available"
-        class="column no-wrap justify-between full-height px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0 relative-position bg-background-color"
+        style="overflow-x: auto"
+        class="column no-wrap col justify-between full-height px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0 relative-position bg-background-color"
         :style="`border-radius: ${
           $q.screen.lt.md ? getImageBorderRadius : 'unset'
         }`"
