@@ -172,8 +172,8 @@ export class AppManager {
   async setOnline() {
     if (interval) clearInterval(interval)
     else void customerRepo.setOnline(window.navigator.userAgent)
-
     interval = setInterval(() => {
+      if (document.hidden) return
       void customerRepo.setOnline(window.navigator.userAgent)
     }, 30000)
   }

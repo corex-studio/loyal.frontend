@@ -1,7 +1,7 @@
 <template>
   <div class="full-width">
     <div class="full-width header3 bold mb-5">Баллы</div>
-    <div class="row full-width items-center gap-5s justify-between">
+    <div class="row full-width items-center gap-5 justify-between">
       <div class="row items-center gap-7 no-wrap">
         <c-icon
           name="fa-light fa-coin-vertical"
