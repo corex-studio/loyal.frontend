@@ -3,7 +3,7 @@
     <PrepareUiSettings />
     <q-layout class="bg-background-color relative-position" view="lHh Lpr lFf">
       <QRHomePadInfo v-if="$store.tableMode" />
-      <TopHeader v-if="$q.screen.gt.md" />
+      <TopHeader v-if="$q.screen.gt.md && !$store.tableMode" />
       <MainHeader />
       <div v-if="$q.screen.lt.md" class="full-width">
         <QRMobileMenu
@@ -39,7 +39,7 @@
           v-if="$order.orderToReview && $route.name === 'home'"
         />
       </q-page-container>
-      <q-footer v-if="!$store.tableMode">
+      <q-footer>
         <CFooter class="full-width" style="bottom: 0; z-index: 2100" />
       </q-footer>
     </q-layout>

@@ -22,7 +22,11 @@
         />
       </div>
       <template v-if="$q.screen.gt.md">
-        <div class="column text-on-bottom-menu-color" style="width: 186px">
+        <div
+          v-if="!$store.tableMode"
+          class="column text-on-bottom-menu-color"
+          style="width: 186px"
+        >
           <div class="bold subtitle-text mb-8">Информация</div>
           <div class="column gap-6">
             <div
