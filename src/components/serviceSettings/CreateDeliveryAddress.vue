@@ -31,7 +31,7 @@
           height="48px"
           placeholder="Название"
         /> -->
-        <div class="column full-width gap-md-6 gap-xs-4">
+        <div class="column full-width gap-10">
           <AddressSearch
             :address="newAddress.address"
             label="Укажите адрес"

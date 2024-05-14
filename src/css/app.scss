@@ -171,10 +171,17 @@ body:not(.safari) {
   }
 }
 
+input[type='number'] {
+  -moz-appearance: textfield !important;
+}
+
 .change-amount {
   .q-field {
     .q-field__control {
-      height: -webkit-fill-available !important;
+      height: inherit !important;
+    }
+    .q-field__inner {
+      height: inherit !important;
     }
   }
 }

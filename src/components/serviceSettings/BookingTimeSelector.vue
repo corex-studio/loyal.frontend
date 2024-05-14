@@ -31,6 +31,7 @@
           size="20px"
           hover-color="primary"
         ></CIcon>
+
         <q-menu
           v-model="menu"
           :fit="$q.screen.gt.sm"
@@ -38,7 +39,7 @@
             $q.screen.lt.md ? 'width: 200px !important; overflow-x: hidden' : ''
           "
         >
-          <div ref="menuRef" class="column no-wrap full-width px-4">
+          <div ref="menuRef" class="no-wrap full-width px-4">
             <div
               v-for="(el, index) in totalDayTimes()"
               :class="[el, { 'selected-time border-radius bold': el === time }]"

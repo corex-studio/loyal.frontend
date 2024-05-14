@@ -84,10 +84,26 @@
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
+            v-if="$companyGroup.item?.externalId !== 'Krendel'"
             @click.capture.stop="toCartClickHandler()"
             :color="item.isDead ? 'secondary' : 'primary'"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
             :text-color="item.isDead ? 'on-secondary' : 'on-primary'"
+            height="40px"
+            class="body"
+            :loading="loading"
+            :width="$q.screen.lt.md ? '100%' : undefined"
+          >
+            <div :class="{ bold: $q.screen.lt.md }">
+              {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
+            </div>
+          </CButton>
+          <CButton
+            v-else
+            @click.capture.stop="toCartClickHandler()"
+            :color="item.isDead ? 'secondary' : 'accent'"
+            :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
+            :text-color="item.isDead ? 'on-secondary' : 'on-accent'"
             height="40px"
             class="body"
             :loading="loading"
