@@ -1,7 +1,7 @@
 <template>
   <div id="footer" class="text-on-bottom-menu-color full-width">
     <div class="row full-width justify-between gap-8">
-      <div class="col column gap-8">
+      <div v-if="!$store.tableMode" class="col column gap-8">
         <div class="header3 bold">Информация</div>
         <div class="column full-width gap-6">
           <div v-for="(el, index) in infoBlocks" :key="index">
@@ -109,7 +109,10 @@
         </div>
       </div>
     </div>
-    <div class="column mt-10 full-width gap-6 body mt-15">
+    <div
+      :class="$store.tableMode ? '' : 'mt-15'"
+      class="column full-width gap-6 body"
+    >
       <div>© 2023 все права защищены</div>
       <CButton
         text-color="on-bottom-menu-color"

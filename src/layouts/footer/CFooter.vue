@@ -1,5 +1,9 @@
 <template>
-  <div ref="footer" class="bg-bottom-menu-color">
+  <div
+    ref="footer"
+    class="bg-bottom-menu-color"
+    :class="{ 'pb-30': $q.screen.lt.md && $store.tableMode }"
+  >
     <q-separator v-if="!$q.screen.xs" />
     <div class="pb-md-15 pb-xs-5" style="bottom: 0; z-index: 2100">
       <div class="c-container" v-if="$q.screen.gt.sm">
