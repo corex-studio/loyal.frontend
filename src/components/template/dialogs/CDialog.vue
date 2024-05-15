@@ -67,8 +67,9 @@
 <script setup lang="ts">
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import CIcon from '../helpers/CIcon.vue'
+import { watch } from 'vue'
 
-defineProps({
+const props = defineProps({
   hideActions: Boolean,
   alignActions: {
     type: String,
@@ -109,6 +110,17 @@ defineEmits(['update:modelValue'])
 const bottomBorderRadius = () => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 }
+
+watch(
+  () => props.modelValue,
+  (v) => {
+    if (v) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+  },
+)
 </script>
 
 <style lang="scss" scoped>
