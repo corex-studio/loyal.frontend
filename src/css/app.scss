@@ -186,6 +186,12 @@ input[type='number'] {
   }
 }
 
+@-moz-document url-prefix() {
+  .q-body--prevent-scroll {
+    position: unset !important;
+  }
+}
+
 .q-field--outlined .q-field__control:before,
 .q-editor {
   border: 1px solid $gray-light;
