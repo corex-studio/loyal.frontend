@@ -58,6 +58,7 @@ export class Store {
   menuItemImage: Image | null = null
   groupDragged = false
   private _menuItemModal = false
+  cityFromParam: string | null = null
 
   get menuItemModal() {
     return this._menuItemModal

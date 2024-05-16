@@ -71,7 +71,7 @@
 
 <script lang="ts" setup>
 import MainHeader from './header/MainHeader.vue'
-import { Screen } from 'quasar'
+import { LocalStorage, Screen } from 'quasar'
 import {
   computed,
   defineAsyncComponent,
@@ -80,7 +80,7 @@ import {
   ref,
   watch,
 } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import { authentication } from 'src/models/authentication/authentication'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
@@ -95,6 +95,7 @@ import TopHeader from './header/TopHeader.vue'
 import { AppManager } from 'src/models/utils/appManager'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -145,6 +146,7 @@ const routesWithoutContainerPaddings = [
   'menu_item',
 ]
 const route = useRoute()
+const router = useRouter()
 const ready = ref(false)
 
 watch(
@@ -198,6 +200,10 @@ const closeMenuItemModal = () => {
 }
 
 onMounted(async () => {
+  if (!!route.params.cityUUID) {
+    store.cityFromParam = String(route.params.cityUUID)
+  }
+
   if (route.path.includes('qr_menu')) {
     store.tableMode = true
   }
@@ -206,13 +212,27 @@ onMounted(async () => {
     initMenuPage: true,
   })
   await manager.initApp()
+
   if (authentication.user) {
     void orderReviewRepo.getOrderToReview()
   }
   // salesPointRepo.menuLoading = true
   ready.value = true
   setMeta(route.meta)
+  postCurrentCityToParam()
 })
+
+const postCurrentCityToParam = () => {
+  const cityFromStorage = LocalStorage.getItem('city')
+  if (
+    (companyGroupRepo.item?.cityData.results?.length || 0) > 1 &&
+    !store.cityFromParam !== cityFromStorage
+  ) {
+    void router.push({
+      path: `/${cityFromStorage}`,
+    })
+  }
+}
 
 const companySelected = (v: Company | null) => {
   if (!authentication.user) {

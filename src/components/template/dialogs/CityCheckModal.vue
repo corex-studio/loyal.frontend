@@ -37,7 +37,7 @@ import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CButton from '../buttons/CButton.vue'
 import CDialog from './CDialog.vue'
 import { AppManager } from 'src/models/utils/appManager'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 
 defineProps<{
@@ -47,6 +47,8 @@ defineProps<{
 const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
+
+const router = useRouter()
 
 const route = useRoute()
 
@@ -58,6 +60,9 @@ const confirmSuggestedCity = async () => {
   )
   emit('update:modelValue', false)
   await reRequest()
+  void router.push({
+    path: `/${companyGroupRepo.item.cityData.current?.uuid}`,
+  })
 }
 
 const rejectSuggestedCity = () => {

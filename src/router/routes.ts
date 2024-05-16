@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/pages/SuccessfulPayment.vue'),
   },
   {
-    path: '/',
+    path: '/:cityUUID?',
     component: () => import('src/layouts/MainLayout.vue'),
     children: [
       {
