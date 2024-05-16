@@ -157,14 +157,14 @@ const currentStep = ref(1)
 
 const openPolicy = () => {
   window.open(
-    `https://loyalhub.ru/${String(companyGroupRepo.item?.externalId)}/policy`,
+    `https://${window.location.host}/${String(companyGroupRepo.item?.externalId)}/policy`,
     '_blank',
   )
 }
 
 const openTermsOfService = () => {
   window.open(
-    `https://loyalhub.ru/${String(
+    `https://${window.location.host}/${String(
       companyGroupRepo.item?.externalId,
     )}/terms_of_service`,
     '_blank',
