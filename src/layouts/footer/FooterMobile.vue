@@ -122,7 +122,7 @@
         label="Политика конфиденциальности"
         @click="
           openLink(
-            `https://loyalhub.ru/${String(
+            `https://${currentHost}/${String(
               $companyGroup.item?.externalId,
             )}/policy`,
           )
@@ -131,7 +131,7 @@
       <CButton
         @click="
           openLink(
-            `https://loyalhub.ru/${String(
+            `https://${currentHost}/${String(
               $companyGroup.item?.externalId,
             )}/terms_of_service`,
           )
@@ -193,6 +193,10 @@ const infoBlocks = computed(() => {
       },
     },
   ]
+})
+
+const currentHost = computed(() => {
+  return window.location.host
 })
 
 const showContacts = computed(() => {
