@@ -56,6 +56,11 @@ onMounted(() => {
     const index = currentOrders.value.findIndex((v) => v.id === e.order.id)
     if (index > -1) currentOrders.value[index] = e.order
   })
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible') {
+      void loadOrders()
+    }
+  })
 })
 
 const loadOrders = (page = 1, appendItems = false) => {
