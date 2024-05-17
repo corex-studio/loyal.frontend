@@ -5,6 +5,7 @@ class AuthHelper {
   constructor() {}
 
   async getAuthKey() {
+    if (window.location.protocol === 'http:') return ''
     const time = (await this.getServerTime())
       .replaceAll('-', '')
       .replaceAll(' ', '')
