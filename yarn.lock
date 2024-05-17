@@ -3808,6 +3808,11 @@ vue-timer-hook@^1.0.60:
   resolved "https://registry.npmjs.org/vue-timer-hook/-/vue-timer-hook-1.0.84.tgz"
   integrity sha512-OcHWYO8WD/XcGHdEqMkBI1Vj8m+OnXONrcmZvLcL3Gc6Js5LEs3UJ0eg1akVjNB0cXHishEmrmrhK7PZ+iULww==
 
+vue3-otp-input@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/vue3-otp-input/-/vue3-otp-input-0.4.4.tgz#6401ca2902a831618be72c8c8a18aa88b7126faf"
+  integrity sha512-LI1MeBiiEy59cnjqXzlcz4G4cMxZcHF/xOKilb6sfw4uFHfQ22Luu2ls0Bb51zL0pb3gGp7RuIL5eurEJXkoBg==
+
 vue3-qr-reader@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/vue3-qr-reader/-/vue3-qr-reader-1.0.0.tgz#a43c0f9badd39af611f37a92a8dd18e2150f41c5"
