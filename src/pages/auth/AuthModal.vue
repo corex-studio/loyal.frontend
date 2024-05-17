@@ -414,6 +414,7 @@ watch(codeError, (v) => {
   border: unset;
   height: 44px;
   color: var(--on-input-color);
+  background: var(--input-color) !important;
   text-align: center;
   width: 100%;
 }
