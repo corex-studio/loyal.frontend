@@ -141,7 +141,6 @@ import VOtpInput from 'vue3-otp-input'
 import CInput from 'components/template/inputs/CInput.vue'
 import CCheckBox from 'components/helpers/CCheckBox.vue'
 import { Fn, useEventListener } from '@vueuse/core'
-import moment from 'moment'
 
 const props = defineProps<{
   modelValue: boolean

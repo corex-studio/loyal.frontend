@@ -79,7 +79,7 @@ const loadOrders = async (page = 1, appendItems = false) => {
       page: page ? page : orderRepo.pagination.page,
       appendItems: appendItems,
       pageSize: 10,
-    }
+    },
   )
 }
 
@@ -91,6 +91,11 @@ const changeOrdersFilterType = async (type: OrderType) => {
 onMounted(async () => {
   if (!authentication.user) return
   await loadOrders()
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible') {
+      await loadOrders()
+    }
+  })
 })
 
 const orderTypes = ref<
