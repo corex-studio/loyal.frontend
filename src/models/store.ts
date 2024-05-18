@@ -23,6 +23,8 @@ type DeliveryAreaInfoDrawerData = {
 
 export class Store {
   scrollPositionBeforeOpenProductModal = 0
+  visibleMenuGroupId: string | null = null
+  visibleMenuGroupIdManualSet = false
   footerHeight = 0
   headerHeight = 0
   salesPoint = 'd253cd53-044b-468d-8881-232f43715f5e'
