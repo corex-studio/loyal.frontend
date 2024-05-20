@@ -1,13 +1,12 @@
 <template>
   <div
-    :data-group-id="item.id"
     @mouseover="hover = true"
     @mouseleave="hover = false"
     class="cursor-pointer border-radius row items-center body"
     @click="clickHandler(item)"
     :style="[isHomePage ? 'transition: color 0.25s ease-out' : '']"
     :class="[
-      (isSelected && isHomePage && !additional) || hover
+      (isSelected && isHomePage && !additional) || (hover && !$q.platform.has.touch)
         ? 'text-primary'
         : 'text-secondary-text',
     ]"
@@ -27,6 +26,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { Fn, useEventListener } from '@vueuse/core'
+import { debounce } from 'quasar'
+import { isApple } from 'src/services/isApple'
 
 const groupElement = ref()
 const route = useRoute()
@@ -41,18 +42,26 @@ const props = defineProps<{
 }>()
 
 onMounted(() => {
-  cleanups.push(useEventListener(window, 'scrollend', () => {
+  cleanups.push(useEventListener(window.document, 'scrollend', () => {
     store.visibleMenuGroupIdManualSet = false
   }))
+  if (isApple()) {
+    cleanups.push(useEventListener(window.document, 'scroll', debounce(emitScrollEnd, 50)))
+  }
 })
+
+const emitScrollEnd = () => {
+  const e = new Event('scrollend')
+  window.document.dispatchEvent(e)
+}
 
 
 
 const clickHandler = (v: MenuGroup) => {
-  if (store.groupDragged) {
-    store.groupDragged = false
-    return
-  }
+  // if (store.groupDragged) {
+  //   store.groupDragged = false
+  //   return
+  // }
   store.visibleMenuGroupIdManualSet = true
   store.visibleMenuGroupId = v.id
   if (route.name === 'home' || route.name === 'qrHome') {

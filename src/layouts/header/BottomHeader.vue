@@ -13,7 +13,7 @@
           class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
           style="overflow-x: scroll"
           ref="scrollArea"
-          v-dragscroll
+          v-bind="{vDragscroll: !$q.platform.has.touch}"
           @dragscrollstart="onDragStart"
           @dragscrollend="onDragEnd"
         >
