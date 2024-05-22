@@ -298,6 +298,15 @@ const deleteCartItem = async (item: CartItem) => {
 }
 
 const arrange = () => {
+  if (
+    cartRepo.loading ||
+    cartRepo.arrangeLoading ||
+    loading.value ||
+    cartRepo.setParamsLoading
+  ) {
+    return
+  }
+
   if (['orderingPage'].includes(String(route.name))) {
     store.cartDrawer = false
     return
