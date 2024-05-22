@@ -41,11 +41,11 @@ const toggleClickHandler = (v: boolean) => {
   } else {
     discard()
   }
+  applyBonuses()
 }
 
 const applyClickHandler = () => {
   if (!cartRepo.item) return
-
   currentChoice.value = 2
   cartRepo.item.walletPayments[0].applied_sum = maxSum.value
 }
@@ -54,5 +54,27 @@ const discard = () => {
   if (!cartRepo.item) return
   cartRepo.item.walletPayments[0].applied_sum = 0
   currentChoice.value = 1
+}
+
+const applyBonuses = () => {
+  if (cartRepo.item?.walletPayments.some((v) => v.applied_sum)) {
+    void cartRepo.setParams({
+      sales_point: cartRepo.item?.salesPoint?.id,
+      type: cartRepo.item?.type || undefined,
+      use_bonuses: true,
+      // applied_wallet_payments: [
+      //   {
+      //     wallet_payment: cartRepo.item.walletPayments[0].uuid,
+      //     applied_sum: cartRepo.item.walletPayments[0].applied_sum,
+      //   },
+      // ],
+    })
+  } else {
+    void cartRepo.setParams({
+      sales_point: cartRepo.item?.salesPoint?.id,
+      type: cartRepo.item?.type || undefined,
+      use_bonuses: false,
+    })
+  }
 }
 </script>

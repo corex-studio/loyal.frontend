@@ -37,6 +37,7 @@ export const handleMessage = (v: MessageEvent<string>) => {
         })
     })
     cartRepo.loading = false
+    cartRepo.setParamsLoading = false
   }
   if (response.type === 'user.updated') {
     authentication.user = new Customer(response.data as CustomerRaw)
