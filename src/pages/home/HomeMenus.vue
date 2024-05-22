@@ -1,13 +1,12 @@
 <template>
   <div>
-    <template
-      v-if="(!$salesPoint.menuLoading || $menu.item) && $menu.item?.groups"
-    >
+    <template v-if="(!$salesPoint.menuLoading || $menu.item) && menuItems">
       <div
-        v-for="(el, index) in $menu.item.groups.filter((v) => v.items.length)"
+        v-for="(el, index) in menuItems"
         :key="index"
         class="full-width pt-md-20 pt-xs-10"
         :id="el.id"
+        ref="menuGroupRefs"
       >
         <div class="header bold mb-lg-15 mb-md-15 mb-xs-8">
           {{ el.name }}
@@ -56,12 +55,122 @@ import GridContainer from 'src/components/containers/GridContainer.vue'
 import { ecommerceImpressions } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
-import { watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { scroll } from 'quasar'
+import { Fn, useElementBounding, useEventListener } from '@vueuse/core'
+import { menuRepo } from 'src/models/menu/menuRepo'
+import { store } from 'src/models/store'
+import { maxBy } from 'lodash'
+import getVerticalScrollPosition = scroll.getVerticalScrollPosition
+
+const { getScrollTarget } = scroll
+const scrollBodyTatget = getScrollTarget(document.body)
+const menuGroupRefs = ref<HTMLDivElement[]>([])
+const menuGroupsBounding = ref<
+  Record<number, ReturnType<typeof useElementBounding>>
+>({})
+
+const cleanups: Fn[] = []
+
+onMounted(async () => {
+  try {
+    await initMenuGroupsBounding()
+    cleanups.push(
+      useEventListener(document, 'scroll', setCurrentActiveMenuGroupId),
+    )
+  } catch {
+    console.error('menu groups ref is empty')
+  }
+})
+
+type VisibleElement = {
+  index: number
+  visibleHeight: number
+  fromTop: number
+  fromBottom: number
+}
+
+const setCurrentActiveMenuGroupId = () => {
+  const visible: VisibleElement[] = []
+  for (const [i, _v] of Object.entries(menuGroupsBounding.value)) {
+    const v = _v as unknown as Record<keyof typeof _v, number>
+    const top = v.top
+    const bottom = v.bottom
+    const fromBottom = window.innerHeight - v.bottom
+    let visibleHeight = 0
+    if (top > 0 && fromBottom > 0) {
+      visibleHeight = window.innerHeight - top - fromBottom
+    } else if (top > 0) {
+      visibleHeight = window.innerHeight - top
+    } else if (bottom > 0) {
+      visibleHeight = window.innerHeight - fromBottom
+    } else if (top < 0 && fromBottom < 0) {
+      visibleHeight = window.innerHeight
+    }
+    visibleHeight = visibleHeight < 0 ? 0 : visibleHeight
+    if (visibleHeight)
+      visible.push({
+        index: Number(i),
+        fromBottom,
+        fromTop: top,
+        visibleHeight,
+      })
+  }
+  _setCurrentActiveMenuGroupId(visible)
+}
+
+const _setCurrentActiveMenuGroupId = (visibleItems: VisibleElement[]) => {
+  const scrollPosition = getVerticalScrollPosition(scrollBodyTatget)
+  if (!visibleItems.length || scrollPosition < 20) {
+    store.visibleMenuGroupId = null
+  } else if (visibleItems.length === 1 && scrollPosition > 20 && !store.visibleMenuGroupIdManualSet) {
+    store.visibleMenuGroupId =
+      menuItems.value.at(visibleItems[0].index)?.id || null
+  } else {
+    const filtered = visibleItems.filter((v) => v.visibleHeight > 80)
+    const item = maxBy(filtered, (v) => v.fromTop)
+    if (item && !store.visibleMenuGroupIdManualSet) {
+      store.visibleMenuGroupId = menuItems.value.at(item.index)?.id || null
+    }
+  }
+}
+
+const initMenuGroupsBounding = async () => {
+  return new Promise((resolve, reject) => {
+    let attempts = 0
+    const interval = setInterval(() => {
+      if (attempts > 40) {
+        if (interval) clearInterval(interval)
+        reject()
+      }
+      if (menuGroupRefs.value.length) {
+        for (const [index, menuGroupRef] of menuGroupRefs.value.entries()) {
+          menuGroupsBounding.value[index] = useElementBounding(menuGroupRef)
+        }
+        if (interval) clearInterval(interval)
+        resolve(void 0)
+      } else {
+        attempts++
+      }
+    }, 50)
+  })
+}
+
+watch(
+  () => menuGroupsBounding.value[0],
+  (v) => {
+    console.log(v)
+  },
+)
+
+const menuItems = computed(() => {
+  return menuRepo.item?.groups?.filter((v) => v.items.length) || []
+})
 
 let timeout: NodeJS.Timeout | null = null
 
 watch(
-  () => menuItemRepo.visibleItems.length,
+  () => menuItemRepo.visibleItems.length, // todo check on work
   () => {
     if (timeout) clearTimeout(timeout)
     timeout = setTimeout(() => {
@@ -69,6 +178,10 @@ watch(
     }, 500)
   },
 )
+
+onBeforeUnmount(() => {
+  cleanups.forEach((v) => v())
+})
 </script>
 
 <style lang="scss" scoped>

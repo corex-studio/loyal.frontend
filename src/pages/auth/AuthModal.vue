@@ -132,7 +132,7 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
 import { CartType } from 'src/models/carts/cart'
@@ -342,6 +342,10 @@ watch(codeError, (v) => {
       el.classList.remove('otp-error')
     }
   })
+})
+
+onBeforeUnmount(() => {
+  cleanupListeners.map(v => v())
 })
 </script>
 

@@ -3,7 +3,7 @@
     @mouseover="disabled ? (hover = false) : (hover = true)"
     @mouseleave="hover = false"
   >
-    <slot :hover="hover"></slot>
+    <slot :hover="hover && !$q.platform.has.touch"></slot>
   </b>
 </template>
 

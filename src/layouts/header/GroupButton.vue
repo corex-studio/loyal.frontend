@@ -4,18 +4,9 @@
     @mouseleave="hover = false"
     class="cursor-pointer border-radius row items-center body"
     @click="clickHandler(item)"
-    :style="[
-      isHomePage
-        ? item.id === $menuGroup.elementsInViewport[0] || hover
-          ? `transition: color 0.25s ease-out;`
-          : 'transition: color 0.25s ease-out'
-        : '',
-    ]"
+    :style="[isHomePage ? 'transition: color 0.25s ease-out' : '']"
     :class="[
-      (item.id === $menuGroup.elementsInViewport[0] &&
-        isHomePage &&
-        !additional) ||
-      hover
+      (isSelected && isHomePage && !additional) || (hover && !$q.platform.has.touch)
         ? 'text-primary'
         : 'text-secondary-text',
     ]"
@@ -30,40 +21,49 @@
 </template>
 <script lang="ts" setup>
 import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
-import { ref, onMounted, computed, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useIntersectionObserver } from '@vueuse/core'
-import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { store } from 'src/models/store'
+import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
+import { Fn, useEventListener } from '@vueuse/core'
+import { debounce } from 'quasar'
+import { isApple } from 'src/services/isApple'
 
 const groupElement = ref()
 const route = useRoute()
 const router = useRouter()
 const hover = ref(false)
-let timeout: NodeJS.Timeout | null = null
+const cleanups: Fn[] = []
 
 const props = defineProps<{
   item: MenuGroup
   additional?: boolean
+  isSelected?: boolean
 }>()
 
-watch(
-  () => route.name,
-  (v) => {
-    if (v === 'home' || v === 'qrHome') {
-      if (timeout) clearTimeout(timeout)
-      timeout = setTimeout(() => {
-        startScrollMonitoring()
-      }, 500)
-    }
-  },
-)
+onMounted(() => {
+  cleanups.push(useEventListener(window.document, 'scrollend', () => {
+    store.visibleMenuGroupIdManualSet = false
+  }))
+  if (isApple()) {
+    cleanups.push(useEventListener(window.document, 'scroll', debounce(emitScrollEnd, 50)))
+  }
+})
+
+const emitScrollEnd = () => {
+  const e = new Event('scrollend')
+  window.document.dispatchEvent(e)
+}
+
+
 
 const clickHandler = (v: MenuGroup) => {
-  if (store.groupDragged) {
-    store.groupDragged = false
-    return
-  }
+  // if (store.groupDragged) {
+  //   store.groupDragged = false
+  //   return
+  // }
+  store.visibleMenuGroupIdManualSet = true
+  store.visibleMenuGroupId = v.id
   if (route.name === 'home' || route.name === 'qrHome') {
     void scrollToGroup(v)
   } else {
@@ -81,6 +81,7 @@ const scrollToGroup = (v: MenuGroup) => {
     const y =
       groupElement.value.getBoundingClientRect().top + window.scrollY - 100
     menuGroupRepo.scrollingToGroup = true
+
     window.scrollTo({ top: y, behavior: 'smooth' })
     setTimeout(() => {
       const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
@@ -102,29 +103,8 @@ const isHomePage = computed(() => {
   return route.name === 'home' || route.name === 'qrHome'
 })
 
-const startScrollMonitoring = () => {
-  useIntersectionObserver(
-    groupElement,
-    ([{ isIntersecting }]) => {
-      if (isIntersecting) {
-        if (!menuGroupRepo.elementsInViewport.includes(props.item.id))
-          menuGroupRepo.elementsInViewport.push(props.item.id)
-      } else {
-        const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
-          (el) => el === props.item.id,
-        )
-        if (elementIndex > -1)
-          menuGroupRepo.elementsInViewport.splice(elementIndex, 1)
-      }
-    },
-    {
-      rootMargin: '-100px',
-    },
-  )
-}
 
-onMounted(() => {
-  groupElement.value = document.getElementById(props.item.id)
-  startScrollMonitoring()
+onBeforeUnmount(() => {
+  cleanups.map(v => v())
 })
 </script>

@@ -13,7 +13,7 @@
           class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
           style="overflow-x: scroll"
           ref="scrollArea"
-          v-dragscroll
+          v-bind="{vDragscroll: !$q.platform.has.touch}"
           @dragscrollstart="onDragStart"
           @dragscrollend="onDragEnd"
         >
@@ -27,7 +27,11 @@
               :key="index"
               ref="groupButtons"
             >
-              <GroupButton :key="key" :item="el" />
+              <GroupButton
+                :key="key"
+                :item="el"
+                :is-selected="$store.visibleMenuGroupId === el.id"
+              />
             </div>
           </div>
           <template v-if="$salesPoint.menuLoading && !$menu.item">
@@ -46,13 +50,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import GroupButton from './GroupButton.vue'
 import { useRoute } from 'vue-router'
 import { menuRepo } from 'src/models/menu/menuRepo'
-import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { dragscroll } from 'vue-dragscroll'
 import { store } from 'src/models/store'
+import { debounce } from 'quasar'
 
 const vDragscroll = dragscroll
 
@@ -60,35 +64,34 @@ const bottomHeader = ref<Element | null>(null)
 const key = ref(0)
 const route = useRoute()
 const groupButtons = ref<HTMLDivElement[]>([])
-const initWatcher = ref(false)
 const scrollArea = ref<HTMLDivElement>()
+const offsetForScroll = ref(0)
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
 })
 
-watch(
-  () => menuGroupRepo.elementsInViewport[0],
-  (v) => {
-    if (!initWatcher.value) {
-      initWatcher.value = true
-      return
-    }
-    const foundElementIndex = categories.value?.findIndex((el) => el.id === v)
-    if (
-      foundElementIndex !== undefined &&
-      foundElementIndex > -1 &&
-      scrollArea.value
-    ) {
-      scrollArea.value.scrollTo({
-        left: groupButtons.value[foundElementIndex].offsetLeft,
-        behavior: 'smooth',
-      })
-      // scrollArea.value.scrollLeft =
-      //   groupButtons.value[foundElementIndex].offsetLeft
-    }
-  },
-)
+const selectedIndex = computed(() => {
+  return (
+    categories.value?.findIndex((v) => v.id === store.visibleMenuGroupId) ?? -1
+  )
+})
+
+watch(selectedIndex, (i) => {
+  if (i < 0 || !groupButtons.value.length) return
+  offsetForScroll.value = groupButtons.value[i].offsetLeft || 0
+  scrollToSelectedIndex()
+})
+
+const _scrollToSelectedIndex = () => {
+  scrollArea.value?.scrollTo({
+    left: offsetForScroll.value,
+    behavior: 'smooth',
+  })
+}
+
+const scrollToSelectedIndex = debounce(_scrollToSelectedIndex, 150)
+
 
 watch(
   () => route.name,
