@@ -418,7 +418,16 @@
           <div class="row full-width justify-between">
             <div class="body bold">Сумма заказа</div>
             <div class="body bold">
-              {{ beautifyNumber($cart.item.discountedSum, true) }} ₽
+              {{ beautifyNumber($cart.item.sum, true) }} ₽
+            </div>
+          </div>
+          <div
+            v-if="$cart.item.type === CartType.DELIVERY"
+            class="row full-width justify-between"
+          >
+            <div class="body bold">Стоимость доставки</div>
+            <div class="body bold">
+              {{ beautifyNumber($cart.item?.deliveryPrice, true) }} ₽
             </div>
           </div>
           <div
@@ -430,13 +439,17 @@
               -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
             </div>
           </div>
+
           <div
-            v-if="$cart.item.type === CartType.DELIVERY"
+            v-if="$cart.item?.discountWithoutBonuses !== undefined"
             class="row full-width justify-between"
           >
-            <div class="body bold">Стоимость доставки</div>
+            <div class="body bold">Скидка</div>
             <div class="body bold">
-              {{ beautifyNumber($cart.item?.deliveryPrice, true) }} ₽
+              {{
+                beautifyNumber($cart.item?.discountWithoutBonuses || 0, true)
+              }}
+              ₽
             </div>
           </div>
           <div class="row full-width justify-between">
