@@ -90,7 +90,7 @@ const confirmSelectedCity = async () => {
   localStorage.setItem('city', currentCity.value.uuid)
   emit('update:modelValue', false)
   await reRequest()
-  history.pushState({}, '', `/${currentCity.value.uuid}`)
+  // history.pushState({}, '', `/${currentCity.value.uuid}`)
 }
 
 const reRequest = async () => {
