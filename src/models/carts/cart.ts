@@ -111,6 +111,7 @@ export type CartRaw = {
   guest_count: number
   closest_time_text?: string | null
   use_bonuses?: boolean
+  discount_without_bonuses?: number
 }
 
 export class Cart implements BaseModel {
@@ -151,6 +152,7 @@ export class Cart implements BaseModel {
   closestTimeText: string | null
   calculationStatus: CalculationStatus
   useBonuses: boolean
+  discountWithoutBonuses: number | undefined
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -197,6 +199,7 @@ export class Cart implements BaseModel {
     this.calculationStatus =
       raw.calculation_status || CalculationStatus.INACTIVE
     this.useBonuses = raw.use_bonuses || false
+    this.discountWithoutBonuses = raw.discount_without_bonuses
   }
 
   get cartItemsQuantitySum() {
