@@ -237,6 +237,8 @@
               auto-grow
               height="fit-content"
               class="col"
+              :loading="$cart.setParamsLoading"
+              :readonly="$cart.setParamsLoading"
               placeholder="Напишите ваши пожелания"
               v-model="$cart.item.comment"
             />
@@ -313,9 +315,10 @@
             color="secondary-button-color"
             text-color="on-secondary-button-color"
           />
+
           <CButton
             @click="makeAnOrder()"
-            :loading="loading"
+            :loading="loading || $cart.setParamsLoading"
             :disabled="!isArrangeAvailable"
             label="Оформить"
             :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
@@ -486,6 +489,7 @@
       @click="paymentModal = true"
     />
   </div>
+
   <SelectPaymentTypeModal
     :types="paymentTypes"
     v-model="selectedPaymentTypeModal"
@@ -582,6 +586,20 @@ const menu = ref(false)
 const menuRef = ref<HTMLDivElement | null>(null)
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
+
+let timeout: NodeJS.Timeout | null = null
+
+watch(
+  () => cartRepo.item?.comment,
+  () => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      void cartRepo.setParams({
+        comment: cartRepo.item?.comment,
+      })
+    }, 950)
+  },
+)
 
 const currentEatInsideTab = computed(() => {
   return cartRepo.item?.eatInside
@@ -759,17 +777,17 @@ const makeAnOrder = async () => {
       })
       return
     }
-    await cartRepo.setParams({
-      delivery_time: cartRepo.item?.deliveryTime
-        ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-            .utc()
-            .format('YYYY-MM-DD HH:mm:ss')
-        : null,
-      comment: cartRepo.item?.comment || undefined,
-      pad: store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined,
-      sales_point: store.qrMenuData?.pad.salesPoint?.id,
-      type: cartRepo.item?.type,
-    })
+    // await cartRepo.setParams({
+    //   delivery_time: cartRepo.item?.deliveryTime
+    //     ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
+    //         .utc()
+    //         .format('YYYY-MM-DD HH:mm:ss')
+    //     : null,
+    //   comment: cartRepo.item?.comment || undefined,
+    //   pad: store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined,
+    //   sales_point: store.qrMenuData?.pad.salesPoint?.id,
+    //   type: cartRepo.item?.type,
+    // })
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {

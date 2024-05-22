@@ -1,6 +1,13 @@
 import { CartItem } from './cartItem/cartItem'
 import { OrderRaw, Order } from './../order/order'
-import { Cart, CartParams, CartRaw, AvailableHours, CartType } from './cart'
+import {
+  Cart,
+  CartParams,
+  CartRaw,
+  AvailableHours,
+  CartType,
+  CalculationStatus,
+} from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { cartApi } from './cartApi'
 import { reactive } from 'vue'
@@ -31,13 +38,20 @@ export class CartRepo extends BaseRepo<Cart> {
       data.type ? void 0 : (data.type = CartType.TABLE)
       data.pad ? void 0 : (data.pad = padRepo.item?.id)
     }
+    if (!data.pad) {
+      data.pad =
+        store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined
+    }
     const res: CartRaw = await this.api.send({
       method: 'PUT',
       action: 'set_params',
       data: { ...data },
     })
-    this.setParamsLoading = false
+
     this.item = new Cart(res)
+    if (this.item.calculationStatus === CalculationStatus.INACTIVE) {
+      this.setParamsLoading = false
+    }
     return this.item
   }
 

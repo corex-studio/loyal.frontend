@@ -131,6 +131,7 @@ import { beautifyNumber, store } from 'src/models/store'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import CIcon from '../template/helpers/CIcon.vue'
+import { CalculationStatus } from 'src/models/carts/cart'
 
 const cartItem = ref<CartItem | null>(null)
 
@@ -174,7 +175,9 @@ const updateQuantity = async (v: number) => {
       color: 'danger',
     })
   } finally {
-    cartRepo.loading = false
+    if (cartRepo.item?.calculationStatus === CalculationStatus.INACTIVE) {
+      cartRepo.loading = false
+    }
   }
 }
 </script>

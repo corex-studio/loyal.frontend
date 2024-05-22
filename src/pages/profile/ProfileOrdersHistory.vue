@@ -79,7 +79,7 @@ const loadOrders = async (page = 1, appendItems = false) => {
       page: page ? page : orderRepo.pagination.page,
       appendItems: appendItems,
       pageSize: 10,
-    },
+    }
   )
 }
 

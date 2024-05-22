@@ -40,6 +40,7 @@ export class AppManager {
     if (!authentication.user && store.tableMode) {
       await authRepo.initAnonymousUser()
     }
+    // if (store.cityFromParam) localStorage.setItem('city', store.cityFromParam)
     await Promise.all([
       this.tryAuth(),
       this.getCurrentCompanyGroup(),

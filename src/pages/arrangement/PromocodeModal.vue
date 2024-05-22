@@ -61,7 +61,7 @@ const apply = async () => {
   try {
     cartRepo.loading = true
     await cartRepo.setParams({
-      promo_code: cartRepo.item.promoCode || undefined,
+      promo_code: cartRepo.item.promoCode,
     })
   } catch {}
 }

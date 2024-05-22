@@ -144,6 +144,7 @@ import {
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { useYandexMetrika } from 'yandex-metrika-vue3'
 import { useRoute } from 'vue-router'
+import { CalculationStatus } from 'src/models/carts/cart'
 
 const props = defineProps<{
   item: MenuItem
@@ -251,8 +252,11 @@ const addToCart = async () => {
         color: 'danger',
       })
     } finally {
-      cartRepo.loading = false
+      if (cartRepo.item?.calculationStatus === CalculationStatus.INACTIVE) {
+        cartRepo.loading = false
+      }
       loading.value = false
+
       void ecommerceAdd(props.item)
     }
   }

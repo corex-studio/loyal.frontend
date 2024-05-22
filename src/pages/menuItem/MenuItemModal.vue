@@ -219,6 +219,7 @@ import {
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { useRoute } from 'vue-router'
+import { CalculationStatus } from 'src/models/carts/cart'
 
 const props = defineProps<{
   modelValue: boolean
@@ -398,7 +399,10 @@ const addToCart = async () => {
       })
     } finally {
       loading.value = false
-      cartRepo.loading = false
+      if (cartRepo.item?.calculationStatus === CalculationStatus.INACTIVE) {
+        cartRepo.loading = false
+      }
+
       emit('update:modelValue', false)
       if (menuItemRepo.item) {
         void ecommerceAdd(menuItemRepo.item)

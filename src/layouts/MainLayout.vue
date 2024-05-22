@@ -198,6 +198,10 @@ const closeMenuItemModal = () => {
 }
 
 onMounted(async () => {
+  // if (!!route.params.cityUUID) {
+  //   store.cityFromParam = String(route.params.cityUUID)
+  // }
+
   if (route.path.includes('qr_menu')) {
     store.tableMode = true
   }
@@ -212,7 +216,20 @@ onMounted(async () => {
   // salesPointRepo.menuLoading = true
   ready.value = true
   setMeta(route.meta)
+  // postCurrentCityToParam()
 })
+
+// const postCurrentCityToParam = () => {
+//   const cityFromStorage = LocalStorage.getItem('city')
+//   if (
+//     (companyGroupRepo.item?.cityData.results?.length || 0) > 1 &&
+//     !store.cityFromParam !== cityFromStorage
+//   ) {
+//     void router.push({
+//       path: `/${cityFromStorage}`,
+//     })
+//   }
+// }
 
 const companySelected = (v: Company | null) => {
   if (!authentication.user) {

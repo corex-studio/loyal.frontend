@@ -58,6 +58,9 @@ const confirmSuggestedCity = async () => {
   )
   emit('update:modelValue', false)
   await reRequest()
+  // void router.push({
+  //   path: `/${companyGroupRepo.item.cityData.current?.uuid}`,
+  // })
 }
 
 const rejectSuggestedCity = () => {

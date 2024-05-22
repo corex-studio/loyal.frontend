@@ -147,7 +147,12 @@
         >
           <div
             class="row justify-center full-width"
-            v-if="cartRepo.loading || $cart.arrangeLoading || loading"
+            v-if="
+              cartRepo.loading ||
+              $cart.arrangeLoading ||
+              loading ||
+              $cart.setParamsLoading
+            "
           >
             <q-spinner size="28px" />
           </div>
@@ -169,9 +174,10 @@
               }"
               >{{
                 $cart.item?.discountedTotalSum
-                  ? beautifyNumber($cart.item?.discountedTotalSum, true) + ' ₽'
-                  : '-'
+                  ? beautifyNumber($cart.item?.discountedTotalSum, true)
+                  : '0'
               }}
+              ₽
             </q-badge>
           </template>
         </div>
@@ -291,28 +297,12 @@ const deleteCartItem = async (item: CartItem) => {
   }
 }
 
-const applyBonuses = () => {
-  if (cartRepo.item?.walletPayments.some((v) => v.applied_sum)) {
-    void cartRepo.setParams({
-      sales_point: cartRepo.item?.salesPoint?.id,
-      type: cartRepo.item?.type || undefined,
-      applied_wallet_payments: [
-        {
-          wallet_payment: cartRepo.item.walletPayments[0].uuid,
-          applied_sum: cartRepo.item.walletPayments[0].applied_sum,
-        },
-      ],
-    })
-  }
-}
-
 const arrange = () => {
   if (['orderingPage'].includes(String(route.name))) {
     store.cartDrawer = false
     return
   }
   if (addToCartDisabledInfo.value) return
-  applyBonuses()
   void router.push({
     name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage',
   })

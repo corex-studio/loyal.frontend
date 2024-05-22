@@ -10,6 +10,13 @@ import { WalletRaw } from '../customer/customer'
 import { sum } from 'lodash'
 import { MenuItem, MenuItemRaw } from '../menu/menuItem/menuItem'
 
+export enum CalculationStatus {
+  INACTIVE = 'inactive',
+  IN_PROGRESS = 'in_progress',
+  FAILED = 'failed',
+  CALCULATED = 'calculated',
+}
+
 export enum CartType {
   PICKUP = 'pickup',
   DELIVERY = 'delivery',
@@ -54,15 +61,15 @@ export type CartParams = {
   pad?: string
   delivery_address?: string
   delivery_time?: string | null
-
   eat_inside?: boolean
-  promo_code?: string
+  promo_code?: string | null
   applied_wallet_payments?: {
     wallet_payment: string
     applied_sum: number
   }[]
   comment?: string | null
   guest_count?: number
+  use_bonuses?: boolean
 }
 
 export type CartRaw = {
@@ -91,7 +98,7 @@ export type CartRaw = {
     menu_item: MenuItemRaw
     applied: boolean
   }[]
-  calculation_status: string
+  calculation_status?: CalculationStatus
   delivery_area: string | null
   current_delivery_settings: string | null
   delivery_price: number
@@ -103,6 +110,7 @@ export type CartRaw = {
   eat_inside: boolean
   guest_count: number
   closest_time_text?: string | null
+  use_bonuses?: boolean
 }
 
 export class Cart implements BaseModel {
@@ -141,6 +149,8 @@ export class Cart implements BaseModel {
   eatInside: boolean
   guestCount: number
   closestTimeText: string | null
+  calculationStatus: CalculationStatus
+  useBonuses: boolean
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -184,6 +194,9 @@ export class Cart implements BaseModel {
     this.eatInside = raw.eat_inside
     this.guestCount = raw.guest_count
     this.closestTimeText = raw.closest_time_text || null
+    this.calculationStatus =
+      raw.calculation_status || CalculationStatus.INACTIVE
+    this.useBonuses = raw.use_bonuses || false
   }
 
   get cartItemsQuantitySum() {
