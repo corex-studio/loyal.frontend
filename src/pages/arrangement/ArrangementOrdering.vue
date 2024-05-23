@@ -240,7 +240,8 @@
               :loading="$cart.setParamsLoading"
               :readonly="$cart.setParamsLoading"
               placeholder="Напишите ваши пожелания"
-              v-model="$cart.item.comment"
+              :model-value="comment"
+              @update:model-value="comment = $event || null"
             />
           </div>
           <q-separator v-if="$q.screen.lt.md" color="divider-color" />
@@ -602,20 +603,21 @@ const menu = ref(false)
 const menuRef = ref<HTMLDivElement | null>(null)
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
+const comment = ref<string | null>(null)
 
-let timeout: NodeJS.Timeout | null = null
+// let timeout: NodeJS.Timeout | null = null
 
-watch(
-  () => cartRepo.item?.comment,
-  () => {
-    if (timeout) clearTimeout(timeout)
-    timeout = setTimeout(() => {
-      void cartRepo.setParams({
-        comment: cartRepo.item?.comment,
-      })
-    }, 950)
-  },
-)
+// watch(
+//   () => cartRepo.item?.comment,
+//   () => {
+//     if (timeout) clearTimeout(timeout)
+//     timeout = setTimeout(() => {
+//       void cartRepo.setParams({
+//         comment: cartRepo.item?.comment,
+//       })
+//     }, 950)
+//   },
+// )
 
 const currentEatInsideTab = computed(() => {
   return cartRepo.item?.eatInside
@@ -816,6 +818,7 @@ const makeAnOrder = async () => {
               ? 'card'
               : 'web_form',
       },
+      comment: comment.value,
       extra_data: {
         system_source: 'website',
       },
