@@ -39,6 +39,16 @@
         <div class="row items-center pl-3">
           {{ item.getPaymentType?.label }}
         </div>
+        <template v-if="item.paymentType === PaymentType.ONLINE && item.paymentStatus == PaymentStatusType.NOT_PAID">
+          <q-separator vertical class="mx-5" />
+          <CButton
+            text-color="primary"
+            text-button
+            class="body"
+            label="Оплатить"
+            @click="$emit('payOrder', item)"
+          />
+        </template>
       </div>
       <div class="row body mt-4">
         <span class="bold" style="max-width: 40%; width: 100%">Создан:</span>
@@ -107,9 +117,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { Order } from 'src/models/order/order'
+import { Order, PaymentStatusType, PaymentType } from 'src/models/order/order'
 import CBadge from 'components/helpers/CBadge.vue'
 import { beautifyNumber } from 'src/models/store'
+import CButton from 'components/template/buttons/CButton.vue'
 
 withDefaults(
   defineProps<{
@@ -119,6 +130,8 @@ withDefaults(
   }>(),
   { asCard: true },
 )
+
+defineEmits(['payOrder'])
 </script>
 <style lang="scss" scoped>
 .qr-order-item {
