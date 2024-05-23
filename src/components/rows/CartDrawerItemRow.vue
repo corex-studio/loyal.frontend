@@ -175,7 +175,7 @@ const updateQuantity = async (v: number) => {
       color: 'danger',
     })
   } finally {
-    if (cartRepo.item?.calculationStatus === CalculationStatus.INACTIVE) {
+    if (cartRepo.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {
       cartRepo.loading = false
     }
   }

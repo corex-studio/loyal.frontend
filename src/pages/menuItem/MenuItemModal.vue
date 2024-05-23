@@ -399,7 +399,7 @@ const addToCart = async () => {
       })
     } finally {
       loading.value = false
-      if (cartRepo.item?.calculationStatus === CalculationStatus.INACTIVE) {
+      if (cartRepo.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {
         cartRepo.loading = false
       }
 

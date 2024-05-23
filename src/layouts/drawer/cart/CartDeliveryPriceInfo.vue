@@ -9,7 +9,8 @@
   >
     <template v-if="deliverySteps.currentStep">
       <div class="row body bold text-on-backing-color">
-        Доставка {{ deliverySteps.currentStep?.deliveryPrice || 'бесплатно' }}
+        <!-- {{ deliverySteps.currentStep?.deliveryPrice }} -->
+        Доставка {{ $cart.item?.deliveryPrice || 'бесплатно' }}
         {{ deliverySteps.currentStep.deliveryPrice ? '₽' : '' }}
       </div>
       <div v-if="deliverySteps.nextStep" class="helper-text mt-3">
