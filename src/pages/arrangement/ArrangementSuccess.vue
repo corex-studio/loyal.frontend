@@ -171,7 +171,7 @@
       class="body mt-lg-30 mt-xs-20"
       :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
-    <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-10 full-width">
+    <div v-if="$route.query.paymentUrl && !$cart.item && $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID" class="mt-10 full-width">
       <CButton
         label="Открыть окно для оплаты заказа"
         :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
@@ -182,25 +182,7 @@
     </div>
   </div>
 
-  <CDialog
-    :disable-overflow="$q.platform.is.safari"
-    v-model="paymentModal"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    width="900px"
-    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
-    no-backdrop-dismiss
-    :card-styles="`flex-direction: column; ${$q.screen.lt.md ? `height: ${$q.screen.height * 0.9}px;` : ''}`"
-    content-wrapper-styles="flex-grow:1; display: flex"
-  >
-    <div class="flex" style="flex-grow: 1">
-      <iframe
-        style="border: 0"
-        class="full-width full-height"
-        v-if="paymentModal && paymentUrl"
-        :src="paymentUrl"
-      ></iframe>
-    </div>
-  </CDialog>
+  <OrderPaymentModal v-model="paymentModal" :payment-url="paymentUrl" />
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
@@ -211,10 +193,10 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { CartType } from 'src/models/carts/cart'
 import { beautifyNumber } from 'src/models/store'
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import { PaymentStatusType } from 'src/models/order/order'
+import OrderPaymentModal from 'components/OrderPaymentModal.vue'
 
 const route = useRoute()
 
@@ -223,8 +205,18 @@ const router = useRouter()
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
 
+
+let interval: NodeJS.Timeout | null = null
 const checkOnPaymentUrlInPath = () => {
-  if (route.query.paymentUrl) {
+  if (!orderRepo.item && !interval) {
+    interval = setInterval(() => checkOnPaymentUrlInPath(), 100)
+    return
+  } else if (!orderRepo.item && interval) {
+    return
+  } else if (interval) {
+    clearInterval(interval)
+  }
+  if (route.query.paymentUrl && orderRepo.item?.paymentStatus !== PaymentStatusType.FULL_PAID) {
     paymentUrl.value = String(route.query.paymentUrl)
     void nextTick(() => {
       paymentModal.value = true
@@ -244,6 +236,7 @@ onMounted(() => {
   checkOnPaymentUrlInPath()
 
   useEventBus(orderUpdatedKey).on(({ order }) => {
+    orderRepo.item = order
     if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
       paymentModal.value = false
     }
