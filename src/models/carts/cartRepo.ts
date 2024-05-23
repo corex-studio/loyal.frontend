@@ -49,7 +49,7 @@ export class CartRepo extends BaseRepo<Cart> {
     })
 
     this.item = new Cart(res)
-    if (this.item.calculationStatus === CalculationStatus.INACTIVE) {
+    if (this.item.calculationStatus !== CalculationStatus.IN_PROGRESS) {
       this.setParamsLoading = false
     }
     return this.item
