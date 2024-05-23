@@ -11,8 +11,11 @@
       <CInput
         height="48px"
         placeholder="Введите промокод"
-        v-model="$cart.item.promoCode"
-        @update:model-value="$cart.promocodeError = false"
+        :model-value="$cart.item.promoCode"
+        @update:model-value="
+          ($cart.item!.promoCode = $event || null),
+            ($cart.promocodeError = false)
+        "
         :rules="[
           () =>
             $cart.promocodeError

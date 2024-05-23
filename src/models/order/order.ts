@@ -194,7 +194,7 @@ export type OrderRaw = {
   received_bonuses: number
   payment_url: string | null
   comment?: string | null
-  discount_without_bonuses?: number
+  total_discount_without_bonuses?: number
 }
 
 export class Order implements BaseModel {
@@ -222,7 +222,7 @@ export class Order implements BaseModel {
   receivedBonuses: number
   paymentUrl: string | null
   comment: string | null
-  discountWithoutBonuses: number | undefined
+  totalDiscountWithoutBonuses: number | undefined
 
   constructor(raw: OrderRaw) {
     this.id = raw.uuid
@@ -254,7 +254,7 @@ export class Order implements BaseModel {
     this.receivedBonuses = raw.received_bonuses
     this.paymentUrl = raw.payment_url
     this.comment = raw.comment || null
-    this.discountWithoutBonuses = raw.discount_without_bonuses
+    this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
   }
 
   get getPaymentStatus() {

@@ -441,13 +441,16 @@
           </div>
 
           <div
-            v-if="$cart.item?.discountWithoutBonuses !== undefined"
+            v-if="$cart.item?.totalDiscountWithoutBonuses !== undefined"
             class="row full-width justify-between"
           >
             <div class="body bold">Скидка</div>
             <div class="body bold">
               {{
-                beautifyNumber($cart.item?.discountWithoutBonuses || 0, true)
+                beautifyNumber(
+                  $cart.item?.totalDiscountWithoutBonuses || 0,
+                  true,
+                )
               }}
               ₽
             </div>
