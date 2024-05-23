@@ -171,21 +171,83 @@
       class="body mt-lg-30 mt-xs-20"
       :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
+    <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-10 full-width">
+      <CButton
+        label="Открыть окно для оплаты заказа"
+        :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
+        width="100%"
+        class="body"
+        @click="paymentModal = true"
+      />
+    </div>
   </div>
+
+  <CDialog
+    :disable-overflow="$q.platform.is.safari"
+    v-model="paymentModal"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    width="900px"
+    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
+    no-backdrop-dismiss
+    :card-styles="`flex-direction: column; ${$q.screen.lt.md ? `height: ${$q.screen.height * 0.9}px;` : ''}`"
+    content-wrapper-styles="flex-grow:1; display: flex"
+  >
+    <div class="flex" style="flex-grow: 1">
+      <iframe
+        style="border: 0"
+        class="full-width full-height"
+        v-if="paymentModal && paymentUrl"
+        :src="paymentUrl"
+      ></iframe>
+    </div>
+  </CDialog>
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
-import { onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import OrderStepper from './OrderStepper.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { CartType } from 'src/models/carts/cart'
 import { beautifyNumber } from 'src/models/store'
+import CDialog from 'src/components/template/dialogs/CDialog.vue'
+import { useEventBus } from '@vueuse/core'
+import { orderUpdatedKey } from 'src/services/eventBusKeys'
+import { PaymentStatusType } from 'src/models/order/order'
 
 const route = useRoute()
 
+const router = useRouter()
+
+const paymentUrl = ref<string | null>(null)
+const paymentModal = ref(false)
+
+const checkOnPaymentUrlInPath = () => {
+  if (route.query.paymentUrl) {
+    paymentUrl.value = String(route.query.paymentUrl)
+    void nextTick(() => {
+      paymentModal.value = true
+    })
+  }
+}
+
+const clearBeforeRouterResolve = router.afterEach(() => {
+  checkOnPaymentUrlInPath()
+})
+
+onBeforeUnmount(() => {
+  if (clearBeforeRouterResolve) clearBeforeRouterResolve()
+})
+
 onMounted(() => {
+  checkOnPaymentUrlInPath()
+
+  useEventBus(orderUpdatedKey).on(({ order }) => {
+    if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
+      paymentModal.value = false
+    }
+  })
   if (!orderRepo.item) {
     void orderRepo.retrieve(String(route.params.orderId))
   }
