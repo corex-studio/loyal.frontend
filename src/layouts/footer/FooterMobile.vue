@@ -110,7 +110,17 @@
       </div>
     </div>
     <div
-      :class="$store.tableMode ? '' : 'mt-15'"
+      :class="
+        $store.tableMode &&
+        !(
+          $appSettings.linksData &&
+          ($appSettings.linksData.app_redirect_link ||
+            $appSettings.linksData.android_download_link ||
+            $appSettings.linksData.ios_download_link)
+        )
+          ? ''
+          : 'mt-15'
+      "
       class="column full-width gap-6 body"
     >
       <div>© 2023 все права защищены</div>

@@ -6,13 +6,7 @@
       <TopHeader v-if="$q.screen.gt.md && !$store.tableMode" />
       <MainHeader />
       <div v-if="$q.screen.lt.md" class="full-width">
-        <QRMobileMenu
-          v-if="
-            $store.tableMode &&
-            $pad.item?.isEnabled &&
-            $route.name !== 'qrMenuItemPage'
-          "
-        />
+        <QRMobileMenu v-if="showQrMobileMenu" />
       </div>
       <q-page-container
         :class="{
@@ -95,6 +89,7 @@ import TopHeader from './header/TopHeader.vue'
 import { AppManager } from 'src/models/utils/appManager'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
+import { menuRepo } from 'src/models/menu/menuRepo'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -180,6 +175,16 @@ watch(
 
 const footerAndHeaderHeight = computed(() => {
   return Screen.gt.sm ? store.headerHeight + store.footerHeight : 0
+})
+
+const showQrMobileMenu = computed(() => {
+  return (
+    store.tableMode &&
+    padRepo.item?.isEnabled &&
+    route.name !== 'qrMenuItemPage' &&
+    padRepo.item.salesPoint &&
+    menuRepo.item
+  )
 })
 
 const setScroll = () => {

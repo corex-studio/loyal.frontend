@@ -269,11 +269,11 @@ onMounted(() => {
   outline: 2px $danger solid !important;
 }
 
-.input :deep(input::-webkit-outer-spin-button),
-.input :deep(input::-webkit-inner-spin-button),
-.input :deep(input[type='number']) {
-  -moz-appearance: textfield !important;
-  -webkit-appearance: none;
-  margin: 0;
-}
+// .input :deep(input::-webkit-outer-spin-button),
+// .input :deep(input::-webkit-inner-spin-button),
+// .input :deep(input[type='number']) {
+//   -moz-appearance: textfield !important;
+//   -webkit-appearance: none;
+//   margin: 0;
+// }
 </style>
