@@ -489,7 +489,7 @@
           :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
           class="col-grow body"
-          @click="paymentUrl ? (paymentModal = true) : makeAnOrder()"
+          @click="makeAnOrder()"
           :loading="loading"
           :disabled="!isArrangeAvailable"
         />
@@ -499,12 +499,6 @@
   <div class="row items-center pt-20 gap-7" v-else>
     <ArrangementOrderingBackButton />
     <div class="header3 bold">Корзина пуста</div>
-  </div>
-  <div v-if="$route.query.paymentUrl && !$cart.item" class="mt-15">
-    <CButton
-      label="Открыть окно для оплаты заказа"
-      @click="paymentModal = true"
-    />
   </div>
 
   <SelectPaymentTypeModal
@@ -517,25 +511,6 @@
     @address-selected="changeDeliveryAddress($event)"
     v-model="deliveryAddressesModal"
   />
-  <CDialog
-    :disable-overflow="$q.platform.is.safari"
-    v-model="paymentModal"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    width="900px"
-    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
-    no-backdrop-dismiss
-    :card-styles="`flex-direction: column; ${$q.screen.lt.md ? `height: ${$q.screen.height * 0.9}px;` : ''}`"
-    content-wrapper-styles="flex-grow:1; display: flex"
-  >
-    <div class="flex" style="flex-grow: 1">
-      <iframe
-        style="border: 0"
-        class="full-width full-height"
-        v-if="paymentModal && paymentUrl"
-        :src="paymentUrl"
-      ></iframe>
-    </div>
-  </CDialog>
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
@@ -544,23 +519,18 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import {
-  Order,
-  PaymentObjectType,
-  PaymentStatusType,
-  PaymentType,
-} from 'src/models/order/order'
+import { Order, PaymentObjectType, PaymentType } from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
   store,
   totalDayTimes,
 } from 'src/models/store'
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { Notify } from 'quasar'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
@@ -569,9 +539,6 @@ import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
 import { padRepo } from 'src/models/pads/padRepo'
 import { orderRepo } from 'src/models/order/orderRepo'
-import CDialog from 'components/template/dialogs/CDialog.vue'
-import { useEventBus } from '@vueuse/core'
-import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import ArrangementOrderingBackButton from 'pages/arrangement/ArrangementOrderingBackButton.vue'
 import { ecommercePurchase } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
@@ -597,36 +564,16 @@ const selectedPaymentType = ref<PaymentObjectType | null>(null)
 const selectedPaymentTypeModal = ref(false)
 const loading = ref(false)
 const router = useRouter()
-const route = useRoute()
 const deliveryAddressesModal = ref(false)
 const menu = ref(false)
 const menuRef = ref<HTMLDivElement | null>(null)
-const paymentUrl = ref<string | null>(null)
-const paymentModal = ref(false)
+
 const comment = ref<string | null>(null)
-
-// let timeout: NodeJS.Timeout | null = null
-
-// watch(
-//   () => cartRepo.item?.comment,
-//   () => {
-//     if (timeout) clearTimeout(timeout)
-//     timeout = setTimeout(() => {
-//       void cartRepo.setParams({
-//         comment: cartRepo.item?.comment,
-//       })
-//     }, 950)
-//   },
-// )
 
 const currentEatInsideTab = computed(() => {
   return cartRepo.item?.eatInside
     ? eatInsideTabs[0].label
     : eatInsideTabs[1].label
-})
-
-const clearBeforeRouterResolve = router.afterEach(() => {
-  checkOnPaymentUrlInPath()
 })
 
 const openMenuItemModal = async (item: CartItem) => {
@@ -655,28 +602,6 @@ const changeEatInside = async (val: string) => {
     })
   }
 }
-
-const checkOnPaymentUrlInPath = () => {
-  if (route.query.paymentUrl) {
-    paymentUrl.value = String(route.query.paymentUrl)
-    void nextTick(() => {
-      paymentModal.value = true
-    })
-  }
-}
-
-onBeforeUnmount(() => {
-  if (clearBeforeRouterResolve) clearBeforeRouterResolve()
-})
-
-// const mobileViewSelectedTime = computed(() => {
-//   if (!cartRepo.item) return
-//   return cartRepo.item.deliveryTime
-//     ? cartRepo.item.deliveryTime.slice(0, 5) +
-//         ' ' +
-//         cartRepo.item.deliveryTime.slice(11, 16)
-//     : '~ 10 мин'
-// })
 
 const isArrangeAvailable = computed(() => {
   return (
@@ -828,16 +753,16 @@ const makeAnOrder = async () => {
           ? store.qrData.data?.pad?.id
           : undefined,
     })
-    if (order.paymentUrl) {
-      await router.replace({
-        name: String(route.name),
-        query: { paymentUrl: order.paymentUrl },
-      })
-      paymentUrl.value = order.paymentUrl
-      paymentModal.value = true
-    } else {
-      void onOrderPaid(order)
-    }
+    // if (order.paymentUrl) {
+    //   await router.replace({
+    //     name: String(route.name),
+    //     query: { paymentUrl: order.paymentUrl },
+    //   })
+    //   paymentUrl.value = order.paymentUrl
+    //   paymentModal.value = true
+    // } else {
+    void onOrderPaid(order)
+    // }
   } catch (e) {
     console.log(e)
     cartRepo.arrangeLoading = false
@@ -854,7 +779,6 @@ const makeAnOrder = async () => {
 }
 
 const onOrderPaid = async (order: Order) => {
-  paymentModal.value = false
   setTimeout(async () => {
     if (store.qrData && store.qrData.data?.pad) {
       await cartRepo.current(
@@ -866,10 +790,12 @@ const onOrderPaid = async (order: Order) => {
         params: {
           orderId: order.id,
         },
+        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
     } else if (store.tableMode) {
       void router.push({
         name: 'myQrMenuOrders',
+        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
       await cartRepo.current(
         padRepo.item?.salesPoint?.id,
@@ -882,6 +808,7 @@ const onOrderPaid = async (order: Order) => {
         params: {
           orderId: order.id,
         },
+        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
     }
   }, 350)
@@ -943,13 +870,6 @@ watch(selectedPaymentTypeModal, async (v) => {
 })
 
 onMounted(async () => {
-  checkOnPaymentUrlInPath()
-  useEventBus(orderUpdatedKey).on(({ order }) => {
-    if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
-      paymentModal.value = false
-      onOrderPaid(order)
-    }
-  })
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
   })

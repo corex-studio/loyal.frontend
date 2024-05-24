@@ -37,7 +37,7 @@ export class AuthenticationRepo extends BaseRepo<Authentication> {
     const res: TokensRaw = await this.api.send({
       method: 'POST',
       action: 'init_anonymous_user',
-      data: { key, fingerprint },
+      data: { key: key || 'test', fingerprint },
     })
     new BaseAuthenticationTokens(res.access, res.refresh)
   }
