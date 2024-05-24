@@ -10,13 +10,13 @@ import { Pad, PadRaw } from 'src/models/pads/pad'
 
 type QRMenuDataRaw = {
   company_group: CompanyGroupRaw
-  pad: PadRaw
+  pad: PadRaw | null
   settings: { orders_bottom_bar_text: string; waiter_calls_enabled: boolean }
 }
 
 export type QRMenuData = {
   company_group: CompanyGroup
-  pad: Pad
+  pad: Pad | null
   settings: { orders_bottom_bar_text: string; waiter_calls_enabled: boolean }
 }
 
@@ -31,7 +31,7 @@ export class QrMenuSettingsRepo extends BaseRepo<QrMenuSettings> {
     })
     return {
       ...res,
-      pad: new Pad(res.pad),
+      pad: res.pad ? new Pad(res.pad) : null,
       company_group: new CompanyGroup(res.company_group),
     }
   }

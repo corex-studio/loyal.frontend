@@ -1,15 +1,17 @@
 <template>
-  <template v-if="!errorText">
-    <div class="no-wrap column text-on-background-color">
-      <HomeMenus class="c-container" />
-    </div>
+  <template v-if="!$store.catalogLoading">
+    <template v-if="!errorText">
+      <div class="no-wrap column text-on-background-color">
+        <HomeMenus class="c-container" />
+      </div>
+    </template>
+    <div
+      v-else
+      style="width: 100%; height: 60vh; text-align: center"
+      class="row justify-center items-center header light px-5"
+      v-html="errorText"
+    ></div>
   </template>
-  <div
-    v-else
-    style="width: 100%; height: 60vh; text-align: center"
-    class="row justify-center items-center header light px-5"
-    v-html="errorText"
-  ></div>
 </template>
 <script lang="ts" setup>
 import { computed, onMounted } from 'vue'
