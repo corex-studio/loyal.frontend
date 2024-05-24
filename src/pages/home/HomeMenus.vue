@@ -123,7 +123,11 @@ const _setCurrentActiveMenuGroupId = (visibleItems: VisibleElement[]) => {
   const scrollPosition = getVerticalScrollPosition(scrollBodyTatget)
   if (!visibleItems.length || scrollPosition < 20) {
     store.visibleMenuGroupId = null
-  } else if (visibleItems.length === 1 && scrollPosition > 20 && !store.visibleMenuGroupIdManualSet) {
+  } else if (
+    visibleItems.length === 1 &&
+    scrollPosition > 20 &&
+    !store.visibleMenuGroupIdManualSet
+  ) {
     store.visibleMenuGroupId =
       menuItems.value.at(visibleItems[0].index)?.id || null
   } else {

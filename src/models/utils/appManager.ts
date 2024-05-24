@@ -71,9 +71,7 @@ export class AppManager {
       store.authModal = true
     }
     this.setDefaultCompany()
-    if (this.config.initMenuPage) {
-      await this.loadMenuPage()
-    }
+
     if (store.tableMode) {
       void uiSettingsRepo.fetchSettings()
       const group =
@@ -87,12 +85,15 @@ export class AppManager {
       store.qrMenuData = res
       void cartRepo.setParams({
         type: CartType.TABLE,
-        pad: padRepo.item.id,
-        sales_point: padRepo.item.salesPoint?.id,
+        pad: padRepo.item?.id,
+        sales_point: padRepo.item?.salesPoint?.id,
       })
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
     } else if (authentication.user?.isAnonymous) {
       authentication.logout()
+    }
+    if (this.config.initMenuPage) {
+      await this.loadMenuPage()
     }
   }
 
@@ -191,12 +192,14 @@ export class AppManager {
   }
 
   async loadMenuPage() {
-    let currentPoint = cartRepo.item
-      ? cartRepo.item?.salesPoint
-      : companyGroupRepo.item?.companies[0]?.salesPoints &&
-          companyGroupRepo.item?.companies[0]?.salesPoints.length
-        ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
-        : null
+    let currentPoint = store.tableMode
+      ? padRepo.item?.salesPoint
+      : cartRepo.item
+        ? cartRepo.item?.salesPoint
+        : companyGroupRepo.item?.companies[0]?.salesPoints &&
+            companyGroupRepo.item?.companies[0]?.salesPoints.length
+          ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
+          : null
     if (authentication.user) {
       if (store.qrData) {
         await cartRepo.setParams({

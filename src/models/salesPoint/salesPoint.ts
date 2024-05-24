@@ -173,6 +173,10 @@ export class SalesPoint implements BaseModel {
     this.legalEntity = raw.legal_entity || ''
   }
 
+  get currentAddress() {
+    return this.customAddress || this.address
+  }
+
   toJson(): Record<string, any> {
     return {
       id: this.id,
