@@ -35,6 +35,7 @@ export class Color implements BaseModel {
   id: undefined
   color: string
   on_color: string
+
   constructor(raw: ColorRaw) {
     this.color = parseAlphaColorsFromCorrect(raw.color)
     this.on_color = parseAlphaColorsFromCorrect(raw.on_color)
@@ -111,6 +112,7 @@ export type UiSettingsRaw = {
     link: string | null
   } | null
   qr_arrangement_description: string | null
+  order_complete_post_payment_banner_text: string | null
   show_menu_item_border: boolean
   out_of_stock_text: string | null
   ui_elements: UIElementRaw[]
@@ -196,6 +198,7 @@ export class UiSetting implements BaseModel {
   outOfStockText: string | null
   uiElements: UIElementRaw[]
   guestCountSetterText: string | null
+  orderCompletePostPaymentBannerText: string | null
 
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
@@ -218,7 +221,7 @@ export class UiSetting implements BaseModel {
     this.selectionColor = new Color(raw.selection_color)
     this.cardColor = new Color(raw.card_color)
     this.loyaltyCardBackgroundColor = new Color(
-      raw.loyalty_card_background_color,
+      raw.loyalty_card_background_color
     )
     this.borderRadius = raw.border_radius
     this.borderRadiusSmall = raw.border_radius_small
@@ -241,7 +244,7 @@ export class UiSetting implements BaseModel {
       blur: raw.box_shadow.blur,
       spread: raw.box_shadow.spread,
       offset_x: raw.box_shadow.offset_x,
-      offset_y: raw.box_shadow.offset_y,
+      offset_y: raw.box_shadow.offset_y
     }
     this.company = raw.company
     this.companyGroup = raw.company_group
@@ -271,6 +274,7 @@ export class UiSetting implements BaseModel {
     this.outOfStockText = raw.out_of_stock_text
     this.uiElements = raw.ui_elements
     this.guestCountSetterText = raw.guest_count_setter_text || null
+    this.orderCompletePostPaymentBannerText = raw.order_complete_post_payment_banner_text || null
   }
 
   get useBonuses() {
@@ -278,7 +282,7 @@ export class UiSetting implements BaseModel {
       .filter(
         (el) =>
           el.semantic_label === 'main_page_header_wallets' ||
-          el.semantic_label === 'main_page_wallets',
+          el.semantic_label === 'main_page_wallets'
       )
       .some((v) => !!v.active)
   }

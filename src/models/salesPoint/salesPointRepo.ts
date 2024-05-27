@@ -17,16 +17,14 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
 
   async status(sales_point?: string): Promise<boolean> {
     const res: {
-      sales_point: {
-        order_creation_available: boolean
-      }
+      order_creation_available: boolean
     } = await this.api.send({
       method: 'GET',
       action: 'status',
       id: sales_point,
     })
 
-    return res.sales_point.order_creation_available
+    return res.order_creation_available
   }
 
   async getExternalPaymentTypes() {

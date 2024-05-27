@@ -40,6 +40,11 @@
             Вы оформили заказ из «{{ $order.item.salesPoint.name }}»
           </div>
         </div>
+        <div class="subtitle-text mt-10"
+             v-if="$order.item.isPostPayment && $uiSettings.item?.orderCompletePostPaymentBannerText">
+          {{ $uiSettings.item.orderCompletePostPaymentBannerText }}
+
+        </div>
         <div
           :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
           class="pa-10 column full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
@@ -105,8 +110,9 @@
                       height="65px"
                       :src="$store.images.empty"
                     ></q-img>
-                  </span> </template
-              ></q-img>
+                  </span></template
+                >
+              </q-img>
               <div class="column gap-2">
                 <div>{{ el.size.name }}</div>
                 <div style="opacity: 0.5">{{ el.quantity }} шт</div>
@@ -171,7 +177,8 @@
       class="body mt-lg-30 mt-xs-20"
       :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
-    <div v-if="$route.query.paymentUrl && !$cart.item && $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID" class="mt-10 full-width">
+    <div v-if="$route.query.paymentUrl && !$cart.item && $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID"
+         class="mt-10 full-width">
       <CButton
         label="Открыть окно для оплаты заказа"
         :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
