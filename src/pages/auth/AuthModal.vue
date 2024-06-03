@@ -142,7 +142,7 @@
           <div class="text-h5 text-center text-grey-6">
             +7 000 000
             <span
-              class="bg-secondary text-on-secondary px-4 rounded-borders"
+              class="bg-grey-6 text-on-secondary px-4 rounded-borders"
               style="opacity: 1"
               >XX-XX</span
             >
