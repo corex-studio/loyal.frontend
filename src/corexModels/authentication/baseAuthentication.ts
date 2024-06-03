@@ -16,7 +16,7 @@ export class BaseAuthentication {
   settings = {
     urls: {
       login: 'users/auth/',
-      sendSms: 'users/request_auth/',
+      requestAuth: 'users/request_auth/',
       me: '/users/me/',
       register: '/users/',
       refresh: '/token/refresh/',
@@ -76,14 +76,16 @@ export class BaseAuthentication {
     }
   }
 
-  async sendSms(data: any) {
+  async requestAuth(data: any) {
     try {
       const response: AxiosResponse<{
         success: boolean
         requested_at: string
         phone: string
-      }> = await api.post(this.settings.urls.sendSms, data)
-      return response.data.success
+        authorize_url?: string
+        session?: { key: string; end_time: string }
+      }> = await api.post(this.settings.urls.requestAuth, data)
+      return response.data
     } catch {}
   }
 
@@ -94,12 +96,8 @@ export class BaseAuthentication {
         this.settings.urls.login,
         data,
       )
-      this.tokens = new this.tokensClass(
-        response.data.access,
-        response.data.refresh,
-      )
-      this.setApiHeader()
-      this.user = await this._loadUser()
+      this.tokenAuth(response.data.access, response.data.refresh)
+
       return {
         user: this.user,
         tokens: this.tokens,
@@ -107,6 +105,12 @@ export class BaseAuthentication {
     } catch (e) {
       throw Error('Fail login')
     }
+  }
+
+  async tokenAuth(access: string | null, refresh: string | null) {
+    this.tokens = new this.tokensClass(access, refresh)
+    this.setApiHeader()
+    this.user = await this._loadUser()
   }
 
   async register(data: any) {

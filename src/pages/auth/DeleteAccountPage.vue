@@ -109,7 +109,7 @@ const data = ref<{
 
 const nextStepHandler = async () => {
   if (step.value === 1) {
-    const res = await sendSms()
+    const res = await requestAuth()
     if (res) step.value = 2
   } else {
     try {
@@ -145,12 +145,14 @@ const auth = async () => {
   }
 }
 
-const sendSms = async () => {
+const requestAuth = async () => {
   try {
     loading.value = true
-    const res = await authentication.sendSms({
-      phone: `7${data.value.phone}`,
-    })
+    const res = await authentication
+      .requestAuth({
+        phone: `7${data.value.phone}`,
+      })
+      .then((response) => Boolean(response?.success))
     if (res) {
       Notify.create({
         message: 'Сообщение с кодом успешно отправлено',

@@ -32,7 +32,20 @@
             unmasked-value
             v-model="data.phone"
           />
-          <div class="row no-wrap items-center mt-10 gap-6">
+          <div class="mt-16" v-if="tabs.length > 1">
+            <div
+              :style="$q.screen.lt.md ? 'text-align: center' : ''"
+              class="body"
+            >
+              Выберите способ авторизации
+            </div>
+            <AuthModalTabs
+              :tabs="tabs"
+              v-model="data.authType"
+              class="mt-4"
+            ></AuthModalTabs>
+          </div>
+          <div class="row no-wrap items-center mt-16 gap-6">
             <CCheckBox v-model="data.agreement" color="primary" size="48px" />
             <div
               @click="data.agreement = !data.agreement"
@@ -54,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div class="mt-4" v-else>
+      <div class="mt-4" v-else-if="data.authType === AuthType.SMS">
         <div class="column body gap-1 full-width">
           <div
             :style="$q.screen.lt.md ? 'text-align: center' : ''"
@@ -75,12 +88,6 @@
           </div>
         </div>
         <div class="row full-width justify-center mt-12">
-          <!--          <CodeComponent-->
-          <!--            :code="data.sms"-->
-          <!--            @update=";(data.sms = $event), (codeError = false)"-->
-          <!--            @log-in="auth()"-->
-          <!--            :error="codeError"-->
-          <!--          />-->
           <VOtpInput
             input-classes="otp-input"
             ref="otpInputRef"
@@ -99,7 +106,7 @@
           </div>
         </div>
         <div
-          @click="delay ? void 0 : sendSms()"
+          @click="delay ? void 0 : requestAuth()"
           class="row justify-center mt-md-4 mt-xs-30 body"
           style="text-decoration: underline"
           :class="{ 'cursor-pointer': !delay }"
@@ -109,30 +116,134 @@
           }}
         </div>
       </div>
-      <CButton
-        @click="nextStepHandler()"
-        height="50px"
-        width="100%"
-        :disabled="!data.agreement || !data.phone || data.phone.length < 10"
-        :label="currentStep === 1 ? 'Выслать код' : 'Войти'"
-        class="subtitle-text"
-        :class="
-          $q.screen.lt.md ? (currentStep === 2 ? 'mt-6' : 'mt-30') : 'mt-15'
-        "
-        color="primary"
-        text-color="on-primary"
-        :loading="loading"
-      />
+      <div class="mt-4" v-else-if="data.authType === AuthType.FLASHCALL">
+        <div class="column body gap-1 full-width">
+          <div
+            :style="$q.screen.lt.md ? 'text-align: center' : ''"
+            style="opacity: 0.7"
+            class="body"
+          >
+            Вам поступит звонок на номер:
+            <div
+              :class="{ 'justify-center': $q.screen.lt.md }"
+              class="row gap-4"
+            >
+              <div>+7{{ data.phone }}</div>
+              <CButton
+                @click="currentStep = 1"
+                text-button
+                label="Изменить"
+                text-color="primary"
+                class="body"
+              />
+            </div>
+            Введите последние 4 цифры номера, с которого идёт звонок.
+          </div>
+          <div class="text-h5 text-center text-grey-6">
+            +7 000 000
+            <span
+              class="bg-secondary text-on-secondary px-4 rounded-borders"
+              style="opacity: 1"
+              >XX-XX</span
+            >
+          </div>
+        </div>
+        <div class="row full-width justify-center mt-12">
+          <VOtpInput
+            input-classes="otp-input"
+            ref="otpInputRef"
+            separator=""
+            inputType="number"
+            :num-inputs="4"
+            v-model:value="data.code"
+            @on-change="data.code = $event"
+            @on-complete="auth()"
+          />
+          <div
+            v-if="codeError"
+            class="col-12 text-center text-danger body mt-2"
+          >
+            Неверный код
+          </div>
+        </div>
+        <div
+          @click="delay ? void 0 : requestAuth()"
+          class="row justify-center mt-md-4 mt-xs-30 body"
+          style="text-decoration: underline"
+          :class="{ 'cursor-pointer': !delay }"
+        >
+          {{
+            !!delay ? `Позвонить еще раз (${delay} сек)` : 'Позвонить еще раз'
+          }}
+        </div>
+      </div>
+      <div class="mt-4" v-else-if="data.authType === AuthType.TELEGRAM">
+        <div class="column body gap-1 full-width">
+          <div :class="{ 'justify-center': $q.screen.lt.md }" class="row gap-4">
+            <div>+7{{ data.phone }}</div>
+            <CButton
+              @click="currentStep = 1"
+              text-button
+              label="Изменить"
+              text-color="primary"
+              class="body"
+            />
+          </div>
+          <div
+            :style="$q.screen.lt.md ? 'text-align: center' : ''"
+            style="opacity: 0.7"
+            class="body"
+          >
+            Переход в телеграм. Пожалуйста не закрывайте страницу.
+          </div>
+        </div>
+        <div class="row mt-10 justify-center full-width">
+          <QSpinner size="32" />
+        </div>
+
+        <a
+          v-if="sessionLink"
+          :href="sessionLink"
+          target="_blank"
+          class="row justify-center mt-10 body cursor-pointer"
+          style="text-decoration: underline"
+        >
+          Нажмите, если не сработал переход в телеграм
+        </a>
+      </div>
     </div>
+
+    <CButton
+      v-if="
+        currentStep === 1 ||
+        (data.authType &&
+          [AuthType.SMS, AuthType.FLASHCALL].includes(data.authType))
+      "
+      @click="stepHandler()"
+      height="50px"
+      width="100%"
+      :disabled="
+        !data.agreement ||
+        !data.phone ||
+        data.phone.length < 10 ||
+        !data.authType
+      "
+      label="Войти"
+      class="subtitle-text mt-10"
+      color="primary"
+      text-color="on-primary"
+      :loading="loading"
+    />
   </CDialog>
 </template>
 <script lang="ts" setup>
-import { Notify } from 'quasar'
+import { Notify, QSpinner } from 'quasar'
+import { handleMessage } from 'src/models/webSocket/webSocketRepo'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { nextTick, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
 import { CartType } from 'src/models/carts/cart'
@@ -141,12 +252,16 @@ import VOtpInput from 'vue3-otp-input'
 import CInput from 'components/template/inputs/CInput.vue'
 import CCheckBox from 'components/helpers/CCheckBox.vue'
 import { Fn, useEventListener } from '@vueuse/core'
+import { authSettingsRepo } from 'src/models/authSettings/authSettingsRepo'
+import { AuthType } from 'src/models/authSettings/authSettings'
+import AuthModalTabs from './AuthModalTabs.vue'
 
 const props = defineProps<{
   modelValue: boolean
 }>()
 
 const otpInputRef = ref<{ $el: HTMLDivElement } | null>(null)
+
 const delay = ref(30)
 let interval: NodeJS.Timeout | null = null
 const codeError = ref(false)
@@ -156,12 +271,45 @@ const data = ref<{
   phone: string
   code: string | undefined
   agreement: boolean
+  authType: AuthType | null
 }>({
   phone: '7',
   code: undefined,
   agreement: false,
+  authType: null,
 })
+
 const currentStep = ref(1)
+const sessionLink = ref<string | null>(null)
+const webSocket = ref<WebSocket | null>(null)
+
+const authSettings = authSettingsRepo.authSettingsData
+
+const tabs = computed(() => {
+  const buttons = [
+    {
+      label: authSettings?.flashcall_auth ? 'Позвонить' : 'Отправить код',
+      authType: authSettings?.flashcall_auth
+        ? AuthType.FLASHCALL
+        : AuthType.SMS,
+      icon: 'fa-solid fa-phone',
+    },
+  ]
+
+  if (authSettings?.telegram_auth)
+    buttons.push({
+      label: 'Телеграм',
+      authType: AuthType.TELEGRAM,
+      icon: 'fa fa-telegram',
+    })
+
+  return buttons
+})
+
+if (tabs.value.length === 1)
+  data.value.authType = authSettings?.flashcall_auth
+    ? AuthType.FLASHCALL
+    : AuthType.SMS
 
 const openPolicy = () => {
   window.open(
@@ -201,49 +349,15 @@ watch(
   },
 )
 
-const nextStepHandler = async () => {
-  loading.value = true
-  if (currentStep.value === 1) {
-    const res = await sendSms()
-    if (res) {
-      currentStep.value = 2
-    }
-    loading.value = false
-  } else {
-    await auth()
-    loading.value = false
-  }
-}
-
-const auth = async () => {
+const auth = async (authType = 1) => {
   try {
     loading.value = true
     await authentication.login({
       phone: `7${data.value.phone}`,
       code: data.value.code,
+      auth_type: authType,
     })
-    await authentication.me()
-    if (authentication.user) {
-      if (store.qrData) {
-        await cartRepo.setParams({
-          sales_point: store.qrData.data?.salesPoint?.id,
-          type: CartType.TABLE,
-          pad: store.qrData.data?.pad?.id,
-        })
-      }
-      void cartRepo.current(undefined, store.qrData?.data?.pad?.id)
-      if (store.qrData && store.qrData.data?.salesPoint?.id) {
-        void store.loadCatalog(store.qrData.data?.salesPoint?.id)
-      }
-    }
-    currentStep.value = 1
-    emit('update:modelValue', false)
-    if (
-      authentication.user?.registeredAt === null &&
-      !authentication.user.isAnonymous
-    ) {
-      store.registrationModal = true
-    }
+    await checkAuth()
   } catch {
     codeError.value = true
   } finally {
@@ -251,34 +365,29 @@ const auth = async () => {
   }
 }
 
-const sendSms = async () => {
-  const res = await authentication.sendSms({
-    phone: `7${data.value.phone}`,
-    key: await authHelper.getAuthKey(),
-  })
-  if (res) {
-    Notify.create({
-      message: 'Сообщение с кодом успешно отправлено',
-    })
-    delay.value = 30
-    if (interval) {
-      clearInterval(interval)
+const checkAuth = async () => {
+  await authentication.me()
+  if (authentication.user) {
+    if (store.qrData) {
+      await cartRepo.setParams({
+        sales_point: store.qrData.data?.salesPoint?.id,
+        type: CartType.TABLE,
+        pad: store.qrData.data?.pad?.id,
+      })
     }
-    interval = setInterval(() => {
-      if (!delay.value) return
-      delay.value--
-    }, 1000)
-    if (currentStep.value === 2) {
-      codeError.value = false
-      data.value.code = undefined
+    void cartRepo.current(undefined, store.qrData?.data?.pad?.id)
+    if (store.qrData && store.qrData.data?.salesPoint?.id) {
+      void store.loadCatalog(store.qrData.data?.salesPoint?.id)
     }
-  } else {
-    Notify.create({
-      message: 'Ошибка при отправке sms',
-      color: 'danger',
-    })
   }
-  return res
+  currentStep.value = 1
+  emit('update:modelValue', false)
+  if (
+    authentication.user?.registeredAt === null &&
+    !authentication.user.isAnonymous
+  ) {
+    store.registrationModal = true
+  }
 }
 
 watch(currentStep, (v) => {
@@ -344,8 +453,96 @@ watch(codeError, (v) => {
   })
 })
 
+const stepHandler = async () => {
+  loading.value = true
+  switch (currentStep.value) {
+    case 1:
+      await requestAuth()
+      break
+    case 2:
+      break
+  }
+  currentStep.value++
+  loading.value = false
+}
+
+const requestAuth = async () => {
+  const authType = data.value.authType
+
+  const res = await authentication.requestAuth({
+    phone: `7${data.value.phone}`,
+    key: await authHelper.getAuthKey(),
+    auth_type: authType,
+  })
+  console.log(res)
+  if (!res || !res.success) {
+    Notify.create({
+      message: 'Ошибка при обработке запроса',
+      color: 'danger',
+    })
+
+    return
+  }
+
+  if (authType === AuthType.TELEGRAM) {
+    const session = res.session!
+    if (webSocket.value) {
+      webSocket.value.close()
+    }
+
+    webSocket.value = new WebSocket(
+      `ws://localhost:15119/ws/services/${session.key}/`,
+    )
+
+    webSocket.value.onmessage = async (event) => {
+      const message = handleMessage(event)
+      if (!message.data.access) return
+      webSocket.value?.close()
+
+      try {
+        loading.value = true
+        await checkAuth()
+      } catch {
+        codeError.value = true
+      } finally {
+        loading.value = false
+      }
+    }
+
+    sessionLink.value = res.authorize_url!
+    window.open(sessionLink.value, '_blank')
+  } else if (
+    authType &&
+    [AuthType.SMS, AuthType.FLASHCALL].includes(authType)
+  ) {
+    Notify.create({
+      message: 'Сообщение с кодом успешно отправлено',
+    })
+
+    delay.value = 30
+    if (interval) {
+      clearInterval(interval)
+    }
+    interval = setInterval(() => {
+      if (!delay.value) return
+      delay.value--
+    }, 1000)
+    if (currentStep.value === 2) {
+      codeError.value = false
+      data.value.code = undefined
+    }
+  } else {
+    Notify.create({
+      message: 'Ошибка при отправке sms',
+      color: 'danger',
+    })
+  }
+
+  return res
+}
+
 onBeforeUnmount(() => {
-  cleanupListeners.map(v => v())
+  cleanupListeners.map((v) => v())
 })
 </script>
 

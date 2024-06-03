@@ -17,6 +17,7 @@ import { padRepo } from 'src/models/pads/padRepo'
 import { menuItemRepo } from '../menu/menuItem/menuItemRepo'
 import { salesPointRepo } from '../salesPoint/salesPointRepo'
 import { menuRulesForAddingRepo } from '../menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import { authSettingsRepo } from '../authSettings/authSettingsRepo'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -46,6 +47,7 @@ export class AppManager {
       this.getCurrentCompanyGroup(),
       uiSettingsRepo.fetchSettings(),
       appSettingsRepo.getLinksSettings(),
+      authSettingsRepo.getAuthSettings(),
       companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
       if (

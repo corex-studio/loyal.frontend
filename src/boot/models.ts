@@ -64,6 +64,10 @@ import {
   BalanceOperationRepo,
   balanceOperationRepo,
 } from 'src/models/balanceOperation/balanceOperationRepo'
+import {
+  AuthSettingsRepo,
+  authSettingsRepo,
+} from 'src/models/authSettings/authSettingsRepo'
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -85,6 +89,7 @@ declare module '@vue/runtime-core' {
     $paymentCard: PaymentCardRepo
     $company: CompanyRepo
     $appSettings: AppSettingsRepo
+    $authSettings: AuthSettingsRepo
     $customer: CustomerRepo
     $pad: PadRepo
     $waiterCall: WaiterCallRepo
@@ -113,6 +118,7 @@ export default boot(({ app }) => {
   app.config.globalProperties.$paymentCard = paymentCardRepo
   app.config.globalProperties.$company = companyRepo
   app.config.globalProperties.$appSettings = appSettingsRepo
+  app.config.globalProperties.$authSettings = authSettingsRepo
   app.config.globalProperties.$customer = customerRepo
   app.config.globalProperties.$pad = padRepo
   app.config.globalProperties.$waiterCall = waiterCallRepo

@@ -19,6 +19,7 @@ export type WebSocketMessage = {
     | 'user.updated'
     | 'order.updated'
     | 'waiter_call.updated'
+    | 'services.telegram_authorization'
   data: any
 }
 
@@ -50,6 +51,9 @@ export const handleMessage = (v: MessageEvent<string>) => {
   }
   if (response.type === 'waiter_call.updated') {
     waiterCallRepo.item = new WaiterCall(response.data as WaiterCallRaw)
+  }
+  if (response.type === 'services.telegram_authorization') {
+    authentication.tokenAuth(response.data.access, response.data.refresh)
   }
 
   return response
