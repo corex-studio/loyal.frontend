@@ -139,11 +139,10 @@
             </div>
             Введите последние 4 цифры номера, с которого идёт звонок.
           </div>
-          <div class="text-h5 text-center text-grey-6">
-            +7 000 000
+          <div class="text-h5 text-center">
+            <span style="opacity: 0.5">+7 000 000 </span>
             <span
-              class="bg-grey-6 text-on-secondary px-4 rounded-borders"
-              style="opacity: 1"
+              class="bg-backing-color text-on-backing-color px-4 rounded-borders"
               >XX-XX</span
             >
           </div>
@@ -167,13 +166,15 @@
           </div>
         </div>
         <div
-          @click="delay ? void 0 : requestAuth()"
+          @click="delay ? void 0 : sendSmsCode()"
           class="row justify-center mt-md-4 mt-xs-30 body"
           style="text-decoration: underline"
           :class="{ 'cursor-pointer': !delay }"
         >
           {{
-            !!delay ? `Позвонить еще раз (${delay} сек)` : 'Позвонить еще раз'
+            !!delay
+              ? `Отправить смс с кодом (${delay} сек)`
+              : 'Отправить смс с кодом'
           }}
         </div>
       </div>
@@ -466,6 +467,11 @@ const stepHandler = async () => {
   loading.value = false
 }
 
+const sendSmsCode = async () => {
+  data.value.authType = AuthType.SMS
+  requestAuth()
+}
+
 const requestAuth = async () => {
   const authType = data.value.authType
 
@@ -474,7 +480,6 @@ const requestAuth = async () => {
     key: await authHelper.getAuthKey(),
     auth_type: authType,
   })
-  console.log(res)
   if (!res || !res.success) {
     Notify.create({
       message: 'Ошибка при обработке запроса',
@@ -516,7 +521,10 @@ const requestAuth = async () => {
     [AuthType.SMS, AuthType.FLASHCALL].includes(authType)
   ) {
     Notify.create({
-      message: 'Сообщение с кодом успешно отправлено',
+      message:
+        authType === AuthType.SMS
+          ? 'Сообщение с кодом успешно отправлено'
+          : 'Звонок с кодом успешно отправлен',
     })
 
     delay.value = 30
