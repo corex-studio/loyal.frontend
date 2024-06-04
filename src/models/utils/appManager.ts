@@ -179,6 +179,14 @@ export class AppManager {
     interval = setInterval(() => {
       if (document.hidden) return
       void customerRepo.setOnline(window.navigator.userAgent)
+      if (store.webSocket?.readyState === 3) {
+        store.webSocket =
+          store.tableMode && padRepo.item
+            ? new WebSocket(`wss://loyalhub.ru/ws/pads/${padRepo.item.id}/`)
+            : new WebSocket(
+                `wss://loyalhub.ru/ws/customers/${authentication.user?.id}/`,
+              )
+      }
     }, 30000)
   }
 
