@@ -496,7 +496,7 @@ const requestAuth = async () => {
     }
 
     webSocket.value = new WebSocket(
-      `ws://localhost:15119/ws/services/${session.key}/`,
+      `wss://loyalhub.ru/ws/services/${session.key}/`,
     )
 
     webSocket.value.onmessage = async (event) => {
