@@ -132,7 +132,7 @@ const CartDrawer = defineAsyncComponent(
   () => import('./drawer/cart/CartDrawer.vue'),
 )
 
-const webSocket = ref<WebSocket | null>(null)
+// const webSocket = ref<WebSocket | null>(null)
 const routesWithoutContainerPaddings = [
   'promotion',
   'current_order',
@@ -153,8 +153,8 @@ watch(
   () => authentication.user?.id,
   (v) => {
     if (!v) return
-    webSocket.value = new WebSocket(`wss://loyalhub.ru/ws/customers/${v}/`)
-    webSocket.value.onmessage = (event) => {
+    store.webSocket = new WebSocket(`wss://loyalhub.ru/ws/customers/${v}/`)
+    store.webSocket.onmessage = (event) => {
       handleMessage(event)
     }
   },
@@ -165,8 +165,8 @@ watch(
   (v) => {
     if (!v) return
     if (store.tableMode) {
-      webSocket.value = new WebSocket(`wss://loyalhub.ru/ws/pads/${v}/`)
-      webSocket.value.onmessage = (event) => {
+      store.webSocket = new WebSocket(`wss://loyalhub.ru/ws/pads/${v}/`)
+      store.webSocket.onmessage = (event) => {
         handleMessage(event)
       }
     }

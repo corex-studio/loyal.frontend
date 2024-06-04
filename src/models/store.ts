@@ -60,6 +60,7 @@ export class Store {
   menuItemImage: Image | null = null
   groupDragged = false
   private _menuItemModal = false
+  webSocket: WebSocket | null = null
   // cityFromParam: string | null = null
 
   get menuItemModal() {
