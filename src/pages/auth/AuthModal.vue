@@ -293,7 +293,9 @@ const tabs = computed(() => {
       authType: authSettings?.flashcall_auth
         ? AuthType.FLASHCALL
         : AuthType.SMS,
-      icon: 'fa-solid fa-phone',
+      icon: authSettings?.flashcall_auth
+        ? 'fa-solid fa-phone'
+        : 'fa fa-envelope',
     },
   ]
 
