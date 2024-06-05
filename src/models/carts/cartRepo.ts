@@ -13,6 +13,10 @@ import { cartApi } from './cartApi'
 import { reactive } from 'vue'
 import { store } from '../store'
 import { padRepo } from '../pads/padRepo'
+import {
+  DeliveryAreaSettings,
+  DeliveryAreaSettingsRaw
+} from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 
 export class CartRepo extends BaseRepo<Cart> {
   api = cartApi
@@ -40,7 +44,7 @@ export class CartRepo extends BaseRepo<Cart> {
     }
     if (!data.pad) {
       data.pad =
-        store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined
+        store.qrData?.data?.pad?.id || store.qrMenuData?.pad?.id || undefined
     }
     const res: CartRaw = await this.api.send({
       method: 'PUT',
@@ -53,6 +57,17 @@ export class CartRepo extends BaseRepo<Cart> {
       this.setParamsLoading = false
     }
     return this.item
+  }
+
+  async getDeliverySettings(v:Cart) {
+    const results = await this.api.send<{
+      delivery_settings: DeliveryAreaSettingsRaw[]
+    }>({
+      method: 'GET',
+      id: v.id,
+      action: 'delivery_settings'
+    })
+    return results.delivery_settings.map(v => new DeliveryAreaSettings(v))
   }
 
   getRelatedItems(v: CartItem) {

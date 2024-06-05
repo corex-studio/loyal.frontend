@@ -26,7 +26,6 @@ export type WebSocketMessage = {
 
 export const handleMessage = (v: MessageEvent<string>) => {
   const response = JSON.parse(v.data) as WebSocketMessage
-
   if (response.type === 'cart.updated') {
     cartRepo.item = new Cart(response.data as CartRaw)
     cartRepo.item.errors.forEach((error) => {
@@ -54,7 +53,7 @@ export const handleMessage = (v: MessageEvent<string>) => {
     waiterCallRepo.item = new WaiterCall(response.data as WaiterCallRaw)
   }
   if (response.type === 'services.telegram_authorization') {
-    authentication.tokenAuth(response.data.access, response.data.refresh)
+    void authentication.tokenAuth(response.data.access, response.data.refresh)
   }
 
   return response

@@ -158,8 +158,9 @@
           </div>
           <template v-else>
             <CTooltip v-if="addToCartDisabledInfo">{{
-              addToCartDisabledInfo
-            }}</CTooltip>
+                addToCartDisabledInfo
+              }}
+            </CTooltip>
             <div>Оформить заказ</div>
             <q-badge
               v-if="$q.screen.gt.sm"
@@ -172,7 +173,7 @@
               :class="{
                 'text-on-secondary-button-color': addToCartDisabledInfo,
               }"
-              >{{
+            >{{
                 $cart.item?.discountedTotalSum
                   ? beautifyNumber($cart.item?.discountedTotalSum, true)
                   : '0'
@@ -211,8 +212,6 @@ import CartBonuses from './CartBonuses.vue'
 import { PromoCodeMode } from 'src/models/salesPoint/salesPoint'
 import PromocodeModal from 'src/pages/arrangement/PromocodeModal.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
-import { deliveryAreaSettingsRepo } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettingsRepo'
-import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import CartFreeItems from './CartFreeItems.vue'
 import CartDrawerGuestsCount from './CartDrawerGuestsCount.vue'
@@ -232,7 +231,7 @@ watch(
     if (v) {
       selectPaymentType.value = false
     }
-  },
+  }
 )
 
 const addToCartDisabledInfo = computed(() => {
@@ -240,14 +239,14 @@ const addToCartDisabledInfo = computed(() => {
     cartRepo.item?.cartItems.some(
       (v) =>
         v.availableQuantity !== null &&
-        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity),
+        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity)
     )
   )
     return 'Имеются недоступные позиции'
-  if (cartRepo.item?.deliveryAddress && currentDeliverySettings.value?.length) {
+  if (cartRepo.item?.isDelivery && currentDeliverySettings.value?.length) {
     if (
       !currentDeliverySettings.value?.find(
-        (v) => cartRepo.item && v.minimalOrderSum < cartRepo.item.totalSum,
+        (v) => cartRepo.item && v.minimalOrderSum < (cartRepo.item.discountedSumWithoutBonuses)
       )
     ) {
       return 'Не набрана минимальная сумма'
@@ -262,12 +261,12 @@ const clearCart = async () => {
     void ecommerceRemove(cartRepo.item)
     cartRepo.item = await cartRepo.clear()
     Notify.create({
-      message: 'Корзина очищена',
+      message: 'Корзина очищена'
     })
   } catch {
     Notify.create({
       message: 'Ошибка при очистке корзины',
-      color: 'danger',
+      color: 'danger'
     })
   }
 }
@@ -276,21 +275,21 @@ const deleteCartItem = async (item: CartItem) => {
   try {
     await cartItemRepo.delete(item)
     Notify.create({
-      message: 'Блюдо удалено из корзины',
+      message: 'Блюдо удалено из корзины'
     })
     await cartRepo.current(
       store.qrData?.data?.salesPoint?.id,
-      store.qrData?.data?.pad?.id,
+      store.qrData?.data?.pad?.id
     )
     const foundIndex = cartRepo.item?.cartItems.findIndex(
-      (v) => v.id === item.id,
+      (v) => v.id === item.id
     )
     if (foundIndex !== undefined && foundIndex > -1)
       cartRepo.item?.cartItems.splice(foundIndex, 1)
   } catch {
     Notify.create({
       message: 'Ошибка при удалении',
-      color: 'danger',
+      color: 'danger'
     })
   } finally {
     void ecommerceRemove(item)
@@ -313,7 +312,7 @@ const arrange = () => {
   }
   if (addToCartDisabledInfo.value) return
   void router.push({
-    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage',
+    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage'
   })
 }
 
@@ -323,24 +322,12 @@ watch(
     currentDeliverySettings.value = cartRepo.item?.deliveryAddress
       ? []
       : undefined
-    if (v && cartRepo.item?.deliveryArea) {
-      const { items } = await deliveryAreaSettingsRepo.list(
-        {
-          delivery_area: cartRepo.item.deliveryArea,
-        },
-        { pageSize: 'all' },
-      )
-      const currentWeekday = moment().isoWeekday()
-      const currentTime = moment().format('HH:mm:ss')
-      const byToday = items.filter((v) => v.weekdays.includes(currentWeekday))
-      currentDeliverySettings.value = byToday.filter(
-        (v) =>
-          (v.endTime >= currentTime && v.startTime <= currentTime) ||
-          v.startTime === v.endTime,
-      )
+
+    if (v && cartRepo.item?.isDelivery) {
+      currentDeliverySettings.value = await cartRepo.getDeliverySettings(cartRepo.item)
     }
   },
-  { immediate: true },
+  { immediate: true }
 )
 </script>
 

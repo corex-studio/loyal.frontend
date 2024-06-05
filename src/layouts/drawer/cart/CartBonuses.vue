@@ -23,14 +23,20 @@
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
+
+onMounted(() => {
+  if (cartRepo.item?.useBonuses) {
+    currentChoice.value = 2
+  }
+})
 
 const currentChoice = ref(1)
 
 const maxSum = computed(() => {
   if (!cartRepo.item) return 0
   return cartRepo.item.walletPayments[0].wallet.balance >
-    cartRepo.item.walletPayments[0].max_sum
+  cartRepo.item.walletPayments[0].max_sum
     ? cartRepo.item.walletPayments[0].max_sum
     : cartRepo.item.walletPayments[0].wallet.balance
 })
@@ -57,24 +63,11 @@ const discard = () => {
 }
 
 const applyBonuses = () => {
-  if (cartRepo.item?.walletPayments.some((v) => v.applied_sum)) {
-    void cartRepo.setParams({
-      sales_point: cartRepo.item?.salesPoint?.id,
-      type: cartRepo.item?.type || undefined,
-      use_bonuses: true,
-      // applied_wallet_payments: [
-      //   {
-      //     wallet_payment: cartRepo.item.walletPayments[0].uuid,
-      //     applied_sum: cartRepo.item.walletPayments[0].applied_sum,
-      //   },
-      // ],
-    })
-  } else {
-    void cartRepo.setParams({
-      sales_point: cartRepo.item?.salesPoint?.id,
-      type: cartRepo.item?.type || undefined,
-      use_bonuses: false,
-    })
-  }
+  const useBonuses = cartRepo.item?.walletPayments.some((v) => v.applied_sum)
+  void cartRepo.setParams({
+    sales_point: cartRepo.item?.salesPoint?.id,
+    type: cartRepo.item?.type || undefined,
+    use_bonuses: useBonuses
+  })
 }
 </script>

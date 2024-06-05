@@ -76,7 +76,7 @@ onMounted(async () => {
   try {
     await initMenuGroupsBounding()
     cleanups.push(
-      useEventListener(document, 'scroll', setCurrentActiveMenuGroupId),
+      useEventListener(document, 'scroll', setCurrentActiveMenuGroupId)
     )
   } catch {
     console.error('menu groups ref is empty')
@@ -113,7 +113,7 @@ const setCurrentActiveMenuGroupId = () => {
         index: Number(i),
         fromBottom,
         fromTop: top,
-        visibleHeight,
+        visibleHeight
       })
   }
   _setCurrentActiveMenuGroupId(visible)
@@ -159,13 +159,13 @@ const initMenuGroupsBounding = async () => {
     }, 50)
   })
 }
-
-watch(
-  () => menuGroupsBounding.value[0],
-  (v) => {
-    console.log(v)
-  },
-)
+//
+// watch(
+//   () => menuGroupsBounding.value[0],
+//   (v) => {
+//     console.log(v)
+//   },
+// )
 
 const menuItems = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length) || []
@@ -180,7 +180,7 @@ watch(
     timeout = setTimeout(() => {
       void ecommerceImpressions(menuItemRepo.visibleItems)
     }, 500)
-  },
+  }
 )
 
 onBeforeUnmount(() => {

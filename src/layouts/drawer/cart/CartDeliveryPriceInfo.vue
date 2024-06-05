@@ -74,7 +74,7 @@ const deliverySettings = computed(() => {
   return items.length ? items : props.deliverySettings
 })
 
-const cartSum = toRef(() => cartRepo.item?.discountedSum || 0)
+const cartSum = toRef(() => cartRepo.item?.discountedSumWithoutBonuses || 0)
 
 const deliverySteps = computed(() => {
   const items = clone(deliverySettings.value).sort(

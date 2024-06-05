@@ -208,10 +208,18 @@ export class Cart implements BaseModel {
     )
   }
 
+  get discountedSumWithoutBonuses() {
+      return this.discountedSum + this.appliedBonuses
+  }
+
   get currentAddress() {
     return this.type === CartType.DELIVERY
       ? this.deliveryAddress?.address
       : this.salesPoint.customAddress || this.salesPoint.address
+  }
+
+  get isDelivery() {
+    return this.type === CartType.DELIVERY
   }
 
   get currentDeliveryType() {
