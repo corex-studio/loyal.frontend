@@ -765,6 +765,7 @@ const makeAnOrder = async () => {
     //   sales_point: store.qrMenuData?.pad.salesPoint?.id,
     //   type: cartRepo.item?.type,
     // })
+
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
@@ -779,7 +780,7 @@ const makeAnOrder = async () => {
       },
       comment: comment.value,
       extra_data: {
-        system_source: 'website',
+        system_source: store.qrMenuData ? 'qr_menu' : 'website',
       },
       pad: store.tableMode
         ? padRepo.item?.id
