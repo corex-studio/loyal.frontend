@@ -130,8 +130,13 @@ const modifierViewType = computed(() => {
 })
 
 const radioClickHandler = (item: MenuModifierGroupItem) => {
-  props.group.items.forEach((el) => (el.quantity = 0))
-  item.quantity = 1
+  const otherItems = props.group.items.filter((v) => v.id !== item.id)
+  otherItems.forEach((el) => (el.quantity = 0))
+  if (props.group.restrictions?.min_quantity) {
+    item.quantity = 1
+  } else {
+    item.quantity = item.quantity === 0 ? 1 : 0
+  }
 }
 
 const checkboxClickHandler = (item: MenuModifierGroupItem) => {

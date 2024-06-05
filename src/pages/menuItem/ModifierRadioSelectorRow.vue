@@ -17,7 +17,7 @@
       :class="{ 'text-primary': item.quantity }"
       :style="item.quantity ? '' : 'opacity: 0.5'"
     >
-      +{{ item.price }} ₽
+      {{ item.price }} ₽
     </div>
   </div>
 </template>
