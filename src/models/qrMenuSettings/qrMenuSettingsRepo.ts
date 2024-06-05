@@ -8,16 +8,26 @@ import {
 } from 'src/models/companyGroup/companyGroup'
 import { Pad, PadRaw } from 'src/models/pads/pad'
 
+export enum QrMenuAuthType {
+  DISABLED = 1,
+  PHONE_NUMBER = 2,
+}
+
 type QRMenuDataRaw = {
   company_group: CompanyGroupRaw
   pad: PadRaw | null
-  settings: { orders_bottom_bar_text: string; waiter_calls_enabled: boolean }
+  settings: {
+    orders_bottom_bar_text: string
+    waiter_calls_enabled: boolean
+    authorization_type: QrMenuAuthType
+    // working_mode: number
+  }
 }
 
 export type QRMenuData = {
   company_group: CompanyGroup
   pad: Pad | null
-  settings: { orders_bottom_bar_text: string; waiter_calls_enabled: boolean }
+  settings: QRMenuDataRaw['settings']
 }
 
 export class QrMenuSettingsRepo extends BaseRepo<QrMenuSettings> {

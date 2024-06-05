@@ -72,6 +72,8 @@
       @keydown.left="emitDirectionKeys('left', $event)"
       @keydown.up.prevent="$emit('up')"
       @keydown.down.prevent="$emit('down')"
+      :lazy-rules="lazyRules"
+      :reactive-rules="reactiveRules"
     >
       <template v-if="$slots.prepend" v-slot:prepend>
         <slot name="prepend"></slot>
@@ -174,6 +176,8 @@ const props = defineProps<{
   autocomplete?: string
   rounded?: boolean
   menuMode?: boolean
+  lazyRules?: boolean | 'ondemand'
+  reactiveRules?: boolean
 }>()
 
 const emitDirectionKeys = (

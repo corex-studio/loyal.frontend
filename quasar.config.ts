@@ -92,7 +92,7 @@ export default configure((/* ctx */) => {
           bodyClasses: true, // <<< add this
         },
         notify: {},
-        plugins: ['LocalStorage', 'Meta'],
+        plugins: ['LocalStorage', 'Meta', 'SessionStorage'],
       },
 
       // iconSet: 'material-icons', // Quasar icon set

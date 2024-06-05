@@ -328,6 +328,29 @@
         </div>
       </div>
       <div
+        :class="$q.screen.lt.md ? 'column' : 'row items-center'"
+        class="body full-width gap-md-5 gap-xs-4 mt-12"
+        v-if="
+          $store.qrMenuData?.settings.authorization_type ===
+          QrMenuAuthType.PHONE_NUMBER
+        "
+      >
+        <div :class="{ bold: $q.screen.lt.md }" class="col-md-4">
+          Номер телефона
+        </div>
+        <CInput
+          v-model="qrMenuUserPhone"
+          default
+          unmasked-value
+          mask="+7 (###) ###-##-##"
+          class="border-radius2"
+          :rules="[
+            (v) => [0, 10].includes(v.length) || 'Некорректный номер телефона',
+          ]"
+        />
+        <div class="helper-text mt-8">Укажите, чтобы получить уведомление о готовности заказа</div>
+      </div>
+      <div
         v-if="$q.screen.gt.sm"
         class="pl-lg-30 col-lg-5 col-xs-12 mt-xs-20 mt-lg-0 pb-xs-20 pb-lg-0"
       >
@@ -529,7 +552,7 @@ import {
 import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { Notify } from 'quasar'
+import { Notify, SessionStorage } from 'quasar'
 import { useRouter } from 'vue-router'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
@@ -544,6 +567,7 @@ import { ecommercePurchase } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 
 const currentDay = ref('Сегодня')
 const eatInsideTabs = [
@@ -567,6 +591,9 @@ const router = useRouter()
 const deliveryAddressesModal = ref(false)
 const menu = ref(false)
 const menuRef = ref<HTMLDivElement | null>(null)
+const qrMenuUserPhone = ref<string | null>(
+  SessionStorage.getItem('qrMenuUserPhone') || '7',
+)
 
 const comment = ref<string | null>(null)
 
@@ -711,6 +738,13 @@ const setDeliveryTime = async (v: string | null) => {
 
 const makeAnOrder = async () => {
   try {
+    let phoneToSend: string | null = null
+    if (qrMenuUserPhone.value?.length === 10) {
+      SessionStorage.set('qrMenuUserPhone', qrMenuUserPhone.value)
+      phoneToSend = qrMenuUserPhone.value.startsWith('7') ? qrMenuUserPhone.value : `7${qrMenuUserPhone.value}`
+    } else {
+      SessionStorage.remove('qrMenuUserPhone')
+    }
     loading.value = true
     const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
     if (!status) {
@@ -752,6 +786,7 @@ const makeAnOrder = async () => {
         : store.qrData
           ? store.qrData.data?.pad?.id
           : undefined,
+      phone: phoneToSend || undefined
     })
     // if (order.paymentUrl) {
     //   await router.replace({
