@@ -7,7 +7,7 @@
         :class="{ 'text-primary': item.quantity }"
         :style="item.quantity ? '' : 'opacity: 0.5'"
       >
-        +{{ item.price ? item.price * item.quantity : 0 }} ₽
+        {{ item.price || 0 }} ₽
       </div>
     </div>
     <ChangeAmount
