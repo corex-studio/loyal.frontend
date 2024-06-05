@@ -18,7 +18,7 @@
     <div class="row justify-between items-center">
       <div class="row items-center">
         <div class="body bold text-on-backing-color">
-          № {{ item.number || 'Б/Н' }}
+          № {{ item.internal_number || item.number || 'Б/Н' }}
         </div>
         <CBadge
           :color="item.orderStatus.color"
