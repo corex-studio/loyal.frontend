@@ -3,10 +3,12 @@
     :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
     class="pa-10 border-radius mt-lg-15 mt-md-12 mt-xs-8 gap-10 column"
   >
-    <div class="row full-width justify-between header3 gap-5">
-      <div class="bold">Оплата заказа</div>
-      <div class="bold">
-        0:{{ currentSecond < 10 ? '0' + currentSecond : currentSecond }}
+    <div class="column full-width items-center gap-5">
+      <div class="bold header3">Оплата заказа</div>
+      <div class="body text-center">
+        Потоврная попытка оплаты будет доступна через 0:{{
+          currentSecond < 10 ? '0' + currentSecond : currentSecond
+        }}
       </div>
     </div>
     <div class="progress-line-parent">
@@ -16,6 +18,10 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
+
+const emit = defineEmits<{
+  (evt: 'done'): void
+}>()
 
 const currentSecond = ref(0)
 let timer: NodeJS.Timeout | null = null
@@ -28,6 +34,7 @@ const startTimer = () => {
         clearInterval(timer)
         timer = null
       }
+      emit('done')
     }
   }, 1000)
 }
