@@ -49,38 +49,43 @@
         >
           {{ $uiSettings.item.orderCompletePostPaymentBannerText }}
         </div>
-        <OrderPaymentTimer v-if="showPaymentTimer" />
-        <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
-        <OrderNotPaid
-          v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
-          @retry="paymentModal = true"
-          :show-retry="!!$route.query.paymentUrl && !$cart.item"
+        <OrderPaymentTimer
+          v-if="showPaymentTimer"
+          @done="showPaymentTimer = false"
         />
-        <!-- ЗАКАЗ ОТМЕНЕН -->
-        <OrderCancelled
-          v-else-if="$order.item.status === OrderStatusType.DECLINED"
-        />
-        <!-- ЗАКАЗ ПРИНЯТ -->
-        <div
-          v-else
-          :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
-          class="pa-10 column items-center full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
-        >
-          <div class="header3 bold mb-2">
-            Заказ № {{ $order.item.number || '-' }}
-            <span class="text-lowercase bold">
-              {{ orderStatusTypeNames[$order.item.status].label }}
-            </span>
-          </div>
-          <div class="body text-secondary mb-md-8 mb-xs-6">
-            Приготовим к {{ $order.item?.deliveryTime || '-' }}
-          </div>
-          <OrderStepper
-            :style="`max-width: ${
-              $q.screen.lt.lg ? 'unset' : '432px'
-            }; width: 100%`"
+        <template v-if="!showPaymentTimer && !paymentModal">
+          <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
+          <OrderNotPaid
+            v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
+            @retry="paymentModal = true"
+            :show-retry="!!$route.query.paymentUrl && !$cart.item"
           />
-        </div>
+          <!-- ЗАКАЗ ОТМЕНЕН -->
+          <OrderCancelled
+            v-else-if="$order.item.status === OrderStatusType.DECLINED"
+          />
+          <!-- ЗАКАЗ ПРИНЯТ -->
+          <div
+            v-else
+            :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+            class="pa-10 column items-center full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
+          >
+            <div class="header3 bold mb-2">
+              Заказ № {{ $order.item.number || '-' }}
+              <span class="text-lowercase bold">
+                {{ orderStatusTypeNames[$order.item.status].label }}
+              </span>
+            </div>
+            <div class="body text-secondary mb-md-8 mb-xs-6">
+              Приготовим к {{ $order.item?.deliveryTime || '-' }}
+            </div>
+            <OrderStepper
+              :style="`max-width: ${
+                $q.screen.lt.lg ? 'unset' : '432px'
+              }; width: 100%`"
+            />
+          </div>
+        </template>
       </div>
     </div>
     <div
