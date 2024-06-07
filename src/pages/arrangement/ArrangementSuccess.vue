@@ -40,19 +40,39 @@
             Вы оформили заказ из «{{ $order.item.salesPoint.name }}»
           </div>
         </div>
-        <div class="subtitle-text mt-10"
-             v-if="$order.item.isPostPayment && $uiSettings.item?.orderCompletePostPaymentBannerText">
-          {{ $uiSettings.item.orderCompletePostPaymentBannerText }}
-
-        </div>
         <div
-          :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
-          class="pa-10 column full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
+          class="subtitle-text mt-10"
+          v-if="
+            $order.item.isPostPayment &&
+            $uiSettings.item?.orderCompletePostPaymentBannerText
+          "
         >
-          <div class="body mb-2" style="opacity: 0.7">
+          {{ $uiSettings.item.orderCompletePostPaymentBannerText }}
+        </div>
+        <OrderPaymentTimer v-if="showPaymentTimer" />
+        <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
+        <OrderNotPaid
+          v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
+          @retry="paymentModal = true"
+          :show-retry="!!$route.query.paymentUrl && !$cart.item"
+        />
+        <!-- ЗАКАЗ ОТМЕНЕН -->
+        <OrderCancelled
+          v-else-if="$order.item.status === OrderStatusType.DECLINED"
+        />
+        <!-- ЗАКАЗ ПРИНЯТ -->
+        <div
+          v-else
+          :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+          class="pa-10 column items-center full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
+        >
+          <div class="header3 bold mb-2">
             Заказ № {{ $order.item.number || '-' }}
+            <span class="text-lowercase bold">
+              {{ orderStatusTypeNames[$order.item.status].label }}
+            </span>
           </div>
-          <div class="header3 bold mb-md-8 mb-xs-6">
+          <div class="body text-secondary mb-md-8 mb-xs-6">
             Приготовим к {{ $order.item?.deliveryTime || '-' }}
           </div>
           <OrderStepper
@@ -109,9 +129,8 @@
                       width="65px"
                       height="65px"
                       :src="$store.images.empty"
-                    ></q-img>
-                  </span></template
-                >
+                    ></q-img> </span
+                ></template>
               </q-img>
               <div class="column gap-2">
                 <div>{{ el.size.name }}</div>
@@ -177,8 +196,14 @@
       class="body mt-lg-30 mt-xs-20"
       :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
-    <div v-if="$route.query.paymentUrl && !$cart.item && $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID"
-         class="mt-10 full-width">
+    <!-- <div
+      v-if="
+        $route.query.paymentUrl &&
+        !$cart.item &&
+        $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID
+      "
+      class="mt-10 full-width"
+    >
       <CButton
         label="Открыть окно для оплаты заказа"
         :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
@@ -186,13 +211,18 @@
         class="body"
         @click="paymentModal = true"
       />
-    </div>
+    </div> -->
   </div>
 
-  <OrderPaymentModal v-model="paymentModal" :payment-url="paymentUrl" />
+  <OrderPaymentModal
+    :model-value="paymentModal"
+    @update:model-value="paymentModalCloseHandler()"
+    :payment-url="paymentUrl"
+  />
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
+import { orderStatusTypeNames, OrderStatusType } from 'src/models/order/order'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import OrderStepper from './OrderStepper.vue'
@@ -204,6 +234,9 @@ import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import { PaymentStatusType } from 'src/models/order/order'
 import OrderPaymentModal from 'components/OrderPaymentModal.vue'
+import OrderNotPaid from './OrderNotPaid.vue'
+import OrderCancelled from './OrderCancelled.vue'
+import OrderPaymentTimer from './OrderPaymentTimer.vue'
 
 const route = useRoute()
 
@@ -212,6 +245,7 @@ const router = useRouter()
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
 
+const showPaymentTimer = ref(false)
 
 let interval: NodeJS.Timeout | null = null
 const checkOnPaymentUrlInPath = () => {
@@ -223,7 +257,10 @@ const checkOnPaymentUrlInPath = () => {
   } else if (interval) {
     clearInterval(interval)
   }
-  if (route.query.paymentUrl && orderRepo.item?.paymentStatus !== PaymentStatusType.FULL_PAID) {
+  if (
+    route.query.paymentUrl &&
+    orderRepo.item?.paymentStatus !== PaymentStatusType.FULL_PAID
+  ) {
     paymentUrl.value = String(route.query.paymentUrl)
     void nextTick(() => {
       paymentModal.value = true
@@ -239,9 +276,13 @@ onBeforeUnmount(() => {
   if (clearBeforeRouterResolve) clearBeforeRouterResolve()
 })
 
+const paymentModalCloseHandler = () => {
+  paymentModal.value = false
+  showPaymentTimer.value = true
+}
+
 onMounted(() => {
   checkOnPaymentUrlInPath()
-
   useEventBus(orderUpdatedKey).on(({ order }) => {
     orderRepo.item = order
     if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
