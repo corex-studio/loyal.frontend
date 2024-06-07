@@ -20,6 +20,11 @@
     <q-separator color="divider-color" class="full-width" />
     <div class="column gap-3 text-center">
       <CIconButton
+        @click="
+          $router.push({
+            name: 'home',
+          })
+        "
         icon="fa-regular fa-rotate-right"
         size="50px"
         icon-color="on-backing-color"
@@ -27,7 +32,9 @@
         circle
         icon-size="26px"
       />
-      <div class="secondary-text text-on-background-color">Повторить заказ</div>
+      <div class="secondary-text text-on-background-color">
+        Вернуться в меню
+      </div>
     </div>
   </div>
 </template>

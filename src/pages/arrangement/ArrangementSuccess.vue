@@ -49,6 +49,7 @@
         >
           {{ $uiSettings.item.orderCompletePostPaymentBannerText }}
         </div>
+        <OrderPaymentTimer v-if="showPaymentTimer" />
         <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
         <OrderNotPaid
           v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
@@ -213,7 +214,11 @@
     </div> -->
   </div>
 
-  <OrderPaymentModal v-model="paymentModal" :payment-url="paymentUrl" />
+  <OrderPaymentModal
+    :model-value="paymentModal"
+    @update:model-value="paymentModalCloseHandler()"
+    :payment-url="paymentUrl"
+  />
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
@@ -231,6 +236,7 @@ import { PaymentStatusType } from 'src/models/order/order'
 import OrderPaymentModal from 'components/OrderPaymentModal.vue'
 import OrderNotPaid from './OrderNotPaid.vue'
 import OrderCancelled from './OrderCancelled.vue'
+import OrderPaymentTimer from './OrderPaymentTimer.vue'
 
 const route = useRoute()
 
@@ -238,6 +244,8 @@ const router = useRouter()
 
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
+
+const showPaymentTimer = ref(false)
 
 let interval: NodeJS.Timeout | null = null
 const checkOnPaymentUrlInPath = () => {
@@ -267,6 +275,11 @@ const clearBeforeRouterResolve = router.afterEach(() => {
 onBeforeUnmount(() => {
   if (clearBeforeRouterResolve) clearBeforeRouterResolve()
 })
+
+const paymentModalCloseHandler = () => {
+  paymentModal.value = false
+  showPaymentTimer.value = true
+}
 
 onMounted(() => {
   checkOnPaymentUrlInPath()

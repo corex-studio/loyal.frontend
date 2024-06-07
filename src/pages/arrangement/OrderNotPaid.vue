@@ -26,7 +26,7 @@
           оплату
         </div>
       </div>
-      <div class="column gap-3 text-center">
+      <!-- <div class="column gap-3 text-center">
         <CIconButton
           @click="$emit('cancel')"
           icon="fa-regular fa-xmark"
@@ -40,7 +40,7 @@
           Отменить <br />
           заказ
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
