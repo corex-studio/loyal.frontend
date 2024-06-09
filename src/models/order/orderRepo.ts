@@ -20,10 +20,9 @@ export class OrderRepo extends BaseRepo<Order> {
       params: {
         for_review,
         sales_point: pad?.salesPoint?.id,
-        pad: pad?.id,
-      },
+        pad: pad?.id
+      }
     })
-    if (res.results[0]) this.item = new Order(res.results[0])
     return res.results.map((v) => new Order(v))
   }
 
@@ -32,7 +31,7 @@ export class OrderRepo extends BaseRepo<Order> {
       method: 'POST',
       action: 'apply_payments',
       id: this.item?.id,
-      data,
+      data
     })
     return new Order(res)
   }
