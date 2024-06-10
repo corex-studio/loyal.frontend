@@ -63,7 +63,7 @@
             v-if="
               $cart.item.type !== CartType.TABLE &&
               !$salesPoint.item?.settings
-                .allow_order_arrangement_without_delivery_time
+                .allow_order_arrangement_without_delivery_time && !$store.qrMenuData
             "
             :disabled="$q.screen.gt.sm || !timeBlockMobileSpot"
             :to="timeBlockMobileSpot"
@@ -288,7 +288,7 @@
             v-if="
               $cart.item.type !== CartType.TABLE &&
               $cart.item.type !== CartType.DELIVERY &&
-              $cart.item.salesPoint.settings.allow_pickup_orders_inside
+              $cart.item.salesPoint.settings.allow_pickup_orders_inside && !$store.qrMenuData
             "
             class="row full-width gap-md-5 gap-xs-4"
           >
