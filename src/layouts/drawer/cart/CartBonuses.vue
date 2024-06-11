@@ -1,5 +1,5 @@
 <template>
-  <div class="full-width">
+  <div style="z-index: 10" class="full-width">
     <div class="full-width header3 bold mb-5">Баллы</div>
     <div class="row full-width items-center gap-5 justify-between">
       <div class="row items-center gap-7 no-wrap">
@@ -36,7 +36,7 @@ const currentChoice = ref(1)
 const maxSum = computed(() => {
   if (!cartRepo.item) return 0
   return cartRepo.item.walletPayments[0].wallet.balance >
-  cartRepo.item.walletPayments[0].max_sum
+    cartRepo.item.walletPayments[0].max_sum
     ? cartRepo.item.walletPayments[0].max_sum
     : cartRepo.item.walletPayments[0].wallet.balance
 })
@@ -67,7 +67,7 @@ const applyBonuses = () => {
   void cartRepo.setParams({
     sales_point: cartRepo.item?.salesPoint?.id,
     type: cartRepo.item?.type || undefined,
-    use_bonuses: useBonuses
+    use_bonuses: useBonuses,
   })
 }
 </script>

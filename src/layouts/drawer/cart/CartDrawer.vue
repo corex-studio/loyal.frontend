@@ -98,6 +98,10 @@
             <CartFreeItems
               v-if="$cart.item.freeItems.filter((el) => !el.applied).length"
             />
+            <CartUpsales
+              v-if="filteredUpsales.length"
+              :upsales="filteredUpsales"
+            />
           </template>
           <div v-else class="subtitle-text">Корзина пуста</div>
         </div>
@@ -105,7 +109,7 @@
       <div
         v-if="$cart.item?.cartItems.length || $cart.arrangeLoading"
         class="row full-width justify-center bg-background-color px-15 py-13"
-        style="position: sticky; bottom: 0"
+        style="position: sticky; bottom: 0; z-index: 10"
       >
         <CartBonuses
           v-if="
@@ -157,9 +161,8 @@
             <q-spinner size="28px" />
           </div>
           <template v-else>
-            <CTooltip v-if="addToCartDisabledInfo">{{
-                addToCartDisabledInfo
-              }}
+            <CTooltip v-if="addToCartDisabledInfo"
+              >{{ addToCartDisabledInfo }}
             </CTooltip>
             <div>Оформить заказ</div>
             <q-badge
@@ -173,7 +176,7 @@
               :class="{
                 'text-on-secondary-button-color': addToCartDisabledInfo,
               }"
-            >{{
+              >{{
                 $cart.item?.discountedTotalSum
                   ? beautifyNumber($cart.item?.discountedTotalSum, true)
                   : '0'
@@ -216,6 +219,8 @@ import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSetti
 import CartFreeItems from './CartFreeItems.vue'
 import CartDrawerGuestsCount from './CartDrawerGuestsCount.vue'
 import { ecommerceRemove } from 'src/models/ecommerceEvents/ecommerceEvents'
+import { MenuItem } from 'src/models/menu/menuItem/menuItem'
+import CartUpsales from './CartUpsales.vue'
 
 const selectPaymentType = ref(false)
 const acceptModal = ref(false)
@@ -224,6 +229,7 @@ const route = useRoute()
 const loading = ref(false)
 const promocodeModal = ref(false)
 const currentDeliverySettings = ref<DeliveryAreaSettings[] | undefined>()
+const upsales = ref<MenuItem[]>([])
 
 watch(
   () => store.cartDrawer,
@@ -231,22 +237,33 @@ watch(
     if (v) {
       selectPaymentType.value = false
     }
-  }
+  },
 )
+
+const filteredUpsales = computed(() => {
+  return upsales.value.filter(
+    (el) =>
+      !cartRepo.item?.cartItems.map((v) => v.menuItem).includes(el.id) &&
+      !el.isDead &&
+      el.isItemInMenu,
+  )
+})
 
 const addToCartDisabledInfo = computed(() => {
   if (
     cartRepo.item?.cartItems.some(
       (v) =>
         v.availableQuantity !== null &&
-        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity)
+        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity),
     )
   )
     return 'Имеются недоступные позиции'
   if (cartRepo.item?.isDelivery && currentDeliverySettings.value?.length) {
     if (
       !currentDeliverySettings.value?.find(
-        (v) => cartRepo.item && v.minimalOrderSum < (cartRepo.item.discountedSumWithoutBonuses)
+        (v) =>
+          cartRepo.item &&
+          v.minimalOrderSum < cartRepo.item.discountedSumWithoutBonuses,
       )
     ) {
       return 'Не набрана минимальная сумма'
@@ -261,12 +278,12 @@ const clearCart = async () => {
     void ecommerceRemove(cartRepo.item)
     cartRepo.item = await cartRepo.clear()
     Notify.create({
-      message: 'Корзина очищена'
+      message: 'Корзина очищена',
     })
   } catch {
     Notify.create({
       message: 'Ошибка при очистке корзины',
-      color: 'danger'
+      color: 'danger',
     })
   }
 }
@@ -275,21 +292,21 @@ const deleteCartItem = async (item: CartItem) => {
   try {
     await cartItemRepo.delete(item)
     Notify.create({
-      message: 'Блюдо удалено из корзины'
+      message: 'Блюдо удалено из корзины',
     })
     await cartRepo.current(
       store.qrData?.data?.salesPoint?.id,
-      store.qrData?.data?.pad?.id
+      store.qrData?.data?.pad?.id,
     )
     const foundIndex = cartRepo.item?.cartItems.findIndex(
-      (v) => v.id === item.id
+      (v) => v.id === item.id,
     )
     if (foundIndex !== undefined && foundIndex > -1)
       cartRepo.item?.cartItems.splice(foundIndex, 1)
   } catch {
     Notify.create({
       message: 'Ошибка при удалении',
-      color: 'danger'
+      color: 'danger',
     })
   } finally {
     void ecommerceRemove(item)
@@ -312,7 +329,7 @@ const arrange = () => {
   }
   if (addToCartDisabledInfo.value) return
   void router.push({
-    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage'
+    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage',
   })
 }
 
@@ -324,10 +341,15 @@ watch(
       : undefined
 
     if (v && cartRepo.item?.isDelivery) {
-      currentDeliverySettings.value = await cartRepo.getDeliverySettings(cartRepo.item)
+      currentDeliverySettings.value = await cartRepo.getDeliverySettings(
+        cartRepo.item,
+      )
+    }
+    if (v) {
+      upsales.value = await cartRepo.getUpsales()
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

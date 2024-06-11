@@ -15,8 +15,9 @@ import { store } from '../store'
 import { padRepo } from '../pads/padRepo'
 import {
   DeliveryAreaSettings,
-  DeliveryAreaSettingsRaw
+  DeliveryAreaSettingsRaw,
 } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
+import { MenuItem, MenuItemRaw } from '../menu/menuItem/menuItem'
 
 export class CartRepo extends BaseRepo<Cart> {
   api = cartApi
@@ -60,15 +61,15 @@ export class CartRepo extends BaseRepo<Cart> {
     return this.item
   }
 
-  async getDeliverySettings(v:Cart) {
+  async getDeliverySettings(v: Cart) {
     const results = await this.api.send<{
       delivery_settings: DeliveryAreaSettingsRaw[]
     }>({
       method: 'GET',
       id: v.id,
-      action: 'delivery_settings'
+      action: 'delivery_settings',
     })
-    return results.delivery_settings.map(v => new DeliveryAreaSettings(v))
+    return results.delivery_settings.map((v) => new DeliveryAreaSettings(v))
   }
 
   getRelatedItems(v: CartItem) {
@@ -129,6 +130,16 @@ export class CartRepo extends BaseRepo<Cart> {
       action: `${this.item?.id}/clear`,
     })
     return new Cart(res)
+  }
+
+  async getUpsales() {
+    const res: {
+      results: MenuItemRaw[]
+    } = await this.api.send({
+      method: 'GET',
+      action: `${this.item?.id}/upsales`,
+    })
+    return res.results.map((v) => new MenuItem(v))
   }
 }
 
