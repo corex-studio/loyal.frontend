@@ -6,7 +6,7 @@
     <div class="column full-width items-center gap-5">
       <div class="bold header3">Оплата заказа</div>
       <div class="body text-center">
-        Потоврная попытка оплаты будет доступна через 0:{{
+        Повторная попытка оплаты будет доступна через 0:{{
           currentSecond < 10 ? '0' + currentSecond : currentSecond
         }}
       </div>
@@ -23,12 +23,12 @@ const emit = defineEmits<{
   (evt: 'done'): void
 }>()
 
-const currentSecond = ref(0)
+const currentSecond = ref(30)
 let timer: NodeJS.Timeout | null = null
 const startTimer = () => {
   timer = setInterval(() => {
-    if (currentSecond.value < 30) {
-      currentSecond.value += 1
+    if (currentSecond.value > 0) {
+      currentSecond.value -= 1
     } else {
       if (timer) {
         clearInterval(timer)
