@@ -134,11 +134,7 @@ const routes: RouteRecordRaw[] = [
     name: 'offerPage',
     component: () => import('pages/Offer.vue'),
   },
-  {
-    path: '/docs',
-    name: 'docsPage',
-    component: () => import('pages/DocsPage.vue'),
-  },
+
   {
     path: '/:catchAll(.*)*',
     component: () => import('src/pages/404page.vue'),
