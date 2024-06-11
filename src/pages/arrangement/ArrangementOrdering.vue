@@ -646,7 +646,7 @@ const isDelivery = computed(() => {
 })
 
 const orderTypeText = computed(() => {
-  if (cartRepo.item?.type === CartType.TABLE) return 'Оформление заказа'
+  if (store.qrMenuData) return 'Оформление заказа'
   return `Заказ на ${isDelivery.value ? 'доставку' : 'самовывоз'}`
 })
 
