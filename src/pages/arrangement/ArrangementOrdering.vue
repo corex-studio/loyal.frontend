@@ -820,7 +820,7 @@ const onOrderPaid = async (order: Order) => {
         store.qrData.data?.salesPoint?.id,
         store.qrData.data?.pad?.id,
       )
-      void router.push({
+      void router.replace({
         name: 'successOrderPage',
         params: {
           orderId: order.id,
@@ -828,7 +828,7 @@ const onOrderPaid = async (order: Order) => {
         query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
     } else if (store.tableMode) {
-      void router.push({
+      void router.replace({
         name: 'myQrMenuOrders',
         query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
@@ -838,7 +838,7 @@ const onOrderPaid = async (order: Order) => {
       )
     } else {
       cartRepo.item = null
-      void router.push({
+      void router.replace({
         name: 'successOrderPage',
         params: {
           orderId: order.id,

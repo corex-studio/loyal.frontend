@@ -6,7 +6,8 @@
     <div class="column gap-2 text-center">
       <div class="text-primary header3 bold">Заказ не оплачен</div>
       <div class="body text-on-background-color">
-        Повторите попытку оплаты заказа
+        <div>Заказ будет принят после подтверждения оплаты</div>
+        <div>Повторите попытку оплаты</div>
       </div>
     </div>
     <q-separator color="divider-color" class="full-width" />
