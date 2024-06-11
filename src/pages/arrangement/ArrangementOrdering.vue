@@ -263,8 +263,8 @@
               @click="selectedPaymentTypeModal = true"
             >
               <div class="gap-4 row items-center no-wrap">
-                <q-icon size="20px" :name="selectedPaymentType?.icon" />
-                {{ selectedPaymentType?.label }}
+                <q-icon size="20px" :name="$cart.selectedPaymentType?.icon" />
+                {{ $cart.selectedPaymentType?.label }}
               </div>
               <CButton
                 v-if="$q.screen.gt.sm"
@@ -425,7 +425,6 @@
               </div>
               <div
                 class="col-2 column items-end no-wrap"
-                style="white-space: no-wrap"
               >
                 <div
                   v-if="item.totalSum !== item.discountedTotalSum"
@@ -527,8 +526,8 @@
   <SelectPaymentTypeModal
     :types="paymentTypes"
     v-model="selectedPaymentTypeModal"
-    :current-type="selectedPaymentType"
-    @select="selectedPaymentType = $event"
+    :current-type="$cart.selectedPaymentType"
+    @select="$cart.selectedPaymentType = $event"
   />
   <DeliveryAddressesModal
     @address-selected="changeDeliveryAddress($event)"
@@ -584,7 +583,6 @@ const eatInsideTabs = [
 ]
 const availableHours = ref<AvailableHours | null>(null)
 const timeBlockMobileSpot = ref<HTMLDivElement>()
-const selectedPaymentType = ref<PaymentObjectType | null>(null)
 const selectedPaymentTypeModal = ref(false)
 const loading = ref(false)
 const router = useRouter()
@@ -617,7 +615,9 @@ const openMenuItemModal = async (item: CartItem) => {
 
 const changeEatInside = async (val: string) => {
   try {
-    if (!cartRepo.item) throw new Error('Object is null')
+    if (!cartRepo.item) {
+      throw new Error('Object is null')
+    }
     cartRepo.item.eatInside = val === 'В зале'
     await cartRepo.setParams({
       eat_inside: cartRepo.item.eatInside,
@@ -632,7 +632,7 @@ const changeEatInside = async (val: string) => {
 
 const isArrangeAvailable = computed(() => {
   return (
-    !!selectedPaymentType.value &&
+    !!cartRepo.selectedPaymentType &&
     cartRepo.item?.cartItems.every(
       (v) =>
         !v.isDead &&
@@ -646,7 +646,7 @@ const isDelivery = computed(() => {
 })
 
 const orderTypeText = computed(() => {
-  if (cartRepo.item?.type === CartType.TABLE) return 'Оформление заказа'
+  if (store.qrMenuData) return 'Оформление заказа'
   return `Заказ на ${isDelivery.value ? 'доставку' : 'самовывоз'}`
 })
 
@@ -769,12 +769,12 @@ const makeAnOrder = async () => {
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
-        type: selectedPaymentType.value?.type,
+        type: cartRepo.selectedPaymentType?.type,
         payment_service:
-          selectedPaymentType.value?.type === PaymentType.CASH ||
-          selectedPaymentType.value?.type === PaymentType.PAY_LATER
+          cartRepo.selectedPaymentType?.type === PaymentType.CASH ||
+          cartRepo.selectedPaymentType?.type === PaymentType.PAY_LATER
             ? undefined
-            : selectedPaymentType.value?.type === PaymentType.CARD
+            : cartRepo.selectedPaymentType?.type === PaymentType.CARD
               ? 'card'
               : 'web_form',
       },
@@ -821,7 +821,7 @@ const onOrderPaid = async (order: Order) => {
         store.qrData.data?.salesPoint?.id,
         store.qrData.data?.pad?.id,
       )
-      void router.push({
+      void router.replace({
         name: 'successOrderPage',
         params: {
           orderId: order.id,
@@ -829,7 +829,7 @@ const onOrderPaid = async (order: Order) => {
         query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
     } else if (store.tableMode) {
-      void router.push({
+      void router.replace({
         name: 'myQrMenuOrders',
         query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
@@ -839,7 +839,7 @@ const onOrderPaid = async (order: Order) => {
       )
     } else {
       cartRepo.item = null
-      void router.push({
+      void router.replace({
         name: 'successOrderPage',
         params: {
           orderId: order.id,
@@ -895,12 +895,12 @@ watch(selectedPaymentTypeModal, async (v) => {
       (v) => v.type === PaymentType.ONLINE,
     )
     if (
-      selectedPaymentType.value?.type === PaymentType.ONLINE &&
+      cartRepo.selectedPaymentType?.type === PaymentType.ONLINE &&
       !foundOnlinePaymentType
     ) {
       if (paymentTypes.value.length)
-        selectedPaymentType.value = paymentTypes.value[0]
-      else selectedPaymentType.value = null
+        cartRepo.selectedPaymentType = paymentTypes.value[0]
+      else cartRepo.selectedPaymentType = null
     }
   }
 })
@@ -915,9 +915,9 @@ onMounted(async () => {
     (v) => v.type === PaymentType.ONLINE,
   )
   if (foundOnlinePaymentType) {
-    selectedPaymentType.value = foundOnlinePaymentType
+    cartRepo.selectedPaymentType = foundOnlinePaymentType
   } else {
-    selectedPaymentType.value = paymentTypes.value[0]
+    cartRepo.selectedPaymentType = paymentTypes.value[0]
   }
 })
 </script>

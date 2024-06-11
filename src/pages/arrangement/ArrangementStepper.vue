@@ -55,6 +55,9 @@
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { CSSProperties, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import { PaymentType } from 'src/models/order/order'
+import { orderRepo } from 'src/models/order/orderRepo'
 
 const route = useRoute()
 
@@ -67,21 +70,33 @@ const currentStep = computed(() => {
   else return 0
 })
 
+
 const orderingSteps = computed(() => {
-  return [
+  const values = [
     {
       title: 'Корзина',
-      to: '',
+      to: ''
     },
     {
       title: 'Оформление заказа',
-      to: '',
-    },
-    {
-      title: 'Заказ принят',
-      to: '',
-    },
+      to: ''
+    }
   ]
+  if ((route.name === 'orderingPage' &&
+      cartRepo.selectedPaymentType?.type === PaymentType.ONLINE)
+    || (route.name === 'successOrderPage' &&
+      orderRepo.item?.paymentType === PaymentType.ONLINE)) {
+    values.push({
+      title: 'Оплата заказа',
+      to: ''
+    })
+  }
+  // if (route.name === 'orderingPage')
+  values.push({
+    title: 'Заказ принят',
+    to: ''
+  })
+  return values
 })
 
 const getTitleStyle = (index: number): CSSProperties => {
@@ -96,7 +111,7 @@ const getTitleStyle = (index: number): CSSProperties => {
             : route.name === 'cart' || route.name === 'cartReview'
               ? '0'
               : '-40'
-    }px`,
+    }px`
   }
 }
 </script>

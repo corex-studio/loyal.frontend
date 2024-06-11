@@ -1,5 +1,5 @@
 import { CartItem } from './cartItem/cartItem'
-import { OrderRaw, Order } from './../order/order'
+import { OrderRaw, Order, PaymentObjectType } from './../order/order'
 import {
   Cart,
   CartParams,
@@ -24,6 +24,7 @@ export class CartRepo extends BaseRepo<Cart> {
   setParamsLoading = false
   arrangeLoading = false
   promocodeError = false
+  selectedPaymentType: PaymentObjectType | null = null
 
   isItemInCart(id: string): CartItem | undefined {
     return this.item
