@@ -24,8 +24,10 @@
         </span>
       </template>
     </q-img>
-    <div class="column full-width px-5 py-4 secondary-text">
-      {{ item.menuItem.name }}
+    <div class="column gap-2 full-width px-5 py-4 secondary-text">
+      <div>
+        {{ item.menuItem.name }}
+      </div>
     </div>
   </div>
 </template>
