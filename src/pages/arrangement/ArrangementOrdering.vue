@@ -615,7 +615,9 @@ const openMenuItemModal = async (item: CartItem) => {
 
 const changeEatInside = async (val: string) => {
   try {
-    if (!cartRepo.item) throw new Error('Object is null')
+    if (!cartRepo.item) {
+      throw new Error('Object is null')
+    }
     cartRepo.item.eatInside = val === 'В зале'
     await cartRepo.setParams({
       eat_inside: cartRepo.item.eatInside,
