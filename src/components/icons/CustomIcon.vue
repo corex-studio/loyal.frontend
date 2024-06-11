@@ -2,7 +2,7 @@
   <div v-html="svg" class="icon" ref="parent"></div>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
   svg: string
@@ -16,6 +16,16 @@ const parent = ref<HTMLDivElement>()
 const height = ref<string>('30px')
 const width = ref<string>('30px')
 const color = ref<string>('#000000')
+
+watch(
+  () => props.color,
+  (v) => {
+    if (v) {
+      color.value = v
+      parent.value?.style.setProperty('--color', color.value)
+    }
+  },
+)
 
 onMounted(() => {
   props.height ? (height.value = props.height) : void 0
