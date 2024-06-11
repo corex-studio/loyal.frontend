@@ -425,7 +425,6 @@
               </div>
               <div
                 class="col-2 column items-end no-wrap"
-                style="white-space: no-wrap"
               >
                 <div
                   v-if="item.totalSum !== item.discountedTotalSum"
