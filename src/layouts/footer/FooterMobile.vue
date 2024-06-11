@@ -152,6 +152,28 @@
         style="opacity: 0.7; width: fit-content"
         label="Условия использования"
       />
+      <CButton
+        class="body"
+        label="Публичная оферта"
+        style="opacity: 0.7; width: fit-content"
+        text-button
+        text-color="on-bottom-menu-color"
+        @click="
+          openLink(
+            `https://${currentHost}/${String(
+              $companyGroup.item?.externalId,
+            )}/offer`,
+          )
+        "
+      />
+      <CButton
+        class="body"
+        label="Документы"
+        style="opacity: 0.7; width: fit-content"
+        text-button
+        text-color="on-bottom-menu-color"
+        @click="openLink(`https://${currentHost}/docs`)"
+      />
       <div class="row no-wrap gap-3">
         <div style="opacity: 0.7">Работает на</div>
         <q-img style="width: 30px" src="/assets/loyalHeart.svg" />

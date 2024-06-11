@@ -94,6 +94,14 @@
                 )
               "
             />
+            <CButton
+              class="body"
+              label="Документы"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
+              @click="openLink(`https://${currentHost}/docs`)"
+            />
           </div>
         </div>
         <div
@@ -231,6 +239,14 @@
                   )}/offer`,
                 )
               "
+            />
+            <CButton
+              class="body"
+              label="Документы"
+              style="opacity: 0.6"
+              text-button
+              text-color="on-bottom-menu-color"
+              @click="openLink(`https://${currentHost}/docs`)"
             />
           </div>
         </div>
