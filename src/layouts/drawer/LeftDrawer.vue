@@ -97,6 +97,7 @@ import TopHeaderSocials from '../header/TopHeaderSocials.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
+import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 
 const router = useRouter()
 const route = useRoute()
@@ -125,7 +126,6 @@ const blocks = computed(() => {
     },
     {
       label: 'О нас',
-      hidden: !authentication.user,
       click: () => {
         router.push({
           name: 'aboutUs',
@@ -139,6 +139,7 @@ const blocks = computed(() => {
       },
     },
     {
+      hidden: !appSettingsRepo.hasAppLinks,
       label: 'Мобильное приложение',
       click: () => {
         scrollToBlock('footer')

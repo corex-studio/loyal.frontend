@@ -318,9 +318,7 @@
       <div>© Все права защищены 2024</div>
       <div
         v-if="
-          $appSettings.linksData &&
-          ($appSettings.linksData.ios_download_link ||
-            $appSettings.linksData.android_download_link)
+          $appSettings.hasAppLinks
         "
         class="row gap-20 col-xs-12 col-lg-shrink"
       >
@@ -330,7 +328,7 @@
         </div>
         <div class="row gap-10">
           <div
-            v-if="$appSettings.linksData.ios_download_link"
+            v-if="$appSettings.linksData?.ios_download_link"
             class="app-link-block items-center justify-center row border-radius2"
           >
             <img
@@ -342,7 +340,7 @@
             />
           </div>
           <div
-            v-if="$appSettings.linksData.android_download_link"
+            v-if="$appSettings.linksData?.android_download_link"
             class="app-link-block row items-center justify-center border-radius2"
           >
             <img
@@ -383,29 +381,29 @@ const infoBlocks = computed(() => {
       label: 'Акции и новости',
       click: () => {
         scrollToBlock('offers')
-      },
+      }
     },
     {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
-      },
+      }
     },
     {
       label: 'О заведении',
       click: () => {
         router.push({
-          name: 'aboutUs',
+          name: 'aboutUs'
         })
-      },
+      }
     },
     {
       label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
       hidden: !uiSettingsRepo.item?.becomeFranchisee,
       click: () => {
         window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
-      },
-    },
+      }
+    }
   ]
 })
 
@@ -416,7 +414,7 @@ const currentHost = computed(() => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (route.name !== 'home') {
     void router.push({
-      name: 'home',
+      name: 'home'
     })
     setTimeout(() => {
       scrollToBlock(v, tab)

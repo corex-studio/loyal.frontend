@@ -12,7 +12,7 @@ export class AppSettingsRepo extends BaseRepo<AppSettings> {
     const res: LinksSettingsRaw = await this.api.send({
       method: 'GET',
       action: 'fetch',
-      headers,
+      headers
     })
     this.linksData = res
     return res
@@ -21,8 +21,12 @@ export class AppSettingsRepo extends BaseRepo<AppSettings> {
   async saveLinksSettings(data: LinksSettingsRaw): Promise<LinksSettingsRaw> {
     return await this.api.send({
       method: 'POST',
-      data: data,
+      data: data
     })
+  }
+
+  get hasAppLinks() {
+    return !!(this.linksData?.android_download_link || this.linksData?.ios_download_link)
   }
 }
 
