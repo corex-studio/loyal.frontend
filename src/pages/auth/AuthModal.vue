@@ -252,11 +252,10 @@ import { authHelper } from 'src/services/authKeyManager'
 import VOtpInput from 'vue3-otp-input'
 import CInput from 'components/template/inputs/CInput.vue'
 import CCheckBox from 'components/helpers/CCheckBox.vue'
-import { Fn, useEventListener, useWebSocket } from '@vueuse/core'
+import { Fn, useEventListener } from '@vueuse/core'
 import { authSettingsRepo } from 'src/models/authSettings/authSettingsRepo'
 import { AuthType } from 'src/models/authSettings/authSettings'
 import AuthModalTabs from './AuthModalTabs.vue'
-import { openWebsocket } from 'src/services/openWebsocket'
 
 const props = defineProps<{
   modelValue: boolean
@@ -283,7 +282,7 @@ const data = ref<{
 
 const currentStep = ref(1)
 const sessionLink = ref<string | null>(null)
-const webSocket = ref<ReturnType<typeof useWebSocket> | null>(null)
+const webSocket = ref<WebSocket | null>(null)
 
 const authSettings = authSettingsRepo.authSettingsData
 
@@ -498,11 +497,11 @@ const requestAuth = async () => {
       webSocket.value.close()
     }
 
-    webSocket.value = openWebsocket(
+    webSocket.value = new WebSocket(
       `wss://loyalhub.ru/ws/services/${session.key}/`,
-    ) as unknown as typeof webSocket.value
-    if (!webSocket.value?.ws) return
-    webSocket.value.ws.onmessage = async (event: MessageEvent) => {
+    )
+
+    webSocket.value.onmessage = async (event) => {
       const message = handleMessage(event)
       if (!message.data.access) return
       webSocket.value?.close()

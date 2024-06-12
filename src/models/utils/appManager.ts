@@ -179,12 +179,13 @@ export class AppManager {
     interval = setInterval(() => {
       if (document.hidden) return
       void customerRepo.setOnline(window.navigator.userAgent)
-      if (store.webSocket?.ws?.readyState === 3) {
-        let wsUrl: string = `wss://loyalhub.ru/ws/customers/${authentication.user?.id}/`
-        if (store.tableMode && padRepo.item) {
-          wsUrl = `wss://loyalhub.ru/ws/pads/${padRepo.item.id}/`
-        }
-        store.setWebSocket(wsUrl)
+      if (store.webSocket?.readyState === 3) {
+        store.webSocket =
+          store.tableMode && padRepo.item
+            ? new WebSocket(`wss://loyalhub.ru/ws/pads/${padRepo.item.id}/`)
+            : new WebSocket(
+                `wss://loyalhub.ru/ws/customers/${authentication.user?.id}/`,
+              )
       }
     }, 30000)
   }
