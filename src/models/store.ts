@@ -13,6 +13,9 @@ import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
 import { QrData } from './utils/qrData/qrData'
 import { QRMenuData } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { Image } from './image/image'
+import { UseWebSocketOptions, UseWebSocketReturn } from '@vueuse/core'
+import { MaybeRefOrGetter } from '@vueuse/shared'
+import { openWebsocket } from 'src/services/openWebsocket'
 
 type DeliveryAreaInfoDrawerData = {
   salesPoint: SalesPoint
@@ -60,8 +63,16 @@ export class Store {
   menuItemImage: Image | null = null
   groupDragged = false
   private _menuItemModal = false
-  webSocket: WebSocket | null = null
+  webSocket: UseWebSocketReturn<any> | null = null
   // cityFromParam: string | null = null
+
+  setWebSocket<Data = any>(
+    url: MaybeRefOrGetter<string | URL | undefined>,
+    options?: UseWebSocketOptions,
+  ): UseWebSocketReturn<Data> {
+    this.webSocket = openWebsocket(url, options)
+    return this.webSocket
+  }
 
   get menuItemModal() {
     return this._menuItemModal
