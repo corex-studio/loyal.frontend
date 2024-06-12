@@ -153,9 +153,8 @@ watch(
   () => authentication.user?.id,
   (v) => {
     if (!v) return
-    const ws = store.setWebSocket(`wss://loyalhub.ru/ws/customers/${v}/`)
-    if (!ws.ws.value) return
-    ws.ws.value.onmessage = (event) => {
+    store.webSocket = new WebSocket(`wss://loyalhub.ru/ws/customers/${v}/`)
+    store.webSocket.onmessage = (event) => {
       handleMessage(event)
     }
   },
@@ -166,9 +165,8 @@ watch(
   (v) => {
     if (!v) return
     if (store.tableMode) {
-      const ws = store.setWebSocket(`wss://loyalhub.ru/ws/pads/${v}/`)
-      if (!ws.ws.value) return
-      ws.ws.value.onmessage = (event) => {
+      store.webSocket = new WebSocket(`wss://loyalhub.ru/ws/pads/${v}/`)
+      store.webSocket.onmessage = (event) => {
         handleMessage(event)
       }
     }
