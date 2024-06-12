@@ -6,14 +6,14 @@ import { salesPointRepo } from './salesPoint/salesPointRepo'
 import { SalesPoint } from './salesPoint/salesPoint'
 import { authentication } from './authentication/authentication'
 import { LocalStorage } from 'quasar'
-import { reactive } from 'vue'
+import { reactive, UnwrapRef } from 'vue'
 import moment from 'moment'
 import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
 import { QrData } from './utils/qrData/qrData'
 import { QRMenuData } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { Image } from './image/image'
-import { UseWebSocketOptions, UseWebSocketReturn } from '@vueuse/core'
+import { useWebSocket, UseWebSocketOptions, UseWebSocketReturn } from '@vueuse/core'
 import { MaybeRefOrGetter } from '@vueuse/shared'
 import { openWebsocket } from 'src/services/openWebsocket'
 
@@ -69,9 +69,9 @@ export class Store {
   setWebSocket<Data = any>(
     url: MaybeRefOrGetter<string | URL | undefined>,
     options?: UseWebSocketOptions,
-  ): UseWebSocketReturn<Data> {
+  ): UnwrapRef<ReturnType<typeof useWebSocket>> {
     this.webSocket = openWebsocket(url, options)
-    return this.webSocket
+    return this.webSocket as unknown as UnwrapRef<ReturnType<typeof useWebSocket>>
   }
 
   get menuItemModal() {

@@ -154,8 +154,8 @@ watch(
   (v) => {
     if (!v) return
     const ws = store.setWebSocket(`wss://loyalhub.ru/ws/customers/${v}/`)
-    if (!ws.ws.value) return
-    ws.ws.value.onmessage = (event) => {
+    if (!ws.ws) return
+    ws.ws.onmessage = (event) => {
       handleMessage(event)
     }
   },
@@ -167,8 +167,8 @@ watch(
     if (!v) return
     if (store.tableMode) {
       const ws = store.setWebSocket(`wss://loyalhub.ru/ws/pads/${v}/`)
-      if (!ws.ws.value) return
-      ws.ws.value.onmessage = (event) => {
+      if (!ws.ws) return
+      ws.ws.onmessage = (event) => {
         handleMessage(event)
       }
     }
