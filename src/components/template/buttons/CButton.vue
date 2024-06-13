@@ -22,7 +22,7 @@
     }"
     :style="`width:${_width}; height:${_height};font-size:${textSize}; padding:${
       textButton || noPadding ? '0px;' : '4px 16px;'
-    } ${absolute ? 'position: absolute !important;' : ''}`"
+    } ${absolute ? 'position: absolute !important;' : ''} ${loading || iconLoading ? 'cursor: progress;' : ''}`"
   >
     <slot name="append"></slot>
     <div
@@ -40,14 +40,16 @@
             }`
       "
     >
+      <div :class="`mr-${iconGap_}`" v-if="icon">
       <q-icon
-        v-if="icon"
+        v-if="icon && !iconLoading"
         :name="icon"
-        :class="`mr-${iconGap_}`"
         :color="iconColor"
         :style="`font-size:${iconSize} !important;`"
         class="transition-1"
       />
+        <q-spinner v-if="iconLoading" />
+      </div>
       <span
         :class="
           ellipsis
@@ -64,13 +66,16 @@
         >{{ label }}</span
       >
       <slot></slot>
+      <div v-if="iconRight" :class="`ml-${iconGap_}`">
       <q-icon
-        v-if="iconRight"
+        v-if="iconRight && !iconLoading"
         :name="iconRight"
         :color="iconColor"
-        :class="`ml-${iconGap_}`"
+
         :style="`font-size:${iconSize} !important;`"
       />
+        <q-spinner v-if="iconLoading" />
+      </div>
     </div>
     <slot name="custom-icons"></slot>
   </q-btn>
@@ -139,6 +144,7 @@ const props = defineProps({
   ellipsis: Number,
   iconGap: [Number, String],
   labelLineHeight: String,
+  iconLoading: Boolean
 })
 
 const metrika = useYandexMetrika()
@@ -224,6 +230,7 @@ const _disabled = computed(() => {
 })
 
 const clickHandler = () => {
+  if (props.iconLoading) return
   metrika.hit(route.fullPath)
   emit('click')
 }

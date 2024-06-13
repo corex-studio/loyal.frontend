@@ -39,7 +39,7 @@
             @update="selectAddress($event, 15)"
           />
           <CButton
-            :loading="geoloading"
+            :icon-loading="geoloading"
             icon="fa-regular fa-location-dot"
             icon-size="24px"
             style="width: fit-content"
@@ -177,7 +177,7 @@ const getBorderRadius = computed(() => {
 
 const requestGeolocation = (auto = false) => {
   if (geolocation.isSupported) {
-    geoloading.value = !auto
+    geoloading.value = true
     preventGeolocationErrorNotify.value = auto
     geolocation.resume()
   } else if (!auto) {
