@@ -66,7 +66,7 @@ export class Store {
   webSocket: UseWebSocketReturn<any> | null = null
   // cityFromParam: string | null = null
 
-  setWebSocket<Data = any>(
+  setWebSocket(
     url: MaybeRefOrGetter<string | URL | undefined>,
     options?: UseWebSocketOptions,
   ): UnwrapRef<ReturnType<typeof useWebSocket>> {

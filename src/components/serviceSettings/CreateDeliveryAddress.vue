@@ -45,7 +45,7 @@
             style="width: fit-content"
             text-button
             text-color="primary"
-            @click="geolocate()"
+            @click="requestGeolocation()"
           >
             <div class="body bold">Определить адрес автоматически</div>
           </CButton>
@@ -130,7 +130,7 @@ import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAdd
 import CButton from '../template/buttons/CButton.vue'
 import AddressSearch from '../template/inputs/AddressSearch.vue'
 import CInput from '../template/inputs/CInput.vue'
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
 import { Notify, useQuasar } from 'quasar'
 import { Address } from 'src/models/types'
@@ -146,7 +146,9 @@ const props = defineProps<{
   backCallback?: () => void
 }>()
 
-const { coords, resume, pause } = useGeolocation()
+// const { coords, resume, pause } = useGeolocation()
+const geolocation = useGeolocation()
+const preventGeolocationErrorNotify = ref(false)
 const currentCoords = ref<{
   lat: number
   lng: number
@@ -173,20 +175,73 @@ const getBorderRadius = computed(() => {
     : `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
 })
 
+const requestGeolocation = (auto = false) => {
+  if (geolocation.isSupported) {
+    geoloading.value = !auto
+    preventGeolocationErrorNotify.value = auto
+    geolocation.resume()
+  } else if (!auto) {
+    Notify.create({
+      message:
+        'Автоматическое определение геопозиции не поддерживается на вашем устройстве',
+      color: 'danger',
+    })
+  }
+}
+
+watch(
+  () => geolocation.coords.value,
+  () => {
+    geolocation.pause()
+    geolocate()
+  },
+  { deep: true },
+)
+
+watch(
+  () => geolocation.error.value,
+  () => {
+    processGeolocationError()
+  },
+)
+
+const processGeolocationError = () => {
+  const error = geolocation.error.value
+  const code = error?.code
+  if (error) {
+    let notifyText: string | null = null
+    if (code === error?.PERMISSION_DENIED) {
+      notifyText =
+        'Предоставьте доступ к геопозиции для определения местоположения'
+    } else if (code === error?.POSITION_UNAVAILABLE) {
+      notifyText = 'Не удалось определить местоположение'
+    }
+    if (notifyText && !preventGeolocationErrorNotify.value) {
+      Notify.create({
+        message: notifyText,
+        color: 'danger',
+      })
+    }
+  }
+  geoloading.value = false
+  geolocation.error.value = null
+  preventGeolocationErrorNotify.value = false
+}
+
 const geolocate = async () => {
   geoloading.value = true
-  if (coords.value.latitude !== Infinity) {
+  if (geolocation.coords.value.latitude !== Infinity) {
     currentCoords.value = {
-      lat: coords.value.latitude,
-      lng: coords.value.longitude,
+      lat: geolocation.coords.value.latitude,
+      lng: geolocation.coords.value.longitude,
     }
     await loadAddressDataByCoords()
   } else {
     currentCoords.value = undefined
-    Notify.create({
-      message: 'Ошибка при получении вашего положения',
-      color: 'danger',
-    })
+    // Notify.create({
+    //   message: 'Ошибка при получении вашего положения',
+    //   color: 'danger',
+    // })
   }
   geoloading.value = false
 }
@@ -232,12 +287,12 @@ const drawPoint = (zoom?: number) => {
     })
 }
 
-onBeforeUnmount(() => {
-  pause()
-})
+// onBeforeUnmount(() => {
+//   pause()
+// })
 
 onMounted(() => {
-  resume()
+  requestGeolocation(true)
   newAddress.value = new DeliveryAddress({
     uuid: props.address?.id || undefined,
     name: props.address?.name || null,
@@ -256,7 +311,7 @@ onMounted(() => {
     map = new CorexLeafletMap()
     if (!map) return
     map.lmap.addLayer(drawnItems)
-    if (!props.address) void geolocate()
+    // if (!props.address) void geolocate()
     drawPoint(13)
     map.lmap.invalidateSize()
     map.lmap.on(
