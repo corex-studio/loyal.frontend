@@ -177,9 +177,9 @@ const getBorderRadius = computed(() => {
 
 const requestGeolocation = (auto = false) => {
   if (geolocation.isSupported) {
-    geoloading.value = true
     preventGeolocationErrorNotify.value = auto
     geolocation.resume()
+    geoloading.value = true
   } else if (!auto) {
     Notify.create({
       message:
