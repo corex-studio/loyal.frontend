@@ -31,7 +31,7 @@ export default configure((/* ctx */) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-webpack/boot-files
-    boot: ['axios', 'models', 'notify-defaults', 'metrika'],
+    boot: ['axios', 'models', 'metrika'],
 
     // https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-css
     css: ['app.scss'],
@@ -106,7 +106,7 @@ export default configure((/* ctx */) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Loading'],
+      plugins: ['Loading'],
     },
 
     // animations: 'all', // --- includes all animations

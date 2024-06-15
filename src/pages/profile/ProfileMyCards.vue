@@ -69,7 +69,7 @@
   />
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { paymentCardRepo } from 'src/models/customer/paymentCards/paymentCardRepo'
 import {
   CardType,
@@ -77,8 +77,8 @@ import {
 } from 'src/models/customer/paymentCards/paymentCard'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
-import { Notify } from 'quasar'
 import { authentication } from 'src/models/authentication/authentication'
+import { notifier } from 'src/services/notifier'
 
 const acceptModal = ref(false)
 const cardToDelete = ref<PaymentCard | null>(null)
@@ -115,15 +115,10 @@ const deleteCard = async () => {
   try {
     await paymentCardRepo.delete(cardToDelete.value)
     cardToDelete.value.active = false
-    Notify.create({
-      message: 'Карта успешно удалена',
-    })
+    notifier.success('Карта успешно удалена')
     cardToDelete.value = null
   } catch {
-    Notify.create({
-      message: 'Ошибка при удалении карты',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при удалении карты')
     cardToDelete.value = null
   }
 }

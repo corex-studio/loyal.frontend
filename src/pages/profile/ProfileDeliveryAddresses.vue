@@ -83,7 +83,7 @@ import { authentication } from 'src/models/authentication/authentication'
 import ProfileDeliveryAddressRow from './ProfileDeliveryAddressRow.vue'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
-import { Notify } from 'quasar'
+import { notifier } from 'src/services/notifier'
 
 const deliveryAddressModal = ref(false)
 const addressToEdit = ref<DeliveryAddress | null>(null)
@@ -127,14 +127,9 @@ const deleteAddress = async () => {
       deliveryAddressRepo.items.splice(foundAddressIndex, 1)
     }
     addressToDelete.value = null
-    Notify.create({
-      message: 'Адрес успешно удален',
-    })
+    notifier.success('Адрес успешно удален')
   } catch {
-    Notify.create({
-      message: 'Ошибка при удалении адреса',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при удалении адреса')
   }
 }
 

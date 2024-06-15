@@ -207,7 +207,7 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
-import { Notify, useMeta, useQuasar } from 'quasar'
+import { useMeta, useQuasar } from 'quasar'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
@@ -220,6 +220,7 @@ import {
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { useRoute } from 'vue-router'
 import { CalculationStatus } from 'src/models/carts/cart'
+import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
   modelValue: boolean
@@ -393,10 +394,7 @@ const addToCart = async () => {
       })
       quantity.value = 1
     } catch (e) {
-      Notify.create({
-        message: 'Ошибка при добавлении в корзину',
-        color: 'danger',
-      })
+      notifier.error('Ошибка при добавлении в корзину')
     } finally {
       loading.value = false
       if (cartRepo.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {

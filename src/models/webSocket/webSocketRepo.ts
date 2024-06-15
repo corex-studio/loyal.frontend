@@ -1,8 +1,7 @@
-import { Notify } from 'quasar'
 import { waiterCallRepo } from './../customer/waiterCall/waiterCallRepo'
 import {
-  WaiterCallRaw,
   WaiterCall,
+  WaiterCallRaw,
 } from 'src/models/customer/waiterCall/waiterCall'
 import { orderRepo } from './../order/orderRepo'
 import { Customer, CustomerRaw } from './../customer/customer'
@@ -13,6 +12,7 @@ import { Order, OrderRaw } from '../order/order'
 import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import { orderReviewRepo } from '../order/orderReview/orderReviewRepo'
+import { notifier } from 'src/services/notifier'
 
 export type WebSocketMessage = {
   type:
@@ -31,11 +31,7 @@ export const handleMessage = (v: MessageEvent<string>) => {
     cartRepo.item.errors.forEach((error) => {
       if (error.title === 'Промокод') {
         cartRepo.promocodeError = true
-      } else
-        Notify.create({
-          message: error.description || undefined,
-          color: 'danger',
-        })
+      } else if (error.description) notifier.error(error.description)
     })
     cartRepo.loading = false
     cartRepo.setParamsLoading = false

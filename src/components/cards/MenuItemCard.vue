@@ -130,7 +130,6 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { authentication } from 'src/models/authentication/authentication'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
-import { Notify } from 'quasar'
 import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { ref } from 'vue'
@@ -145,6 +144,7 @@ import {
 import { useYandexMetrika } from 'yandex-metrika-vue3'
 import { useRoute } from 'vue-router'
 import { CalculationStatus } from 'src/models/carts/cart'
+import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
   item: MenuItem
@@ -247,10 +247,7 @@ const addToCart = async () => {
           ) || [],
       })
     } catch (e) {
-      Notify.create({
-        message: 'Ошибка при добавлении в корзину',
-        color: 'danger',
-      })
+      notifier.error('Ошибка при добавлении в корзину')
     } finally {
       if (cartRepo.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {
         cartRepo.loading = false

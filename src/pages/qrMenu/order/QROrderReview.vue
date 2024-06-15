@@ -28,7 +28,6 @@
 </template>
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash'
-import { Notify } from 'quasar'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { orderRepo } from 'src/models/order/orderRepo'
@@ -36,6 +35,7 @@ import { OrderReview } from 'src/models/order/orderReview/orderReview'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { notifier } from 'src/services/notifier'
 
 const item = ref<OrderReview | null>(null)
 const router = useRouter()
@@ -55,17 +55,12 @@ onMounted(() => {
 const createReview = async () => {
   try {
     await orderReviewRepo.create(item.value)
-    Notify.create({
-      message: 'Отзыв успешно создан',
-    })
+    notifier.success('Отзыв успешно создан')
     void router.push({
       name: 'qrHome',
     })
   } catch {
-    Notify.create({
-      message: 'Ошибка при создании отзыва',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при создании отзыва')
   }
 }
 </script>

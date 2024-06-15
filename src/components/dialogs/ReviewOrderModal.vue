@@ -152,9 +152,9 @@ import { OrderReview } from 'src/models/order/orderReview/orderReview'
 import CInput from '../template/inputs/CInput.vue'
 import CButton from '../template/buttons/CButton.vue'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
-import { Notify } from 'quasar'
 import { orderRepo } from 'src/models/order/orderRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
   modelValue: boolean
@@ -193,10 +193,7 @@ const createReview = async () => {
     success.value = true
     await orderReviewRepo.getOrderToReview()
   } catch {
-    Notify.create({
-      message: 'Ошибка при создании отзыва',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при создании отзыва')
   } finally {
     loading.value = false
   }

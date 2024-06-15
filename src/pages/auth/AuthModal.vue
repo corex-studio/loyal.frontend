@@ -238,7 +238,7 @@
   </CDialog>
 </template>
 <script lang="ts" setup>
-import { Notify, QSpinner } from 'quasar'
+import { QSpinner } from 'quasar'
 import { handleMessage } from 'src/models/webSocket/webSocketRepo'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
@@ -257,6 +257,7 @@ import { authSettingsRepo } from 'src/models/authSettings/authSettingsRepo'
 import { AuthType } from 'src/models/authSettings/authSettings'
 import AuthModalTabs from './AuthModalTabs.vue'
 import { openWebsocket } from 'src/services/openWebsocket'
+import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
   modelValue: boolean
@@ -484,11 +485,7 @@ const requestAuth = async () => {
     auth_type: authType,
   })
   if (!res || !res.success) {
-    Notify.create({
-      message: 'Ошибка при обработке запроса',
-      color: 'danger',
-    })
-
+    notifier.error('Ошибка при обработке запроса')
     return
   }
 
@@ -523,12 +520,11 @@ const requestAuth = async () => {
     authType &&
     [AuthType.SMS, AuthType.FLASHCALL].includes(authType)
   ) {
-    Notify.create({
-      message:
-        authType === AuthType.SMS
-          ? 'Сообщение с кодом успешно отправлено'
-          : 'Звонок с кодом успешно отправлен',
-    })
+    notifier.success(
+      authType === AuthType.SMS
+        ? 'Сообщение с кодом успешно отправлено'
+        : 'Звонок с кодом успешно отправлен',
+    )
 
     delay.value = 30
     if (interval) {
@@ -543,10 +539,7 @@ const requestAuth = async () => {
       data.value.code = undefined
     }
   } else {
-    Notify.create({
-      message: 'Ошибка при отправке sms',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при отправке sms')
   }
 
   return res

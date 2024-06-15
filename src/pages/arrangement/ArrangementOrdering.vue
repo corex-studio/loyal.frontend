@@ -63,7 +63,8 @@
             v-if="
               $cart.item.type !== CartType.TABLE &&
               !$salesPoint.item?.settings
-                .allow_order_arrangement_without_delivery_time && !$store.qrMenuData
+                .allow_order_arrangement_without_delivery_time &&
+              !$store.qrMenuData
             "
             :disabled="$q.screen.gt.sm || !timeBlockMobileSpot"
             :to="timeBlockMobileSpot"
@@ -288,7 +289,8 @@
             v-if="
               $cart.item.type !== CartType.TABLE &&
               $cart.item.type !== CartType.DELIVERY &&
-              $cart.item.salesPoint.settings.allow_pickup_orders_inside && !$store.qrMenuData
+              $cart.item.salesPoint.settings.allow_pickup_orders_inside &&
+              !$store.qrMenuData
             "
             class="row full-width gap-md-5 gap-xs-4"
           >
@@ -348,7 +350,9 @@
             (v) => [0, 10].includes(v.length) || 'Некорректный номер телефона',
           ]"
         />
-        <div class="helper-text mt-8">Укажите, чтобы получить уведомление о готовности заказа</div>
+        <div class="helper-text mt-8">
+          Укажите, чтобы получить уведомление о готовности заказа
+        </div>
       </div>
       <div
         v-if="$q.screen.gt.sm"
@@ -423,9 +427,7 @@
                   <div style="opacity: 0.6">{{ item.quantity }} шт</div>
                 </div>
               </div>
-              <div
-                class="col-2 column items-end no-wrap"
-              >
+              <div class="col-2 column items-end no-wrap">
                 <div
                   v-if="item.totalSum !== item.discountedTotalSum"
                   style="opacity: 0.5"
@@ -551,7 +553,7 @@ import {
 import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { Notify, SessionStorage } from 'quasar'
+import { SessionStorage } from 'quasar'
 import { useRouter } from 'vue-router'
 import DeliveryAddressesModal from 'src/components/template/dialogs/DeliveryAddressesModal.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
@@ -567,6 +569,7 @@ import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
+import { notifier } from 'src/services/notifier'
 
 const currentDay = ref('Сегодня')
 const eatInsideTabs = [
@@ -623,10 +626,7 @@ const changeEatInside = async (val: string) => {
       eat_inside: cartRepo.item.eatInside,
     })
   } catch {
-    Notify.create({
-      message: 'Ошибка при задании параметров корзины',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при задании параметров корзины')
   }
 }
 
@@ -741,17 +741,16 @@ const makeAnOrder = async () => {
     let phoneToSend: string | null = null
     if (qrMenuUserPhone.value?.length === 10) {
       SessionStorage.set('qrMenuUserPhone', qrMenuUserPhone.value)
-      phoneToSend = qrMenuUserPhone.value.startsWith('7') ? qrMenuUserPhone.value : `7${qrMenuUserPhone.value}`
+      phoneToSend = qrMenuUserPhone.value.startsWith('7')
+        ? qrMenuUserPhone.value
+        : `7${qrMenuUserPhone.value}`
     } else {
       SessionStorage.remove('qrMenuUserPhone')
     }
     loading.value = true
     const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
     if (!status) {
-      Notify.create({
-        message: 'В данный момент невозможно оформить заказ',
-        color: 'danger',
-      })
+      notifier.error('В данный момент невозможно оформить заказ')
       return
     }
     // await cartRepo.setParams({
@@ -787,7 +786,7 @@ const makeAnOrder = async () => {
         : store.qrData
           ? store.qrData.data?.pad?.id
           : undefined,
-      phone: phoneToSend || undefined
+      phone: phoneToSend || undefined,
     })
     // if (order.paymentUrl) {
     //   await router.replace({
@@ -802,10 +801,7 @@ const makeAnOrder = async () => {
   } catch (e) {
     console.log(e)
     cartRepo.arrangeLoading = false
-    Notify.create({
-      message: 'Ошибка при оформлении заказа',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при оформлении заказа')
   } finally {
     if (cartRepo.item) {
       void ecommercePurchase(cartRepo.item)
@@ -848,10 +844,7 @@ const onOrderPaid = async (order: Order) => {
       })
     }
   }, 350)
-
-  Notify.create({
-    message: 'Заказ успешно оформлен',
-  })
+  notifier.success('Заказ успешно оформлен')
   orderRepo.item = order
 }
 
@@ -865,10 +858,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
     address.coords?.longitude || 0,
   ])
   if (!res.length) {
-    Notify.create({
-      message: 'По данному адресу не осуществляется доставка',
-      color: 'danger',
-    })
+    notifier.error('По данному адресу не осуществляется доставка')
     deliveryAddressesModal.value = false
     return
   }
@@ -879,10 +869,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
       delivery_address: address.id,
     })
   } catch {
-    Notify.create({
-      message: 'Ошибка',
-      color: 'danger',
-    })
+    notifier.error('Ошибка')
   } finally {
     deliveryAddressesModal.value = false
   }

@@ -204,7 +204,6 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { beautifyNumber, lightColor, store } from 'src/models/store'
 import { computed, ref, watch } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { Notify } from 'quasar'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
 import AcceptModal from 'src/components/dialogs/AcceptModal.vue'
@@ -221,6 +220,7 @@ import CartDrawerGuestsCount from './CartDrawerGuestsCount.vue'
 import { ecommerceRemove } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 import CartUpsales from './CartUpsales.vue'
+import { notifier } from 'src/services/notifier'
 
 const selectPaymentType = ref(false)
 const acceptModal = ref(false)
@@ -277,23 +277,16 @@ const clearCart = async () => {
   try {
     void ecommerceRemove(cartRepo.item)
     cartRepo.item = await cartRepo.clear()
-    Notify.create({
-      message: 'Корзина очищена',
-    })
+    notifier.success('Корзина очищена')
   } catch {
-    Notify.create({
-      message: 'Ошибка при очистке корзины',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при очистке корзины')
   }
 }
 
 const deleteCartItem = async (item: CartItem) => {
   try {
     await cartItemRepo.delete(item)
-    Notify.create({
-      message: 'Блюдо удалено из корзины',
-    })
+    notifier.success('Блюдо удалено из корзины')
     await cartRepo.current(
       store.qrData?.data?.salesPoint?.id,
       store.qrData?.data?.pad?.id,
@@ -304,10 +297,7 @@ const deleteCartItem = async (item: CartItem) => {
     if (foundIndex !== undefined && foundIndex > -1)
       cartRepo.item?.cartItems.splice(foundIndex, 1)
   } catch {
-    Notify.create({
-      message: 'Ошибка при удалении',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при удалении')
   } finally {
     void ecommerceRemove(item)
   }

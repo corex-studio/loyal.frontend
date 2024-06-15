@@ -79,18 +79,18 @@
   </CDialog>
 </template>
 <script lang="ts" setup>
-import { Notify } from 'quasar'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import rules from 'src/corexModels/rules'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { authRepo } from 'src/models/authentication/authRepo'
 import { SexType } from 'src/models/customer/customer'
 import moment from 'moment'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { authentication } from 'src/models/authentication/authentication'
+import { notifier } from 'src/services/notifier'
 
 defineProps<{
   modelValue: boolean
@@ -156,15 +156,10 @@ const register = async () => {
       company_group: companyGroupRepo.item?.id || undefined,
     })
     authentication.user = user
-    Notify.create({
-      message: 'Вы успешно авторизировались',
-    })
+    notifier.success('Вы успешно авторизировались')
     emit('update:modelValue', false)
   } catch {
-    Notify.create({
-      message: 'Ошибка',
-      color: 'danger',
-    })
+    notifier.error('Ошибка')
   } finally {
     loading.value = false
   }

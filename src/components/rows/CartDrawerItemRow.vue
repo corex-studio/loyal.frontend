@@ -123,15 +123,15 @@
 <script lang="ts" setup>
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import ChangeAmount from '../inputs/ChangeAmount.vue'
-import { ref, onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
-import { Notify } from 'quasar'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { beautifyNumber, store } from 'src/models/store'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import CIcon from '../template/helpers/CIcon.vue'
 import { CalculationStatus } from 'src/models/carts/cart'
+import { notifier } from 'src/services/notifier'
 
 const cartItem = ref<CartItem | null>(null)
 
@@ -170,10 +170,7 @@ const updateQuantity = async (v: number) => {
     cartRepo.loading = true
     cartRepo.item = await cartItemRepo.updateItem(cartItem.value)
   } catch {
-    Notify.create({
-      message: 'Ошибка изменения товара',
-      color: 'danger',
-    })
+    notifier.error('Ошибка изменения товара')
   } finally {
     if (cartRepo.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {
       cartRepo.loading = false

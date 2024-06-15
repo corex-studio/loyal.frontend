@@ -128,7 +128,7 @@
 </template>
 <script lang="ts" setup>
 import CInput from '../template/inputs/CInput.vue'
-import { ref, onMounted, computed, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import CButton from '../template/buttons/CButton.vue'
 import { sectionRepo } from 'src/models/sections/sectionRepo'
 import BookingTableSelector from './BookingTableSelector.vue'
@@ -141,7 +141,6 @@ import {
 import { bookingRequestRepo } from 'src/models/bookingRequest/bookingRequestRepo'
 import TableDetail from './TableDetail.vue'
 import { authentication } from 'src/models/authentication/authentication'
-import { Notify } from 'quasar'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 import ChangeAmount from '../inputs/ChangeAmount.vue'
 import { lightColor } from 'src/models/store'
@@ -150,6 +149,7 @@ import BookingTimeSelector from './BookingTimeSelector.vue'
 import { AvailableHours } from 'src/models/carts/cart'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import CIcon from '../template/helpers/CIcon.vue'
+import { notifier } from 'src/services/notifier'
 
 export type BookingModes =
   | 'bookingList'
@@ -233,10 +233,7 @@ const createBooking = async () => {
     )
     emit('changeBookingMode', 'successBooked')
   } catch {
-    Notify.create({
-      message: 'Ошибка при создании бронирования',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при создании бронирования')
   }
 }
 </script>

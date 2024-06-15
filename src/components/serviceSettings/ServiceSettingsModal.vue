@@ -274,7 +274,7 @@
 <script lang="ts" setup>
 import { CartType } from 'src/models/carts/cart'
 import CDialog from '../template/dialogs/CDialog.vue'
-import { ref, computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { authentication } from 'src/models/authentication/authentication'
 import ServiceSettingsTabPicker from './ServiceSettingsTabPicker.vue'
@@ -284,7 +284,7 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
-import { Notify, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { store } from 'src/models/store'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import ServiceModalHeader from './ServiceModalHeader.vue'
@@ -302,6 +302,7 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import DeliveryTypeSelector from './DeliveryTypeSelector.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { notifier } from 'src/services/notifier'
 
 export type TabRaw = {
   label: string | null
@@ -537,10 +538,7 @@ const confirmSelectedAddress = async (noClose = false) => {
         .includes(el.salesPoint),
     )
     if (!res.length || !availableAreas.length) {
-      Notify.create({
-        message: 'По данному адресу не осуществляется доставка',
-        color: 'danger',
-      })
+      notifier.error('По данному адресу не осуществляется доставка')
       return
     }
     if (authentication.user) {

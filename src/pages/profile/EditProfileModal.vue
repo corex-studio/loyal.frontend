@@ -92,7 +92,6 @@
 <script lang="ts" setup>
 import { cloneDeep, isEqual } from 'lodash'
 import moment from 'moment'
-import { Notify } from 'quasar'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import TabPicker from 'src/components/template/buttons/TabPicker.vue'
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
@@ -102,7 +101,8 @@ import rules from 'src/corexModels/rules'
 import { authentication } from 'src/models/authentication/authentication'
 import { Customer, SexType } from 'src/models/customer/customer'
 import { customerRepo } from 'src/models/customer/customerRepo'
-import { watch, ref, computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
   modelValue: boolean
@@ -159,15 +159,10 @@ const save = async () => {
 
     const res = await customerRepo.update(item.value)
     authentication.user = cloneDeep(res)
-    Notify.create({
-      message: 'Данные профиля обновлены',
-    })
+    notifier.success('Данные профиля обновлены')
     emit('update:modelValue', false)
   } catch {
-    Notify.create({
-      message: 'Ошибка при обновлении данных',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при обновлении данных')
   } finally {
     loading.value = false
   }

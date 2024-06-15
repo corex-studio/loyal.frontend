@@ -195,7 +195,6 @@
 </template>
 
 <script setup lang="ts">
-import { Notify } from 'quasar'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import {
@@ -208,6 +207,7 @@ import { beautifyNumber } from 'src/models/store'
 import { ref } from 'vue'
 import WaiterCallSuccessfullyCreated from './WaiterCallSuccessfullyCreated.vue'
 import CBadge from 'components/helpers/CBadge.vue'
+import { notifier } from 'src/services/notifier'
 
 const callCreatedModal = ref(false)
 const setStatusLoading = ref(false)
@@ -232,10 +232,7 @@ const callSetStatus = async (status: WaiterCallStatus) => {
     await waiterCallRepo.setStatus(waiterCallRepo.item.id || '', status)
     setStatusLoading.value = false
   } catch {
-    Notify.create({
-      message: 'Ошибка при смене статуса',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при смене статуса')
     setStatusLoading.value = false
   }
 }
@@ -249,10 +246,7 @@ const createCall = async () => {
     await waiterCallRepo.create(newCall)
     callCreatedModal.value = true
   } catch {
-    Notify.create({
-      message: 'Невозможно позвать официанта в данный момент',
-      color: 'danger',
-    })
+    notifier.error('Невозможно позвать официанта в данный момент')
     waiterCallRepo.loadings.create = false
   }
 }

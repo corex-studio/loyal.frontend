@@ -82,7 +82,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { Notify } from 'quasar'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
@@ -93,6 +92,7 @@ import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { customerRepo } from 'src/models/customer/customerRepo'
+import { notifier } from 'src/services/notifier'
 
 const route = useRoute()
 const ready = ref(false)
@@ -116,14 +116,9 @@ const nextStepHandler = async () => {
       await auth()
       await customerRepo.deleteCustomer()
       deleted.value = true
-      Notify.create({
-        message: 'Аккаунт успешно удален',
-      })
+      notifier.success('Аккаунт успешно удален')
     } catch {
-      Notify.create({
-        message: 'Ошибка при удалении аккаунта',
-        color: 'danger',
-      })
+      notifier.error('Ошибка при удалении аккаунта')
     }
   }
 }
@@ -136,10 +131,7 @@ const auth = async () => {
       code: data.value.code,
     })
   } catch (e) {
-    Notify.create({
-      message: 'Ошибка',
-      color: 'danger',
-    })
+    notifier.error('Ошибка')
   } finally {
     loading.value = false
   }
@@ -154,21 +146,13 @@ const requestAuth = async () => {
       })
       .then((response) => Boolean(response?.success))
     if (res) {
-      Notify.create({
-        message: 'Сообщение с кодом успешно отправлено',
-      })
+      notifier.error('Сообщение с кодом успешно отправлено')
     } else {
-      Notify.create({
-        message: 'Ошибка при отправке sms',
-        color: 'danger',
-      })
+      notifier.error('Ошибка при отправке sms')
     }
     return res
   } catch {
-    Notify.create({
-      message: 'Ошибка при отправке SMS',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при отправке SMS')
   } finally {
     loading.value = false
   }

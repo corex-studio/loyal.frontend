@@ -22,10 +22,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { Notify } from 'quasar'
 import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
+import { notifier } from 'src/services/notifier'
 
 const changeGuestsCount = async (val: number) => {
   try {
@@ -35,10 +35,7 @@ const changeGuestsCount = async (val: number) => {
       guest_count: cartRepo.item.guestCount,
     })
   } catch {
-    Notify.create({
-      message: 'Ошибка при задании параметров корзины',
-      color: 'danger',
-    })
+    notifier.error('Ошибка при задании параметров корзины')
   }
 }
 </script>

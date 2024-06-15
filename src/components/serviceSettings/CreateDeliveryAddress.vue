@@ -132,7 +132,7 @@ import AddressSearch from '../template/inputs/AddressSearch.vue'
 import CInput from '../template/inputs/CInput.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
-import { Notify, useQuasar } from 'quasar'
+import { useQuasar } from 'quasar'
 import { Address } from 'src/models/types'
 import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
@@ -140,6 +140,7 @@ import L, { Layer } from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import { useGeolocation } from '@vueuse/core'
 import { utilsRepo } from 'src/models/utils/utilsRepo'
+import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
   address?: DeliveryAddress
@@ -181,11 +182,9 @@ const requestGeolocation = (auto = false) => {
     geolocation.resume()
     geoloading.value = true
   } else if (!auto) {
-    Notify.create({
-      message:
-        'Автоматическое определение геопозиции не поддерживается на вашем устройстве',
-      color: 'danger',
-    })
+    notifier.error(
+      'Автоматическое определение геопозиции не поддерживается на вашем устройстве',
+    )
   }
 }
 
@@ -217,10 +216,7 @@ const processGeolocationError = () => {
       notifyText = 'Не удалось определить местоположение'
     }
     if (notifyText && !preventGeolocationErrorNotify.value) {
-      Notify.create({
-        message: notifyText,
-        color: 'danger',
-      })
+      notifier.error(notifyText)
     }
   }
   geoloading.value = false
@@ -238,10 +234,6 @@ const geolocate = async () => {
     await loadAddressDataByCoords()
   } else {
     currentCoords.value = undefined
-    // Notify.create({
-    //   message: 'Ошибка при получении вашего положения',
-    //   color: 'danger',
-    // })
   }
   geoloading.value = false
 }
@@ -347,28 +339,18 @@ const createAddress = async () => {
       if (foundAddressIndex > -1) {
         deliveryAddressRepo.items[foundAddressIndex] = res
       }
-      Notify.create({
-        message: 'Адрес успешно изменен',
-      })
+      notifier.success('Адрес успешно изменен')
       emit('updated')
     } else {
       const res = await deliveryAddressRepo.create(newAddress.value)
-      Notify.create({
-        message: 'Адрес успешно создан',
-      })
+      notifier.success('Адрес успешно создан')
       emit('created', res)
     }
   } catch {
     if (props.address) {
-      Notify.create({
-        message: 'Ошибка при обновлении адреса',
-        color: 'danger',
-      })
+      notifier.error('Ошибка при обновлении адреса')
     } else {
-      Notify.create({
-        message: 'Ошибка при создании адреса',
-        color: 'danger',
-      })
+      notifier.error('Ошибка при создании адреса')
     }
   }
 }
