@@ -41,13 +41,13 @@
       "
     >
       <div :class="`mr-${iconGap_}`" v-if="icon">
-      <q-icon
-        v-if="icon && !iconLoading"
-        :name="icon"
-        :color="iconColor"
-        :style="`font-size:${iconSize} !important;`"
-        class="transition-1"
-      />
+        <q-icon
+          v-if="icon && !iconLoading"
+          :name="icon"
+          :color="iconColor"
+          :style="`font-size:${iconSize} !important;`"
+          class="transition-1"
+        />
         <q-spinner v-if="iconLoading" />
       </div>
       <span
@@ -67,13 +67,12 @@
       >
       <slot></slot>
       <div v-if="iconRight" :class="`ml-${iconGap_}`">
-      <q-icon
-        v-if="iconRight && !iconLoading"
-        :name="iconRight"
-        :color="iconColor"
-
-        :style="`font-size:${iconSize} !important;`"
-      />
+        <q-icon
+          v-if="iconRight && !iconLoading"
+          :name="iconRight"
+          :color="iconColor"
+          :style="`font-size:${iconSize} !important;`"
+        />
         <q-spinner v-if="iconLoading" />
       </div>
     </div>
@@ -144,7 +143,7 @@ const props = defineProps({
   ellipsis: Number,
   iconGap: [Number, String],
   labelLineHeight: String,
-  iconLoading: Boolean
+  iconLoading: Boolean,
 })
 
 const metrika = useYandexMetrika()
@@ -156,7 +155,7 @@ const iconGap_ = computed(() => {
   if (!props.iconGap) return '3'
   if (Number.isNaN(Number(props.iconGap)))
     console.warn(
-      'Icon gap prop expected number or numerical string, got string'
+      'Icon gap prop expected number or numerical string, got string',
     )
   return props.iconGap
 })
@@ -253,7 +252,7 @@ const clickHandler = () => {
 }
 
 .outlined {
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--divider-color);
 }
 
 .c-btn .left-icon {
