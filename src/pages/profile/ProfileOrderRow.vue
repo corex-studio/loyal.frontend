@@ -100,6 +100,6 @@ const openReviewModal = () => {
 
 <style lang="scss" scoped>
 .bordered {
-  outline: 1px var(--secondary) solid;
+  outline: 1px var(--divider-color) solid;
 }
 </style>

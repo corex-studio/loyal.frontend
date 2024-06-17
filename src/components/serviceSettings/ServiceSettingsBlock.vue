@@ -80,7 +80,7 @@ const openDialog = () => {
 .button {
   border-radius: 100px !important;
   max-width: 430px;
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--divider-color);
 }
 
 .rounded-separator {
