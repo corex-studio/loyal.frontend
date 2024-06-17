@@ -61,13 +61,12 @@ onMounted(() => {
   })
   loadOrders()
 
-  useEventBus(orderUpdatedKey).on((e) => {
-    const index = currentOrders.value.findIndex((v) => v.id === e.order.id)
-    if (index > -1) currentOrders.value[index] = e.order
-  })
   useEventBus(orderUpdatedKey).on(({ order }) => {
     const index = currentOrders.value.findIndex(v => v.id === order.id)
     if (index > -1) currentOrders.value[index] = order
+    else {
+      currentOrders.value.unshift(order)
+    }
     if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
       paymentModal.value = false
       void router.replace({name: String(route.name), query: {...route.query, paymentUrl: undefined}, params: route.params})

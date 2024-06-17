@@ -36,6 +36,16 @@ export class PadRepo extends BaseRepo<Pad> {
 
     return res
   }
+
+  async synchronizeOrders(pad: Pad) {
+    const res: { success: boolean } = await this.api.send({
+      method: 'POST',
+      action: 'synchronize_orders',
+      id: pad.id,
+    })
+
+    return res
+  }
 }
 
 export const padRepo = reactive(new PadRepo())
