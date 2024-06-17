@@ -79,7 +79,7 @@ const loadOrders = async (page = 1, appendItems = false) => {
       page: page ? page : orderRepo.pagination.page,
       appendItems: appendItems,
       pageSize: 10,
-    }
+    },
   )
 }
 
@@ -126,6 +126,6 @@ const orderTypes = ref<
 
 <style lang="scss" scoped>
 .bordered-type {
-  border: 1px var(--secondary) solid;
+  border: 1px var(--divider-color) solid;
 }
 </style>

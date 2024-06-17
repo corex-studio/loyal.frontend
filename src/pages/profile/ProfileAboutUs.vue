@@ -519,7 +519,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .contact-block {
-  border: 1px var(--secondary) solid;
+  border: 1px var(--divider-color) solid;
   min-width: 340px;
   width: 100%;
 }
@@ -566,7 +566,7 @@ onMounted(() => {
   background-color: var(--background-color);
   border-bottom-left-radius: 110px;
   border-top-left-radius: 110px;
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--divider-color);
   border-right: 0;
   position: absolute;
   top: 44%;
@@ -579,7 +579,7 @@ onMounted(() => {
   background-color: var(--background-color);
   border-bottom-right-radius: 110px;
   border-top-right-radius: 110px;
-  border: 1px solid var(--secondary);
+  border: 1px solid var(--divider-color);
   border-left: 0;
   position: absolute;
   top: 44%;
