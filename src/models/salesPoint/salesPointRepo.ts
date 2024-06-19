@@ -8,12 +8,47 @@ import { Schedule, ScheduleDay, ScheduleRaw } from './schedule/schedule'
 import { Image, ImageRaw } from '../image/image'
 import { cartRepo } from '../carts/cartRepo'
 import { store } from '../store'
+import { PaymentObjectType, PaymentType } from 'src/models/order/order'
 
 export class SalesPointRepo extends BaseRepo<SalesPoint> {
   api = salesPointApi
   menuLoading = false
   paymentSettings: PaymentSettings | null = null
   externalPaymentTypes: AvailablePaymentType[] = []
+
+  get paymentTypes() {
+    const result: PaymentObjectType[] = []
+    if (this.paymentSettings?.online_payment_enabled)
+      result.push({
+        label: 'Онлайн',
+        type: PaymentType.ONLINE,
+        class: 'bg-online-button-color text-on-online-button-color',
+        icon: 'fa-light fa-ruble-sign',
+      })
+    if (salesPointRepo.paymentSettings?.card_enabled)
+      result.push({
+        label: 'Картой при получении',
+        type: PaymentType.CARD,
+        class: 'bg-card-button-color text-on-card-button-color',
+        icon: 'fa-light fa-credit-card',
+      })
+    if (salesPointRepo.paymentSettings?.cash_enabled)
+      result.push({
+        label: 'Наличными при получении',
+        type: PaymentType.CASH,
+        class: 'bg-cash-button-color text-on-cash-button-color',
+        icon: 'fa-light fa-money-bill',
+      })
+    if (salesPointRepo.paymentSettings?.pay_later_enabled && store.qrMenuData?.pad) // todo проверять, что идет оплата заказа в стол
+      result.push({
+        label: 'Внести в счет',
+        type: PaymentType.PAY_LATER,
+        class: 'bg-cash-button-color text-on-cash-button-color',
+        icon: 'fa-light fa-money-bill',
+      })
+
+    return result
+  }
 
   async status(sales_point?: string): Promise<boolean> {
     const res: {

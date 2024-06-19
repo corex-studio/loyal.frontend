@@ -91,7 +91,8 @@ export class AppManager {
         sales_point: padRepo.item?.salesPoint?.id,
       })
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
-      if (padRepo.item) void padRepo.synchronizeOrders(padRepo.item)
+      if (padRepo.item)
+        void padRepo.synchronizeOrdersForRestaurant(padRepo.item)
     } else if (authentication.user?.isAnonymous) {
       authentication.logout()
     }

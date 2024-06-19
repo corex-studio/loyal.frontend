@@ -13,6 +13,11 @@ export enum QrMenuAuthType {
   PHONE_NUMBER = 2,
 }
 
+export enum QrMenuWorkingMode {
+  RESTAURANT = 1,
+  FAST_FOOD = 2,
+}
+
 type QRMenuDataRaw = {
   company_group: CompanyGroupRaw
   pad: PadRaw | null
@@ -20,7 +25,7 @@ type QRMenuDataRaw = {
     orders_bottom_bar_text: string
     waiter_calls_enabled: boolean
     authorization_type: QrMenuAuthType
-    // working_mode: number
+    working_mode: QrMenuWorkingMode
   }
 }
 

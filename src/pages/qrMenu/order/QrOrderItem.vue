@@ -39,7 +39,13 @@
         <div class="row items-center pl-3">
           {{ item.getPaymentType?.label }}
         </div>
-        <template v-if="item.paymentType === PaymentType.ONLINE && item.paymentStatus == PaymentStatusType.NOT_PAID">
+        <template
+          v-if="
+            (item.paymentType === PaymentType.ONLINE &&
+              item.paymentStatus == PaymentStatusType.NOT_PAID) ||
+            item.paymentType === PaymentType.PAY_LATER
+          "
+        >
           <q-separator vertical class="mx-5" />
           <CButton
             text-color="primary"
