@@ -104,6 +104,6 @@ defineEmits<{
 const getBorderColor = (el: DeliveryAddress) => {
   return props.currentAddress?.id === el.id
     ? '#' + uiSettingsRepo.item?.primaryColor.color
-    : '#' + uiSettingsRepo.item?.secondaryColor.color
+    : '#' + uiSettingsRepo.item?.dividerColor.color
 }
 </script>

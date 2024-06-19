@@ -10,6 +10,7 @@ export enum LinkType {
   MAPS = 'maps',
   OK = 'ok',
   INSTAGRAM = 'instagram',
+  WHATSAPP = 'whatsapp'
 }
 
 export enum AggregatorType {
