@@ -149,8 +149,8 @@
             <div class="subtitle-text bold">
               {{
                 $company.item?.salesPoints?.length > 1
-                  ? 'Адреса заведений в Калининграде'
-                  : 'Адрес заведения в Калининграде'
+                  ? 'Адреса заведений'
+                  : 'Адрес заведения'
               }}
             </div>
             <div
@@ -389,29 +389,29 @@ const infoBlocks = computed(() => {
       label: 'Акции и новости',
       click: () => {
         scrollToBlock('offers')
-      },
+      }
     },
     {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
-      },
+      }
     },
     {
       label: 'О заведении',
       click: () => {
         router.push({
-          name: 'aboutUs',
+          name: 'aboutUs'
         })
-      },
+      }
     },
     {
       label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
       hidden: !uiSettingsRepo.item?.becomeFranchisee,
       click: () => {
         window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
-      },
-    },
+      }
+    }
   ]
 })
 
@@ -422,7 +422,7 @@ const currentHost = computed(() => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (route.name !== 'home') {
     void router.push({
-      name: 'home',
+      name: 'home'
     })
     setTimeout(() => {
       scrollToBlock(v, tab)
