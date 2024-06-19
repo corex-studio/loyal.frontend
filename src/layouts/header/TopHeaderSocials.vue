@@ -63,6 +63,11 @@ const socialsTypes = ref([
     icon: 'fa-brands fa-instagram',
     link: '',
   },
+  {
+    type: LinkType.WHATSAPP,
+    icon: 'fa-brands fa-whatsapp',
+    link: '',
+  },
 ])
 
 const openLink = (v: string) => {
