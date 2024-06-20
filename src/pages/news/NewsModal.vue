@@ -59,9 +59,10 @@
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
-defineProps<{
+const props = defineProps<{
   modelValue: boolean
 }>()
 
@@ -69,9 +70,20 @@ defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
+const fictiveUrlStore = useFictiveUrlStore()
+
 const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 })
+
+watch(
+  () => props.modelValue,
+  () => {
+    if (!props.modelValue) {
+      fictiveUrlStore.setFictiveCategoryUrl()
+    }
+  },
+)
 </script>
 
 <style lang="scss" scoped>

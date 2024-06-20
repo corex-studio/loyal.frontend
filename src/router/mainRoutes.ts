@@ -52,11 +52,11 @@ export const mainRoutes = [
     //   keywords: '',
     // },
   },
-  {
-    path: 'news/:newsId',
-    name: 'newsPage',
-    component: () => import('src/pages/news/NewsPage.vue'),
-  },
+  // {
+  //   path: 'news/:newsId',
+  //   name: 'newsPage',
+  //   component: () => import('src/pages/news/NewsPage.vue'),
+  // },
 
   {
     path: 'my_qr',

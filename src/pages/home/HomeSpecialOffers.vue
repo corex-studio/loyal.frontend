@@ -22,6 +22,7 @@
         </div>
       </div>
     </div>
+
     <SwiperContainer
       :key="`${$store.offersTab}${$q.screen.gt.md}`"
       :class="{
@@ -77,16 +78,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue'
+import { computed, defineAsyncComponent, onMounted } from 'vue'
 import { News } from 'src/models/news/news'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { useQuasar } from 'quasar'
 import { store } from 'src/models/store'
 import { newsRepo } from 'src/models/news/newsRepo'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const SwiperContainer = defineAsyncComponent(() => import('src/layouts/containers/SwiperContainer.vue'))
 
 const q = useQuasar()
+
+onMounted(() => {
+    if (fictiveUrlStore.currentNewsItem) {
+      void newsRepo.retrieve(fictiveUrlStore.currentNewsItem).then(() => {
+        fictiveUrlStore.setFictiveNewsUrl()
+        store.newsModal = true
+      })
+    }
+})
 
 const tabs = computed(() => {
   const result = []
@@ -131,8 +142,13 @@ const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 })
 
+const fictiveUrlStore = useFictiveUrlStore()
+
 const goToItem = (item: News) => {
-  void newsRepo.retrieve(item.id)
+  void newsRepo.retrieve(item.id).then(v => {
+    fictiveUrlStore.currentNewsItem = v.alias || v.id
+    fictiveUrlStore.setFictiveNewsUrl()
+  })
   store.newsModal = true
 }
 </script>

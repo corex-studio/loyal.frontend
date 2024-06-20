@@ -15,11 +15,27 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
   const visibleMenuGroupIdManualSet = ref(false)
   const initialMenuItem = ref<string | null>(null)
   const initialMenuGroupItem = ref<string | null>(null)
+  // const initialNewsItem = ref<string | null>(null)
 
   const visibleMenuGroupId = toRef(() => _visibleMenuGroupId.value)
   const visibleMenuGroupAlias = toRef(() => _visibleMenuGroupAlias.value)
+  const currentNewsItem = ref('')
 
   const route = useRoute()
+
+  const setFictiveNewsUrl = () => {
+    if (!currentNewsItem.value) return
+    const cityFromParams = route.params._cityId
+    let url = '/'
+    if (cityFromParams) url += String(cityFromParams) + '/'
+    if (currentNewsItem.value) {
+      url += `news/${currentNewsItem.value}`
+    }
+    if (lastFictiveUrl.value === url) return
+    lastFictiveUrl.value = url
+      history.pushState({}, '', url)
+
+  }
 
   const setFictiveCategoryUrl = () => {
     const cityFromParams = route.params._cityId
@@ -45,7 +61,7 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     if (cityFromParams) url += String(cityFromParams) + '/'
     if (menuGroupItem)
       url += `categories/${menuGroupItem.alias || menuGroupItem.id}/`
-    url += `product/${pk}`
+    url += `products/${pk}`
     if (url === lastFictiveUrl.value) return
     lastFictiveUrl.value = url
     history.pushState({}, '', url)
@@ -53,23 +69,32 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
 
   const extractIdsFromUrl = (
     url: string,
-  ): { categoryId: string | null; productId: string | null } => {
+  ): {
+    categoryId: string | null
+    productId: string | null
+    newsId: string | null
+  } => {
     let categoryId: string | null = null
     let productId: string | null = null
+    let newsId: string | null = null
+    const newsMatch = url.match(/\/news\/([^/]+)/)
+    if (newsMatch) {
+      newsId = newsMatch[1]
+    }
     const categoryMatch = url.match(/\/categories\/([^/]+)/)
     if (categoryMatch) {
       categoryId = categoryMatch[1]
     }
-    const productMatch = url.match(/\/categories\/[^/]+\/product\/([^/]+)/)
+    const productMatch = url.match(/\/categories\/[^/]+\/products\/([^/]+)/)
     if (productMatch) {
       productId = productMatch[1]
     } else {
-      const productOnlyMatch = url.match(/\/product\/([^/]+)/)
+      const productOnlyMatch = url.match(/\/products\/([^/]+)/)
       if (productOnlyMatch) {
         productId = productOnlyMatch[1]
       }
     }
-    return { categoryId, productId }
+    return { categoryId, productId, newsId }
   }
 
   const setVisibleMenuGroup = (item: MenuGroup | null) => {
@@ -82,7 +107,6 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     if (groupElement) {
       const y = groupElement.getBoundingClientRect().top + window.scrollY - 100
       menuGroupRepo.scrollingToGroup = true
-
       window.scrollTo({ top: y, behavior: 'smooth' })
       setTimeout(() => {
         const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
@@ -107,10 +131,12 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     visibleMenuGroupIdManualSet,
     initialMenuItem,
     initialMenuGroupItem,
+    currentNewsItem,
     extractIdsFromUrl,
     setFictiveCategoryUrl,
     setFictiveProductUrl,
     setVisibleMenuGroup,
     scrollToGroup,
+    setFictiveNewsUrl
   }
 })

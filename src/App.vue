@@ -12,6 +12,7 @@ import {
   useYandexMetrika,
 } from 'yandex-metrika-vue3'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { newsRepo } from 'src/models/news/newsRepo'
 
 const metrika = useYandexMetrika()
 const fictiveUrlStore = useFictiveUrlStore()
@@ -20,15 +21,22 @@ const route = useRoute()
 
 const storeInitialProduct = () => {
   const url = window.location.href
-  if (url.includes('product/') || url.includes('categories/')) {
-    const res = fictiveUrlStore.extractIdsFromUrl(url)
-    fictiveUrlStore.initialMenuItem = res.productId
-    fictiveUrlStore.initialMenuGroupItem = res.categoryId
+  const res = fictiveUrlStore.extractIdsFromUrl(url)
+  fictiveUrlStore.initialMenuItem = res.productId
+  fictiveUrlStore.initialMenuGroupItem = res.categoryId
+}
+
+const handleInitialNews = () => {
+  const url = window.location.href
+  const res = fictiveUrlStore.extractIdsFromUrl(url)
+  if (res.newsId) {
+    fictiveUrlStore.currentNewsItem = res.newsId
   }
 }
 
 onMounted(() => {
   storeInitialProduct()
+  handleInitialNews()
   const platformIs = useQuasar().platform.is
   if (
     platformIs.safari ||
@@ -40,6 +48,7 @@ onMounted(() => {
     document.body.classList.add('safari')
   }
   initMetrika()
+
 })
 
 let interval: NodeJS.Timeout
