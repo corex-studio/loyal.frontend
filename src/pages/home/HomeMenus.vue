@@ -9,7 +9,7 @@
         ref="menuGroupRefs"
       >
         <div class="header bold mb-lg-15 mb-md-15 mb-xs-8">
-          {{ el.name }} {{ el.id }} {{ el.alias }}
+          {{ el.name }}
         </div>
 
         <div v-if="el.items.length" class="row full-width">
