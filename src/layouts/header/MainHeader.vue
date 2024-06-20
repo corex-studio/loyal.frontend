@@ -194,7 +194,7 @@
         <BottomHeader
           v-if="
             $route.matched.some((v) =>
-              ['qrHome', 'home'].includes(String(v.name)),
+              $router.isIncludesRouteName(['qrHome', 'home'], String(v.name)),
             )
           "
         />

@@ -11,11 +11,12 @@ import {
   updateYandexMerikaByConfig,
   useYandexMetrika,
 } from 'yandex-metrika-vue3'
-import { store } from './models/store'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const metrika = useYandexMetrika()
 const fictiveUrlStore = useFictiveUrlStore()
+const router = useRouter()
+const route = useRoute()
 
 const storeInitialProduct = () => {
   const url = window.location.href
@@ -41,8 +42,6 @@ onMounted(() => {
   initMetrika()
 })
 
-const router = useRouter()
-const route = useRoute()
 let interval: NodeJS.Timeout
 
 const initMetrika = () => {

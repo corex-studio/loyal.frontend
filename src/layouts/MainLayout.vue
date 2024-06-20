@@ -11,9 +11,7 @@
       <q-page-container
         :class="{
           'c-container':
-            $route.name !== 'home' &&
-            $route.name !== 'qrHome' &&
-            $route.name !== 'aboutUs' &&
+            !$router.isIncludesRouteName(['home', 'qrHome', 'aboutUs']) &&
             !routesWithoutContainerPaddings.some((v) =>
               $route.path.includes(v),
             ),
@@ -30,7 +28,7 @@
         <LeftDrawer v-if="$q.screen.lt.lg" />
         <CartOverlayButton v-if="!$route.path.includes('arrangement')" />
         <OrderToReviewOverlay
-          v-if="$order.orderToReview && $route.name === 'home'"
+          v-if="$order.orderToReview && $router.isIncludesRouteName(['home'])"
         />
       </q-page-container>
       <q-footer>
@@ -91,6 +89,7 @@ import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { withCityRouteKey } from 'src/router/mainRoutes'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -134,12 +133,10 @@ const CartDrawer = defineAsyncComponent(
 )
 
 // const webSocket = ref<WebSocket | null>(null)
-const routesWithoutContainerPaddings = [
-  'promotion',
-  'current_order',
-  'order_review',
-  'menu_item',
-]
+const routesWithoutContainerPaddings = computed(() => {
+  const items = ['promotion', 'current_order', 'order_review', 'menu_item']
+  return items.flatMap((v) => [v, v + withCityRouteKey])
+})
 const route = useRoute()
 const ready = ref(false)
 

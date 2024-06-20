@@ -7,3 +7,4 @@ export const selectCompanyKey: EventBusKey<{ company: Company }> =
 
 export const orderUpdatedKey: EventBusKey<{ order: Order }> =
   Symbol('orderUpdatedKey')
+
