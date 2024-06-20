@@ -72,7 +72,7 @@ import {
   ref,
   watch,
 } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import { authentication } from 'src/models/authentication/authentication'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
@@ -139,6 +139,7 @@ const routesWithoutContainerPaddings = computed(() => {
 })
 const route = useRoute()
 const ready = ref(false)
+const router = useRouter()
 
 watch(
   () => route.name,
@@ -181,7 +182,7 @@ const showQrMobileMenu = computed(() => {
   return (
     store.tableMode &&
     padRepo.item?.isEnabled &&
-    route.name !== 'qrMenuItemPage' &&
+    !router.isIncludesRouteName(['qrMenuItemPage']) &&
     padRepo.item.salesPoint &&
     menuRepo.item
   )

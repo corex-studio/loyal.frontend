@@ -63,7 +63,7 @@ const emitScrollEnd = () => {
 const clickHandler = (v: MenuGroup) => {
   fictiveUrlStore.visibleMenuGroupIdManualSet = true
   fictiveUrlStore.setVisibleMenuGroup(v)
-  if (route.name === 'home' || route.name === 'qrHome') {
+  if (router.isIncludesRouteName(['home', 'qrHome'])) {
     void scrollToGroup(v)
   } else {
     void router.push({ name: store.tableMode ? 'qrHome' : 'home' }).then(() => {
@@ -79,7 +79,7 @@ const scrollToGroup = (v: MenuGroup) => {
 }
 
 const isHomePage = computed(() => {
-  return route.name === 'home' || route.name === 'qrHome'
+  return router.isIncludesRouteName(['home', 'qrHome'])
 })
 
 

@@ -54,17 +54,19 @@
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { CSSProperties, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { PaymentType } from 'src/models/order/order'
 import { orderRepo } from 'src/models/order/orderRepo'
 
 const route = useRoute()
+const router = useRouter()
 
 const currentStep = computed(() => {
-  if (route.name === 'orderingPage') return 1
+
+  if (router.isIncludesRouteName(['orderingPage'])) return 1
   else if (
-    ['qrMenuSuccessOrderPage', 'successOrderPage'].includes(String(route.name))
+    router.isIncludesRouteName(['qrMenuSuccessOrderPage', 'successOrderPage'])
   )
     return 2
   else return 0
@@ -82,16 +84,15 @@ const orderingSteps = computed(() => {
       to: ''
     }
   ]
-  if ((route.name === 'orderingPage' &&
+  if ((router.isIncludesRouteName(['orderingPage']) &&
       cartRepo.selectedPaymentType?.type === PaymentType.ONLINE)
-    || (route.name === 'successOrderPage' &&
+    || (router.isIncludesRouteName(['successOrderPage']) &&
       orderRepo.item?.paymentType === PaymentType.ONLINE)) {
     values.push({
       title: 'Оплата заказа',
       to: ''
     })
   }
-  // if (route.name === 'orderingPage')
   values.push({
     title: 'Заказ принят',
     to: ''
@@ -108,7 +109,7 @@ const getTitleStyle = (index: number): CSSProperties => {
           ? '-47'
           : index === 2
             ? '-23'
-            : route.name === 'cart' || route.name === 'cartReview'
+            : router.isIncludesRouteName(['cart','cartReview'])
               ? '0'
               : '-40'
     }px`

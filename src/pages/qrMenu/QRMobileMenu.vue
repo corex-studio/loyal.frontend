@@ -8,7 +8,7 @@
       class="row full-width justify-center mb-3"
     >
       <CButton
-        v-if="$route.name !== 'orderingPage'"
+        v-if="!$router.isIncludesRouteName(['orderingPage'])"
         style="min-width: 200px"
         height="44px"
         @click="$store.cartDrawer = true"

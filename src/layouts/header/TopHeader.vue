@@ -81,7 +81,7 @@ const blocks = computed(() => {
 })
 
 const scrollToBlock = (v: string, tab?: string) => {
-  if (route.name !== 'home') {
+  if (router.isIncludesRouteName(['home'])) {
     void router.push({
       name: 'home',
     })
