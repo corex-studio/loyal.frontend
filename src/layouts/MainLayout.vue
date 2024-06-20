@@ -90,6 +90,7 @@ import { AppManager } from 'src/models/utils/appManager'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
 import { menuRepo } from 'src/models/menu/menuRepo'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -196,8 +197,10 @@ const setScroll = () => {
   })
 }
 
+const fictiveUrlStore = useFictiveUrlStore()
+
 const closeMenuItemModal = () => {
-  history.pushState({}, '', `${route.path}`)
+  fictiveUrlStore.setFictiveCategoryUrl()
   setMeta(route.meta)
   store.freeItem = null
   store.closeMenuItemModal()

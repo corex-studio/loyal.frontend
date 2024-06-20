@@ -18,6 +18,8 @@ import { menuItemRepo } from '../menu/menuItem/menuItemRepo'
 import { salesPointRepo } from '../salesPoint/salesPointRepo'
 import { menuRulesForAddingRepo } from '../menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import { authSettingsRepo } from '../authSettings/authSettingsRepo'
+import { menuRepo } from 'src/models/menu/menuRepo'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -28,6 +30,7 @@ let interval: NodeJS.Timeout | null = null
 
 export class AppManager {
   config: AppManagerConfig
+  fictiveUrlStore = useFictiveUrlStore()
 
   constructor(config: AppManagerConfig) {
     this.config = config
@@ -101,15 +104,28 @@ export class AppManager {
   }
 
   handleInitialMenuItem = async () => {
-    if (store.initialMenuItem) {
+    if (this.fictiveUrlStore.initialMenuItem) {
       store.openMenuItemModal()
-      await menuItemRepo.retrieve(store.initialMenuItem, {
+      await menuItemRepo.retrieve(this.fictiveUrlStore.initialMenuItem, {
         sales_point: salesPointRepo.item?.id,
       })
       await menuRulesForAddingRepo.list({
         menu_item: menuItemRepo.item?.id,
       })
-      store.initialMenuItem = null
+      this.fictiveUrlStore.initialMenuItem = null
+    }
+  }
+
+
+  handleInitialMenuGroupItem = async () => {
+    if (this.fictiveUrlStore.initialMenuGroupItem) {
+      const res = menuRepo.item?.groups?.find(v => [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem)) || null
+      if (res) {
+        this.fictiveUrlStore.setVisibleMenuGroup(res)
+        this.fictiveUrlStore.visibleMenuGroupIdManualSet = true
+        this.fictiveUrlStore.scrollToGroup(res)
+      }
+      this.fictiveUrlStore.initialMenuGroupItem = null
     }
   }
 
@@ -225,6 +241,7 @@ export class AppManager {
     if (currentPoint) {
       void store.loadCatalog(currentPoint).then(() => {
         void this.handleInitialMenuItem()
+        void this.handleInitialMenuGroupItem()
       })
     }
 

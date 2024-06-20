@@ -24,18 +24,18 @@ import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
-import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
 import { Fn, useEventListener } from '@vueuse/core'
 import { debounce } from 'quasar'
 import { isApple } from 'src/services/isApple'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
-const groupElement = ref()
 const route = useRoute()
 const router = useRouter()
 const hover = ref(false)
 const cleanups: Fn[] = []
+const fictiveUrlStore = useFictiveUrlStore()
 
-const props = defineProps<{
+defineProps<{
   item: MenuGroup
   additional?: boolean
   isSelected?: boolean
@@ -43,7 +43,10 @@ const props = defineProps<{
 
 onMounted(() => {
   cleanups.push(useEventListener(window.document, 'scrollend', () => {
-    store.visibleMenuGroupIdManualSet = false
+    setTimeout(() => {
+      fictiveUrlStore.visibleMenuGroupIdManualSet = false
+    }, 50)
+
   }))
   if (isApple()) {
     cleanups.push(useEventListener(window.document, 'scroll', debounce(emitScrollEnd, 50)))
@@ -58,12 +61,8 @@ const emitScrollEnd = () => {
 
 
 const clickHandler = (v: MenuGroup) => {
-  // if (store.groupDragged) {
-  //   store.groupDragged = false
-  //   return
-  // }
-  store.visibleMenuGroupIdManualSet = true
-  store.visibleMenuGroupId = v.id
+  fictiveUrlStore.visibleMenuGroupIdManualSet = true
+  fictiveUrlStore.setVisibleMenuGroup(v)
   if (route.name === 'home' || route.name === 'qrHome') {
     void scrollToGroup(v)
   } else {
@@ -76,27 +75,7 @@ const clickHandler = (v: MenuGroup) => {
 }
 
 const scrollToGroup = (v: MenuGroup) => {
-  groupElement.value = document.getElementById(v.id)
-  if (groupElement.value) {
-    const y =
-      groupElement.value.getBoundingClientRect().top + window.scrollY - 100
-    menuGroupRepo.scrollingToGroup = true
-
-    window.scrollTo({ top: y, behavior: 'smooth' })
-    setTimeout(() => {
-      const elementIndex = menuGroupRepo.elementsInViewport.findIndex(
-        (el) => el === props.item.id,
-      )
-      if (elementIndex > -1)
-        menuGroupRepo.elementsInViewport = [
-          menuGroupRepo.elementsInViewport[elementIndex],
-          ...menuGroupRepo.elementsInViewport.filter(
-            (_, index) => index !== elementIndex,
-          ),
-        ]
-      menuGroupRepo.scrollingToGroup = false
-    }, 600)
-  }
+  fictiveUrlStore.scrollToGroup(v)
 }
 
 const isHomePage = computed(() => {

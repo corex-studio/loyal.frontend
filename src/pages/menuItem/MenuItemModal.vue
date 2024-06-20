@@ -218,9 +218,9 @@ import {
   ecommerceAdd,
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
-import { useRoute } from 'vue-router'
 import { CalculationStatus } from 'src/models/carts/cart'
 import { notifier } from 'src/services/notifier'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const props = defineProps<{
   modelValue: boolean
@@ -230,7 +230,7 @@ const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
-const route = useRoute()
+const fictiveUrlStore = useFictiveUrlStore()
 const touchSpot = ref<HTMLDivElement>()
 const currentSize = ref<ItemSize | null>(null)
 const quantity = ref(1)
@@ -304,11 +304,7 @@ watch(
         ? menuItemRepo.item?.sizes[0]
         : null
       if (menuItemRepo.item) {
-        history.pushState(
-          {},
-          '',
-          `${route.path === '/' ? '' : route.path + '/'}product/${menuItemRepo.item?.id}`,
-        )
+        fictiveUrlStore.setFictiveProductUrl(menuItemRepo.item)
         const metaData = {
           title: menuItemRepo.item.name || '',
           titleTemplate: (title: any) => `${title}`,

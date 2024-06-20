@@ -30,7 +30,7 @@
               <GroupButton
                 :key="key"
                 :item="el"
-                :is-selected="$store.visibleMenuGroupId === el.id"
+                :is-selected="fictiveUrlStore.visibleMenuGroupId === el.id"
               />
             </div>
           </div>
@@ -57,6 +57,7 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { dragscroll } from 'vue-dragscroll'
 import { store } from 'src/models/store'
 import { debounce } from 'quasar'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const vDragscroll = dragscroll
 
@@ -66,6 +67,7 @@ const route = useRoute()
 const groupButtons = ref<HTMLDivElement[]>([])
 const scrollArea = ref<HTMLDivElement>()
 const offsetForScroll = ref(0)
+const fictiveUrlStore = useFictiveUrlStore()
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
@@ -73,7 +75,7 @@ const categories = computed(() => {
 
 const selectedIndex = computed(() => {
   return (
-    categories.value?.findIndex((v) => v.id === store.visibleMenuGroupId) ?? -1
+    categories.value?.findIndex((v) => v.id === fictiveUrlStore.visibleMenuGroupId) ?? -1
   )
 })
 
