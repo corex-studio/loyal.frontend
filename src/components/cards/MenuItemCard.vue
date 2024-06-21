@@ -21,14 +21,15 @@
       "
       class="bg-primary row justify-center items-center"
     >
-      <CIcon name="fa-solid fa-cart-shopping" color="on-primary" size="16px" />
+      <CIcon name="fa-solid fa-cart-shopping" color="on-primary" size="16px"/>
     </div>
     <q-chip
       v-if="false"
       class="info-chip subtitle-text"
       color="red"
       text-color="white"
-      >Новинка</q-chip
+    >Новинка
+    </q-chip
     >
 
     <q-img
@@ -72,7 +73,7 @@
       <div class="row no-wrap full-width justify-between items-center">
         <div
           v-if="$q.screen.gt.sm"
-          class="subtitle-text bold text-on-backgroun-color row gap-2 no-wrap"
+          class="subtitle-text bold text-on-background-color row gap-2 no-wrap"
           itemprop="offers"
           itemscope
           itemtype="https://schema.org/Offer"
@@ -97,6 +98,10 @@
             <div :class="{ bold: $q.screen.lt.md }">
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
             </div>
+
+            <q-menu v-if="item.isDead && $q.screen.lt.md" v-model="err" class="pa-3 secondary-text">
+              {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+            </q-menu>
           </CButton>
           <CButton
             v-else
@@ -112,9 +117,13 @@
             <div :class="{ bold: $q.screen.lt.md }">
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
             </div>
+
+            <q-menu v-if="item.isDead && $q.screen.lt.md" v-model="err" class="pa-3 secondary-text">
+              {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+            </q-menu>
           </CButton>
-          <CTooltip v-if="item.isDead"
-            >{{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+          <CTooltip v-if="item.isDead && $q.screen.gt.sm"
+          >{{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
           </CTooltip>
         </div>
       </div>
@@ -122,34 +131,35 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { MenuItem } from 'src/models/menu/menuItem/menuItem'
-import { store } from 'src/models/store'
+import {MenuItem} from 'src/models/menu/menuItem/menuItem'
+import {store} from 'src/models/store'
 import CButton from '../template/buttons/CButton.vue'
-import { cartRepo } from 'src/models/carts/cartRepo'
-import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { companyRepo } from 'src/models/company/companyRepo'
-import { authentication } from 'src/models/authentication/authentication'
-import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
-import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import { ref } from 'vue'
-import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import {cartRepo} from 'src/models/carts/cartRepo'
+import {salesPointRepo} from 'src/models/salesPoint/salesPointRepo'
+import {companyRepo} from 'src/models/company/companyRepo'
+import {authentication} from 'src/models/authentication/authentication'
+import {cartItemRepo} from 'src/models/carts/cartItem/cartItemRepo'
+import {CartItemModifier} from 'src/models/carts/cartItem/cartItem'
+import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo'
+import {ref} from 'vue'
+import {menuItemRepo} from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
-import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import {menuRulesForAddingRepo} from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import {
   ecommerceAdd,
   ecommerceClick,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
-import { useYandexMetrika } from 'yandex-metrika-vue3'
-import { useRoute } from 'vue-router'
-import { CalculationStatus } from 'src/models/carts/cart'
-import { notifier } from 'src/services/notifier'
+import {useYandexMetrika} from 'yandex-metrika-vue3'
+import {useRoute} from 'vue-router'
+import {CalculationStatus} from 'src/models/carts/cart'
+import {notifier} from 'src/services/notifier'
+import {Screen} from 'quasar';
 
 const props = defineProps<{
   item: MenuItem
 }>()
-
+const err = ref(false)
 const metrika = useYandexMetrika()
 const loading = ref(false)
 const route = useRoute()
@@ -168,7 +178,11 @@ const onIntersection = (entry: IntersectionObserverEntry) => {
 }
 
 const toCartClickHandler = async () => {
-  if (props.item.isDead) return
+  if (props.item.isDead) {
+    if (Screen.lt.md)
+      err.value = true
+    return
+  }
   if (!authentication.user) {
     store.authModal = true
     return
