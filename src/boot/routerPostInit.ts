@@ -24,7 +24,6 @@ const processRouteLocation = (
 
 export default boot(({ app }) => {
   setTimeout(() => {
-    // vueRouter.rawUseRoute = vueRouter.useRoute
     const router = app.config.globalProperties.$router
     const getRouteName = () => String(app.config.globalProperties.$route.name)
     const getRouteParams = () => app.config.globalProperties.$route.params
@@ -70,13 +69,9 @@ declare module 'vue-router' {
   interface Router {
     rawPush: _Router['push']
     rawReplace: _Router['replace']
-    // toggleWithCityPage: () => ReturnType<_Router['replace']>
     replaceToWithCityPage: () => ReturnType<_Router['replace']>
     replaceToWithoutCityPage: () => ReturnType<_Router['replace']>
     isIncludesRouteName: (first: string[], second?: string) => boolean
   }
-  // interface RouteLocationNormalizedLoaded {
-  //   rawUseRoute: RouteLocationNormalizedLoaded
-  // }
 }
 
