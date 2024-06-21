@@ -36,7 +36,7 @@
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { store } from 'src/models/store'
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from './TopHeaderSocials.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
@@ -81,13 +81,16 @@ const blocks = computed(() => {
 })
 
 const scrollToBlock = (v: string, tab?: string) => {
-  if (router.isIncludesRouteName(['home'])) {
-    void router.push({
-      name: 'home',
-    })
-    setTimeout(() => {
-      scrollToBlock(v, tab)
-    }, 300)
+  if (!router.isIncludesRouteName(['home'])) {
+    void router
+      .push({
+        name: 'home',
+      })
+      .then(() => {
+        setTimeout(() => {
+          scrollToBlock(v, tab)
+        })
+      })
   } else {
     const groupElement = document.getElementById(v)
     if (groupElement) {
