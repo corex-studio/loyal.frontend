@@ -5,7 +5,7 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
   const _visibleMenuGroupId = ref<string | null>(null)
@@ -33,6 +33,7 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     }
     if (lastFictiveUrl.value === url) return
     lastFictiveUrl.value = url
+    if (location.pathname !== url)
       history.pushState({}, '', url)
 
   }
@@ -48,6 +49,7 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     }
     if (lastFictiveUrl.value === url) return
     lastFictiveUrl.value = url
+    if (location.pathname !== url)
     history.pushState({}, '', url)
   }
 
@@ -64,7 +66,9 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     url += `products/${pk}`
     if (url === lastFictiveUrl.value) return
     lastFictiveUrl.value = url
-    history.pushState({}, '', url)
+    if (location.pathname !== url) {
+      history.pushState({}, '', url)
+    }
   }
 
   const extractIdsFromUrl = (

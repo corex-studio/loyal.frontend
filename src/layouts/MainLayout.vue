@@ -90,6 +90,8 @@ import { setMeta } from 'src/models/metaTags/metaTags'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 import { withCityRouteKey } from 'src/router/mainRoutes'
+import { useEventBus } from '@vueuse/core'
+import { onCloseProductModalKey } from 'src/services/eventBusKeys'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -198,6 +200,8 @@ const setScroll = () => {
 const fictiveUrlStore = useFictiveUrlStore()
 
 const closeMenuItemModal = () => {
+  useEventBus(onCloseProductModalKey).emit()
+  fictiveUrlStore.initialMenuItem = null
   fictiveUrlStore.setFictiveCategoryUrl()
   setMeta(route.meta)
   store.freeItem = null

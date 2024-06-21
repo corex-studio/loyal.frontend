@@ -12,6 +12,21 @@ export const mainRoutes = [
     component: () => import('src/pages/home/Home.vue'),
   },
   {
+    path: 'categories/:_categoryId',
+    name: 'home__withCategories',
+    component: () => import('src/pages/home/Home.vue'),
+  },
+  {
+    path: 'categories/:_categoryId/products/:_productId',
+    name: 'home__withCategories__withProducts',
+    component: () => import('src/pages/home/Home.vue'),
+  },
+  {
+    path: 'news/:_newsId',
+    name: 'home__withNews',
+    component: () => import('src/pages/home/Home.vue'),
+  },
+  {
     path: 'profile',
     name: 'profilePage',
     redirect: {

@@ -40,6 +40,7 @@ export default boot(({ app }) => {
     }
     router.isIncludesRouteName = (first, second = getRouteName()) => {
       const f = first.map((v) => v.replace(withCityRouteKey, ''))
+      if (f.includes('home')) f.push('home__withCategories', 'home__withCategories__withProducts', 'home__withNews')
       const s = second.replace(withCityRouteKey, '')
       return f.includes(s)
     }

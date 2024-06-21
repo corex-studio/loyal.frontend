@@ -12,7 +12,6 @@ import {
   useYandexMetrika,
 } from 'yandex-metrika-vue3'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
-import { newsRepo } from 'src/models/news/newsRepo'
 
 const metrika = useYandexMetrika()
 const fictiveUrlStore = useFictiveUrlStore()

@@ -57,11 +57,13 @@ import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { scroll } from 'quasar'
-import { Fn, useElementBounding, useEventListener } from '@vueuse/core'
+import { Fn, useElementBounding, useEventBus, useEventListener } from '@vueuse/core'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { maxBy } from 'lodash'
 import getVerticalScrollPosition = scroll.getVerticalScrollPosition
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { useRoute } from 'vue-router'
+import { onCloseProductModalKey } from 'src/services/eventBusKeys'
 
 const { getScrollTarget } = scroll
 const scrollBodyTatget = getScrollTarget(document.body)
@@ -79,6 +81,7 @@ onMounted(async () => {
     cleanups.push(
       useEventListener(document, 'scroll', setCurrentActiveMenuGroupId),
     )
+    useEventBus(onCloseProductModalKey).on(() => setCurrentActiveMenuGroupId())
   } catch {
     console.error('menu groups ref is empty')
   }
@@ -176,6 +179,7 @@ watch(
 const stopWatchUrlHandle = watch(
   computed(() => `${fictiveUrlStore.visibleMenuGroupId}${fictiveUrlStore.visibleMenuGroupAlias}`),
   () => {
+    if (!fictiveUrlStore.initialMenuItem)
     fictiveUrlStore.setFictiveCategoryUrl()
   },
 )
