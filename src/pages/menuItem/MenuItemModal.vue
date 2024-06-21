@@ -63,7 +63,8 @@
             class="body"
             itemprop="weight"
           >
-            {{ currentWeight
+            {{
+              currentWeight
             }}{{
               currentSize.characteristics.unit
                 ? unitTypeNamesShort[currentSize.characteristics.unit]
@@ -78,7 +79,7 @@
           >
             {{ $menuItem.item?.description }}
           </div>
-          <MenuItemCharacteristics v-if="currentSize" :size="currentSize" />
+          <MenuItemCharacteristics v-if="currentSize" :size="currentSize"/>
           <MenuItemRelatedItems
             v-if="
               $cart.item &&
@@ -99,8 +100,8 @@
           </div>
           <div class="mt-10">
             <div v-for="(el, index) in currentModifierGroups" :key="index">
-              <q-separator v-if="index" color="divider-color" class="my-8" />
-              <ModifiersSelector :group="el" />
+              <q-separator v-if="index" color="divider-color" class="my-8"/>
+              <ModifiersSelector :group="el"/>
             </div>
           </div>
         </div>
@@ -155,14 +156,27 @@
                     <div itemprop="priceCurrency">₽</div>
                   </div>
                 </div>
+                <template v-if="$q.screen.lt.md">
+                  <q-menu v-if="$menuItem.item?.isDead" v-model="isDeadErr" class="pa-3 secondary-text">
+                    {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+                  </q-menu>
+                  <q-menu v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem" v-model="isNotInMenuErr"
+                          class="pa-3 secondary-text">
+                    Недоступно к заказу
+                  </q-menu>
+                </template>
+
+
               </CButton>
-              <CTooltip v-if="$menuItem.item?.isDead"
+              <template v-if="$q.screen.gt.sm">
+                <CTooltip v-if="$menuItem.item?.isDead"
                 >Товар недоступен
-              </CTooltip>
-              <CTooltip
-                v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem"
+                </CTooltip>
+                <CTooltip
+                  v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem"
                 >Недоступно к заказу
-              </CTooltip>
+                </CTooltip>
+              </template>
             </div>
           </div>
         </teleport>
@@ -172,16 +186,16 @@
         class="column justify-between full-width px-md-15 px-xs-8 pt-md-15 mt-xs-18 mt-md-0 pb-xs-50 pb-lg-0"
       >
         <div>
-          <q-skeleton height="30px" width="80%" class="mb-5" />
-          <q-skeleton height="30px" width="40%" class="mb-5" />
-          <q-skeleton height="20px" width="20%" class="mb-5" />
-          <q-skeleton height="20px" width="100%" class="mb-3" />
-          <q-skeleton height="20px" width="100%" class="mb-3" />
-          <q-skeleton height="20px" width="40%" />
+          <q-skeleton height="30px" width="80%" class="mb-5"/>
+          <q-skeleton height="30px" width="40%" class="mb-5"/>
+          <q-skeleton height="20px" width="20%" class="mb-5"/>
+          <q-skeleton height="20px" width="100%" class="mb-3"/>
+          <q-skeleton height="20px" width="100%" class="mb-3"/>
+          <q-skeleton height="20px" width="40%"/>
         </div>
         <div class="row full-width py-lg-12 py-xs-10 gap-sm-15 gap-xs-5">
-          <q-skeleton :height="$q.screen.lt.lg ? '40px' : '48px'" width="30%" />
-          <q-skeleton :height="$q.screen.lt.lg ? '40px' : '48px'" class="col" />
+          <q-skeleton :height="$q.screen.lt.lg ? '40px' : '48px'" width="30%"/>
+          <q-skeleton :height="$q.screen.lt.lg ? '40px' : '48px'" class="col"/>
         </div>
       </div>
     </div>
@@ -191,36 +205,36 @@
 <script lang="ts" setup>
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import MenuItemCharacteristics from './MenuItemCharacteristics.vue'
-import { ItemSize, unitTypeNamesShort } from 'src/models/menu/menu'
-import { computed, ref, watch } from 'vue'
-import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
+import {ItemSize, unitTypeNamesShort} from 'src/models/menu/menu'
+import {computed, ref, watch} from 'vue'
+import {menuItemRepo} from 'src/models/menu/menuItem/menuItemRepo'
 import ItemSizeSelector from './ItemSizeSelector.vue'
 import ModifiersSelector from './ModifiersSelector.vue'
 import ChangeAmount from 'src/components/inputs/ChangeAmount.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { beautifyNumber, store } from 'src/models/store'
-import { padRepo } from 'src/models/pads/padRepo'
-import { sum } from 'lodash'
-import { authentication } from 'src/models/authentication/authentication'
-import { cartRepo } from 'src/models/carts/cartRepo'
-import { companyRepo } from 'src/models/company/companyRepo'
-import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
-import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
-import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
-import { useMeta, useQuasar } from 'quasar'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import {beautifyNumber, store} from 'src/models/store'
+import {padRepo} from 'src/models/pads/padRepo'
+import {sum} from 'lodash'
+import {authentication} from 'src/models/authentication/authentication'
+import {cartRepo} from 'src/models/carts/cartRepo'
+import {companyRepo} from 'src/models/company/companyRepo'
+import {salesPointRepo} from 'src/models/salesPoint/salesPointRepo'
+import {cartItemRepo} from 'src/models/carts/cartItem/cartItemRepo'
+import {CartItemModifier} from 'src/models/carts/cartItem/cartItem'
+import {Screen, useMeta, useQuasar} from 'quasar'
+import {uiSettingsRepo} from 'src/models/uiSettings/uiSettingsRepo'
+import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
-import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import {menuRulesForAddingRepo} from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import {
   ecommerceAdd,
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
-import { useRoute } from 'vue-router'
-import { CalculationStatus } from 'src/models/carts/cart'
-import { notifier } from 'src/services/notifier'
+import {useRoute} from 'vue-router'
+import {CalculationStatus} from 'src/models/carts/cart'
+import {notifier} from 'src/services/notifier'
 
 const props = defineProps<{
   modelValue: boolean
@@ -230,6 +244,8 @@ const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
+const isDeadErr = ref(false)
+const isNotInMenuErr = ref(false)
 const route = useRoute()
 const touchSpot = ref<HTMLDivElement>()
 const currentSize = ref<ItemSize | null>(null)
@@ -248,8 +264,8 @@ const currentImage = computed(() => {
   return menuItemRepo.loadings.retrieve
     ? store.menuItemImage?.thumbnail || store.images.empty
     : menuItemRepo.item?.image?.image ||
-        store.menuItemImage?.thumbnail ||
-        store.images.empty
+    store.menuItemImage?.thumbnail ||
+    store.images.empty
 })
 
 const currentMenuRulesForAdding = computed(() => {
@@ -347,6 +363,16 @@ const isAddToCardDisabled = computed(() => {
 })
 
 const addToCart = async () => {
+  if (Screen.lt.md) {
+    if (menuItemRepo.item?.isDead) {
+      isDeadErr.value = true
+      return
+    }
+    if (!menuItemRepo.item?.isItemInMenu && !store.freeItem) {
+      isNotInMenuErr.value = true
+      return
+    }
+  }
   if (!authentication.user && !store.tableMode) {
     store.authModal = true
     return
