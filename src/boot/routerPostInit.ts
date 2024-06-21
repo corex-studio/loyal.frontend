@@ -60,6 +60,7 @@ export default boot(({ app }) => {
       const name = getRouteName()
       const _to = { name: name, params: getRouteParams(), meta: cloneDeep(getRouteMeta()) }
       _to.name = name.replace(withCityRouteKey, '')
+      if (_to.params) delete _to.params._cityId
       return router.rawReplace(_to)
     }
   })

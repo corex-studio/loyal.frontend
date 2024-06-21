@@ -146,6 +146,7 @@ export class AppManager {
   }
 
   checkSelectedCity() {
+    // todo refactor
     const paramsCity = this.route.params._cityId
     const localStorageCity =
       localStorage.getItem('cityAlias') || localStorage.getItem('city')
@@ -175,6 +176,7 @@ export class AppManager {
         localStorage.setItem('city', foundCity.uuid)
         localStorage.setItem('cityAlias', foundCity.alias || foundCity.uuid)
       }
+      void this.router.replaceToWithCityPage()
     }
     if (this.route.params._cityId) {
       const currentId = String(this.route.params._cityId)
@@ -184,8 +186,12 @@ export class AppManager {
         localStorage.setItem('cityAlias', city?.alias || currentId)
         companyGroupRepo.item.cityData.current = city
       }
+      if (cities.length > 1) void this.router.replaceToWithCityPage()
     }
-    void this.router.replaceToWithCityPage()
+    // if (cities.length > 1 && !isCityPage(this.route)) void this.router.replaceToWithCityPage()
+    if (cities.length <= 1 && isCityPage(this.route)) void  this.router.replaceToWithoutCityPage()
+
+
   }
 
   setDefaultCompany() {
