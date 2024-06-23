@@ -61,6 +61,7 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed, watch } from 'vue'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps<{
   modelValue: boolean
@@ -71,6 +72,8 @@ defineEmits<{
 }>()
 
 const fictiveUrlStore = useFictiveUrlStore()
+const route = useRoute()
+const router = useRouter()
 
 const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
@@ -78,8 +81,13 @@ const getBorderRadius = computed(() => {
 
 watch(
   () => props.modelValue,
-  () => {
+  async () => {
     if (!props.modelValue) {
+      if (
+        String(route.name) === 'home__withNews'
+      ) {
+        await router.push({ name: 'home' })
+      }
       fictiveUrlStore.setFictiveCategoryUrl()
     }
   },

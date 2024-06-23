@@ -199,7 +199,9 @@ const setScroll = () => {
 
 const fictiveUrlStore = useFictiveUrlStore()
 
-const closeMenuItemModal = () => {
+const closeMenuItemModal = async () => {
+  if (String(route.name) === 'home__withCategories__withProducts')
+    await router.push({ name: 'home' })
   useEventBus(onCloseProductModalKey).emit()
   fictiveUrlStore.initialMenuItem = null
   fictiveUrlStore.setFictiveCategoryUrl()

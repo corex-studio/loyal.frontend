@@ -1,4 +1,6 @@
 <template>
+  {{$route.name}}
+  {{$route.params}}
   <router-view />
 </template>
 

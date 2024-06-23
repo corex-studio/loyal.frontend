@@ -5,7 +5,7 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 import { menuGroupRepo } from 'src/models/menu/menuGroups/menuGroupRepo'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
   const _visibleMenuGroupId = ref<string | null>(null)
@@ -15,7 +15,6 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
   const visibleMenuGroupIdManualSet = ref(false)
   const initialMenuItem = ref<string | null>(null)
   const initialMenuGroupItem = ref<string | null>(null)
-  // const initialNewsItem = ref<string | null>(null)
 
   const visibleMenuGroupId = toRef(() => _visibleMenuGroupId.value)
   const visibleMenuGroupAlias = toRef(() => _visibleMenuGroupAlias.value)
@@ -35,7 +34,7 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     lastFictiveUrl.value = url
     if (location.pathname !== url)
       history.pushState({}, '', url)
-
+    clearNewsData()
   }
 
   const setFictiveCategoryUrl = () => {
@@ -128,6 +127,17 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     }
   }
 
+  const clearNewsData = () => {
+    currentNewsItem.value = ''
+  }
+
+  const clearMenuGroupData = () => {
+    setVisibleMenuGroup(null)
+  }
+  const clearMenuItemData = () => {
+    initialMenuItem.value = ''
+  }
+
   return {
     lastFictiveUrl,
     visibleMenuGroupId,
@@ -141,6 +151,9 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
     setFictiveProductUrl,
     setVisibleMenuGroup,
     scrollToGroup,
-    setFictiveNewsUrl
+    setFictiveNewsUrl,
+    clearNewsData,
+    clearMenuGroupData,
+    clearMenuItemData
   }
 })
