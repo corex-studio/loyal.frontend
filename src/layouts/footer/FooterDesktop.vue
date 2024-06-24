@@ -100,7 +100,7 @@
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
           style="max-width: 336px"
         >
-          <TopHeaderSocials icon-size="24px" />
+          <TopHeaderSocials icon-size="24px"/>
           <div
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
@@ -322,7 +322,7 @@
       >
         <div class="body">
           Скачайте наше
-          <br />Удобное приложение
+          <br/>Удобное приложение
         </div>
         <div class="row gap-10">
           <div
@@ -370,10 +370,10 @@
 
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { store } from 'src/models/store'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import {store} from 'src/models/store'
+import {uiSettingsRepo} from 'src/models/uiSettings/uiSettingsRepo'
+import {computed} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import TopHeaderSocials from 'layouts/header/TopHeaderSocials.vue'
 import CustomIcon from 'src/components/icons/CustomIcon.vue'
 
@@ -432,7 +432,7 @@ const scrollToBlock = (v: string, tab?: string) => {
     if (groupElement) {
       if (tab) store.offersTab = tab
       const y = groupElement.getBoundingClientRect().top + window.scrollY - 120
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      window.scrollTo({top: y, behavior: 'smooth'})
     }
   }
 }
@@ -446,6 +446,6 @@ const openLink = (link: string) => {
 .app-link-block {
   height: 44px;
   width: 134px;
-  background-color: #3b3b3b65;
+  background-color: #3b3b3bb8
 }
 </style>
