@@ -5,7 +5,7 @@
     class="full-width no-wrap"
   >
     <div
-      v-if="newAddress"
+      v-if="newAddress && $q.screen.gt.sm && $q.platform.has.touch"
       :style="$q.screen.lt.md ? 'max-height: 55vh' : 'width: 47%'"
       class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 py-xs-12 px-xs-8"
       style="overflow-y: auto"
@@ -25,12 +25,6 @@
             {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
           </div>
         </div>
-        <!-- <CInput
-          v-model="newAddress.name"
-          external-label="Название адреса"
-          height="48px"
-          placeholder="Название"
-        /> -->
         <div class="column full-width gap-10">
           <AddressSearch
             :address="newAddress.address"
@@ -92,13 +86,6 @@
         />
       </div>
       <div class="mt-md-15 mt-xs-8 column full-width gap-12">
-        <!-- <CCheckBox
-          :model-value="isPrivateHouse"
-          class="body"
-          label="У меня частный дом"
-          size="50px"
-          @click="privateHouseClickHandler()"
-        /> -->
         <CButton
           :disabled="!isSaveAvailable"
           :loading="
@@ -124,15 +111,119 @@
       ></div>
     </div>
   </div>
+  <CSwipeModal
+    ref="cSwipeModalRef"
+    style="max-width: 450px; width: 100%"
+    class="px-5"
+    v-if="$q.screen.lt.md && $q.platform.has.touch"
+    v-model="swipeModal"
+    allow-open-full-height
+    breakpoint="200"
+    always-visible-on-breakpoint
+    prevent-content-scrolling-if-closed
+    :as-modal="false"
+  >
+    <!--    :full-height="$q.platform.is.safari ? '89vh' : '93vh'"-->
+    <div class="column full-width gap-md-8 gap-xs-6">
+      <div class="row items-center no-wrap gap-5 mb-md-7 mb-xs-4">
+        <CIcon
+          v-if="backCallback"
+          class="cursor-pointer"
+          color="on-background-color"
+          hover-color="primary"
+          name="fa-regular fa-angle-left"
+          size="24px"
+          @click="backCallback ? backCallback() : void 0"
+        />
+        <div class="header3 bold">
+          {{ address ? address.name || 'Изменение адреса' : 'Новый адрес' }}
+        </div>
+      </div>
+      <div class="column full-width gap-10">
+        <AddressSearch
+          :address="newAddress.address"
+          ref="addressSearchRef"
+          label="Укажите адрес"
+          placeholder="Город, улица, дом"
+          @update="selectAddress($event, 15)"
+          @click="onInputClick"
+        />
+        <CButton
+          :icon-loading="geoloading"
+          icon="fa-regular fa-location-dot"
+          icon-size="24px"
+          style="width: fit-content"
+          text-button
+          text-color="primary"
+          @click="requestGeolocation()"
+        >
+          <div class="body bold">Определить адрес автоматически</div>
+        </CButton>
+      </div>
+      <div class="row gap-5 no-wrap">
+        <CInput
+          v-model="newAddress.flat"
+          class="col"
+          external-label="Квартира"
+          height="48px"
+          placeholder="Номер"
+        />
+        <CInput
+          v-model="newAddress.entrance"
+          class="col"
+          external-label="Подъезд"
+          height="48px"
+          placeholder="Номер"
+        />
+      </div>
+      <div class="row gap-5 no-wrap">
+        <CInput
+          v-model="newAddress.floor"
+          class="col"
+          external-label="Этаж"
+          height="48px"
+          placeholder="Номер"
+          type="number"
+        />
+        <CInput
+          v-model="newAddress.intercom"
+          class="col"
+          external-label="Домофон"
+          height="48px"
+          placeholder="Номер"
+        />
+      </div>
+      <CInput
+        v-model="newAddress.description"
+        auto-grow
+        height="fit-content"
+        input-style="border-radius: 15px !important"
+        placeholder="Комментарий"
+      />
+    </div>
+    <div class="mt-md-15 mt-xs-8 column full-width gap-12">
+      <CButton
+        :disabled="!isSaveAvailable"
+        :loading="
+          $deliveryAddress.loadings.update || $deliveryAddress.loadings.create
+        "
+        class="body"
+        height="48px"
+        label="Сохранить"
+        width="100%"
+        @click="createAddress()"
+      />
+    </div>
+  </CSwipeModal>
 </template>
 <script lang="ts" setup>
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 import CButton from '../template/buttons/CButton.vue'
 import AddressSearch from '../template/inputs/AddressSearch.vue'
 import CInput from '../template/inputs/CInput.vue'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { deliveryAddressRepo } from 'src/models/customer/deliveryAddress/deliveryAddressRepo'
-import { useQuasar } from 'quasar'
+import { QInput, scroll, useQuasar } from 'quasar'
 import { Address } from 'src/models/types'
 import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
@@ -140,6 +231,9 @@ import L, { Layer } from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import { useGeolocation } from '@vueuse/core'
 import { utilsRepo } from 'src/models/utils/utilsRepo'
+import CSwipeModal from 'components/dialogs/CSwipeModal.vue'
+import { CSwipeModalRef } from 'components/dialogs/types/types'
+import setVerticalScrollPosition = scroll.setVerticalScrollPosition
 import { notifier } from 'src/services/notifier'
 
 const props = defineProps<{
@@ -148,8 +242,11 @@ const props = defineProps<{
 }>()
 
 // const { coords, resume, pause } = useGeolocation()
+const swipeModal = ref(false)
 const geolocation = useGeolocation()
 const preventGeolocationErrorNotify = ref(false)
+const cSwipeModalRef = ref<CSwipeModalRef | null>(null)
+const addressSearchRef = ref<{ cInputRef: QInput } | null>(null)
 const currentCoords = ref<{
   lat: number
   lng: number
@@ -161,11 +258,37 @@ const emit = defineEmits<{
 }>()
 
 const drawnItems = new L.FeatureGroup()
-const newAddress = ref<DeliveryAddress | null>(null)
+const newAddress = ref<DeliveryAddress>(
+  new DeliveryAddress({
+    uuid: props.address?.id || undefined,
+    name: props.address?.name || null,
+    address: props.address?.address || '',
+    coords: props.address?.coords || null,
+    city: props.address?.city || '',
+    street: props.address?.street || '',
+    house: props.address?.house || '',
+    flat: props.address?.flat || null,
+    floor: props.address?.floor || null,
+    entrance: props.address?.entrance || null,
+    intercom: props.address?.intercom || null,
+    description: props.address?.description || '',
+  }),
+)
 const geoloading = ref(false)
 const q = useQuasar()
 let map: CorexLeafletMap
 
+// const onInputClick = (e: Event) => {
+//   e.preventDefault()
+//   // console.log(e)
+//   if (!cSwipeModalRef.value) return
+//   if (!cSwipeModalRef.value.isFullHeight) {
+//     // cSwipeModalRef.value?.toggleFullHeight()
+//     setTimeout(() => {
+//       cSwipeModalRef.value?.contentScrollTo({ top: 0 })
+//     }, 100)
+//   }
+// }
 const isSaveAvailable = computed(() => {
   return !!newAddress.value?.address.length
 })
@@ -247,10 +370,6 @@ const loadAddressDataByCoords = async () => {
   selectAddress(res, 13)
 }
 
-// const privateHouseClickHandler = () => {
-//   if (!newAddress.value) return
-//   isPrivateHouse.value = !isPrivateHouse.value
-// }
 
 const drawPoint = (zoom?: number) => {
   const values: {
@@ -283,22 +402,10 @@ const drawPoint = (zoom?: number) => {
 //   pause()
 // })
 
+const { getScrollTarget } = scroll
+
 onMounted(() => {
   requestGeolocation(true)
-  newAddress.value = new DeliveryAddress({
-    uuid: props.address?.id || undefined,
-    name: props.address?.name || null,
-    address: props.address?.address || '',
-    coords: props.address?.coords || null,
-    city: props.address?.city || '',
-    street: props.address?.street || '',
-    house: props.address?.house || '',
-    flat: props.address?.flat || null,
-    floor: props.address?.floor || null,
-    entrance: props.address?.entrance || null,
-    intercom: props.address?.intercom || null,
-    description: props.address?.description || '',
-  })
   setTimeout(() => {
     map = new CorexLeafletMap()
     if (!map) return
@@ -322,6 +429,29 @@ onMounted(() => {
       },
     )
   }, 200)
+  const addressSearchEl = addressSearchRef.value?.cInputRef.$el as
+    | HTMLDivElement
+    | undefined
+  const inp = addressSearchEl?.querySelector('input') as
+    | HTMLInputElement
+    | undefined
+  setInterval(() => {}, 2000)
+  inp?.addEventListener('focus', async () => {
+    if (!cSwipeModalRef.value?.isFullHeight)
+      cSwipeModalRef.value?.toggleFullHeight()
+    if (q.platform.is.safari && !cSwipeModalRef.value?.isFullHeight) {
+      void nextTick(() => {
+        setTimeout(() => {
+          if (cSwipeModalRef.value?.contentRef) {
+            const t = getScrollTarget(cSwipeModalRef.value.contentRef)
+            setVerticalScrollPosition(t, 0)
+            console.log(cSwipeModalRef.value?.contentRef.scrollHeight)
+          }
+        }, 220)
+      })
+    }
+
+  })
 })
 
 const createAddress = async () => {
@@ -376,3 +506,12 @@ const redrawPoint = (zoom?: number) => {
   drawPoint(zoom)
 }
 </script>
+<style lang="scss">
+input:focus {
+  background: red;
+}
+
+input:active {
+  background: blue;
+}
+</style>

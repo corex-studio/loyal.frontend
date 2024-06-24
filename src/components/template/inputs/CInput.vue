@@ -286,6 +286,8 @@ watchEffect(() => {
   if (setValue && typeof props.modelValue == 'number')
     setValue(props.modelValue)
 })
+
+defineExpose({inputRef})
 </script>
 
 <style lang="scss">

@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="ready"
-    style="height: 100vh"
+    style="height: 100dvh"
     class="column full-width items-center justify-center bg-background-color text-on-background-color"
   >
     <PrepareUiSettings />
@@ -75,7 +75,7 @@
   </div>
   <div
     v-else
-    style="height: 100vh"
+    style="height: 100dvh"
     class="absolute-full flex items-center justify-center"
   >
     <q-spinner-puff color="primary" size="13%" />

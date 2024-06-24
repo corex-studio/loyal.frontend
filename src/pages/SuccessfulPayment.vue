@@ -1,6 +1,6 @@
 <template>
   <div
-    style="height: 100vh; width: 100vw"
+    style="height: 100dvh; width: 100vw"
     class="main-background row justify-center items-center"
   >
     <div

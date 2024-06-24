@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="ready"
-    style="height: 100vh; width: 100vw"
+    style="height: 100dvh; width: 100vw"
     class="back-panel row justify-center items-center"
   >
     <div

@@ -367,7 +367,7 @@ const modalHeight = computed(() => {
         mobileViewTypeConfirmed.value &&
         bookingMode.value === 'bookingList') ||
       newAddressMode.value)
-    ? '100vh'
+    ? '99dvh'
     : 'unset'
 })
 

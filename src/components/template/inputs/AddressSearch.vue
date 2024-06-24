@@ -1,6 +1,7 @@
 <template>
   <CInput
     :disabled="disabled"
+    ref="inputRef"
     class="col-grow body"
     :external-label="label"
     :input-class="inputClass"
@@ -19,9 +20,10 @@
     <q-menu
       v-model="menu"
       no-parent-event
-      :offset="[0, -10]"
       style="box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.04) !important"
       fit
+      anchor="bottom left"
+      self="top left"
       no-focus
     >
       <div class="col px-5 py-3">
@@ -43,11 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { Address } from 'src/models/types'
 import CInput from './CInput.vue'
 import CButton from '../buttons/CButton.vue'
 import { utilsRepo } from 'src/models/utils/utilsRepo'
+import { QInput } from 'quasar'
 
 const props = withDefaults(
   defineProps<{
@@ -69,6 +72,7 @@ const props = withDefaults(
 const currentAddress = ref('')
 const updated = ref(false)
 const currentFullAddress = ref<Address | null>(null)
+const inputRef = ref<{ inputRef: QInput } | null>(null)
 
 onMounted(() => {
   currentAddress.value = props.address
@@ -122,4 +126,6 @@ const validateAddress = (val: Address | null) => {
     } else return 'Укажите улицу'
   } else return 'Укажите адрес'
 }
+
+defineExpose({cInputRef: inputRef })
 </script>

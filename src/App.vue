@@ -26,7 +26,13 @@ const storeInitialProduct = () => {
 onMounted(() => {
   storeInitialProduct()
   const platformIs = useQuasar().platform.is
-  if (platformIs.safari || platformIs.ios || platformIs.iphone || platformIs.ipad || platformIs.ipod) {
+  if (
+    platformIs.safari ||
+    platformIs.ios ||
+    platformIs.iphone ||
+    platformIs.ipad ||
+    platformIs.ipod
+  ) {
     document.body.classList.add('safari')
   }
   initMetrika()

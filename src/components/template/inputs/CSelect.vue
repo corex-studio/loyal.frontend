@@ -48,6 +48,10 @@
       :outlined="_outlined"
       @virtual-scroll="$emit('virtualScroll', $event)"
       :use-chips="useChips"
+      :menu-anchor="menuAnchor"
+      :menu-self="menuSelf"
+      :menu-offset="menuOffset"
+      :menu-shrink="menuShrink"
     >
       <template v-if="modelValue && clearable" v-slot:append>
         <CIconButton
@@ -99,7 +103,7 @@
 <script setup lang="ts">
 import CIconButton from '../buttons/CIconButton.vue'
 import { computed, ref } from 'vue'
-import { QSelect } from 'quasar'
+import { QSelect, QSelectProps } from 'quasar'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 defineEmits(['update:modelValue', 'change', 'virtualScroll', 'click'])
@@ -147,6 +151,10 @@ const props = defineProps<{
   useRadio?: boolean
   useChips?: boolean
   externalLabel?: string
+  menuAnchor?: QSelectProps['menuAnchor']
+  menuSelf?: QSelectProps['menuSelf']
+  menuOffset?: QSelectProps['menuOffset']
+  menuShrink?: boolean
 }>()
 
 const radioValue = ref<string>(props.modelValue as string)

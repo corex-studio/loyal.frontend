@@ -2,6 +2,22 @@
   <template v-if="ready">
     <PrepareUiSettings />
     <q-layout class="bg-background-color relative-position" view="lHh Lpr lFf">
+<!--      <button @click="isOpen = true">Open modal</button>-->
+<!--      <button @click="CSwipeModalModelValue = true">Open norm modal</button>-->
+<!--      <SwipeModal ref="kekRef" v-model="isOpen" snapPoint="auto">-->
+<!--        <button @click="isOpen = false">Close modal</button>-->
+<!--        <CInput model-value="''" default />-->
+<!--        Modal content <br />-->
+<!--        Modal content <br />-->
+<!--        Modal content <br />Modal content <br />Modal content <br />Modal-->
+<!--        content <br />-->
+<!--        Modal content <br />-->
+<!--        Modal content <br />Modal content <br />Modal content <br />Modal-->
+<!--        content <br />Modal content <br />Modal content <br />Modal content-->
+<!--        <br />Modal content <br />Modal content <br />Modal content <br />Modal-->
+<!--        content <br />Modal content <br />-->
+<!--      </SwipeModal>-->
+<!--      <CSwipeModal v-model="CSwipeModalModelValue" allow-open-full-height />-->
       <QRHomePadInfo v-if="$store.tableMode" />
       <TopHeader v-if="$q.screen.gt.md && !$store.tableMode" />
       <MainHeader />
@@ -21,7 +37,7 @@
         :style="
           $q.screen.lt.md && !$store.tableMode
             ? 'padding-bottom: 50px'
-            : `min-height: calc(100vh - ${footerAndHeaderHeight}px); padding-bottom: ${$store.tableMode ? '120' : '100'}px`
+            : `min-height: calc(100dvh - ${footerAndHeaderHeight}px); padding-bottom: ${$store.tableMode ? '120' : '100'}px`
         "
       >
         <router-view />
@@ -90,6 +106,12 @@ import { AppManager } from 'src/models/utils/appManager'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
 import { menuRepo } from 'src/models/menu/menuRepo'
+import { SwipeModal } from '@takuma-ru/vue-swipe-modal'
+import CSwipeModal from 'components/dialogs/CSwipeModal.vue'
+import CInput from 'components/template/inputs/CInput.vue'
+
+const isOpen = ref(false)
+const CSwipeModalModelValue = ref(false)
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
