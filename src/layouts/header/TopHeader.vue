@@ -25,23 +25,24 @@
             <div class="body bold">{{ el.label }}</div>
           </CButton>
         </div>
-        <ContactsHeader class="col ml-10" />
+        <ContactsHeader class="col ml-10"/>
       </div>
       <!--      <TopHeaderDeliveryInfo />-->
-      <TopHeaderSocials header-mode />
+      <TopHeaderSocials header-mode/>
     </div>
-    <q-separator color="divider-color" />
+    <q-separator color="divider-color"/>
   </div>
 </template>
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { store } from 'src/models/store'
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import {store} from 'src/models/store'
+import {computed} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import TopHeaderSocials from './TopHeaderSocials.vue'
-import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
-import { companyRepo } from 'src/models/company/companyRepo'
+import {appSettingsRepo} from 'src/models/appSettings/appSettingsRepo'
+import {companyRepo} from 'src/models/company/companyRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
+import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo';
 
 const router = useRouter()
 const route = useRoute()
@@ -67,7 +68,7 @@ const blocks = computed(() => {
       },
     },
     {
-      label: 'Мобильное приложение',
+      label: companyGroupRepo.item?.externalId === 'ThreePizzas' ? 'Скачать мобильное приложение' : 'Мобильное приложение',
       visible:
         appSettingsRepo.linksData &&
         (appSettingsRepo.linksData.app_redirect_link ||
@@ -93,7 +94,7 @@ const scrollToBlock = (v: string, tab?: string) => {
     if (groupElement) {
       if (tab) store.offersTab = tab
       const y = groupElement.getBoundingClientRect().top + window.scrollY - 120
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      window.scrollTo({top: y, behavior: 'smooth'})
     }
   }
 }
