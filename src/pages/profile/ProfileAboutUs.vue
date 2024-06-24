@@ -142,7 +142,7 @@
       </div>
     </div>
     <div
-      v-if="$companyGroup.item?.externalId !== 'tochka_vkusa'"
+      v-if="$companyGroup.item?.externalId !== 'tochka_vkusa' && $companyGroup.item?.externalId !== 'ThreePizzas'"
       class="c-container"
     >
       <div
@@ -181,7 +181,7 @@
     <div
       :class="{
         'mt-lg-29 mt-md-25 mt-xs-10':
-          $companyGroup.item?.externalId === 'tochka_vkusa',
+          $companyGroup.item?.externalId === 'tochka_vkusa' || $companyGroup.item?.externalId === 'ThreePizzas',
       }"
       class="bg-backing-color py-lg-30 pt-xs-15 pb-md-11"
     >
@@ -195,9 +195,7 @@
             class="column gap-md-9 gap-xs-6"
           >
             <div class="huge bold">{{ company.name }}</div>
-            <div class="header3" style="white-space: pre-line">
-              {{ company.description }}
-            </div>
+            <div v-html="company.description" class="header3" style="white-space: pre-line"/>
           </div>
           <div
             v-if="$q.screen.gt.sm"
@@ -269,8 +267,10 @@
                   </span>
                 </template>
               </q-img>
-            </div> </template
-        ></SwiperContainer>
+            </div>
+          </template
+          >
+        </SwiperContainer>
       </div>
     </div>
     <div class="c-container">
@@ -309,7 +309,7 @@
                   :key="index"
                   :href="el.link"
                   class="subtitle-text text-on-background-color"
-                  >{{ el.value }}</a
+                >{{ el.value }}</a
                 >
               </template>
               <template v-else>
@@ -359,22 +359,22 @@
 </template>
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
-import { companyRepo } from 'src/models/company/companyRepo'
-import { computed, ref, onMounted } from 'vue'
+import {companyRepo} from 'src/models/company/companyRepo'
+import {computed, ref, onMounted} from 'vue'
 import SocialsModal from './SocialsModal.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import ProfileAddressesOnMap from './ProfileAddressesOnMap.vue'
 import ContactsModal from './ContactsModal.vue'
-import { useRouter } from 'vue-router'
+import {useRouter} from 'vue-router'
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import moment from 'moment'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
-import { Company } from 'src/models/company/company'
-import { useEventBus } from '@vueuse/core'
-import { selectCompanyKey } from 'src/services/eventBusKeys'
-import { daysNames } from 'src/services/daysEnum'
+import {Company} from 'src/models/company/company'
+import {useEventBus} from '@vueuse/core'
+import {selectCompanyKey} from 'src/services/eventBusKeys'
+import {daysNames} from 'src/services/daysEnum'
 
 const socialsModal = ref(false)
 const concatsModal = ref(false)
