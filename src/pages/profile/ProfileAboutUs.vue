@@ -183,7 +183,7 @@
         'mt-lg-29 mt-md-25 mt-xs-10':
           $companyGroup.item?.externalId === 'tochka_vkusa' || $companyGroup.item?.externalId === 'ThreePizzas',
       }"
-      class="bg-backing-color py-lg-30 pt-xs-15 pb-md-11"
+      class="bg-backing-color full-width py-lg-30 pt-xs-15 pb-md-11"
     >
       <div class="c-container">
         <div
