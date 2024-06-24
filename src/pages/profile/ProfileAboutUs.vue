@@ -619,7 +619,6 @@ body.screen--sm {
   min-width: 9px;
   max-width: 9px;
   min-height: 9px;
-  max-width: 9px;
   border-radius: 50%;
   background-color: var(--primary);
 }
@@ -628,7 +627,6 @@ body.screen--sm {
   border-radius: 50% !important;
   overflow: hidden !important;
   background: rgba(53, 53, 53, 0.274);
-  border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(7.3px);
   -webkit-backdrop-filter: blur(7.3px);
