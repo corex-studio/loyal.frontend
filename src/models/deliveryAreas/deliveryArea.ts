@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/corexModels/apiModels/baseModel'
+import {BaseModel} from 'src/corexModels/apiModels/baseModel'
 
 export type DeliveryAreaRaw = {
   uuid: string | undefined
@@ -8,6 +8,8 @@ export type DeliveryAreaRaw = {
   min_delivery_minutes: number
   max_delivery_minutes: number
   active: boolean
+  color?: string | null
+
 }
 
 export class DeliveryArea implements BaseModel {
@@ -21,6 +23,7 @@ export class DeliveryArea implements BaseModel {
   updated: boolean | undefined
   created: boolean | undefined
   active: boolean
+  color: string | null
 
   constructor(raw: DeliveryAreaRaw) {
     this.id = raw.uuid
@@ -30,6 +33,7 @@ export class DeliveryArea implements BaseModel {
     this.minDeliveryMinutes = raw.min_delivery_minutes
     this.maxDeliveryMinutes = raw.max_delivery_minutes
     this.active = raw.active
+    this.color = raw.color || null
   }
 
   toJson(): Record<string, any> {
@@ -40,6 +44,7 @@ export class DeliveryArea implements BaseModel {
       min_delivery_minutes: this.minDeliveryMinutes,
       max_delivery_minutes: this.maxDeliveryMinutes,
       sales_point: this.salesPoint,
+      color: this.color
     }
   }
 }
