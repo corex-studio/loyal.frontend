@@ -9,6 +9,8 @@ import { Image, ImageRaw } from '../image/image'
 import { cartRepo } from '../carts/cartRepo'
 import { store } from '../store'
 import { PaymentObjectType, PaymentType } from 'src/models/order/order'
+import { PadBaseOrderType } from 'src/models/pads/pad'
+import { QrMenuWorkingMode } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 
 export class SalesPointRepo extends BaseRepo<SalesPoint> {
   api = salesPointApi
@@ -39,7 +41,11 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
         class: 'bg-cash-button-color text-on-cash-button-color',
         icon: 'fa-light fa-money-bill',
       })
-    if (salesPointRepo.paymentSettings?.pay_later_enabled && store.qrMenuData?.pad) // todo проверять, что идет оплата заказа в стол
+    if (
+      salesPointRepo.paymentSettings?.pay_later_enabled &&
+      store.qrMenuData?.pad?.baseOrderType === PadBaseOrderType.TABLE &&
+      store.qrMenuData.settings.working_mode === QrMenuWorkingMode.RESTAURANT
+    )
       result.push({
         label: 'Внести в счет',
         type: PaymentType.PAY_LATER,

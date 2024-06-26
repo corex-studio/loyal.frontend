@@ -4,6 +4,10 @@ import { SalesPointRaw, SalesPoint } from '../salesPoint/salesPoint'
 import { Section, SectionRaw } from '../sections/section'
 import { Table, TableRaw } from '../sections/tables/table'
 
+export enum PadBaseOrderType {
+  TABLE = 'table'
+}
+
 export type PadRaw = {
   uuid?: string
   name: string | null
@@ -22,6 +26,7 @@ export type PadRaw = {
   updated_at: string | null
   is_registered: boolean
   section?: SectionRaw | null
+  base_order_type?: PadBaseOrderType
 }
 
 export class Pad implements BaseModel {
@@ -42,6 +47,7 @@ export class Pad implements BaseModel {
   updatedAt: string | null
   isRegistered: boolean
   section: Section | null
+  baseOrderType?: PadBaseOrderType
 
   constructor(raw: PadRaw) {
     this.id = raw.uuid
@@ -58,6 +64,7 @@ export class Pad implements BaseModel {
     this.updatedAt = raw.updated_at
     this.isRegistered = raw.is_registered
     this.section = raw.section ? new Section(raw.section) : null
+    this.baseOrderType = raw.base_order_type
   }
 
   toJson(): Record<string, any> {
