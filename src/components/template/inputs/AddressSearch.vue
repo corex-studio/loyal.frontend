@@ -19,7 +19,7 @@
     <q-menu
       v-model="menu"
       no-parent-event
-      :offset="[0, -10]"
+      :offset="[0, 0]"
       style="
         box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.04) !important;
         z-index: 9999999;
