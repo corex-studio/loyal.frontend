@@ -221,7 +221,7 @@ import {companyRepo} from 'src/models/company/companyRepo'
 import {salesPointRepo} from 'src/models/salesPoint/salesPointRepo'
 import {cartItemRepo} from 'src/models/carts/cartItem/cartItemRepo'
 import {CartItemModifier} from 'src/models/carts/cartItem/cartItem'
-import {Screen, useMeta, useQuasar} from 'quasar'
+import {useMeta, useQuasar} from 'quasar'
 import {uiSettingsRepo} from 'src/models/uiSettings/uiSettingsRepo'
 import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
@@ -233,8 +233,9 @@ import {
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import {useRoute} from 'vue-router'
-import {CalculationStatus} from 'src/models/carts/cart'
-import {notifier} from 'src/services/notifier'
+import { CalculationStatus } from 'src/models/carts/cart'
+import { notifier } from 'src/services/notifier'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const props = defineProps<{
   modelValue: boolean
@@ -244,6 +245,7 @@ const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
+const fictiveUrlStore = useFictiveUrlStore()
 const isDeadErr = ref(false)
 const isNotInMenuErr = ref(false)
 const route = useRoute()
@@ -320,11 +322,7 @@ watch(
         ? menuItemRepo.item?.sizes[0]
         : null
       if (menuItemRepo.item) {
-        history.pushState(
-          {},
-          '',
-          `${route.path === '/' ? '' : route.path + '/'}product/${menuItemRepo.item?.id}`,
-        )
+        fictiveUrlStore.setFictiveProductUrl(menuItemRepo.item)
         const metaData = {
           title: menuItemRepo.item.name || '',
           titleTemplate: (title: any) => `${title}`,

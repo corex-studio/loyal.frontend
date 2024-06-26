@@ -18,6 +18,10 @@ import { menuItemRepo } from '../menu/menuItem/menuItemRepo'
 import { salesPointRepo } from '../salesPoint/salesPointRepo'
 import { menuRulesForAddingRepo } from '../menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import { authSettingsRepo } from '../authSettings/authSettingsRepo'
+import { menuRepo } from 'src/models/menu/menuRepo'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { isCityPage } from 'src/router/helpers'
+import { useRoute, useRouter } from 'vue-router'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -28,6 +32,9 @@ let interval: NodeJS.Timeout | null = null
 
 export class AppManager {
   config: AppManagerConfig
+  fictiveUrlStore = useFictiveUrlStore()
+  private route = useRoute()
+  private router = useRouter()
 
   constructor(config: AppManagerConfig) {
     this.config = config
@@ -41,7 +48,6 @@ export class AppManager {
     if (!authentication.user && store.tableMode) {
       await authRepo.initAnonymousUser()
     }
-    // if (store.cityFromParam) localStorage.setItem('city', store.cityFromParam)
     await Promise.all([
       this.tryAuth(),
       this.getCurrentCompanyGroup(),
@@ -101,15 +107,30 @@ export class AppManager {
   }
 
   handleInitialMenuItem = async () => {
-    if (store.initialMenuItem) {
+    if (this.fictiveUrlStore.initialMenuItem) {
       store.openMenuItemModal()
-      await menuItemRepo.retrieve(store.initialMenuItem, {
+      await menuItemRepo.retrieve(this.fictiveUrlStore.initialMenuItem, {
         sales_point: salesPointRepo.item?.id,
       })
       await menuRulesForAddingRepo.list({
         menu_item: menuItemRepo.item?.id,
       })
-      store.initialMenuItem = null
+      this.fictiveUrlStore.initialMenuItem = null
+    }
+  }
+
+  handleInitialMenuGroupItem = async () => {
+    if (this.fictiveUrlStore.initialMenuGroupItem) {
+      const res =
+        menuRepo.item?.groups?.find((v) =>
+          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem),
+        ) || null
+      if (res) {
+        this.fictiveUrlStore.setVisibleMenuGroup(res)
+        this.fictiveUrlStore.visibleMenuGroupIdManualSet = true
+        this.fictiveUrlStore.scrollToGroup(res)
+      }
+      this.fictiveUrlStore.initialMenuGroupItem = null
     }
   }
 
@@ -125,18 +146,52 @@ export class AppManager {
   }
 
   checkSelectedCity() {
-    const city = localStorage.getItem('city')
-    if ((companyGroupRepo.item?.cityData.results?.length || 0) <= 1) {
+    // todo refactor
+    const paramsCity = this.route.params._cityId
+    const localStorageCity =
+      localStorage.getItem('cityAlias') || localStorage.getItem('city')
+    const city = localStorageCity || (paramsCity ? String(paramsCity) : null)
+
+    const cities = companyGroupRepo.item?.cityData.results || []
+    const foundCity = city ? companyGroupRepo.item?.findByAliasOrId(city) : null
+    if (cities.length <= 1) {
       store.cityCheckModal = false
-      return
-    }
-    if (!city) {
+      if (isCityPage(this.route)) void this.router.replaceToWithoutCityPage()
+    } else if (!city) {
       store.cityCheckModal = true
-      return
-    }
-    if (!companyGroupRepo.item?.cityData.results.find((v) => v.uuid === city)) {
+    } else if (!foundCity) {
       store.cityCheckModal = true
+      void this.router.replaceToWithoutCityPage()
+    } else if (cities.length > 1) {
+      if (
+        !isCityPage(this.route) ||
+        (isCityPage(this.route) && this.route.params._cityId !== city)
+      ) {
+        if (foundCity?.alias) {
+          localStorage.setItem('city', foundCity.uuid)
+          localStorage.setItem('cityAlias', foundCity.alias || city)
+        }
+      }
+      if (foundCity.uuid !== localStorage.getItem('city')) {
+        localStorage.setItem('city', foundCity.uuid)
+        localStorage.setItem('cityAlias', foundCity.alias || foundCity.uuid)
+      }
+      void this.router.replaceToWithCityPage()
     }
+    if (this.route.params._cityId) {
+      const currentId = String(this.route.params._cityId)
+      const city = companyGroupRepo.item?.findByAliasOrId(currentId)
+      if (city && companyGroupRepo.item) {
+        localStorage.setItem('city', city?.uuid || '')
+        localStorage.setItem('cityAlias', city?.alias || currentId)
+        companyGroupRepo.item.cityData.current = city
+      }
+      if (cities.length > 1) void this.router.replaceToWithCityPage()
+    }
+    // if (cities.length > 1 && !isCityPage(this.route)) void this.router.replaceToWithCityPage()
+    if (cities.length <= 1 && isCityPage(this.route)) void  this.router.replaceToWithoutCityPage()
+
+
   }
 
   setDefaultCompany() {
@@ -225,6 +280,7 @@ export class AppManager {
     if (currentPoint) {
       void store.loadCatalog(currentPoint).then(() => {
         void this.handleInitialMenuItem()
+        void this.handleInitialMenuGroupItem()
       })
     }
 

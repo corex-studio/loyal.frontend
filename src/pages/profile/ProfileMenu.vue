@@ -5,7 +5,7 @@
       height: fit-content;
       position: ${$q.screen.lt.lg ? 'relative' : 'sticky'};
       top: ${$q.screen.lt.lg ? '0px' : '80px'};
-      z-index:9; 
+      z-index:9;
       overflow-x: ${$q.screen.lt.lg ? 'auto' : 'unset'}
       `"
     class="gap-lg-1 gap-md-8 gap-xs-6 bg-background-color"
@@ -18,7 +18,7 @@
       :key="index"
       @click="tabClickHandler(el.routeName)"
       :class="
-        $route.name === el.routeName
+      $router.isIncludesRouteName([el.routeName])
           ? 'bg-secondary text-on-secondary'
           : $q.screen.lt.lg
           ? 'bordered text-on-background-color'

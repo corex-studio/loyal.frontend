@@ -30,7 +30,7 @@
               <GroupButton
                 :key="key"
                 :item="el"
-                :is-selected="$store.visibleMenuGroupId === el.id"
+                :is-selected="fictiveUrlStore.visibleMenuGroupId === el.id"
               />
             </div>
           </div>
@@ -52,11 +52,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import GroupButton from './GroupButton.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { dragscroll } from 'vue-dragscroll'
 import { store } from 'src/models/store'
 import { debounce } from 'quasar'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const vDragscroll = dragscroll
 
@@ -66,6 +67,8 @@ const route = useRoute()
 const groupButtons = ref<HTMLDivElement[]>([])
 const scrollArea = ref<HTMLDivElement>()
 const offsetForScroll = ref(0)
+const fictiveUrlStore = useFictiveUrlStore()
+const router = useRouter()
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
@@ -73,7 +76,7 @@ const categories = computed(() => {
 
 const selectedIndex = computed(() => {
   return (
-    categories.value?.findIndex((v) => v.id === store.visibleMenuGroupId) ?? -1
+    categories.value?.findIndex((v) => v.id === fictiveUrlStore.visibleMenuGroupId) ?? -1
   )
 })
 
@@ -94,8 +97,8 @@ const scrollToSelectedIndex = debounce(_scrollToSelectedIndex, 150)
 
 watch(
   () => route.name,
-  (v) => {
-    if (v === 'home' || v === 'qrHome') {
+  () => {
+    if (router.isIncludesRouteName(['home', 'qrHome'])) {
       key.value++
     }
   },

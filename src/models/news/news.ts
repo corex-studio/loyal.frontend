@@ -14,6 +14,7 @@ export type NewsFilters = {
 
 export type NewsRaw = {
   uuid?: string
+  alias?: string | null
   title: string
   image?: ImageRaw
   images?: ImageRaw[]
@@ -36,6 +37,7 @@ export type NewsRaw = {
 
 export class News implements BaseModel {
   id: string
+  alias: string | null
   title: string
   image?: ImageRaw
   images: ImageRaw[]
@@ -57,6 +59,7 @@ export class News implements BaseModel {
 
   constructor(raw: NewsRaw) {
     this.id = raw.uuid || ''
+    this.alias = raw.alias || null
     this.title = raw.title
     this.image = raw.image
     this.images = raw.images || []

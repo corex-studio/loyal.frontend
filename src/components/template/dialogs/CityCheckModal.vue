@@ -37,7 +37,7 @@ import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CButton from '../buttons/CButton.vue'
 import CDialog from './CDialog.vue'
 import { AppManager } from 'src/models/utils/appManager'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 
 defineProps<{
@@ -49,18 +49,22 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
 
 const confirmSuggestedCity = async () => {
   if (!companyGroupRepo.item) return
+  const currentCity = companyGroupRepo.item.cityData.current
   localStorage.setItem(
     'city',
-    companyGroupRepo.item.cityData.current?.uuid || '',
+    currentCity?.uuid || '',
+  )
+  localStorage.setItem(
+    'cityAlias',
+    currentCity?.alias || currentCity?.uuid  || '',
   )
   emit('update:modelValue', false)
+  await router.replaceToWithCityPage()
   await reRequest()
-  // void router.push({
-  //   path: `/${companyGroupRepo.item.cityData.current?.uuid}`,
-  // })
 }
 
 const rejectSuggestedCity = () => {

@@ -6,6 +6,7 @@ import { menuRepo } from '../menuRepo'
 
 export type MenuItemRaw = {
   uuid: string
+  alias: string | null
   menu: string
   name: string | null
   product: ProductRaw | string | null
@@ -23,6 +24,7 @@ export type MenuItemRaw = {
 
 export class MenuItem implements BaseModel {
   id: string
+  alias: string | null
   menu: string
   name: string | null
   product: Product | string | null
@@ -39,6 +41,7 @@ export class MenuItem implements BaseModel {
 
   constructor(raw: MenuItemRaw) {
     this.id = raw.uuid
+    this.alias = raw.alias
     this.menu = raw.menu
     this.name = raw.name
     this.product =

@@ -216,7 +216,7 @@ const openMenuItem = async () => {
   metrika.hit(route.fullPath)
   store.openMenuItemModal(props.item)
   store.menuItemImage = props.item.image
-  await menuItemRepo.retrieve(props.item.id, {
+  await menuItemRepo.retrieve(props.item.alias || props.item.id, {
     sales_point: salesPointRepo.item?.id,
   })
   await menuRulesForAddingRepo.list({

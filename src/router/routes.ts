@@ -1,8 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import {
-  arrangementRoutes,
-  arrangementRoutesInQrMenu,
-} from 'src/router/arrangementRoutes'
+import { mainRoutes, mainRoutesWithCity } from 'src/router/mainRoutes'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -11,71 +8,9 @@ const routes: RouteRecordRaw[] = [
     component: () => import('src/pages/SuccessfulPayment.vue'),
   },
   {
-    // path: '/:cityUUID?',
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        name: 'home',
-        component: () => import('src/pages/home/Home.vue'),
-      },
-      {
-        path: 'profile',
-        name: 'profilePage',
-        redirect: {
-          name: 'profileData',
-        },
-        children: [
-          {
-            path: 'data',
-            name: 'profileData',
-            component: () => import('src/pages/profile/ProfileData.vue'),
-          },
-          {
-            path: 'orders',
-            name: 'ordersHistory',
-            component: () =>
-              import('src/pages/profile/ProfileOrdersHistory.vue'),
-          },
-          // {
-          //   path: 'cards',
-          //   name: 'profileCards',
-          //   component: () => import('src/pages/profile/ProfileMyCards.vue'),
-          // },
-          {
-            path: 'addresses',
-            name: 'profileAddresses',
-            component: () =>
-              import('src/pages/profile/ProfileDeliveryAddresses.vue'),
-          },
-        ],
-        component: () => import('src/pages/profile/ProfilePage.vue'),
-      },
-      {
-        path: 'about',
-        name: 'aboutUs',
-        component: () => import('src/pages/profile/ProfileAboutUs.vue'),
-        // meta: {
-        //   title: 'О нас',
-        //   description: 'Страница с данными о компании',
-        //   keywords: '',
-        // },
-      },
-      {
-        path: 'news/:newsId',
-        name: 'newsPage',
-        component: () => import('src/pages/news/NewsPage.vue'),
-      },
-
-      {
-        path: 'my_qr',
-        name: 'myQrPage',
-        component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue'),
-      },
-      ...arrangementRoutes,
-      ...arrangementRoutesInQrMenu,
-    ],
+    children: [...mainRoutes, ...mainRoutesWithCity],
   },
   {
     path: '/qr_menu/:padId?',

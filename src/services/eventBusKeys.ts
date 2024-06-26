@@ -7,3 +7,6 @@ export const selectCompanyKey: EventBusKey<{ company: Company }> =
 
 export const orderUpdatedKey: EventBusKey<{ order: Order }> =
   Symbol('orderUpdatedKey')
+
+export const onCloseProductModalKey: EventBusKey<{ order: Order }> =
+  Symbol('onCloseProductModalKey')

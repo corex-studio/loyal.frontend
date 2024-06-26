@@ -7,33 +7,49 @@ import { onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRoute, useRouter } from 'vue-router'
 import { getYandexMetrikaDefaultConfig } from 'src/services/yandexMetrikaConfig'
-import { updateYandexMerikaByConfig } from 'yandex-metrika-vue3'
-import { useYandexMetrika } from 'yandex-metrika-vue3'
-import { store } from './models/store'
+import {
+  updateYandexMerikaByConfig,
+  useYandexMetrika,
+} from 'yandex-metrika-vue3'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const metrika = useYandexMetrika()
+const fictiveUrlStore = useFictiveUrlStore()
+const router = useRouter()
+const route = useRoute()
 
 const storeInitialProduct = () => {
-  if (window.location.href.includes('product/')) {
-    const regex = /\/product\/(\w+-\w+-\w+-\w+-\w+)/
-    const match = window.location.href.match(regex)
-    if (match && match[1]) {
-      store.initialMenuItem = match[1]
-    }
+  const url = window.location.href
+  const res = fictiveUrlStore.extractIdsFromUrl(url)
+  fictiveUrlStore.initialMenuItem = res.productId
+  fictiveUrlStore.initialMenuGroupItem = res.categoryId
+}
+
+const handleInitialNews = () => {
+  const url = window.location.href
+  const res = fictiveUrlStore.extractIdsFromUrl(url)
+  if (res.newsId) {
+    fictiveUrlStore.currentNewsItem = res.newsId
   }
 }
 
 onMounted(() => {
   storeInitialProduct()
+  handleInitialNews()
   const platformIs = useQuasar().platform.is
-  if (platformIs.safari || platformIs.ios || platformIs.iphone || platformIs.ipad || platformIs.ipod) {
+  if (
+    platformIs.safari ||
+    platformIs.ios ||
+    platformIs.iphone ||
+    platformIs.ipad ||
+    platformIs.ipod
+  ) {
     document.body.classList.add('safari')
   }
   initMetrika()
+
 })
 
-const router = useRouter()
-const route = useRoute()
 let interval: NodeJS.Timeout
 
 const initMetrika = () => {
