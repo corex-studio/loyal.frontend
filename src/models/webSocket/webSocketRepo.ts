@@ -1,7 +1,7 @@
 import { waiterCallRepo } from './../customer/waiterCall/waiterCallRepo'
 import {
   WaiterCall,
-  WaiterCallRaw,
+  WaiterCallRaw
 } from 'src/models/customer/waiterCall/waiterCall'
 import { orderRepo } from './../order/orderRepo'
 import { Customer, CustomerRaw } from './../customer/customer'
@@ -13,6 +13,7 @@ import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
 import { orderReviewRepo } from '../order/orderReview/orderReviewRepo'
 import { notifier } from 'src/services/notifier'
+import { store } from 'src/models/store'
 
 export type WebSocketMessage = {
   type:
@@ -35,6 +36,9 @@ export const handleMessage = (v: MessageEvent<string>) => {
     })
     cartRepo.loading = false
     cartRepo.setParamsLoading = false
+    if (store.cartDrawer) {
+      void cartRepo.getUpsales()
+    }
   }
   if (response.type === 'user.updated') {
     authentication.user = new Customer(response.data as CustomerRaw)

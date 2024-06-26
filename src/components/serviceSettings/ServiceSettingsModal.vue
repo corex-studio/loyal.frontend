@@ -1,13 +1,13 @@
 <template>
   <CDialog
+    :height="modalHeight"
+    :hide-close="$q.screen.lt.md"
+    :maximize="$q.screen.lt.lg"
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
     :width="modalWidth"
     no-padding
-    :height="modalHeight"
-    :maximize="$q.screen.lt.lg"
-    :hide-close="$q.screen.lt.md"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <template v-if="!newAddressMode">
       <div
@@ -39,11 +39,11 @@
                   bookingMode === 'tableDetail' ||
                   bookingMode === 'successBooked'
                 "
-                @click="navigationButtonClickHandler()"
-                name="fa-regular fa-angle-left"
-                hover-color="primary"
                 class="cursor-pointer"
+                hover-color="primary"
+                name="fa-regular fa-angle-left"
                 size="24px"
+                @click="navigationButtonClickHandler()"
               />
             </template>
           </ServiceModalHeader>
@@ -51,86 +51,86 @@
             v-if="
               $companyGroup.item && $companyGroup.item?.companies.length > 1
             "
-            @click="changeCompany"
-            text-button
-            label="Выбрать другое заведение"
             class="mt-4 body"
-            text-color="secondary-text"
+            label="Выбрать другое заведение"
             style="width: fit-content"
+            text-button
+            text-color="secondary-text"
+            @click="changeCompany"
           />
           <ServiceSettingsTabPicker
+            :model-value="currentTab || undefined"
+            :tabs="availableCartTypes"
             class="mt-12 mb-13"
             @update-tab="currentTab = $event"
-            :tabs="availableCartTypes"
-            :model-value="currentTab || undefined"
           />
           <div>
             <DeliveryAddressesTab
               v-if="currentTab?.type === CartType.DELIVERY"
               :current-address="selectedDeliveryAddress"
-              @select="selectedDeliveryAddress = $event"
               @edit="editAddressHandler($event)"
+              @select="selectedDeliveryAddress = $event"
             >
               <template v-slot:bottom>
                 <div class="row full-width gap-6">
                   <CButton
-                    @click="confirmSelectedAddress()"
-                    height="48px"
-                    label="Выбрать"
                     :disabled="!selectedDeliveryAddress"
                     :loading="$cart.setParamsLoading || $store.catalogLoading"
                     class="col body"
+                    height="48px"
+                    label="Выбрать"
+                    @click="confirmSelectedAddress()"
                   />
                   <CButton
-                    @click="addAddressHandler()"
-                    label="Добавить адрес"
-                    height="48px"
-                    color="secondary-button-color"
                     class="col body"
+                    color="secondary-button-color"
+                    height="48px"
+                    label="Добавить адрес"
                     text-color="on-secondary-button-color"
+                    @click="addAddressHandler()"
                   />
                 </div>
               </template>
             </DeliveryAddressesTab>
             <PickupAddressesTab
               v-if="currentTab?.type === CartType.PICKUP"
-              @select="selectedPickupAddress = $event"
               :current-point="selectedPickupAddress"
+              @select="selectedPickupAddress = $event"
             >
               <template v-slot:bottom>
                 <CButton
-                  @click="confirmSelectedAddress()"
-                  height="48px"
-                  width="100%"
                   :loading="$cart.setParamsLoading || $store.catalogLoading"
                   class="body"
+                  height="48px"
                   label="Заберу здесь"
+                  width="100%"
+                  @click="confirmSelectedAddress()"
                 />
               </template>
             </PickupAddressesTab>
             <template v-if="currentTab?.type === CartType.BOOKING">
               <BookingAddressesTab
                 v-if="bookingMode === 'bookingList'"
-                @select="selectedSalesPoint = $event"
                 :current-point="selectedSalesPoint"
+                @select="selectedSalesPoint = $event"
               >
                 <template v-slot:bottom>
                   <CButton
-                    @click="bookingMode = 'bookingInfo'"
-                    height="48px"
                     :disabled="!selectedSalesPoint"
-                    width="100%"
                     class="body"
+                    height="48px"
                     label="Выбрать"
+                    width="100%"
+                    @click="bookingMode = 'bookingInfo'"
                   />
                 </template>
               </BookingAddressesTab>
               <BookingInfo
                 v-if="bookingMode != 'bookingList'"
-                :sales-point="selectedSalesPoint"
                 :current-mode="bookingMode"
-                @change-booking-mode="bookingMode = $event"
+                :sales-point="selectedSalesPoint"
                 @close="$emit('update:modelValue', false)"
+                @change-booking-mode="bookingMode = $event"
               />
             </template>
             <DeliveryAggregatorTab
@@ -150,8 +150,8 @@
               (currentTab?.type === CartType.BOOKING &&
                 bookingMode === 'bookingList'))
           "
-          :selected-point="selectedPickupAddress"
           :addresses="currentSalesPoints || []"
+          :selected-point="selectedPickupAddress"
           @select="
             currentTab?.type === CartType.DELIVERY
               ? (selectedSalesPoint = $event)
@@ -167,8 +167,8 @@
               (currentTab?.type === CartType.BOOKING &&
                 bookingMode === 'bookingList'))
           "
-          :selected-point="selectedPickupAddress"
           :addresses="currentSalesPoints || []"
+          :selected-point="selectedPickupAddress"
           @select="
             currentTab?.type === CartType.DELIVERY
               ? (selectedSalesPoint = $event)
@@ -177,75 +177,75 @@
         />
         <DeliveryTypeSelector
           v-if="!mobileViewTypeConfirmed"
+          :current-tab="currentTab"
+          :types="availableCartTypes"
           @confirm="mobileViewTypeConfirmed = true"
           @select="currentTab = $event"
-          :types="availableCartTypes"
-          :current-tab="currentTab"
         />
         <template v-else>
           <DeliveryAddressesTab
             v-if="currentTab?.type === CartType.DELIVERY"
             :current-address="selectedDeliveryAddress"
             @back="mobileViewTypeConfirmed = false"
-            @select="selectedDeliveryAddress = $event"
             @edit="editAddressHandler($event)"
+            @select="selectedDeliveryAddress = $event"
             @add-address="addAddressHandler()"
           >
             <template v-slot:bottom>
               <div class="row full-width gap-6">
                 <CButton
-                  @click="confirmSelectedAddress()"
-                  :height="$q.screen.lt.md ? '40px' : '48px'"
-                  label="Выбрать"
                   :disabled="!selectedDeliveryAddress"
+                  :height="$q.screen.lt.md ? '40px' : '48px'"
                   :loading="$cart.setParamsLoading || $store.catalogLoading"
                   class="col body"
+                  label="Выбрать"
+                  @click="confirmSelectedAddress()"
                 />
               </div>
             </template>
           </DeliveryAddressesTab>
           <PickupAddressesTab
             v-if="currentTab?.type === CartType.PICKUP"
-            @select="selectedPickupAddress = $event"
-            @back="mobileViewTypeConfirmed = false"
             :current-point="selectedPickupAddress"
+            @back="mobileViewTypeConfirmed = false"
+            @select="selectedPickupAddress = $event"
           >
             <template v-slot:bottom>
               <CButton
-                @click="confirmSelectedAddress()"
                 :height="$q.screen.lt.md ? '40px' : '48px'"
-                width="100%"
                 :loading="$cart.setParamsLoading || $store.catalogLoading"
                 class="subtitle-text"
                 label="Заберу здесь"
+                width="100%"
+                @click="confirmSelectedAddress()"
               />
             </template>
           </PickupAddressesTab>
           <template v-if="currentTab?.type === CartType.BOOKING">
             <BookingAddressesTab
               v-if="bookingMode === 'bookingList'"
-              @select="selectedSalesPoint = $event"
-              @back="mobileViewTypeConfirmed = false"
               :current-point="selectedSalesPoint"
+              @back="mobileViewTypeConfirmed = false"
+              @select="selectedSalesPoint = $event"
             >
               <template v-slot:bottom>
                 <CButton
-                  @click="bookingMode = 'bookingInfo'"
-                  :height="$q.screen.lt.md ? '40px' : '48px'"
                   :disabled="!selectedSalesPoint"
-                  width="100%"
+                  :height="$q.screen.lt.md ? '40px' : '48px'"
                   class="subtitle-text col-6"
                   label="Выбрать"
+                  width="100%"
+                  @click="bookingMode = 'bookingInfo'"
                 />
               </template>
             </BookingAddressesTab>
             <BookingInfo
               v-if="bookingMode != 'bookingList'"
-              :sales-point="selectedSalesPoint"
               :current-mode="bookingMode"
-              @change-booking-mode="bookingMode = $event"
-              @close="$emit('update:modelValue', false)"
+              :sales-point="selectedSalesPoint"
               @back="navigationButtonClickHandler()"
+              @close="$emit('update:modelValue', false)"
+              @change-booking-mode="bookingMode = $event"
             />
           </template>
           <DeliveryAggregatorTab
@@ -263,10 +263,10 @@
     </template>
     <template v-else>
       <CreateDeliveryAddress
-        :back-callback="() => (newAddressMode = false)"
-        @updated="deliveryAddressCreateHandler()"
-        @created="deliveryAddressCreateHandler($event)"
         :address="deliveryAddressToEdit || undefined"
+        :back-callback="() => (newAddressMode = false)"
+        @created="deliveryAddressCreateHandler($event)"
+        @updated="deliveryAddressCreateHandler()"
       />
     </template>
   </CDialog>
@@ -353,20 +353,20 @@ const modalWidth = computed(() => {
     : newAddressMode.value
       ? '1094px'
       : currentTab.value?.type === CartType.PICKUP ||
-          (currentTab.value?.type === CartType.BOOKING &&
-            bookingMode.value === 'bookingList')
+      (currentTab.value?.type === CartType.BOOKING &&
+        bookingMode.value === 'bookingList')
         ? '1300px'
         : '649px'
 })
 
 const modalHeight = computed(() => {
   return q.screen.lt.md &&
-    ((currentTab.value?.type === CartType.PICKUP &&
+  ((currentTab.value?.type === CartType.PICKUP &&
       mobileViewTypeConfirmed.value) ||
-      (currentTab.value?.type === CartType.BOOKING &&
-        mobileViewTypeConfirmed.value &&
-        bookingMode.value === 'bookingList') ||
-      newAddressMode.value)
+    (currentTab.value?.type === CartType.BOOKING &&
+      mobileViewTypeConfirmed.value &&
+      bookingMode.value === 'bookingList') ||
+    newAddressMode.value)
     ? '100vh'
     : 'unset'
 })
@@ -518,7 +518,7 @@ const openPreviousMenuItem = () => {
     menuRepo.item?.allMenuItems?.map((v) => v.id).includes(store.storedMenuItem)
   ) {
     void menuItemRepo.retrieve(store.storedMenuItem)
-    store.openMenuItemModal()
+    store.openMenuItemModal(store.storedMenuItem)
     store.storedMenuItem = null
   }
 }
