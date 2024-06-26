@@ -100,7 +100,7 @@
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
           style="max-width: 336px"
         >
-          <TopHeaderSocials icon-size="24px" />
+          <TopHeaderSocials icon-size="24px"/>
           <div
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
@@ -149,8 +149,8 @@
             <div class="subtitle-text bold">
               {{
                 $company.item?.salesPoints?.length > 1
-                  ? 'Адреса заведений в Калининграде'
-                  : 'Адрес заведения в Калининграде'
+                  ? 'Адреса заведений'
+                  : 'Адрес заведения'
               }}
             </div>
             <div
@@ -290,8 +290,8 @@
             <div class="subtitle-text bold">
               {{
                 $company.item?.salesPoints?.length > 1
-                  ? 'Адреса заведений в Калининграде'
-                  : 'Адрес заведения в Калининграде'
+                  ? 'Адреса заведений'
+                  : 'Адрес заведения'
               }}
             </div>
             <div
@@ -322,7 +322,7 @@
       >
         <div class="body">
           Скачайте наше
-          <br />Удобное приложение
+          <br/>Удобное приложение
         </div>
         <div class="row gap-10">
           <div
@@ -370,10 +370,10 @@
 
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
-import { store } from 'src/models/store'
-import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import {store} from 'src/models/store'
+import {uiSettingsRepo} from 'src/models/uiSettings/uiSettingsRepo'
+import {computed} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import TopHeaderSocials from 'layouts/header/TopHeaderSocials.vue'
 import CustomIcon from 'src/components/icons/CustomIcon.vue'
 
@@ -389,29 +389,29 @@ const infoBlocks = computed(() => {
       label: 'Акции и новости',
       click: () => {
         scrollToBlock('offers')
-      },
+      }
     },
     {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
-      },
+      }
     },
     {
       label: 'О заведении',
       click: () => {
         router.push({
-          name: 'aboutUs',
+          name: 'aboutUs'
         })
-      },
+      }
     },
     {
       label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
       hidden: !uiSettingsRepo.item?.becomeFranchisee,
       click: () => {
         window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
-      },
-    },
+      }
+    }
   ]
 })
 
@@ -422,7 +422,7 @@ const currentHost = computed(() => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (router.isIncludesRouteName(['home'])) {
     void router.push({
-      name: 'home',
+      name: 'home'
     })
     setTimeout(() => {
       scrollToBlock(v, tab)
@@ -432,7 +432,7 @@ const scrollToBlock = (v: string, tab?: string) => {
     if (groupElement) {
       if (tab) store.offersTab = tab
       const y = groupElement.getBoundingClientRect().top + window.scrollY - 120
-      window.scrollTo({ top: y, behavior: 'smooth' })
+      window.scrollTo({top: y, behavior: 'smooth'})
     }
   }
 }
@@ -446,6 +446,6 @@ const openLink = (link: string) => {
 .app-link-block {
   height: 44px;
   width: 134px;
-  background-color: #3b3b3b65;
+  background-color: #3b3b3bb8
 }
 </style>

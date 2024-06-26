@@ -25,12 +25,12 @@
             <div class="body bold">{{ el.label }}</div>
           </CButton>
         </div>
-        <ContactsHeader class="col ml-10" />
+        <ContactsHeader class="col ml-10"/>
       </div>
       <!--      <TopHeaderDeliveryInfo />-->
-      <TopHeaderSocials header-mode />
+      <TopHeaderSocials header-mode/>
     </div>
-    <q-separator color="divider-color" />
+    <q-separator color="divider-color"/>
   </div>
 </template>
 <script lang="ts" setup>
@@ -39,9 +39,10 @@ import { store } from 'src/models/store'
 import { computed, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from './TopHeaderSocials.vue'
-import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
-import { companyRepo } from 'src/models/company/companyRepo'
+import {appSettingsRepo} from 'src/models/appSettings/appSettingsRepo'
+import {companyRepo} from 'src/models/company/companyRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
+import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo';
 
 const router = useRouter()
 const route = useRoute()
@@ -67,7 +68,7 @@ const blocks = computed(() => {
       },
     },
     {
-      label: 'Мобильное приложение',
+      label: companyGroupRepo.item?.externalId === 'ThreePizzas' ? 'Скачать мобильное приложение' : 'Мобильное приложение',
       visible:
         appSettingsRepo.linksData &&
         (appSettingsRepo.linksData.app_redirect_link ||

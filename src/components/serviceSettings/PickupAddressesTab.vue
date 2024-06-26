@@ -78,6 +78,6 @@ const availablePickupAddresses = computed(() => {
 const getBorderColor = (el: SalesPoint) => {
   return props.currentPoint?.id === el.id
     ? '#' + uiSettingsRepo.item?.primaryColor.color
-    : '#' + uiSettingsRepo.item?.secondaryColor.color
+    : '#' + uiSettingsRepo.item?.dividerColor.color
 }
 </script>

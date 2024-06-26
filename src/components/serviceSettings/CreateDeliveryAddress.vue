@@ -136,11 +136,12 @@ import { useQuasar } from 'quasar'
 import { Address } from 'src/models/types'
 import CIcon from '../template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import L, { Layer } from 'leaflet'
+import L, { LatLng, Layer } from 'leaflet'
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import { useGeolocation } from '@vueuse/core'
 import { utilsRepo } from 'src/models/utils/utilsRepo'
 import { notifier } from 'src/services/notifier'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const props = defineProps<{
   address?: DeliveryAddress
@@ -148,7 +149,7 @@ const props = defineProps<{
 }>()
 
 // const { coords, resume, pause } = useGeolocation()
-const geolocation = useGeolocation()
+const geolocation = useGeolocation({ immediate: false })
 const preventGeolocationErrorNotify = ref(false)
 const currentCoords = ref<{
   lat: number
@@ -284,7 +285,9 @@ const drawPoint = (zoom?: number) => {
 // })
 
 onMounted(() => {
-  requestGeolocation(true)
+  if (!props.address) {
+    requestGeolocation(true)
+  }
   newAddress.value = new DeliveryAddress({
     uuid: props.address?.id || undefined,
     name: props.address?.name || null,
@@ -302,6 +305,13 @@ onMounted(() => {
   setTimeout(() => {
     map = new CorexLeafletMap()
     if (!map) return
+    if (!props.address) {
+      const city = companyGroupRepo.item?.cityData.current
+      if (city?.coords?.length) {
+        const cityCoords = new LatLng(city.coords[1], city.coords[0])
+        map.lmap.flyTo(cityCoords, 12, { duration: 0.1 })
+      }
+    }
     map.lmap.addLayer(drawnItems)
     // if (!props.address) void geolocate()
     drawPoint(13)
