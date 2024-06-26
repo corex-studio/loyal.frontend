@@ -1,13 +1,6 @@
 import { CartItem } from './cartItem/cartItem'
-import { OrderRaw, Order, PaymentObjectType } from './../order/order'
-import {
-  Cart,
-  CartParams,
-  CartRaw,
-  AvailableHours,
-  CartType,
-  CalculationStatus
-} from './cart'
+import { Order, OrderRaw, PaymentObjectType } from './../order/order'
+import { AvailableHours, CalculationStatus, Cart, CartParams, CartRaw, CartType } from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { cartApi } from './cartApi'
 import { reactive } from 'vue'
@@ -104,14 +97,13 @@ export class CartRepo extends BaseRepo<Cart> {
   }
 
   async getAvailableHours(salesPointId?: string): Promise<AvailableHours> {
-    const res: AvailableHours = await this.api.send({
+    return await this.api.send({
       method: 'GET',
       action: 'get_available_hours',
       params: {
         sales_point: salesPointId
       }
     })
-    return res
   }
 
   async arrange(data: Record<string, any>): Promise<Order> {
