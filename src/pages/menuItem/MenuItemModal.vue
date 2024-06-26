@@ -232,7 +232,6 @@ import {
   ecommerceAdd,
   ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
-import {useRoute} from 'vue-router'
 import { CalculationStatus } from 'src/models/carts/cart'
 import { notifier } from 'src/services/notifier'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
@@ -248,7 +247,6 @@ const emit = defineEmits<{
 const fictiveUrlStore = useFictiveUrlStore()
 const isDeadErr = ref(false)
 const isNotInMenuErr = ref(false)
-const route = useRoute()
 const touchSpot = ref<HTMLDivElement>()
 const currentSize = ref<ItemSize | null>(null)
 const quantity = ref(1)
@@ -361,7 +359,7 @@ const isAddToCardDisabled = computed(() => {
 })
 
 const addToCart = async () => {
-  if (Screen.lt.md) {
+  if (q.screen.lt.md) {
     if (menuItemRepo.item?.isDead) {
       isDeadErr.value = true
       return
