@@ -8,6 +8,19 @@ import { ImageRaw } from '../image/image'
 import { MenuModifierGroupRaw } from '../menu/menuModifierGroup/menuModifierGroup'
 import { CartType } from 'src/models/carts/cart'
 
+export enum OrderSystemSource {
+  WEBSITE = 'website',
+  QR_MENU = 'qr_menu',
+  APP = 'app',
+  BLANK = 'blank',
+}
+
+export enum OrderPaymentService {
+  WEB_FORM = 'web_form',
+  SBP = 'sbp',
+  CARD = 'card',
+}
+
 export type PaymentObjectType = {
   label: string
   type: PaymentType

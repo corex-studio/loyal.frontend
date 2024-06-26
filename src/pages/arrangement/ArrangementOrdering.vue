@@ -543,7 +543,7 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { Order, PaymentObjectType, PaymentType } from 'src/models/order/order'
+import { Order, PaymentType } from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
@@ -661,30 +661,7 @@ const availableTimes = computed(() => {
 })
 
 const paymentTypes = computed(() => {
-  const result: PaymentObjectType[] = []
-  if (salesPointRepo.paymentSettings?.online_payment_enabled)
-    result.push({
-      label: 'Онлайн',
-      type: PaymentType.ONLINE,
-      class: 'bg-online-button-color text-on-online-button-color',
-      icon: 'fa-light fa-ruble-sign',
-    })
-  if (salesPointRepo.paymentSettings?.card_enabled)
-    result.push({
-      label: 'Картой при получении',
-      type: PaymentType.CARD,
-      class: 'bg-card-button-color text-on-card-button-color',
-      icon: 'fa-light fa-credit-card',
-    })
-  if (salesPointRepo.paymentSettings?.cash_enabled)
-    result.push({
-      label: 'Наличными при получении',
-      type: PaymentType.CASH,
-      class: 'bg-cash-button-color text-on-cash-button-color',
-      icon: 'fa-light fa-money-bill',
-    })
-
-  return result
+  return salesPointRepo.paymentTypes
 })
 
 watch(

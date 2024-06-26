@@ -43,7 +43,7 @@ import { ref, watch } from 'vue'
 const props = defineProps<{
   modelValue: boolean
   types: PaymentObjectType[]
-  currentType: PaymentObjectType | null
+  currentType?: PaymentObjectType | null
 }>()
 
 const emit = defineEmits<{
@@ -58,6 +58,7 @@ watch(
   (v) => {
     if (v) {
       if (props.currentType) selectedPaymentType.value = props.currentType
+      else selectedPaymentType.value = null
     }
   },
 )
