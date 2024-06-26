@@ -1,6 +1,6 @@
 <template>
   <div class="mt-15">
-    <div class="header3 bold">Также заказывают</div>
+    <div class="header3 bold">Рекомендуем к заказу</div>
     <div
       class="mt-8"
       :style="`width:${$q.screen.lt.lg ? $q.screen.width - ($q.screen.lt.lg ? ($q.screen.md ? 64 : 38) : 64) : 516}px`"
@@ -27,15 +27,32 @@
               <div style="min-height: 40px" class="ellipsis-2-lines">
                 {{ item.name }}
               </div>
-              <div class="row gap-2">
-                <div class="bold">
-                  {{ beautifyNumber(item.sizes[0].price || 0) }}
+              <div class="row gap-3" v-if="item.sizes[0].specialPrice !== null">
+                <div class="row gap-2 bold text-primary">
+                  <div class="bold">
+                    {{ beautifyNumber(item.sizes[0].specialPrice || 0) }}
+                  </div>
+                  <div class="bold" itemprop="priceCurrency">₽</div>
                 </div>
-                <div itemprop="priceCurrency" class="bold">₽</div>
+                <div class="row gap-2 ml-2 items-center caption-text text-strike text-secondary">
+                  <div class="bold">{{ beautifyNumber(item.sizes[0].price || 0) }}</div>
+                  <div class="bold" itemprop="priceCurrency">₽</div>
+                </div>
+
+              </div>
+              <div class="row gap-3" v-else>
+                <div class="bold text-primary row items-center" v-if="item.sizes[0].specialPrice !== null">
+                  {{ beautifyNumber(item.sizes[0].specialPrice || 0) }}
+                </div>
+                <div class="bold row">
+                  {{ beautifyNumber(item.sizes[0].price || 0) }}
+                  ₽
+                </div>
               </div>
             </div>
           </div>
-        </template></SwiperContainer
+        </template>
+      </SwiperContainer
       >
     </div>
   </div>
@@ -54,7 +71,7 @@ defineProps<{
 const openItemModal = async (menuItemId: string | null) => {
   store.openMenuItemModal()
   await menuItemRepo.retrieve(menuItemId || '', {
-    sales_point: salesPointRepo.item?.id,
+    sales_point: salesPointRepo.item?.id
   })
 }
 </script>
