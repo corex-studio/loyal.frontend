@@ -61,7 +61,7 @@
       <div v-else class="subtitle-text mb-xs-6 mb-md-0">
         У вас нет адресов доставки
       </div>
-      <div v-if="$q.screen.lt.md && !selectionOnly">
+      <div v-if="$q.screen.lt.md && !selectionOnly" class="mt-5">
         <CButton
           @click="$emit('addAddress')"
           label="Добавить новый адрес"
