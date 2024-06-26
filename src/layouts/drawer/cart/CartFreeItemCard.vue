@@ -1,25 +1,25 @@
 <template>
   <div
-    style="height: 100%; overflow: overlay; overflow-x: hidden"
-    class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
-    @click="openFreeItem()"
     :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
+    class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
+    style="height: 100%; overflow: overlay; overflow-x: hidden"
+    @click="openFreeItem()"
   >
     <q-img
-      height="100%"
-      :src="item.menuItem.image?.thumbnail || $store.images.empty"
-      fit="cover"
-      class="border-radius"
       :class="{ dimmed: item.menuItem.isDead }"
       :ratio="1"
+      :src="item.menuItem.image?.thumbnail || $store.images.empty"
+      class="border-radius"
+      fit="cover"
+      height="100%"
     >
       <template v-slot:error>
         <span>
           <q-img
             :ratio="1"
+            :src="$store.images.empty"
             fit="cover"
             height="100%"
-            :src="$store.images.empty"
           ></q-img>
         </span>
       </template>
@@ -50,7 +50,7 @@ const props = defineProps<{
 }>()
 
 const openFreeItem = async () => {
-  store.openMenuItemModal()
+  store.openMenuItemModal(props.item.menuItem)
   store.freeItem = props.item.uuid
   await menuItemRepo.retrieve(props.item.menuItem.id || '', {
     sales_point: salesPointRepo.item?.id,

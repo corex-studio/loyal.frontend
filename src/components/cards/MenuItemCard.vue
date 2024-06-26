@@ -1,15 +1,16 @@
 <template>
   <div
-    style="height: 100%; overflow: overlay; overflow-x: hidden"
     v-intersection="onIntersection"
-    class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
-    @click="openMenuItem()"
     :class="{ 'bordered-item': $uiSettings.item?.showMenuItemBorder }"
+    class="border-radius column no-wrap cursor-pointer relative-position bg-product-tile-color"
     itemscope
     itemtype="https://schema.org/Product"
+    style="height: 100%; overflow: overlay; overflow-x: hidden"
+    @click="openMenuItem()"
   >
     <div
       v-if="$cart.isItemInCart(item.id)?.quantity"
+      class="bg-primary row justify-center items-center"
       style="
         width: 36px;
         height: 36px;
@@ -19,9 +20,8 @@
         right: 5px;
         z-index: 9;
       "
-      class="bg-primary row justify-center items-center"
     >
-      <CIcon name="fa-solid fa-cart-shopping" color="on-primary" size="16px"/>
+      <CIcon color="on-primary" name="fa-solid fa-cart-shopping" size="16px"/>
     </div>
     <q-chip
       v-if="false"
@@ -33,20 +33,20 @@
     >
 
     <q-img
-      :src="item.image?.thumbnail || $store.images.empty"
-      fit="cover"
-      class="border-radius"
-      :ratio="1"
       :alt="item.name || 'Продукт'"
+      :ratio="1"
+      :src="item.image?.thumbnail || $store.images.empty"
+      class="border-radius"
+      fit="cover"
       itemprop="image"
     >
       <template v-slot:error>
         <span>
           <q-img
             :ratio="1"
+            :src="$store.images.empty"
             fit="cover"
             height="100%"
-            :src="$store.images.empty"
           ></q-img>
         </span>
       </template>
@@ -56,16 +56,16 @@
     >
       <div class="column no-wrap mb-md-0 mb-xs-8">
         <div class="row full-width no-wrap gap-6">
-          <div itemprop="name" class="header3 bold">
+          <div class="header3 bold" itemprop="name">
             {{ item.name }}
           </div>
         </div>
         <div
           v-if="item.description"
-          style="opacity: 0.6"
           :class="$q.screen.lt.md ? 'ellipsis' : 'ellipsis-2-lines'"
           class="mt-3 body"
           itemprop="description"
+          style="opacity: 0.6"
         >
           {{ item.description }}
         </div>
@@ -86,14 +86,14 @@
         <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
             v-if="$companyGroup.item?.externalId !== 'Krendel'"
-            @click.capture.stop="toCartClickHandler()"
             :color="item.isDead ? 'secondary' : 'primary'"
+            :loading="loading"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
             :text-color="item.isDead ? 'on-secondary' : 'on-primary'"
-            height="40px"
-            class="body"
-            :loading="loading"
             :width="$q.screen.lt.md ? '100%' : undefined"
+            class="body"
+            height="40px"
+            @click.capture.stop="toCartClickHandler()"
           >
             <div :class="{ bold: $q.screen.lt.md }">
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
@@ -105,14 +105,14 @@
           </CButton>
           <CButton
             v-else
-            @click.capture.stop="toCartClickHandler()"
             :color="item.isDead ? 'secondary' : 'accent'"
+            :loading="loading"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
             :text-color="item.isDead ? 'on-secondary' : 'on-accent'"
-            height="40px"
-            class="body"
-            :loading="loading"
             :width="$q.screen.lt.md ? '100%' : undefined"
+            class="body"
+            height="40px"
+            @click.capture.stop="toCartClickHandler()"
           >
             <div :class="{ bold: $q.screen.lt.md }">
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
@@ -131,30 +131,28 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {MenuItem} from 'src/models/menu/menuItem/menuItem'
-import {store} from 'src/models/store'
+import { MenuItem } from 'src/models/menu/menuItem/menuItem'
+import { store } from 'src/models/store'
 import CButton from '../template/buttons/CButton.vue'
-import {cartRepo} from 'src/models/carts/cartRepo'
-import {salesPointRepo} from 'src/models/salesPoint/salesPointRepo'
-import {companyRepo} from 'src/models/company/companyRepo'
-import {authentication} from 'src/models/authentication/authentication'
-import {cartItemRepo} from 'src/models/carts/cartItem/cartItemRepo'
-import {CartItemModifier} from 'src/models/carts/cartItem/cartItem'
-import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo'
-import {ref} from 'vue'
-import {menuItemRepo} from 'src/models/menu/menuItem/menuItemRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { companyRepo } from 'src/models/company/companyRepo'
+import { authentication } from 'src/models/authentication/authentication'
+import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
+import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
+import { ref } from 'vue'
+import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
-import {menuRulesForAddingRepo} from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
-import {
-  ecommerceAdd,
-  ecommerceClick,
-} from 'src/models/ecommerceEvents/ecommerceEvents'
-import {useYandexMetrika} from 'yandex-metrika-vue3'
-import {useRoute} from 'vue-router'
-import {CalculationStatus} from 'src/models/carts/cart'
-import {notifier} from 'src/services/notifier'
-import {Screen} from 'quasar';
+import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
+import { ecommerceAdd, ecommerceClick, } from 'src/models/ecommerceEvents/ecommerceEvents'
+import { useYandexMetrika } from 'yandex-metrika-vue3'
+import { useRoute } from 'vue-router'
+import { CalculationStatus } from 'src/models/carts/cart'
+import { notifier } from 'src/services/notifier'
+import { Screen } from 'quasar';
+
 
 const props = defineProps<{
   item: MenuItem
@@ -216,7 +214,7 @@ const toCartClickHandler = async () => {
 const openMenuItem = async () => {
   void ecommerceClick(props.item)
   metrika.hit(route.fullPath)
-  store.openMenuItemModal()
+  store.openMenuItemModal(props.item)
   store.menuItemImage = props.item.image
   await menuItemRepo.retrieve(props.item.id, {
     sales_point: salesPointRepo.item?.id,
