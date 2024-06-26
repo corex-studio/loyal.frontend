@@ -307,7 +307,7 @@ onMounted(() => {
     if (!map) return
     if (!props.address) {
       const city = companyGroupRepo.item?.cityData.current
-      if (city?.coords.length) {
+      if (city?.coords?.length) {
         const cityCoords = new LatLng(city.coords[1], city.coords[0])
         map.lmap.flyTo(cityCoords, 12, { duration: 0.1 })
       }
