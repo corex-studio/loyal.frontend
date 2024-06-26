@@ -331,7 +331,7 @@ onMounted(() => {
         selectAddress(addressWithCorrectCoords)
       },
     )
-  }, 0)
+  }, 200)
 })
 
 const createAddress = async () => {
