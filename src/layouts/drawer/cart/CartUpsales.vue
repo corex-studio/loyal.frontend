@@ -1,30 +1,31 @@
 <template>
+
   <div class="mt-15">
     <div class="header3 bold">Рекомендуем к заказу</div>
     <div
-      class="mt-8"
       :style="`width:${$q.screen.lt.lg ? $q.screen.width - ($q.screen.lt.lg ? ($q.screen.md ? 64 : 38) : 64) : 516}px`"
+      class="mt-8"
     >
       <SwiperContainer
         :key="`${$store.offersTab}${$q.screen.gt.md}`"
         :initial-slide="0"
+        :items="upsales"
         :slides-per-view="$q.screen.lt.md ? 2.3 : $q.screen.md ? 3.5 : 3.4"
         no-navigation
-        :items="upsales"
       >
         <template v-slot:item="{ item }: { item: MenuItem }">
           <div
-            @click="openItemModal(item.id)"
             class="border-radius cursor-pointer column"
+            @click="openItemModal(item)"
           >
             <q-img
-              class="border-radius"
               :src="item.image?.thumbnail || $store.images.empty"
+              class="border-radius"
             />
             <div
               class="column px-5 py-4 body text-on-backgroun-color secondary-text"
             >
-              <div style="min-height: 40px" class="ellipsis-2-lines">
+              <div class="ellipsis-2-lines" style="min-height: 40px">
                 {{ item.name }}
               </div>
               <div class="row gap-3" v-if="item.sizes[0].specialPrice !== null">
@@ -46,8 +47,8 @@
                 </div>
                 <div class="bold row">
                   {{ beautifyNumber(item.sizes[0].price || 0) }}
-                  ₽
                 </div>
+                <div class="bold" itemprop="priceCurrency">₽</div>
               </div>
             </div>
           </div>
@@ -64,14 +65,15 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { beautifyNumber, store } from 'src/models/store'
 
+
 defineProps<{
   upsales: MenuItem[]
 }>()
 
-const openItemModal = async (menuItemId: string | null) => {
-  store.openMenuItemModal()
-  await menuItemRepo.retrieve(menuItemId || '', {
-    sales_point: salesPointRepo.item?.id
+const openItemModal = async (menuItem: MenuItem) => {
+  store.openMenuItemModal(menuItem)
+  await menuItemRepo.retrieve(menuItem.id || '', {
+    sales_point: salesPointRepo.item?.id,
   })
 }
 </script>
