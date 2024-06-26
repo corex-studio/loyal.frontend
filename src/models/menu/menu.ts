@@ -66,6 +66,7 @@ export type ItemSizeRaw = {
   is_hidden?: boolean
   sorting?: number
   price?: number
+  special_price?: number | null
   prices?: PriceRaw[]
   code?: string | number | null
   external_id?: string | number | null
@@ -102,6 +103,7 @@ export class ItemSize implements BaseModel {
   sku: string | null
   image: Image | null
   sorting: number | null
+  specialPrice: number | null
   price?: number | null
   prices?: PriceRaw[]
   code: string | number | null
@@ -124,6 +126,7 @@ export class ItemSize implements BaseModel {
     this.name = raw.name || null
     this.menuItem = raw.menu_item || null
     this.sku = raw.sku || null
+    this.specialPrice = raw.special_price || null
     this.image = raw.image ? new Image(raw.image) : null
     this.sorting = raw.sorting || null
     this.price = raw.price

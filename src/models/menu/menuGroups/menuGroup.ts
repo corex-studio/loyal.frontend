@@ -4,6 +4,7 @@ import { MenuItem, MenuItemRaw } from '../menuItem/menuItem'
 
 export type MenuGroupRaw = {
   uuid?: string
+  alias?: string | null
   menu: string
   external_id?: string | null
   name: string
@@ -17,6 +18,7 @@ export type MenuGroupRaw = {
 
 export class MenuGroup implements BaseModel {
   id: string
+  alias: string | null
   menu: string
   externalId: string | null
   name: string
@@ -30,6 +32,7 @@ export class MenuGroup implements BaseModel {
 
   constructor(raw: MenuGroupRaw) {
     this.id = raw.uuid || ''
+    this.alias = raw.alias || null
     this.menu = raw.menu
     this.externalId = raw.external_id || null
     this.name = raw.name

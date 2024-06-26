@@ -59,9 +59,11 @@
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { useRoute, useRouter } from 'vue-router'
 
-defineProps<{
+const props = defineProps<{
   modelValue: boolean
 }>()
 
@@ -69,9 +71,27 @@ defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
 
+const fictiveUrlStore = useFictiveUrlStore()
+const route = useRoute()
+const router = useRouter()
+
 const getBorderRadius = computed(() => {
   return `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
 })
+
+watch(
+  () => props.modelValue,
+  async () => {
+    if (!props.modelValue) {
+      if (
+        String(route.name) === 'home__withNews'
+      ) {
+        await router.push({ name: 'home' })
+      }
+      fictiveUrlStore.setFictiveCategoryUrl()
+    }
+  },
+)
 </script>
 
 <style lang="scss" scoped>

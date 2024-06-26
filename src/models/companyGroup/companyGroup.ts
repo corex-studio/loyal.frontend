@@ -18,6 +18,7 @@ export enum BankType {
 
 export type CityType = {
   uuid: string
+  alias: string | null
   active: boolean
   name: string | null
   coords: number[]
@@ -170,6 +171,14 @@ export class CompanyGroup implements BaseModel {
 
   get currentCompany() {
     return this.companies.find((v) => v.id === store.institution)
+  }
+
+  findCityByAlias(alias: string) {
+    return this.cityData.results.find(v => v.alias === alias)
+  }
+
+  findByAliasOrId(el: string) {
+    return this.cityData.results.find(v => [v.alias, v.uuid].includes(el))
   }
 
   toJson(): Record<string, any> {

@@ -57,11 +57,13 @@ import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { scroll } from 'quasar'
-import { Fn, useElementBounding, useEventListener } from '@vueuse/core'
+import { Fn, useElementBounding, useEventBus, useEventListener } from '@vueuse/core'
 import { menuRepo } from 'src/models/menu/menuRepo'
-import { store } from 'src/models/store'
 import { maxBy } from 'lodash'
 import getVerticalScrollPosition = scroll.getVerticalScrollPosition
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { useRoute } from 'vue-router'
+import { onCloseProductModalKey } from 'src/services/eventBusKeys'
 
 const { getScrollTarget } = scroll
 const scrollBodyTatget = getScrollTarget(document.body)
@@ -71,13 +73,15 @@ const menuGroupsBounding = ref<
 >({})
 
 const cleanups: Fn[] = []
+const fictiveUrlStore = useFictiveUrlStore()
 
 onMounted(async () => {
   try {
     await initMenuGroupsBounding()
     cleanups.push(
-      useEventListener(document, 'scroll', setCurrentActiveMenuGroupId)
+      useEventListener(document, 'scroll', setCurrentActiveMenuGroupId),
     )
+    useEventBus(onCloseProductModalKey).on(() => setCurrentActiveMenuGroupId())
   } catch {
     console.error('menu groups ref is empty')
   }
@@ -113,28 +117,24 @@ const setCurrentActiveMenuGroupId = () => {
         index: Number(i),
         fromBottom,
         fromTop: top,
-        visibleHeight
+        visibleHeight,
       })
   }
   _setCurrentActiveMenuGroupId(visible)
 }
 
 const _setCurrentActiveMenuGroupId = (visibleItems: VisibleElement[]) => {
+  if (fictiveUrlStore.visibleMenuGroupIdManualSet) return
   const scrollPosition = getVerticalScrollPosition(scrollBodyTatget)
   if (!visibleItems.length || scrollPosition < 20) {
-    store.visibleMenuGroupId = null
-  } else if (
-    visibleItems.length === 1 &&
-    scrollPosition > 20 &&
-    !store.visibleMenuGroupIdManualSet
-  ) {
-    store.visibleMenuGroupId =
-      menuItems.value.at(visibleItems[0].index)?.id || null
+    fictiveUrlStore.setVisibleMenuGroup(null)
+  } else if (scrollPosition < 80) {
+    fictiveUrlStore.setVisibleMenuGroup(menuItems.value.at(visibleItems[0].index) || null)
   } else {
     const filtered = visibleItems.filter((v) => v.visibleHeight > 80)
     const item = maxBy(filtered, (v) => v.fromTop)
-    if (item && !store.visibleMenuGroupIdManualSet) {
-      store.visibleMenuGroupId = menuItems.value.at(item.index)?.id || null
+    if (item && !fictiveUrlStore.visibleMenuGroupIdManualSet) {
+      fictiveUrlStore.setVisibleMenuGroup(menuItems.value.at(item.index) || null)
     }
   }
 }
@@ -159,13 +159,6 @@ const initMenuGroupsBounding = async () => {
     }, 50)
   })
 }
-//
-// watch(
-//   () => menuGroupsBounding.value[0],
-//   (v) => {
-//     console.log(v)
-//   },
-// )
 
 const menuItems = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length) || []
@@ -180,11 +173,20 @@ watch(
     timeout = setTimeout(() => {
       void ecommerceImpressions(menuItemRepo.visibleItems)
     }, 500)
-  }
+  },
+)
+
+const stopWatchUrlHandle = watch(
+  computed(() => `${fictiveUrlStore.visibleMenuGroupId}${fictiveUrlStore.visibleMenuGroupAlias}`),
+  () => {
+    if (!fictiveUrlStore.initialMenuItem)
+    fictiveUrlStore.setFictiveCategoryUrl()
+  },
 )
 
 onBeforeUnmount(() => {
   cleanups.forEach((v) => v())
+  stopWatchUrlHandle()
 })
 </script>
 

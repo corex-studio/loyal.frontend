@@ -94,7 +94,8 @@ onMounted(() => {
   if (props.modelValue) {
     selectedTab.value = props.modelValue
   } else {
-    const found = localTabs.value.find((el) => el.to?.name === route.name)
+    // todo проверить, что правильно
+    const found = localTabs.value.find((el) => el.to && router.isIncludesRouteName([el.to.name]))
     if (found) selectedTab.value = found.label
     else
       selectedTab.value = localTabs.value.length

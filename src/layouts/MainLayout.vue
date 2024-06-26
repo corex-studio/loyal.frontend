@@ -11,9 +11,7 @@
       <q-page-container
         :class="{
           'c-container':
-            $route.name !== 'home' &&
-            $route.name !== 'qrHome' &&
-            $route.name !== 'aboutUs' &&
+            !$router.isIncludesRouteName(['home', 'qrHome', 'aboutUs']) &&
             !routesWithoutContainerPaddings.some((v) =>
               $route.path.includes(v),
             ),
@@ -30,7 +28,7 @@
         <LeftDrawer v-if="$q.screen.lt.lg" />
         <CartOverlayButton v-if="!$route.path.includes('arrangement')" />
         <OrderToReviewOverlay
-          v-if="$order.orderToReview && $route.name === 'home'"
+          v-if="$order.orderToReview && $router.isIncludesRouteName(['home'])"
         />
       </q-page-container>
       <q-footer>
@@ -74,7 +72,7 @@ import {
   ref,
   watch,
 } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import { authentication } from 'src/models/authentication/authentication'
 import PrepareUiSettings from 'src/components/template/PrepareUiSettings.vue'
@@ -90,6 +88,10 @@ import { AppManager } from 'src/models/utils/appManager'
 import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
 import { menuRepo } from 'src/models/menu/menuRepo'
+import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { withCityRouteKey } from 'src/router/mainRoutes'
+import { useEventBus } from '@vueuse/core'
+import { onCloseProductModalKey } from 'src/services/eventBusKeys'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -133,14 +135,13 @@ const CartDrawer = defineAsyncComponent(
 )
 
 // const webSocket = ref<WebSocket | null>(null)
-const routesWithoutContainerPaddings = [
-  'promotion',
-  'current_order',
-  'order_review',
-  'menu_item',
-]
+const routesWithoutContainerPaddings = computed(() => {
+  const items = ['promotion', 'current_order', 'order_review', 'menu_item']
+  return items.flatMap((v) => [v, v + withCityRouteKey])
+})
 const route = useRoute()
 const ready = ref(false)
+const router = useRouter()
 
 watch(
   () => route.name,
@@ -183,7 +184,7 @@ const showQrMobileMenu = computed(() => {
   return (
     store.tableMode &&
     padRepo.item?.isEnabled &&
-    route.name !== 'qrMenuItemPage' &&
+    !router.isIncludesRouteName(['qrMenuItemPage']) &&
     padRepo.item.salesPoint &&
     menuRepo.item
   )
@@ -196,8 +197,14 @@ const setScroll = () => {
   })
 }
 
-const closeMenuItemModal = () => {
-  history.pushState({}, '', `${route.path}`)
+const fictiveUrlStore = useFictiveUrlStore()
+
+const closeMenuItemModal = async () => {
+  if (String(route.name) === 'home__withCategories__withProducts')
+    await router.push({ name: 'home' })
+  useEventBus(onCloseProductModalKey).emit()
+  fictiveUrlStore.initialMenuItem = null
+  fictiveUrlStore.setFictiveCategoryUrl()
   setMeta(route.meta)
   store.freeItem = null
   store.closeMenuItemModal()

@@ -13,9 +13,14 @@ import { DeliveryArea } from 'src/models/deliveryAreas/deliveryArea'
 import { QrData } from './utils/qrData/qrData'
 import { QRMenuData } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { Image } from './image/image'
-import { useWebSocket, UseWebSocketOptions, UseWebSocketReturn } from '@vueuse/core'
+import {
+  useWebSocket,
+  UseWebSocketOptions,
+  UseWebSocketReturn,
+} from '@vueuse/core'
 import { MaybeRefOrGetter } from '@vueuse/shared'
 import { openWebsocket } from 'src/services/openWebsocket'
+import { MenuItem } from 'src/models/menu/menuItem/menuItem';
 
 type DeliveryAreaInfoDrawerData = {
   salesPoint: SalesPoint
@@ -26,8 +31,6 @@ type DeliveryAreaInfoDrawerData = {
 
 export class Store {
   scrollPositionBeforeOpenProductModal = 0
-  visibleMenuGroupId: string | null = null
-  visibleMenuGroupIdManualSet = false
   footerHeight = 0
   headerHeight = 0
   salesPoint = 'd253cd53-044b-468d-8881-232f43715f5e'
@@ -59,32 +62,37 @@ export class Store {
   cityCheckModal = false
   qrData: QrData | null = null
   reviewModal = false
-  initialMenuItem: string | null = null
   menuItemImage: Image | null = null
   groupDragged = false
-  private _menuItemModal = false
   webSocket: UseWebSocketReturn<any> | null = null
+
+  private _menuItemModal = false
+
   // cityFromParam: string | null = null
+
+  get menuItemModal() {
+    return this._menuItemModal
+  }
 
   setWebSocket(
     url: MaybeRefOrGetter<string | URL | undefined>,
     options?: UseWebSocketOptions,
   ): UnwrapRef<ReturnType<typeof useWebSocket>> {
     this.webSocket = openWebsocket(url, options)
-    return this.webSocket as unknown as UnwrapRef<ReturnType<typeof useWebSocket>>
+    return this.webSocket as unknown as UnwrapRef<
+      ReturnType<typeof useWebSocket>
+    >
   }
 
-  get menuItemModal() {
-    return this._menuItemModal
-  }
-
-  openMenuItemModal() {
+  openMenuItemModal(item?: MenuItem) {
     store.scrollPositionBeforeOpenProductModal = window.scrollY
+    store.menuItemImage = item?.image || null
     this._menuItemModal = true
   }
 
   closeMenuItemModal() {
     this._menuItemModal = false
+    store.menuItemImage = null
   }
 
   getCompanyGroup(externalId: string) {
@@ -150,11 +158,11 @@ export const addHash = (v: string) => {
 }
 
 export const totalDayTimes = () => {
-  return Array.from({ length: 24 }, (_, i) => i).reduce((r: string[], hour) => {
-    r.push(moment({ hour, minute: 0 }).format('HH:mm'))
-    r.push(moment({ hour, minute: 15 }).format('HH:mm'))
-    r.push(moment({ hour, minute: 30 }).format('HH:mm'))
-    r.push(moment({ hour, minute: 45 }).format('HH:mm'))
+  return Array.from({length: 24}, (_, i) => i).reduce((r: string[], hour) => {
+    r.push(moment({hour, minute: 0}).format('HH:mm'))
+    r.push(moment({hour, minute: 15}).format('HH:mm'))
+    r.push(moment({hour, minute: 30}).format('HH:mm'))
+    r.push(moment({hour, minute: 45}).format('HH:mm'))
 
     return r
   }, [])

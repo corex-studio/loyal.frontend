@@ -60,7 +60,7 @@ import CDialog from './CDialog.vue'
 import { ref, watch } from 'vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { AppManager } from 'src/models/utils/appManager'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 
 const props = defineProps<{
@@ -68,6 +68,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
 
 const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
@@ -87,8 +88,13 @@ watch(
 
 const confirmSelectedCity = async () => {
   if (!currentCity.value) return
-  localStorage.setItem('city', currentCity.value.uuid)
+  localStorage.setItem(
+    'city',
+    currentCity.value.uuid,
+  )
+  localStorage.setItem('cityAlias', currentCity.value.alias || currentCity.value.uuid)
   emit('update:modelValue', false)
+  void router.replaceToWithCityPage()
   await reRequest()
   // history.pushState({}, '', `/${currentCity.value.uuid}`)
 }

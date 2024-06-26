@@ -1,4 +1,5 @@
 <template>
+  
   <div v-if="$cart.item" class="column full-width gap-8 mt-15">
     <div class="header3 bold">Выберите подарок</div>
     <div
@@ -12,8 +13,10 @@
         :items="$cart.item.freeItems.filter((el) => !el.applied)"
       >
         <template v-slot:item="{ item }">
-          <CartFreeItemCard :item="item" /> </template
-      ></SwiperContainer>
+          <CartFreeItemCard :item="item"/>
+        </template
+        >
+      </SwiperContainer>
     </div>
     <!-- <div class="row full-width">
       <GridContainer

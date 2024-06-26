@@ -19,23 +19,37 @@
     <q-menu
       v-model="menu"
       no-parent-event
-      :offset="[0, -10]"
-      style="box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.04) !important"
+      :offset="[0, 0]"
+      style="
+        box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.04) !important;
+        z-index: 9999999;
+      "
       fit
       no-focus
     >
-      <div class="col px-5 py-3">
-        <CButton
+      <div
+        class="col"
+        :style="{
+          maxHeight: $q.screen.lt.md ? '200px' : undefined,
+          overflowY: $q.screen.lt.md ? 'auto' : undefined,
+        }"
+      >
+        <div
+          class="mb-4 px-5 py-5"
+          style="width: 100%"
           v-for="(el, index) in foundAddresses"
           :key="index"
-          class="mb-4"
-          text-button
-          text-color="on-background-color"
-          hover-text-color="primary"
           @click="selectAddress(el)"
         >
-          {{ el.address }}
-        </CButton>
+          <CButton
+            width="100%"
+            text-button
+            text-color="on-background-color"
+            hover-text-color="primary"
+          >
+            {{ el.address }}
+          </CButton>
+        </div>
       </div>
     </q-menu>
     <template></template>
