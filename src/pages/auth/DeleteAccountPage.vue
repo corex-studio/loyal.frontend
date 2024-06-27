@@ -146,7 +146,7 @@ const requestAuth = async () => {
       })
       .then((response) => Boolean(response?.success))
     if (res) {
-      notifier.error('Сообщение с кодом успешно отправлено')
+      notifier.success('Сообщение с кодом успешно отправлено')
     } else {
       notifier.error('Ошибка при отправке sms')
     }
