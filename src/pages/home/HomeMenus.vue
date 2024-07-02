@@ -140,13 +140,13 @@ const _setCurrentActiveMenuGroupId = (visibleItems: VisibleElement[]) => {
 }
 
 const initMenuGroupsBounding = async () => {
-  return new Promise((resolve, reject) => {
-    let attempts = 0
+  return new Promise((resolve) => {
+    // let attempts = 0
     const interval = setInterval(() => {
-      if (attempts > 40) {
-        if (interval) clearInterval(interval)
-        reject()
-      }
+      // if (attempts > 40) {
+      //   if (interval) clearInterval(interval)
+      //   reject()
+      // }
       if (menuGroupRefs.value.length) {
         for (const [index, menuGroupRef] of menuGroupRefs.value.entries()) {
           menuGroupsBounding.value[index] = useElementBounding(menuGroupRef)
@@ -154,7 +154,7 @@ const initMenuGroupsBounding = async () => {
         if (interval) clearInterval(interval)
         resolve(void 0)
       } else {
-        attempts++
+        // attempts++
       }
     }, 50)
   })
