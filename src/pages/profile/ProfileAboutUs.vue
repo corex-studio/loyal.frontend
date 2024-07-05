@@ -335,6 +335,10 @@
         </div>
       </div>
     </div>
+    <div v-if="$company.item?.conditions !== undefined && !!$company.item?.conditions?.length" class="c-container column gap-10  mt-lg-30 mt-md-25 mt-xs-15" >
+      <div class="header3 bold">Условия</div>
+      <div style="white-space: pre-line" v-html="$company.item.conditions"></div>
+    </div>
     <ProfileAddressesOnMap
       :key="$company.companyForProfile?.id"
       class="c-container mt-lg-30 mt-md-25 mt-xs-15"
