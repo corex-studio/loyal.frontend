@@ -3,7 +3,7 @@ import {BaseModel} from 'src/corexModels/apiModels/baseModel'
 export type DeliveryAreaRaw = {
   uuid: string | undefined
   sales_point: string
-  coords: number[][]
+  coords?: number[][]
   name: string | null
   min_delivery_minutes: number
   max_delivery_minutes: number
@@ -27,7 +27,7 @@ export class DeliveryArea implements BaseModel {
 
   constructor(raw: DeliveryAreaRaw) {
     this.id = raw.uuid
-    this.coords = raw.coords.map((el) => el.reverse())
+    this.coords = (raw.coords || []).map((el) => el.reverse())
     this.salesPoint = raw.sales_point
     this.name = raw.name || ''
     this.minDeliveryMinutes = raw.min_delivery_minutes

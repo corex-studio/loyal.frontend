@@ -3,6 +3,7 @@
     class="px-5 pb-7 pt-10 relative-position bg-background-color text-on-background-color rounded-10"
     style="max-width: 333px"
   >
+
     <CIconButton
       class="absolute pa-0"
       color="transparent"
@@ -45,7 +46,7 @@
       </div>
       <div class="column no-wrap mt-5 overflow-auto" style="max-height: 298px">
         <div
-          v-if="!currentDay?.mainItem && !currentDay?.timesData.length"
+          v-if="!currentDay?.mainItem && !currentDay?.timesData?.length"
           class="body"
         >
           Не заполнено
@@ -85,7 +86,7 @@
           </div>
         </template>
         <template v-else>
-          <template v-for="(item, index) in currentDay?.timesData" :key="index">
+          <template v-for="(item, index) in currentDay?.timesData || []" :key="index">
             <q-separator v-if="index" class="my-4" />
             <div class="body">Расписание: {{ item.time }}</div>
           </template>
@@ -160,12 +161,28 @@ watch(
     deliverySchedule.value = []
   },
 )
-
-const currentDay = computed(() => {
+type CurrentDayComputed = {
+  day: number
+  selected: boolean
+  timesData?: {time: string}[]
+  mainItem: {
+    time: string
+    deliveryPrice: number
+    deliveryDuration: number
+    minimalOrderSum: number
+  } | null
+  children: {
+    time: string
+    deliveryPrice: number
+    deliveryDuration: number
+    minimalOrderSum: number
+  }[]
+}
+const currentDay = computed<CurrentDayComputed>(() => {
   const settings = deliverySchedule.value.length
     ? deliverySchedule.value
     : pickupSchedule.value
-  return settings.find((v) => v.selected)
+  return settings.find((v) => v.selected) as CurrentDayComputed
 })
 
 const selectDay = (day: number) => {

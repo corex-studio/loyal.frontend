@@ -28,23 +28,23 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {CorexLeafletMap} from 'src/models/corexLeafletMap/corexLeafletMap'
+import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import L from 'leaflet'
-import {computed, nextTick, onMounted, ref, watch} from 'vue'
-import {companyRepo} from 'src/models/company/companyRepo'
-import {uiSettingsRepo} from 'src/models/uiSettings/uiSettingsRepo'
-import {store} from 'src/models/store'
-import {Feature} from 'geojson'
-import {deliveryAreaRepo} from 'src/models/deliveryAreas/deliveryAreaRepo'
-import {deliveryAreaSettingsRepo} from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettingsRepo'
-import {SalesPoint} from 'src/models/salesPoint/salesPoint'
-import {useElementBounding} from '@vueuse/core'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { store } from 'src/models/store'
+import { Feature } from 'geojson'
+import { deliveryAreaRepo } from 'src/models/deliveryAreas/deliveryAreaRepo'
+import { deliveryAreaSettingsRepo } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettingsRepo'
+import { SalesPoint } from 'src/models/salesPoint/salesPoint'
+import { useElementBounding } from '@vueuse/core'
 import SalesPointScheduleData from 'pages/profile/SalesPointScheduleData.vue'
 import {
   SalesPointDeliveryData,
   SalesPointPickupData,
 } from 'pages/profile/types/types'
-import {DeliveryAreaSettings} from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
+import { DeliveryAreaSettings } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 
 let map: CorexLeafletMap
 const mapRef = ref<HTMLDivElement | null>(null)
@@ -75,7 +75,7 @@ onMounted(() => {
       {
         company: companyRepo.companyForProfile?.id,
       },
-      {pageSize: 'all'}
+      { pageSize: 'all' },
     )
     await deliveryAreaRepo.list({
       company: companyRepo.companyForProfile?.id,
@@ -109,12 +109,12 @@ const recomputeSalesPointDataCoords = () => {
 watch(
   computed(
     () =>
-      `${mapBounding.top.value}${mapBounding.left.value}${salesPointInfoModelValue.value}`
+      `${mapBounding.top.value}${mapBounding.left.value}${salesPointInfoModelValue.value}`,
   ),
   () => {
     setTimeout(() => recomputeSalesPointDataCoords(), 100)
   },
-  {immediate: true}
+  { immediate: true },
 )
 
 const drawPoints = () => {
@@ -132,7 +132,7 @@ const drawPoints = () => {
     }
   }[] = []
   for (const el of companyRepo.companyForProfile.salesPoints) {
-    if (el.coords && el.active) values.push({id: el.id, coords: el.coords})
+    if (el.coords && el.active) values.push({ id: el.id, coords: el.coords })
   }
 
   const collection = map.pointCollection(values)
@@ -153,19 +153,19 @@ const drawPoints = () => {
               lat: currentSalesPoint.coords.latitude,
               lng: currentSalesPoint.coords.longitude,
             },
-            13
+            13,
           )
       }
     },
     `#${uiSettingsRepo.item?.primaryColor.color}`,
     'circle',
-    companyRepo.cartCompany?.image?.thumbnail || store.images.empty
+    companyRepo.cartCompany?.image?.thumbnail || store.images.empty,
   )
   for (const el of collection.features) drawDeliveryAreas(el)
 
   map.lmap.addLayer(layer)
   if (companyRepo.companyForProfile.salesPoints.length)
-    map.lmap.fitBounds(layer.getBounds(), {maxZoom: 11})
+    map.lmap.fitBounds(layer.getBounds(), { maxZoom: 11 })
 }
 
 const setSalesPointPickupData = (salesPoint: SalesPoint) => {
@@ -179,10 +179,9 @@ const setSalesPointPickupData = (salesPoint: SalesPoint) => {
 const drawDeliveryAreas = async (el: Feature) => {
   const salesPointId = el.id
   const items = deliveryAreaRepo.items.filter(
-    (v) => v.salesPoint === salesPointId
+    (v) => v.salesPoint === salesPointId,
   )
   const salesPoints = companyRepo.companyForProfile?.salesPoints
-
   const salesPointColor = colorBySalesPointId.value[String(salesPointId)]
   for (const item of items.filter((v) => v.active)) {
     const layer = L.polygon(L.GeoJSON.coordsToLatLngs(item.coords), {
@@ -199,23 +198,23 @@ const drawDeliveryAreas = async (el: Feature) => {
       const salesPoint = salesPoints?.find((v) => v.id === el.id)
       if (!salesPoint)
         throw Error(
-          `Sales point with id ${el.id} was not found, available sales points: ${salesPoints}`
+          `Sales point with id ${el.id} was not found, available sales points: ${salesPoints}`,
         )
       salesPointInfoModelValue.value = true
       const filterSettings = (
         v: DeliveryAreaSettings // filter fn
-      ) => v.salesPoint === salesPointId && v.deliveryArea === item.id
+      ) => v.salesPoint === salesPointId && v.deliveryArea.id === item.id
       salesPointDeliveryData.value = {
         deliveryArea: item,
         salesPoint: salesPoint as SalesPoint,
         deliveryAreaSettings: deliveryAreaSettingsRepo.items.filter(
-          (v) => v.deliveryType === 'delivery' && filterSettings(v)
+          (v) => v.deliveryType === 'delivery' && filterSettings(v),
         ),
         defaultDeliveryAreaSettings: deliveryAreaSettingsRepo.items.filter(
-          (v) => v.deliveryType === 'default' && filterSettings(v) // todo надо ли проверять по deliveryArea
+          (v) => v.deliveryType === 'default' && filterSettings(v), // todo надо ли проверять по deliveryArea
         ),
       }
-      map.lmap.fitBounds(layer.getBounds(), {maxZoom: 13})
+      map.lmap.fitBounds(layer.getBounds(), { maxZoom: 13 })
     })
     item.leafletId = drawnItems.getLayerId(layer)
   }
