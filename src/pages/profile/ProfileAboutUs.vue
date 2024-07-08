@@ -2,7 +2,6 @@
   <div v-if="company" class="column full-width text-on-background-color pt-3">
     <div class="c-container">
       <div
-        class="border-radius main-image-block row justify-center items-center full-width relative-position"
         :style="`background-image: url(${
           company.headerImage
             ? company.headerImage.image
@@ -10,28 +9,29 @@
               ? company.images[1].image
               : $store.images.empty
         }); height: ${$q.screen.gt.md ? '388' : '320'}px`"
+        class="border-radius main-image-block row justify-center items-center full-width relative-position"
       >
         <CIconButton
           v-if="$companyGroup.item && $companyGroup.item.companies.length > 1"
-          @click="$company.companyForProfile = null"
-          icon="fa-regular fa-angle-left"
-          style="position: absolute; top: 10px; left: 10px; z-index: 2"
-          outline
-          icon-size="24px"
-          size="48px"
-          icon-color="white"
           class="outlined-button"
+          icon="fa-regular fa-angle-left"
+          icon-color="white"
+          icon-size="24px"
+          outline
+          size="48px"
+          style="position: absolute; top: 10px; left: 10px; z-index: 2"
+          @click="$company.companyForProfile = null"
         />
         <div
           class="col-xs-8 col-lg-9 col-xs-11 column items-center text-white py-18 glassed-block"
         >
-          <div style="text-align: center" class="huge">
+          <div class="huge" style="text-align: center">
             О компании {{ company.name }}
           </div>
           <div
             v-if="company.salesPoints"
-            style="text-align: center"
             class="row justify-center gap-4 mt-10"
+            style="text-align: center"
           >
             <template v-if="$companyGroup.item?.externalId !== 'HooDoo'">
               <div
@@ -46,13 +46,13 @@
               </div>
               <CIcon
                 v-if="company.salesPoints.length > 2"
-                name="fa-regular fa-angle-down"
+                class="cursor-pointer"
                 color="white"
                 hover-color="primary"
-                class="cursor-pointer"
+                name="fa-regular fa-angle-down"
                 size="24px"
               >
-                <q-menu max-width="400px" auto-close class="pa-5 column gap-4">
+                <q-menu auto-close class="pa-5 column gap-4" max-width="400px">
                   <div
                     v-for="(el, index) in company.salesPoints.slice(2)"
                     :key="index"
@@ -68,13 +68,13 @@
               <div class="subtitle-text">Адреса:</div>
               <CIcon
                 v-if="company.salesPoints.length"
-                name="fa-regular fa-angle-down"
+                class="cursor-pointer"
                 color="white"
                 hover-color="primary"
-                class="cursor-pointer"
+                name="fa-regular fa-angle-down"
                 size="24px"
               >
-                <q-menu max-width="400px" auto-close class="pa-5 column gap-4">
+                <q-menu auto-close class="pa-5 column gap-4" max-width="400px">
                   <div
                     v-for="(el, index) in company.salesPoints"
                     :key="index"
@@ -102,16 +102,16 @@
                 </div>
                 <div v-else>Не указано</div>
                 <CIcon
-                  name="fa-regular fa-angle-down"
+                  class="cursor-pointer"
                   color="white"
                   hover-color="primary"
-                  class="cursor-pointer"
+                  name="fa-regular fa-angle-down"
                   size="24px"
                 >
                   <q-menu
-                    max-width="400px"
                     auto-close
                     class="pa-5 column gap-4"
+                    max-width="400px"
                   >
                     <div
                       v-for="(el, index) in $salesPoint.item?.schedule?.days"
@@ -146,19 +146,20 @@
       class="c-container"
     >
       <div
-        :style="$q.screen.lt.md ? '' : 'overflow-x: auto'"
         :class="{ 'no-wrap': $q.screen.gt.sm }"
+        :style="$q.screen.lt.md ? '' : 'overflow-x: auto'"
         class="row full-width gap-lg-16 gap-md-10 gap-xs-6 items-center pb-2 no-scrollbar mt-lg-20 mt-md-15 mt-xs-10 mb-lg-29 mb-md-25 mb-xs-10"
       >
+
         <div
           v-for="(el, index) in features"
           :key="index"
-          @click="el.click"
           :class="{ 'cursor-pointer': el.click }"
-          class="row justify-between items-center px-lg-15 px-xs-13 bg-backing-color text-on-backing-color border-radius relative-position"
           :style="`min-width: ${
             $q.screen.lt.md ? '100%' : features.length < 4 ? '407px' : '350px'
           }; height: ${$q.screen.lt.md ? '100' : '120'}px`"
+          class="row justify-between items-center px-lg-15 px-xs-13 bg-backing-color text-on-backing-color border-radius relative-position"
+          @click="el.click"
         >
           <div class="left-circle"></div>
           <div class="right-circle"></div>
@@ -171,8 +172,8 @@
           >
             <CIcon
               :name="el.icon"
-              color="on-background-color"
               :size="$q.screen.gt.md ? '45px' : $q.screen.lt.md ? '33' : '38'"
+              color="on-background-color"
             />
           </div>
         </div>
@@ -195,7 +196,7 @@
             class="column gap-md-9 gap-xs-6"
           >
             <div class="huge bold">{{ company.name }}</div>
-            <div v-html="company.description" class="header3" style="white-space: pre-line"/>
+            <div class="header3" style="white-space: pre-line" v-html="company.description" />
           </div>
           <div
             v-if="$q.screen.gt.sm"
@@ -204,22 +205,22 @@
             }; max-width: ${$q.screen.lt.lg ? '520px' : 'unset'}`"
           >
             <q-img
-              height="100%"
-              fit="contain"
-              class="border-radius"
               :src="
                 company.descriptionImage?.image ||
                 $company.item?.image?.image ||
                 $store.images.empty
               "
+              class="border-radius"
+              fit="contain"
+              height="100%"
             />
           </div>
           <div v-else class="row full-width justify-end">
             <q-img
-              src="/assets/pinkHearts.png"
-              height="87px"
-              width="97px"
               fit="contain"
+              height="87px"
+              src="/assets/pinkHearts.png"
+              width="97px"
             />
           </div>
         </div>
@@ -235,11 +236,11 @@
             (v) => v.images.length,
           )"
           :key="index"
+          :items="el.images"
+          :slides-per-view="$q.screen.gt.md ? 3 : $q.screen.lt.md ? 1 : 2"
+          :use-bullets="$q.screen.lt.lg"
           class="full-width"
           no-navigation
-          :slides-per-view="$q.screen.gt.md ? 3 : $q.screen.lt.md ? 1 : 2"
-          :items="el.images"
-          :use-bullets="$q.screen.lt.lg"
         >
           <template v-slot:top>
             <div class="row gap-6 no-wrap items-center huge3">
@@ -250,19 +251,19 @@
           <template v-slot:item="{ item }">
             <div :style="`overflow: hidden; height: 314px`">
               <q-img
-                height="314px"
-                class="border-radius"
-                :style="`min-height: 314px`"
                 :src="item.image || $store.images.empty"
+                :style="`min-height: 314px`"
+                class="border-radius"
                 fit="cover"
+                height="314px"
               >
                 <template v-slot:error>
                   <span>
                     <q-img
+                      :src="$store.images.empty"
                       class="border-radius"
                       fit="cover"
                       height="314px"
-                      :src="$store.images.empty"
                     ></q-img>
                   </span>
                 </template>
@@ -279,18 +280,18 @@
           $uiSettings.item?.socialButtonImage &&
           company.guestContacts.socials.length
         "
-        fit="cover"
-        @click="socialsModal = true"
-        width="100%"
-        class="border-radius cursor-pointer mt-lg-60 mt-md-25 mt-xs-15"
         :src="$uiSettings.item?.socialButtonImage?.image"
+        class="border-radius cursor-pointer mt-lg-60 mt-md-25 mt-xs-15"
+        fit="cover"
+        width="100%"
+        @click="socialsModal = true"
       >
       </q-img>
     </div>
     <div v-if="contacts.length" class="c-container">
       <div
-        style="overflow-x: auto"
         class="row full-width no-wrap gap-lg-16 gap-md-10 gap-xs-8 mt-lg-35 mt-md-25 mt-xs-15 no-scrollbar"
+        style="overflow-x: auto"
       >
         <div
           v-for="(item, index) in contacts"
@@ -316,24 +317,30 @@
                 <CButton
                   v-for="(el, index) in item.values"
                   :key="index"
-                  @click="openLink(el.link)"
-                  class="subtitle-text"
-                  text-button
                   :label="el.value"
-                  text-color="on-background-color"
+                  class="subtitle-text"
                   style="width: fit-content"
+                  text-button
+                  text-color="on-background-color"
+                  @click="openLink(el.link)"
                 />
               </template>
             </div>
           </div>
           <q-img
-            style="align-self: flex-end"
+            :height="$q.screen.gt.md ? '100px' : $q.screen.md ? '80px' : '60px'"
             :src="getImage(item.image)"
             :width="$q.screen.gt.md ? '100px' : $q.screen.md ? '80px' : '60px'"
-            :height="$q.screen.gt.md ? '100px' : $q.screen.md ? '80px' : '60px'"
+            style="align-self: flex-end"
           />
         </div>
       </div>
+    </div>
+    <div v-if="company.conditions !== undefined && !!company.conditions?.length"
+         id="conditions"
+         class="c-container column gap-10  mt-lg-30 mt-md-25 mt-xs-15">
+      <div class="huge3 bold">Условия</div>
+      <div style="white-space: pre-line" v-html="company.conditions"></div>
     </div>
     <ProfileAddressesOnMap
       :key="$company.companyForProfile?.id"
@@ -343,8 +350,8 @@
   <div v-else>
     <SelectCompanyModal
       :model-value="!$company.companyForProfile"
-      @select="companySelected($event)"
       no-close
+      @select="companySelected($event)"
     />
   </div>
   <SocialsModal
@@ -352,29 +359,29 @@
     @update:model-value="socialsModal = false"
   />
   <ContactsModal
-    @update:model-value="concatsModal = false"
-    :model-value="concatsModal"
     :contact="currentContactType"
+    :model-value="concatsModal"
+    @update:model-value="concatsModal = false"
   />
 </template>
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
-import {companyRepo} from 'src/models/company/companyRepo'
-import {computed, ref, onMounted} from 'vue'
+import { companyRepo } from 'src/models/company/companyRepo'
+import { computed, ref, onMounted } from 'vue'
 import SocialsModal from './SocialsModal.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import ProfileAddressesOnMap from './ProfileAddressesOnMap.vue'
 import ContactsModal from './ContactsModal.vue'
-import {useRouter} from 'vue-router'
+import { useRouter } from 'vue-router'
 import SwiperContainer from 'src/layouts/containers/SwiperContainer.vue'
-import {companyGroupRepo} from 'src/models/companyGroup/companyGroupRepo'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 import moment from 'moment'
 import SelectCompanyModal from 'src/components/dialogs/SelectCompanyModal.vue'
-import {Company} from 'src/models/company/company'
-import {useEventBus} from '@vueuse/core'
-import {selectCompanyKey} from 'src/services/eventBusKeys'
-import {daysNames} from 'src/services/daysEnum'
+import { Company } from 'src/models/company/company'
+import { useEventBus } from '@vueuse/core'
+import { selectCompanyKey } from 'src/services/eventBusKeys'
+import { daysNames } from 'src/services/daysEnum'
 
 const socialsModal = ref(false)
 const concatsModal = ref(false)
@@ -423,6 +430,9 @@ const features = computed(() => {
       title: 'Доставка',
       text: 'Заказа',
       icon: 'fa-regular fa-truck',
+      click: () => {
+        companyRepo.companyForProfile?.conditions?.length ? scrollToBlock('conditions') : void 0
+      },
     })
   }
   if (
@@ -515,6 +525,14 @@ onMounted(() => {
     (e) => (companyRepo.companyForProfile = e.company),
   )
 })
+
+const scrollToBlock = (v: string) => {
+  const element = document.getElementById(v)
+  if (element) {
+    const y = element.getBoundingClientRect().top + window.scrollY - 120
+    window.scrollTo({ top: y, behavior: 'smooth' })
+  }
+}
 </script>
 
 <style lang="scss" scoped>

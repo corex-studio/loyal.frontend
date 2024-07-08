@@ -100,6 +100,7 @@ export type CompanyRaw = {
   } | null
   guest_contacts: GuestContactRaw | null
   description?: string | null
+  conditions?: string | null
   delivery_aggregators?: DeliveryAggregatorRaw[]
   created_at: string
   updated_at: string
@@ -234,6 +235,7 @@ export class Company implements BaseModel {
   }
 
   description: string
+  conditions: string | undefined | null
   createdAt: string
   updatedAt: string
   deliveryAggregators: DeliveryAggregatorRaw[]
@@ -273,9 +275,9 @@ export class Company implements BaseModel {
           updated_at: '',
         }
     this.description = raw.description || ''
+    this.conditions = raw.conditions
     this.createdAt = raw.created_at
     this.updatedAt = raw.updated_at
-
     this.guestContacts = new GuestContact(
       raw.guest_contacts || {
         active: false,
