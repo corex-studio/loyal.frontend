@@ -1,4 +1,5 @@
 <template>
+
   <div
     :style="`max-width: ${$q.screen.lt.lg ? '' : '628px'}`"
     class="column full-width text-on-background-color"
@@ -11,13 +12,13 @@
       <div
         v-for="(el, index) in orderTypes"
         :key="index"
-        @click="changeOrdersFilterType(el.val)"
         :class="
           el.val === currentType
             ? 'bg-secondary text-on-secondary bold'
             : 'text-on-background-color bordered-type'
         "
         class="cursor-pointer px-10 body py-6 border-radius2"
+        @click="changeOrdersFilterType(el.val)"
       >
         {{ el.label }}
       </div>
@@ -33,8 +34,8 @@
       <div
         v-else
         :style="$q.screen.xs ? '' : 'width: 416px'"
-        style="min-height: 180px"
         class="text-on-background-color border-radius bordered-type column justify-center items-center gap-5"
+        style="min-height: 180px"
       >
         <CIcon
           color="on-on-background-color"
@@ -45,26 +46,62 @@
       </div>
     </div>
     <Pagination
-      :loading="$order.loadings.list"
-      class="px-10 mt-15"
-      @update:modelValue="setPage($event)"
-      @appendItems="setPage($event, true)"
-      :page="$order.pagination.page"
       :last-page="$order.pagination.last_page"
+      :loading="$order.loadings.list"
+      :page="$order.pagination.page"
+      class="px-10 mt-15"
+      @appendItems="setPage($event, true)"
+      @update:modelValue="setPage($event)"
     ></Pagination>
   </div>
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import Pagination from 'src/components/inputs/Pagination.vue'
 import ProfileOrderRow from './ProfileOrderRow.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo';
 
 type OrderType = 'all' | 'pickup' | 'delivery' | 'booking'
 
 const currentType = ref<OrderType>('all')
+
+
+const orderTypes = computed(() => {
+  const res: {
+    label: string
+    val: OrderType
+  }[] = [{
+    label: 'Все',
+    val: 'all',
+  },]
+  if (companiesSalesPoints.value?.some(v => v?.settings.pickup_enabled)) {
+    res.push({
+      label: 'Самовывоз',
+      val: 'pickup',
+    })
+  }
+  if (companiesSalesPoints.value?.some(v => v?.settings.delivery_enabled)) {
+    res.push({
+      label: 'Доставка',
+      val: 'delivery',
+    })
+  }
+  if (companiesSalesPoints.value?.some(v => v?.settings.booking_enabled)) {
+    res.push({
+      label: 'Бронь',
+      val: 'booking',
+    })
+  }
+  return res
+})
+
+
+const companiesSalesPoints = computed(() => {
+  return companyGroupRepo.item?.companies.flatMap(v => v.salesPoints)
+})
 
 const setPage = async (page = 1, appendItems = false) => {
   await loadOrders(page, appendItems)
@@ -99,29 +136,6 @@ onMounted(async () => {
   })
 })
 
-const orderTypes = ref<
-  {
-    label: string
-    val: OrderType
-  }[]
->([
-  {
-    label: 'Все',
-    val: 'all',
-  },
-  {
-    label: 'Самовывоз',
-    val: 'pickup',
-  },
-  {
-    label: 'Доставка',
-    val: 'delivery',
-  },
-  {
-    label: 'Бронь',
-    val: 'booking',
-  },
-])
 </script>
 
 <style lang="scss" scoped>
