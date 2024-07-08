@@ -4,44 +4,54 @@
     class="row gap-5 full-width border-radius pa-10 justify-between items-start card-element no-wrap"
   >
     <div class="row gap-13 items-center no-wrap">
-      <q-img
-        width="58px"
-        height="58px"
-        style="border-radius: 50%"
-        fit="cover"
-        :src="authentication.user.image?.thumbnail || $store.images.empty"
-      >
-        <template v-slot:error>
-          <span>
-            <q-img
-              fit="cover"
-              style="border-radius: 50%"
-              height="54px"
-              width="54px"
-              :src="$store.images.empty"
-            ></q-img>
-          </span>
-        </template>
-      </q-img>
+      <div class="user-icon-block row justify-center items-center">
+        <q-icon
+          :name="authentication.user.sex === SexType.MALE ? 'fa-regular fa-person' : 'fa-regular fa-person-dress'"
+          color="on-backing-color" size="30px"></q-icon>
+      </div>
+      <!--      <q-img-->
+      <!--        :src="authentication.user.image?.thumbnail || $store.images.empty"-->
+      <!--        fit="cover"-->
+      <!--        height="58px"-->
+      <!--        style="border-radius: 50%"-->
+      <!--        width="58px"-->
+      <!--      >-->
+      <!--        <template v-slot:error>-->
+      <!--          <span>-->
+      <!--            <q-img-->
+      <!--              :src="$store.images.empty"-->
+      <!--              fit="cover"-->
+      <!--              height="54px"-->
+      <!--              style="border-radius: 50%"-->
+      <!--              width="54px"-->
+      <!--            ></q-img>-->
+      <!--          </span>-->
+      <!--        </template>-->
+      <!--      </q-img>-->
       <div class="column gap-3">
         <div class="header3 bold">
           {{ authentication.user.fullName }}
         </div>
-        <div style="opacity: 0.7" class="body">
+        <div class="body" style="opacity: 0.7">
           {{ authentication.user.phone }}
         </div>
       </div>
     </div>
     <div class="row items-center gap-7 no-wrap">
       <CIcon
-        @click="$emit('editProfile', true)"
-        size="20px"
-        hover-color="primary"
         class="cursor-pointer"
-        name="fa-regular fa-pen"
         color="secondary"
+        hover-color="primary"
+        name="fa-regular fa-pen"
+        size="20px"
+        @click="$emit('editProfile', true)"
       />
       <CIcon
+        class="cursor-pointer"
+        color="secondary"
+        hover-color="primary"
+        name="fa-regular fa-trash"
+        size="20px"
         @click="
           $router.push({
             name: 'deleteAccountPage',
@@ -50,11 +60,6 @@
             },
           })
         "
-        size="20px"
-        hover-color="primary"
-        class="cursor-pointer"
-        name="fa-regular fa-trash"
-        color="secondary"
       />
     </div>
   </div>
@@ -62,6 +67,7 @@
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
+import { SexType } from 'src/models/customer/customer';
 
 defineEmits<{
   (evt: 'editProfile', val: boolean): void
@@ -71,5 +77,12 @@ defineEmits<{
 <style lang="scss" scoped>
 .card-element {
   border: 2px var(--primary) solid;
+}
+
+.user-icon-block {
+  height: 58px;
+  width: 58px;
+  border-radius: 50%;
+  background-color: var(--backing-color);
 }
 </style>
