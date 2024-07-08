@@ -1,19 +1,19 @@
 <template>
   <div
-    @mouseover="hover = true"
-    @mouseleave="hover = false"
-    class="cursor-pointer border-radius row items-center body"
-    @click="clickHandler(item)"
-    :style="[isHomePage ? 'transition: color 0.25s ease-out' : '']"
     :class="[
       (isSelected && isHomePage && !additional) || (hover && !$q.platform.has.touch)
         ? 'text-primary'
         : 'text-secondary-text',
     ]"
+    :style="[isHomePage ? 'transition: color 0.25s ease-out' : '']"
+    class="cursor-pointer border-radius row items-center body"
+    @click="clickHandler(item)"
+    @mouseleave="hover = false"
+    @mouseover="hover = true"
   >
     <div
-      class="ellipsis bold"
       :class="{ 'text-on-background-color': additional }"
+      class="ellipsis bold"
     >
       {{ item.name }}
     </div>
@@ -22,14 +22,13 @@
 <script lang="ts" setup>
 import { MenuGroup } from 'src/models/menu/menuGroups/menuGroup'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { store } from 'src/models/store'
 import { Fn, useEventListener } from '@vueuse/core'
 import { debounce } from 'quasar'
 import { isApple } from 'src/services/isApple'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
-const route = useRoute()
 const router = useRouter()
 const hover = ref(false)
 const cleanups: Fn[] = []
@@ -59,8 +58,8 @@ const emitScrollEnd = () => {
 }
 
 
-
 const clickHandler = (v: MenuGroup) => {
+  if (store.groupDragged) return
   fictiveUrlStore.visibleMenuGroupIdManualSet = true
   fictiveUrlStore.setVisibleMenuGroup(v)
   if (router.isIncludesRouteName(['home', 'qrHome'])) {

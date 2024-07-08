@@ -1,5 +1,5 @@
 <template>
-  <div class="row full-width bg-background-color" ref="bottomHeader">
+  <div ref="bottomHeader" class="row full-width bg-background-color">
     <div class="row no-wrap items-center full-width">
       <div
         :style="
@@ -9,13 +9,14 @@
         "
         class="row full-width border-radius no-wrap body items-center gap-10 content-row relative-position"
       >
+
         <div
+          ref="scrollArea"
+          v-dragscroll
           class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
           style="overflow-x: scroll"
-          ref="scrollArea"
-          v-bind="{ vDragscroll: !$q.platform.has.touch }"
-          @dragscrollstart="onDragStart"
           @dragscrollend="onDragEnd"
+          @dragscrollstart="onDragStart"
         >
           <div
             v-if="categories && (!$salesPoint.menuLoading || $menu.item)"
@@ -29,8 +30,8 @@
             >
               <GroupButton
                 :key="key"
-                :item="el"
                 :is-selected="fictiveUrlStore.visibleMenuGroupId === el.id"
+                :item="el"
               />
             </div>
           </div>
@@ -49,7 +50,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import GroupButton from './GroupButton.vue'
 import { useRoute, useRouter } from 'vue-router'
