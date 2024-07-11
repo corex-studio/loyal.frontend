@@ -6,12 +6,12 @@
         <div class="column full-width gap-6">
           <div v-for="(el, index) in infoBlocks" :key="index">
             <CButton
-              @click="el.click()"
-              text-button
+              :label="el.label"
               class="body"
               style="opacity: 0.7"
-              :label="el.label"
+              text-button
               text-color="on-bottom-menu-color"
+              @click="el.click()"
             />
           </div>
         </div>
@@ -24,9 +24,9 @@
             :key="index"
           >
             <div
-              @click="openLink(item.link)"
-              style="opacity: 0.7"
               class="body cursor-pointer"
+              style="opacity: 0.7"
+              @click="openLink(item.link)"
             >
               {{ item.value }}
             </div>
@@ -35,7 +35,7 @@
             v-for="(item, index) in $company.item?.guestContacts.phones"
             :key="index"
           >
-            <a class="body" style="opacity: 0.7" :href="item.link">
+            <a :href="item.link" class="body" style="opacity: 0.7">
               {{ item.value }}
             </a>
             <!-- <div
@@ -51,9 +51,9 @@
             :key="index"
           >
             <div
-              @click="openLink(item.link)"
-              style="opacity: 0.7"
               class="body cursor-pointer"
+              style="opacity: 0.7"
+              @click="openLink(item.link)"
             >
               {{ item.value }}
             </div>
@@ -77,13 +77,13 @@
           class="border-radius"
           style="width: 93px; height: 93px; min-width: 93px; overflow: hidden"
         >
-          <img width="93" height="93" :src="qrCode" alt="QR Code" />
+          <img :src="qrCode" alt="QR Code" height="93" width="93" />
         </div>
         <div class="column gap-6">
           <img
             v-if="$appSettings.linksData.ios_download_link"
-            @click="openLink($appSettings.linksData.ios_download_link)"
             class="cursor-pointer"
+            src="/assets/Apple.svg"
             style="
               height: 40px;
               background-color: #2e2e2e;
@@ -91,12 +91,12 @@
               border-radius: 7px;
               width: 100%;
             "
-            src="/assets/Apple.svg"
+            @click="openLink($appSettings.linksData.ios_download_link)"
           />
           <img
             v-if="$appSettings.linksData.android_download_link"
-            @click="openLink($appSettings.linksData.android_download_link)"
             class="cursor-pointer"
+            src="/assets/Google.svg"
             style="
               height: 40px;
               background-color: #2e2e2e;
@@ -104,7 +104,7 @@
               border-radius: 7px;
               width: 100%;
             "
-            src="/assets/Google.svg"
+            @click="openLink($appSettings.linksData.android_download_link)"
           />
         </div>
       </div>
@@ -125,11 +125,11 @@
     >
       <div>© 2023 все права защищены</div>
       <CButton
-        text-color="on-bottom-menu-color"
-        text-button
-        style="opacity: 0.7; width: fit-content"
         class="body"
         label="Политика конфиденциальности"
+        style="opacity: 0.7; width: fit-content"
+        text-button
+        text-color="on-bottom-menu-color"
         @click="
           openLink(
             `https://${currentHost}/${String(
@@ -139,6 +139,11 @@
         "
       />
       <CButton
+        class="body"
+        label="Условия использования"
+        style="opacity: 0.7; width: fit-content"
+        text-button
+        text-color="on-bottom-menu-color"
         @click="
           openLink(
             `https://${currentHost}/${String(
@@ -146,11 +151,6 @@
             )}/terms_of_service`,
           )
         "
-        class="body"
-        text-color="on-bottom-menu-color"
-        text-button
-        style="opacity: 0.7; width: fit-content"
-        label="Условия использования"
       />
       <CButton
         class="body"
@@ -167,13 +167,15 @@
         "
       />
 
-      <div class="row no-wrap gap-3">
+      <div
+        v-if="!$uiSettings.item?.exclusive"
+        class="row no-wrap gap-3">
         <div style="opacity: 0.7">Работает на</div>
-        <q-img style="width: 30px" src="/assets/loyalHeart.svg" />
+        <q-img src="/assets/loyalHeart.svg" style="width: 30px" />
         <a
-          style="opacity: 0.7"
           class="text-on-bottom-menu-color"
           href="https://loyalhub.ru"
+          style="opacity: 0.7"
         >
           Loyalhub</a
         >
@@ -182,7 +184,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useQRCode } from '@vueuse/integrations/useQRCode'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
@@ -201,22 +203,22 @@ const infoBlocks = computed(() => {
       label: 'Акции и новости',
       click: () => {
         scrollToBlock('offers')
-      },
+      }
     },
     {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
-      },
+      }
     },
     {
       label: 'О заведении',
       click: () => {
         router.push({
-          name: 'aboutUs',
+          name: 'aboutUs'
         })
-      },
-    },
+      }
+    }
   ]
 })
 
@@ -239,7 +241,7 @@ const openLink = (link: string) => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (router.isIncludesRouteName(['home'])) {
     void router.push({
-      name: 'home',
+      name: 'home'
     })
     setTimeout(() => {
       scrollToBlock(v, tab)
@@ -259,8 +261,8 @@ if (appSettingsRepo.linksData?.app_redirect_link)
     type: 'image/png',
     color: {
       light: '#424242',
-      dark: '#fff',
-    },
+      dark: '#fff'
+    }
   })
 </script>
 
