@@ -100,7 +100,7 @@
           class="column gap-10 bold subtitle-text text-on-bottom-menu-color"
           style="max-width: 336px"
         >
-          <TopHeaderSocials icon-size="24px"/>
+          <TopHeaderSocials icon-size="24px" />
           <div
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
@@ -112,7 +112,7 @@
               <div class="subtitle-text bold">
                 {{ item.name }}
               </div>
-              <a class="body" style="opacity: 0.6" :href="item.link">
+              <a :href="item.link" class="body" style="opacity: 0.6">
                 {{ item.value }}
               </a>
               <!-- <div
@@ -154,9 +154,9 @@
               }}
             </div>
             <div
-              class="body"
               v-for="(el, index) in $company.item?.salesPoints"
               :key="index"
+              class="body"
               style="opacity: 0.6"
             >
               {{ el.customAddress || el.address }}
@@ -249,9 +249,9 @@
             <a
               v-for="(item, index) in $company.item?.guestContacts.phones"
               :key="index"
+              :href="item.link"
               class="body"
               style="opacity: 0.6"
-              :href="item.link"
             >
               {{ item.value }}
             </a>
@@ -322,7 +322,7 @@
       >
         <div class="body">
           Скачайте наше
-          <br/>Удобное приложение
+          <br />Удобное приложение
         </div>
         <div class="row gap-10">
           <div
@@ -342,16 +342,16 @@
             class="app-link-block row items-center justify-center border-radius2"
           >
             <img
+              alt="Google download link"
               class="cursor-pointer"
               src="/assets/Google.png"
-              alt="Google download link"
               style="object-fit: contain; width: 111px"
               @click="openLink($appSettings.linksData.android_download_link)"
             />
           </div>
         </div>
       </div>
-      <div class="row no-wrap items-center gap-3">
+      <div v-if="!$uiSettings.item?.exclusive" class="row no-wrap items-center gap-3">
         <div>Работает на</div>
         <CustomIcon
           :color="`#${$uiSettings.item?.bottomMenuColor.on_color}`"
@@ -370,10 +370,10 @@
 
 <script lang="ts" setup>
 import CButton from 'src/components/template/buttons/CButton.vue'
-import {store} from 'src/models/store'
-import {uiSettingsRepo} from 'src/models/uiSettings/uiSettingsRepo'
-import {computed} from 'vue'
-import {useRoute, useRouter} from 'vue-router'
+import { store } from 'src/models/store'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import TopHeaderSocials from 'layouts/header/TopHeaderSocials.vue'
 import CustomIcon from 'src/components/icons/CustomIcon.vue'
 
@@ -432,7 +432,7 @@ const scrollToBlock = (v: string, tab?: string) => {
     if (groupElement) {
       if (tab) store.offersTab = tab
       const y = groupElement.getBoundingClientRect().top + window.scrollY - 120
-      window.scrollTo({top: y, behavior: 'smooth'})
+      window.scrollTo({ top: y, behavior: 'smooth' })
     }
   }
 }
