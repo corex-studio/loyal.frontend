@@ -1,6 +1,6 @@
 import {
   DeliveryAddressRaw,
-  DeliveryAddress,
+  DeliveryAddress
 } from './../customer/deliveryAddress/deliveryAddress'
 import { SalesPointRaw, SalesPoint } from './../salesPoint/salesPoint'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
@@ -28,7 +28,7 @@ export const cartTypeName = {
   [CartType.BOOKING]: 'Бронь',
   [CartType.PICKUP]: 'Самовывоз',
   [CartType.DELIVERY]: 'Доставка',
-  [CartType.TABLE]: 'В стол',
+  [CartType.TABLE]: 'В стол'
 }
 
 export type WalletPaymentRaw = {
@@ -70,6 +70,7 @@ export type CartParams = {
   comment?: string | null
   guest_count?: number
   use_bonuses?: boolean
+  cart?: string
 }
 
 export type CartRaw = {
@@ -107,6 +108,13 @@ export type CartRaw = {
     description: string | null
     title: string | null
   }[]
+  validator_errors: {
+    cart?: string[]
+    cart_items?: string[]
+    delivery?: string[]
+    payment?: string[]
+    terminal_group?: string[]
+  }
   eat_inside: boolean
   guest_count: number
   closest_time_text?: string | null
@@ -139,6 +147,13 @@ export class Cart implements BaseModel {
     description: string | null
     title: string | null
   }[]
+  validatorErrors: {
+    cart: string[]
+    cart_items: string[]
+    delivery: string[]
+    payment: string[]
+    terminal_group: string[]
+  }
   freeItems: {
     uuid: string
     active: boolean
@@ -169,9 +184,9 @@ export class Cart implements BaseModel {
     this.createdAt = raw.created_at
     this.deliveryTime = raw.delivery_time
       ? moment
-          .utc(raw.delivery_time, 'YYYY-MM-DD HH:mm:ss')
-          .local()
-          .format('DD.MM.YYYY HH:mm')
+        .utc(raw.delivery_time, 'YYYY-MM-DD HH:mm:ss')
+        .local()
+        .format('DD.MM.YYYY HH:mm')
       : null
     this.discountedTotalSum = raw.discounted_total_sum
     this.discountedSum = raw.discounted_sum
@@ -190,7 +205,7 @@ export class Cart implements BaseModel {
         cart: el.cart,
         cartItem: el.cart_item,
         menuItem: new MenuItem(el.menu_item),
-        applied: el.applied,
+        applied: el.applied
       }
     })
     this.eatInside = raw.eat_inside
@@ -200,16 +215,23 @@ export class Cart implements BaseModel {
       raw.calculation_status || CalculationStatus.INACTIVE
     this.useBonuses = raw.use_bonuses || false
     this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
+    this.validatorErrors = {
+      cart: raw.validator_errors.cart || [],
+      cart_items: raw.validator_errors.cart_items || [],
+      delivery: raw.validator_errors.delivery || [],
+      payment: raw.validator_errors.payment || [],
+      terminal_group: raw.validator_errors.terminal_group || []
+    }
   }
 
   get cartItemsQuantitySum() {
     return sum(
-      this.cartItems.filter((el) => !el.attachedTo).map((v) => v.quantity),
+      this.cartItems.filter((el) => !el.attachedTo).map((v) => v.quantity)
     )
   }
 
   get discountedSumWithoutBonuses() {
-      return this.discountedSum + this.appliedBonuses
+    return this.discountedSum + this.appliedBonuses
   }
 
   get currentAddress() {
