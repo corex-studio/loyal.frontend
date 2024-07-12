@@ -77,7 +77,6 @@ const router = useRouter()
 const showLeftBlurer = ref(false)
 const showRightBlurer = ref(true)
 
-const date = ref('')
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
@@ -156,19 +155,21 @@ onMounted(() => {
   left: 0;
   top: 0;
   height: 100%;
-  width: 100px;
+  width: 130px;
   z-index: 1;
-  background: linear-gradient(90deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 80%);
+  pointer-events: none;
+  background: linear-gradient(90deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 50%);
 }
 
 .right-blurer {
   position: absolute;
   right: 0;
   top: 0;
+  pointer-events: none;
   height: 100%;
-  width: 100px;
+  width: 130px;
   z-index: 1;
-  background: linear-gradient(270deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 80%);
+  background: linear-gradient(270deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 50%);
 }
 
 .fade-enter-active,

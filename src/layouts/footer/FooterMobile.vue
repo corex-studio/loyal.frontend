@@ -167,7 +167,9 @@
         "
       />
 
-      <div v-if="!$uiSettings.item?.exclusive" class="row no-wrap gap-3">
+      <div
+        v-if="!$uiSettings.item?.exclusive"
+        class="row no-wrap gap-3">
         <div style="opacity: 0.7">Работает на</div>
         <q-img src="/assets/loyalHeart.svg" style="width: 30px" />
         <a
