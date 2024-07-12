@@ -77,7 +77,6 @@ const router = useRouter()
 const showLeftBlurer = ref(false)
 const showRightBlurer = ref(true)
 
-const date = ref('')
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
