@@ -155,9 +155,9 @@ onMounted(() => {
   left: 0;
   top: 0;
   height: 100%;
-  width: 100px;
+  width: 130px;
   z-index: 1;
-  background: linear-gradient(90deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 80%);
+  background: linear-gradient(90deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 50%);
 }
 
 .right-blurer {
@@ -165,9 +165,9 @@ onMounted(() => {
   right: 0;
   top: 0;
   height: 100%;
-  width: 100px;
+  width: 130px;
   z-index: 1;
-  background: linear-gradient(270deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 80%);
+  background: linear-gradient(270deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 50%);
 }
 
 .fade-enter-active,
