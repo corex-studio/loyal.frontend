@@ -9,11 +9,16 @@
         "
         class="row full-width border-radius no-wrap body items-center gap-10 content-row relative-position"
       >
-
+        <Transition name="fade">
+          <div v-if="showLeftBlurer" class="left-blurer"></div>
+        </Transition>
+        <Transition name="fade">
+          <div v-if="showRightBlurer" class="right-blurer"></div>
+        </Transition>
         <div
           ref="scrollArea"
           v-dragscroll
-          class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar"
+          class="row gap-sm-14 gap-xs-8 no-wrap items-center no-scrollbar "
           style="overflow-x: scroll"
           @dragscrollend="onDragEnd"
           @dragscrollstart="onDragStart"
@@ -51,7 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import GroupButton from './GroupButton.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { menuRepo } from 'src/models/menu/menuRepo'
@@ -61,7 +66,6 @@ import { debounce } from 'quasar'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
 const vDragscroll = dragscroll
-
 const bottomHeader = ref<Element | null>(null)
 const key = ref(0)
 const route = useRoute()
@@ -70,6 +74,9 @@ const scrollArea = ref<HTMLDivElement>()
 const offsetForScroll = ref(0)
 const fictiveUrlStore = useFictiveUrlStore()
 const router = useRouter()
+const showLeftBlurer = ref(false)
+const showRightBlurer = ref(true)
+
 
 const categories = computed(() => {
   return menuRepo.item?.groups?.filter((v) => v.items.length)
@@ -90,7 +97,7 @@ watch(selectedIndex, (i) => {
 const _scrollToSelectedIndex = () => {
   scrollArea.value?.scrollTo({
     left: offsetForScroll.value,
-    behavior: 'smooth',
+    behavior: 'smooth'
   })
 }
 
@@ -102,7 +109,7 @@ watch(
     if (router.isIncludesRouteName(['home', 'qrHome'])) {
       key.value++
     }
-  },
+  }
 )
 let dragTimeout: NodeJS.Timeout | null = null
 
@@ -118,4 +125,58 @@ const onDragEnd = () => {
   if (dragTimeout) clearTimeout(dragTimeout)
   setTimeout(() => (store.groupDragged = false))
 }
+
+const handleBlurersStates = () => {
+  scrollArea.value?.addEventListener('scroll', (e: any) => {
+    if (!scrollArea.value) return
+    if (scrollArea.value?.scrollWidth - scrollArea.value.scrollLeft === scrollArea.value?.offsetWidth) {
+      showRightBlurer.value = false
+    } else {
+      showRightBlurer.value = true
+    }
+    if (scrollArea.value && scrollArea.value.scrollLeft > 0) {
+      showLeftBlurer.value = true
+    } else {
+      showLeftBlurer.value = false
+    }
+  })
+}
+
+onMounted(() => {
+  handleBlurersStates()
+})
+
+
 </script>
+
+<style lang="scss" scoped>
+.left-blurer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100px;
+  z-index: 1;
+  background: linear-gradient(90deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 80%);
+}
+
+.right-blurer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100px;
+  z-index: 1;
+  background: linear-gradient(270deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 80%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
