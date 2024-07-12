@@ -157,6 +157,7 @@ onMounted(() => {
   height: 100%;
   width: 130px;
   z-index: 1;
+  pointer-events: none;
   background: linear-gradient(90deg, var(--background-color) 0%, rgba(255, 255, 255, 0) 50%);
 }
 
@@ -164,6 +165,7 @@ onMounted(() => {
   position: absolute;
   right: 0;
   top: 0;
+  pointer-events: none;
   height: 100%;
   width: 130px;
   z-index: 1;
