@@ -27,8 +27,7 @@
       </div>
     </div>
     <div class="row gap-6 body">
-
-      <div v-if="$companyGroup.item?.externalId !== 'tochka_vkusa'" class="column gap-2">
+      <div class="column gap-2">
         <div style="opacity: 0.5">Калорийность</div>
         <div>
           {{
