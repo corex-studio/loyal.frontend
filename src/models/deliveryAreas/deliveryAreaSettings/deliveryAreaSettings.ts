@@ -1,13 +1,16 @@
 import moment from 'moment'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
-import { DeliveryArea, DeliveryAreaRaw } from 'src/models/deliveryAreas/deliveryArea'
+import {
+  DeliveryArea,
+  DeliveryAreaRaw,
+} from 'src/models/deliveryAreas/deliveryArea'
 
 export type DeliveryAreaSettingsRaw = {
   uuid?: string
   sales_point: string | undefined
   type: string
   delivery_type: string
-  delivery_area: DeliveryAreaRaw
+  delivery_area: DeliveryAreaRaw | null
   minimal_order_sum: number
   weekdays: number[]
   start_time: string
@@ -21,7 +24,7 @@ export class DeliveryAreaSettings implements BaseModel {
   salesPoint: string | undefined
   type: string
   deliveryType: string
-  deliveryArea: DeliveryArea
+  deliveryArea: DeliveryArea | null
   minimalOrderSum: number
   weekdays: number[]
   startTime: string
@@ -32,11 +35,14 @@ export class DeliveryAreaSettings implements BaseModel {
   updated?: boolean
 
   constructor(raw: DeliveryAreaSettingsRaw) {
+    console.log(raw)
     this.id = raw.uuid || undefined
     this.salesPoint = raw.sales_point
     this.type = raw.type
     this.deliveryType = raw.delivery_type
-    this.deliveryArea = new DeliveryArea(raw.delivery_area)
+    this.deliveryArea = raw.delivery_area
+      ? new DeliveryArea(raw.delivery_area)
+      : null
     this.minimalOrderSum = raw.minimal_order_sum
     this.weekdays = raw.weekdays
     this.startTime = moment
@@ -54,7 +60,7 @@ export class DeliveryAreaSettings implements BaseModel {
       sales_point: this.salesPoint,
       type: this.type,
       delivery_type: this.deliveryType,
-      delivery_area: this.deliveryArea.id,
+      delivery_area: this.deliveryArea?.id,
       minimal_order_sum: this.minimalOrderSum,
       weekdays: this.weekdays,
       start_time: moment(this.startTime, 'HH:mm').utc().format('HH:mm:ss'),

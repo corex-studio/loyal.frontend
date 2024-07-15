@@ -203,7 +203,7 @@ const drawDeliveryAreas = async (el: Feature) => {
       salesPointInfoModelValue.value = true
       const filterSettings = (
         v: DeliveryAreaSettings // filter fn
-      ) => v.salesPoint === salesPointId && v.deliveryArea.id === item.id
+      ) => v.salesPoint === salesPointId && v.deliveryArea?.id === item.id
       salesPointDeliveryData.value = {
         deliveryArea: item,
         salesPoint: salesPoint as SalesPoint,
