@@ -22,6 +22,7 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 import { isCityPage } from 'src/router/helpers'
 import { useRoute, useRouter } from 'vue-router'
+import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -39,6 +40,7 @@ export class AppManager {
   constructor(config: AppManagerConfig) {
     this.config = config
   }
+
   async initApp() {
     this.setScrollSettings()
     let companyGroupId = this.config.companyGroupId
@@ -54,7 +56,7 @@ export class AppManager {
       uiSettingsRepo.fetchSettings(),
       appSettingsRepo.getLinksSettings(),
       authSettingsRepo.getAuthSettings(),
-      companyGroupRepo.getRequiredFieldsSettings(),
+      companyGroupRepo.getRequiredFieldsSettings()
     ]).then(() => {
       if (
         companyGroupRepo.item?.externalId === 'tochka_vkusa' &&
@@ -94,7 +96,7 @@ export class AppManager {
       void cartRepo.setParams({
         type: CartType.TABLE,
         pad: padRepo.item?.id,
-        sales_point: padRepo.item?.salesPoint?.id,
+        sales_point: padRepo.item?.salesPoint?.id
       })
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
       if (padRepo.item)
@@ -111,10 +113,10 @@ export class AppManager {
     if (this.fictiveUrlStore.initialMenuItem) {
       store.openMenuItemModal()
       await menuItemRepo.retrieve(this.fictiveUrlStore.initialMenuItem, {
-        sales_point: salesPointRepo.item?.id,
+        sales_point: salesPointRepo.item?.id
       })
       await menuRulesForAddingRepo.list({
-        menu_item: menuItemRepo.item?.id,
+        menu_item: menuItemRepo.item?.id
       })
       this.fictiveUrlStore.initialMenuItem = null
     }
@@ -124,7 +126,7 @@ export class AppManager {
     if (this.fictiveUrlStore.initialMenuGroupItem) {
       const res =
         menuRepo.item?.groups?.find((v) =>
-          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem),
+          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem)
         ) || null
       if (res) {
         this.fictiveUrlStore.setVisibleMenuGroup(res)
@@ -190,7 +192,7 @@ export class AppManager {
       if (cities.length > 1) void this.router.replaceToWithCityPage()
     }
     // if (cities.length > 1 && !isCityPage(this.route)) void this.router.replaceToWithCityPage()
-    if (cities.length <= 1 && isCityPage(this.route)) void  this.router.replaceToWithoutCityPage()
+    if (cities.length <= 1 && isCityPage(this.route)) void this.router.replaceToWithoutCityPage()
 
 
   }
@@ -212,7 +214,8 @@ export class AppManager {
     try {
       await authentication.validateTokens()
       await authentication.me()
-    } catch {}
+    } catch {
+    }
   }
 
   async setDeviceMeta() {
@@ -226,7 +229,7 @@ export class AppManager {
       mac: window.navigator.userAgent,
       timezone: `${moment().format('Z')} ${
         Intl.DateTimeFormat().resolvedOptions().timeZone
-      }`,
+      }`
     })
   }
 
@@ -258,26 +261,9 @@ export class AppManager {
   }
 
   async loadMenuPage() {
-    let currentPoint = store.tableMode
-      ? padRepo.item?.salesPoint
-      : cartRepo.item
-        ? cartRepo.item?.salesPoint
-        : companyGroupRepo.item?.companies[0]?.salesPoints &&
-            companyGroupRepo.item?.companies[0]?.salesPoints.length
-          ? companyGroupRepo.item?.companies[0]?.salesPoints[0]
-          : null
-    if (authentication.user) {
-      if (store.qrData) {
-        await cartRepo.setParams({
-          sales_point: store.qrData.data?.salesPoint?.id,
-          type: CartType.TABLE,
-          pad: store.qrData.data?.pad?.id,
-          comment: cartRepo.item?.comment || undefined,
-        })
-      }
-      await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
-    }
-    if (cartRepo.item) currentPoint = cartRepo.item.salesPoint
+    cartRepo.item = null
+    const currentPoint = this.findCurrentSalesPoint()
+    await this.loadCart()
     if (currentPoint) {
       void store.loadCatalog(currentPoint).then(() => {
         void this.handleInitialMenuItem()
@@ -292,7 +278,7 @@ export class AppManager {
         type: NewsType.DEFAULT,
         city:
           localStorage.getItem('city') ||
-          companyGroupRepo.item?.cityData.current?.uuid,
+          companyGroupRepo.item?.cityData.current?.uuid
       })
       .then((res) => {
         newsRepo.news = res.items
@@ -304,7 +290,7 @@ export class AppManager {
         type: NewsType.PROMOTION,
         city:
           localStorage.getItem('city') ||
-          companyGroupRepo.item?.cityData.current?.uuid,
+          companyGroupRepo.item?.cityData.current?.uuid
       })
       .then((res) => {
         newsRepo.promotions = res.items
@@ -315,5 +301,34 @@ export class AppManager {
     ) {
       store.registrationModal = true
     }
+  }
+
+  findCurrentSalesPoint() {
+    let currentPoint: SalesPoint | null | undefined = null
+    if (store.tableMode) {
+      currentPoint = padRepo.item?.salesPoint
+    } else if (cartRepo.item) {
+      currentPoint = cartRepo.item?.salesPoint
+    } else if (companyGroupRepo.item?.companies?.[0]?.salesPoints?.length) {
+      currentPoint = companyGroupRepo.item.companies[0].salesPoints[0]
+    }
+    return currentPoint || null
+  }
+
+  async loadCart() {
+    if (authentication.user) {
+      if (store.qrData) {
+        await cartRepo.setParams({
+          sales_point: store.qrData.data?.salesPoint?.id,
+          type: CartType.TABLE,
+          pad: store.qrData.data?.pad?.id,
+          comment: cartRepo.item?.comment || undefined
+        })
+      }
+      await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
+    } else {
+      cartRepo.item = null
+    }
+    return cartRepo.item
   }
 }

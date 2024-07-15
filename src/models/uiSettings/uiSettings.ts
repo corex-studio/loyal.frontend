@@ -117,6 +117,7 @@ export type UiSettingsRaw = {
   out_of_stock_text: string | null
   ui_elements: UIElementRaw[]
   guest_count_setter_text?: string | null
+  exclusive: boolean
 }
 
 export type BoxShadow = {
@@ -199,6 +200,8 @@ export class UiSetting implements BaseModel {
   uiElements: UIElementRaw[]
   guestCountSetterText: string | null
   orderCompletePostPaymentBannerText: string | null
+  exclusive: boolean
+
 
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
@@ -275,6 +278,7 @@ export class UiSetting implements BaseModel {
     this.uiElements = raw.ui_elements
     this.guestCountSetterText = raw.guest_count_setter_text || null
     this.orderCompletePostPaymentBannerText = raw.order_complete_post_payment_banner_text || null
+    this.exclusive = raw.exclusive
   }
 
   get useBonuses() {
