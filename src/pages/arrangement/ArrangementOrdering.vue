@@ -40,9 +40,9 @@
               >
                 <div>{{ $cart.item?.currentAddress }}</div>
               </div>
-              <div v-if=" $cart.item.validatorErrors.delivery.length"
+              <div v-if=" $cart.item.validationErrors.delivery.length"
                    class="text-danger secondary-text mt-2">
-                {{ $cart.item?.validatorErrors.delivery.join(', ') }}
+                {{ $cart.item?.validationErrors.delivery.join(', ') }}
               </div>
             </div>
           </div>
@@ -272,8 +272,8 @@
                   @click="selectedPaymentTypeModal = true"
                 />
               </div>
-              <div v-if="$cart.item.validatorErrors.payment.length" class="mt-2 text-danger secondary-text">
-                {{ $cart.item.validatorErrors.payment.join(', ') }}
+              <div v-if="$cart.item.validationErrors.payment.length" class="mt-2 text-danger secondary-text">
+                {{ $cart.item.validationErrors.payment.join(', ') }}
               </div>
 
             </div>
@@ -311,7 +311,6 @@
               })
             "
           />
-
           <CButton
             :disabled="!isArrangeAvailable"
             :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
@@ -418,6 +417,7 @@
                     {{ item.size.name }}
                   </div>
                   <div style="opacity: 0.6">{{ item.quantity }} шт</div>
+                  <div v-if="item.error" class="text-danger">{{ item.error }}</div>
                 </div>
               </div>
               <div class="col-2 column items-end no-wrap">
@@ -429,8 +429,11 @@
                   {{ beautifyNumber(item.totalSum, true) }} ₽
                 </div>
                 <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
+
               </div>
+
             </div>
+
           </template>
           <q-separator color="divider-color" />
           <div class="row full-width justify-between">
@@ -564,6 +567,7 @@ import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdd
 import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { notifier } from 'src/services/notifier'
 import { isArray } from 'lodash'
+import { ca } from 'app/dist/spa/assets/index-CWcoUynY'
 
 const currentDay = ref('Сегодня')
 const eatInsideTabs = [
@@ -631,9 +635,20 @@ const isArrangeAvailable = computed(() => {
       (v) =>
         !v.isDead &&
         (v.availableQuantity ? v.quantity <= v.availableQuantity : true)
-    )
+    ) && !hasValidationErrors()
   )
 })
+
+const hasValidationErrors = () => {
+  if (!cartRepo.item) return
+  return !!Object.keys(cartRepo.item.validationErrors).filter((key) => {
+    if (!cartRepo.item) return false
+    const _key = key as keyof typeof cartRepo.item.validationErrors
+    if (_key !== 'terminal_group') {
+      return !!cartRepo.item.validationErrors[_key].length
+    }
+  }).length
+}
 
 const isDelivery = computed(() => {
   return cartRepo.item?.type === CartType.DELIVERY
@@ -872,17 +887,17 @@ const validateCurrentCart = async () => {
   if (cartRepo.item && cartRepo.selectedPaymentType) {
     void cartRepo.validateCheckout(cartRepo.item, cartRepo.selectedPaymentType).then(() => {
       if (cartRepo.item) {
-        // cartRepo.item.validatorErrors = {
+        // cartRepo.item.validationErrors = {
         //   cart: ['Ошибка корзины 1', 'Ошибка корзины 2', 'Ошибка корзины 3'],
         //   delivery: ['Ошибка доставки'],
         //   payment: ['Ошибка оплаты'],
-        //   cart_items: ['Ошибка в корзине'],
+        //   cart_items: ['Ошибка в корзине ITEMS'],
         //   terminal_group: ['Ошибка группы терминалов1', 'Ошибка группы терминалов2']
         // }
-        Object.keys(cartRepo.item.validatorErrors).forEach((key) => {
-          const _key = key as keyof typeof cartRepo.item.validatorErrors
-          const _val = cartRepo.item?.validatorErrors[_key]
-          if (_val && _val.length) {
+        Object.keys(cartRepo.item.validationErrors).forEach((key) => {
+          const _key = key as keyof typeof cartRepo.item.validationErrors
+          const _val = cartRepo.item?.validationErrors[_key]
+          if (_val && _val.length && ['cart', 'cart_items', 'terminal_group'].includes(_key)) {
             notifier.error(_val.join(', '))
           }
         })

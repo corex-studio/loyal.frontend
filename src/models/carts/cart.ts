@@ -108,7 +108,7 @@ export type CartRaw = {
     description: string | null
     title: string | null
   }[]
-  validator_errors: {
+  validation_errors: {
     cart?: string[]
     cart_items?: string[]
     delivery?: string[]
@@ -147,7 +147,7 @@ export class Cart implements BaseModel {
     description: string | null
     title: string | null
   }[]
-  validatorErrors: {
+  validationErrors: {
     cart: string[]
     cart_items: string[]
     delivery: string[]
@@ -215,12 +215,12 @@ export class Cart implements BaseModel {
       raw.calculation_status || CalculationStatus.INACTIVE
     this.useBonuses = raw.use_bonuses || false
     this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
-    this.validatorErrors = {
-      cart: raw.validator_errors.cart || [],
-      cart_items: raw.validator_errors.cart_items || [],
-      delivery: raw.validator_errors.delivery || [],
-      payment: raw.validator_errors.payment || [],
-      terminal_group: raw.validator_errors.terminal_group || []
+    this.validationErrors = {
+      cart: raw.validation_errors.cart || [],
+      cart_items: raw.validation_errors.cart_items || [],
+      delivery: raw.validation_errors.delivery || [],
+      payment: raw.validation_errors.payment || [],
+      terminal_group: raw.validation_errors.terminal_group || []
     }
   }
 

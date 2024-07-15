@@ -80,7 +80,6 @@
                 )"
                 :key="index"
               >
-
                 <q-separator
                   v-if="index"
                   class="my-md-10 my-xs-8"
