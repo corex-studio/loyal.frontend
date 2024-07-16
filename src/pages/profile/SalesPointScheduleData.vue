@@ -1,7 +1,7 @@
 <template>
   <div
     class="px-5 pb-7 pt-10 relative-position bg-background-color text-on-background-color rounded-10"
-    style="max-width: 336px"
+    style="max-width: 338px"
   >
     <CIconButton
       class="absolute pa-0"
