@@ -3,14 +3,12 @@
     <div class="row full-width gap-6 justify-between items-center">
       <div class="subtitle-text bold">Пищевая ценность</div>
       <div
-        style="overflow: hidden"
         class="row items-center bg-selector-color border-radius2 pa-1"
+        style="overflow: hidden"
       >
         <div
           v-for="(el, index) in actualNutritions"
           :key="index"
-          @click="currentNutrition = el"
-          class="py-5 px-9 body border-radius2 cursor-pointer"
           :class="
             currentNutrition?.uuid === el.uuid
               ? 'bold bg-selector-active-color text-on-selector-active-color box-shadow'
@@ -21,6 +19,8 @@
               ? 'transition: background-color 0.4s ease-out'
               : 'transition: background-color 0.3s ease-out'
           "
+          class="py-5 px-9 body border-radius2 cursor-pointer"
+          @click="currentNutrition = el"
         >
           {{ nutritionsNames[el.type] }}
         </div>
