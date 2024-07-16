@@ -3,7 +3,6 @@
     class="px-5 pb-7 pt-10 relative-position bg-background-color text-on-background-color rounded-10"
     style="max-width: 333px"
   >
-
     <CIconButton
       class="absolute pa-0"
       color="transparent"
@@ -83,6 +82,10 @@
           <div class="body">
             Минимальная сумма заказа:
             {{ currentDay?.mainItem?.minimalOrderSum }} ₽
+          </div>
+          <div class="body" v-if="currentDay?.mainItem?.minimalOrderSumForFreeDelivery">
+            Беслптаная доставка от суммы:
+            {{ currentDay?.mainItem?.minimalOrderSumForFreeDelivery }} ₽
           </div>
         </template>
         <template v-else>
@@ -170,6 +173,7 @@ type CurrentDayComputed = {
     deliveryPrice: number
     deliveryDuration: number
     minimalOrderSum: number
+    minimalOrderSumForFreeDelivery: null
   } | null
   children: {
     time: string

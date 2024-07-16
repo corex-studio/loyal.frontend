@@ -12,6 +12,7 @@ type DeliveryScheduleTimeData = {
   deliveryPrice: number
   deliveryDuration: number
   minimalOrderSum: number
+  minimalOrderSumForFreeDelivery: number | null
 }
 
 type DeliveryScheduleData = DefaultScheduleData & {
@@ -107,15 +108,34 @@ export class SalesPointScheduleDataBuilder {
         this.deliveryDataByDayByTimes[Number(dayNumber)]
       for (const time of Object.keys(currentItemsByTime)) {
         const currentItems = currentItemsByTime[time].sort(
-          (a, b) => b.deliveryPrice - a.deliveryDuration,
+          (a, b) => b.deliveryPrice - a.deliveryPrice,
         )
         for (const [index, currentItem] of currentItems.entries()) {
-          if (!index) resItem.mainItem = currentItem
+          if (
+            !index &&
+            (!resItem.mainItem ||
+              resItem.mainItem.minimalOrderSum > currentItem.minimalOrderSum)
+          ) {
+            resItem.mainItem = currentItem
+          }
           resItem.children.push(currentItem)
         }
       }
+      const itemWithFreeDelivery = resItem.children.find(
+        (v) => v.deliveryPrice === 0,
+      )
+      if (itemWithFreeDelivery && resItem.mainItem)
+        resItem.mainItem.minimalOrderSumForFreeDelivery =
+          itemWithFreeDelivery.minimalOrderSum
       result.push(resItem)
       resetResItem()
+    }
+
+    // Если друг будет задача "вернуть, чтобы работало как раньше, то надо закомментить вот это
+    for (const el of result) {
+      el.children = el.children.sort(
+        (a, b) => b.deliveryPrice - a.deliveryPrice,
+      )
     }
     return result
   }

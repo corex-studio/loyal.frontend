@@ -35,7 +35,6 @@ export class DeliveryAreaSettings implements BaseModel {
   updated?: boolean
 
   constructor(raw: DeliveryAreaSettingsRaw) {
-    console.log(raw)
     this.id = raw.uuid || undefined
     this.salesPoint = raw.sales_point
     this.type = raw.type
