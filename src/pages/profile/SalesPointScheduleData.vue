@@ -43,7 +43,7 @@
       <div class="body mt-5">
         {{ deliverySchedule.length ? 'График доставки' : 'График работы' }}
       </div>
-      <div class="column no-wrap mt-5 overflow-auto" style="max-height: 298px">
+      <div class="column no-wrap mt-5 overflow-auto" style="max-height: 300px">
         <div
           v-if="!currentDay?.mainItem && !currentDay?.timesData?.length"
           class="body"
@@ -84,7 +84,7 @@
             {{ currentDay?.mainItem?.minimalOrderSum }} ₽
           </div>
           <div class="body" v-if="currentDay?.mainItem?.minimalOrderSumForFreeDelivery">
-            Беслптаная доставка от суммы:
+            Бесплатная доставка от суммы:
             {{ currentDay?.mainItem?.minimalOrderSumForFreeDelivery }} ₽
           </div>
         </template>
