@@ -1,7 +1,7 @@
 <template>
   <div
     class="px-5 pb-7 pt-10 relative-position bg-background-color text-on-background-color rounded-10"
-    style="max-width: 333px"
+    style="max-width: 336px"
   >
     <CIconButton
       class="absolute pa-0"
@@ -43,7 +43,7 @@
       <div class="body mt-5">
         {{ deliverySchedule.length ? 'График доставки' : 'График работы' }}
       </div>
-      <div class="column no-wrap mt-5 overflow-auto" style="max-height: 300px">
+      <div class="column no-wrap mt-5 overflow-auto" style="max-height: 305px">
         <div
           v-if="!currentDay?.mainItem && !currentDay?.timesData?.length"
           class="body"
