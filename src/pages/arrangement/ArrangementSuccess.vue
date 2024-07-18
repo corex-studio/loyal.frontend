@@ -8,11 +8,11 @@
     >
       <CIcon
         v-if="$q.screen.lt.md"
-        name="fa-regular fa-angle-left"
-        size="24px"
+        class="cursor-pointer"
         color="on-background-color"
         hover-color="primary"
-        class="cursor-pointer"
+        name="fa-regular fa-angle-left"
+        size="24px"
         @click="
           $router.push({
             name: 'home',
@@ -31,21 +31,21 @@
         <div class="row gap-6 items-center">
           <img
             v-if="$company.item?.image?.thumbnail"
-            height="36"
-            class="border-radius"
-            style="object-fit: contain"
             :src="$company.item?.image?.thumbnail"
+            class="border-radius"
+            height="36"
+            style="object-fit: contain"
           />
           <div class="subtitle-text">
             Вы оформили заказ из «{{ $order.item.salesPoint.name }}»
           </div>
         </div>
         <div
-          class="subtitle-text mt-10"
           v-if="
             $order.item.isPostPayment &&
             $uiSettings.item?.orderCompletePostPaymentBannerText
           "
+          class="subtitle-text mt-10"
         >
           {{ $uiSettings.item.orderCompletePostPaymentBannerText }}
         </div>
@@ -57,8 +57,8 @@
           <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
           <OrderNotPaid
             v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
-            @retry="paymentModal = true"
             :show-retry="!!$route.query.paymentUrl && !$cart.item"
+            @retry="paymentModal = true"
           />
           <!-- ЗАКАЗ ОТМЕНЕН -->
           <OrderCancelled
@@ -99,58 +99,75 @@
         ресторана
       </div>
       <div class="row gap-3 no-wrap">
-        <CIcon name="fa-regular fa-location-dot" color="primary" size="22px" />
+        <CIcon color="primary" name="fa-regular fa-location-dot" size="22px" />
         <div class="header3 bold">
           {{ $order.item.salesPoint.customAddress }}
         </div>
       </div>
     </div>
-    <div class="full-width" :style="$q.screen.lt.lg ? '' : 'max-width: 550px'">
+    <div :style="$q.screen.lt.lg ? '' : 'max-width: 550px'" class="full-width">
       <div
         :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
         class="col border-radius box-shadow pa-md-10 pa-xs-8 column"
         style="height: fit-content"
       >
         <div class="row full-width justify-between items-center mb-6">
-          <div style="opacity: 0.8" class="subtitle-text">Состав заказа</div>
+          <div class="subtitle-text" style="opacity: 0.8">Состав заказа</div>
         </div>
         <div class="column full-width gap-5">
           <div
             v-for="(el, index) in $order.item.items"
             :key="index"
-            class="row full-width py-5 justify-between body"
+            class="row full-width py-5 justify-between body no-wrap"
           >
-            <div class="row gap-6 items-center">
+            <div class="row gap-6 no-wrap items-center">
               <q-img
                 :src="el.size.image?.thumbnail || $store.images.empty"
-                height="65px"
-                width="65px"
                 fit="contain"
+                height="65px"
+                style="min-width: 65px;"
+                width="65px"
               >
                 <template v-slot:error>
                   <span>
                     <q-img
-                      fit="cover"
-                      width="65px"
-                      height="65px"
                       :src="$store.images.empty"
+                      fit="cover"
+                      height="65px"
+                      style="min-width: 65px;"
+                      width="65px"
                     ></q-img> </span
-                ></template>
+                  ></template>
               </q-img>
               <div class="column gap-2">
                 <div>{{ el.size.name }}</div>
+                <div
+                  v-if="el.modifiers.length"
+                  class="secondary-text text-on-background-color"
+                >
+                  {{
+                    el.modifiers
+                      .map(
+                        (v) =>
+                          `${v.modifier?.name}${
+                            v.quantity > 1 ? ' x ' + v.quantity : ''
+                          }`
+                      )
+                      .join(', ')
+                  }}
+                </div>
                 <div style="opacity: 0.5">{{ el.quantity }} шт</div>
               </div>
             </div>
             <div class="column items-end">
               <div
-                v-if="el.price !== el.discounted_total_sum"
-                style="opacity: 0.5"
+                v-if="el.total_sum !== el.discounted_total_sum"
                 class="text-strike"
+                style="opacity: 0.5"
               >
-                {{ beautifyNumber(el.price, true) }} ₽
+                {{ beautifyNumber(el.total_sum, true) }} ₽
               </div>
-              <div>
+              <div style="text-wrap: nowrap">
                 {{ beautifyNumber(el.discounted_total_sum || 0, true) }} ₽
               </div>
             </div>
@@ -188,18 +205,18 @@
       </div>
     </div>
     <CButton
+      :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
+      class="body mt-lg-30 mt-xs-20"
+      color="secondary-button-color"
+      height="48px"
+      label="Вернуться в меню"
+      text-color="on-secondary-button-color"
+      width="100%"
       @click="
         $router.push({
           name: 'home',
         })
       "
-      label="Вернуться в меню"
-      height="48px"
-      color="secondary-button-color"
-      text-color="on-secondary-button-color"
-      width="100%"
-      class="body mt-lg-30 mt-xs-20"
-      :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
     />
     <!-- <div
       v-if="
@@ -221,8 +238,8 @@
 
   <OrderPaymentModal
     :model-value="paymentModal"
-    @update:model-value="paymentModalCloseHandler()"
     :payment-url="paymentUrl"
+    @update:model-value="paymentModalCloseHandler()"
   />
 </template>
 <script lang="ts" setup>
