@@ -127,7 +127,7 @@ const onDragEnd = () => {
 }
 
 const handleBlurersStates = () => {
-  scrollArea.value?.addEventListener('scroll', (e: any) => {
+  scrollArea.value?.addEventListener('scroll', () => {
     if (!scrollArea.value) return
     if (scrollArea.value?.scrollWidth - scrollArea.value.scrollLeft === scrollArea.value?.offsetWidth) {
       showRightBlurer.value = false

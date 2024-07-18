@@ -41,12 +41,11 @@
 </template>
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { ArrayElement } from 'src/services/types'
 import CIcon from '../helpers/CIcon.vue'
 
 const router = useRouter()
-const route = useRoute()
 
 const props = withDefaults(
   defineProps<{

@@ -2,12 +2,11 @@ import { Company } from './../company/company'
 import { NotritionRaw, PriceRaw } from './../order/order'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { Image, ImageRaw } from '../image/image'
-import { CompanyRaw } from '../company/company'
 import { MenuGroupRaw, MenuGroup } from './menuGroups/menuGroup'
 import { MenuItemRaw } from './menuItem/menuItem'
 import {
   MenuModifierGroup,
-  MenuModifierGroupRaw,
+  MenuModifierGroupRaw
 } from './menuModifierGroup/menuModifierGroup'
 
 export enum UnitType {
@@ -23,7 +22,7 @@ export const unitTypeNames = {
   [UnitType.KG]: 'Килограмм',
   [UnitType.G]: 'Грамм',
   [UnitType.ML]: 'Миллилитр',
-  [UnitType.L]: 'Литр',
+  [UnitType.L]: 'Литр'
 }
 
 export const unitTypeNamesShort = {
@@ -31,7 +30,7 @@ export const unitTypeNamesShort = {
   [UnitType.KG]: 'кг',
   [UnitType.G]: 'г',
   [UnitType.ML]: 'мл',
-  [UnitType.L]: 'л',
+  [UnitType.L]: 'л'
 }
 
 export enum NutritionType {
@@ -43,7 +42,7 @@ export enum NutritionType {
 export const nutritionsNames = {
   [NutritionType.PORTION]: 'Порция',
   [NutritionType.TOTAL]: 'Всего',
-  [NutritionType.HUNDRED_GRAMS]: '100 грамм',
+  [NutritionType.HUNDRED_GRAMS]: '100 грамм'
 }
 
 export const NutritionTypes = Object.keys(nutritionsNames).map((el) => {
@@ -86,7 +85,6 @@ export type ItemSizeRaw = {
 export type MenuRaw = {
   uuid?: string
   name: string | null
-  company: CompanyRaw
   external_id?: string
   image?: string | null
   items?: MenuItemRaw[]
@@ -138,7 +136,7 @@ export class ItemSize implements BaseModel {
     this.createdAt = raw.created_at || null
     this.updatedAt = raw.updated_at || null
     this.modifierGroups = raw.modifier_groups?.map(
-      (v) => new MenuModifierGroup(v),
+      (v) => new MenuModifierGroup(v)
     )
     this.restrictions = raw.restrictions
     this.isHidden = raw.is_hidden || false
@@ -152,7 +150,6 @@ export class ItemSize implements BaseModel {
 export class Menu implements BaseModel {
   id: string
   name: string | null
-  company: Company
   external_id?: string
   image?: string | null
   items?: MenuItemRaw[]
@@ -165,7 +162,6 @@ export class Menu implements BaseModel {
   constructor(raw: MenuRaw) {
     this.id = raw.uuid || ''
     this.name = raw.name
-    this.company = new Company(raw.company)
     this.external_id = raw.external_id || ''
     this.image = raw.image || null
     this.items = raw.items || []
@@ -182,8 +178,7 @@ export class Menu implements BaseModel {
   toJson(): Record<string, any> {
     return {
       name: this.name,
-      company: this.company.id,
-      description: this.description || undefined,
+      description: this.description || undefined
     }
   }
 }

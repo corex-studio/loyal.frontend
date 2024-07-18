@@ -62,7 +62,6 @@ import { menuRepo } from 'src/models/menu/menuRepo'
 import { maxBy } from 'lodash'
 import getVerticalScrollPosition = scroll.getVerticalScrollPosition
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
-import { useRoute } from 'vue-router'
 import { onCloseProductModalKey } from 'src/services/eventBusKeys'
 
 const { getScrollTarget } = scroll
