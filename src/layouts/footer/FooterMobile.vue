@@ -191,9 +191,8 @@ import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
-const route = useRoute()
 const router = useRouter()
 let qrCode: any = null
 

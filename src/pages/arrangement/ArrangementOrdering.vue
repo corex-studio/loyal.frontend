@@ -416,6 +416,21 @@
                   <div class="ellipsis-2-lines">
                     {{ item.size.name }}
                   </div>
+                  <div
+                    v-if="item.cartItemModifiers.length"
+                    class="secondary-text text-on-background-color"
+                  >
+                    {{
+                      item.cartItemModifiers
+                        .map(
+                          (v) =>
+                            `${v.modifier?.name}${
+                              v.quantity > 1 ? ' x ' + v.quantity : ''
+                            }`
+                        )
+                        .join(', ')
+                    }}
+                  </div>
                   <div style="opacity: 0.6">{{ item.quantity }} шт</div>
                   <div v-if="item.error" class="text-danger">{{ item.error }}</div>
                 </div>

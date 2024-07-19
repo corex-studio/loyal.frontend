@@ -26,7 +26,7 @@
           class="col-xs-8 col-lg-9 col-xs-11 column items-center text-white py-18 glassed-block"
         >
           <div class="huge" style="text-align: center">
-            О компании {{ company.name }}
+            О заведении {{ company.name }}
           </div>
           <div
             v-if="company.salesPoints"
@@ -390,14 +390,14 @@ const router = useRouter()
 const days = Object.keys(daysNames).map((key) => {
   return {
     label: daysNames[Number(key) as keyof typeof daysNames],
-    val: Number(key),
+    val: Number(key)
   }
 })
 
 const currentSchedule = computed(() => {
   if (!company.value?.salesPoints) return
   return company.value?.salesPoints[0].schedule?.days.find(
-    (el) => el.day === moment().day(),
+    (el) => el.day === moment().day()
   )
 })
 
@@ -416,14 +416,14 @@ const features = computed(() => {
       icon: 'fa-regular fa-badge-percent',
       click: () => {
         void router.push({
-          name: 'home',
+          name: 'home'
         })
-      },
-    },
+      }
+    }
   ]
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.delivery_enabled,
+      (v) => v.settings.delivery_enabled
     )
   ) {
     result.push({
@@ -432,29 +432,29 @@ const features = computed(() => {
       icon: 'fa-regular fa-truck',
       click: () => {
         companyRepo.companyForProfile?.conditions?.length ? scrollToBlock('conditions') : void 0
-      },
+      }
     })
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.pickup_enabled,
+      (v) => v.settings.pickup_enabled
     )
   ) {
     result.push({
       title: 'Самовывоз',
       text: 'Заказа',
-      icon: 'fa-regular fa-person-carry-box',
+      icon: 'fa-regular fa-person-carry-box'
     })
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.booking_enabled,
+      (v) => v.settings.booking_enabled
     )
   ) {
     result.push({
       title: 'Бронирование',
       text: 'Стола',
-      icon: 'fa-regular fa-table-picnic',
+      icon: 'fa-regular fa-table-picnic'
     })
   }
   return result
@@ -479,7 +479,7 @@ const contacts = computed(() => {
       label: 'Позвонить нам',
       image: 'contactsPhoneImage.png',
       field: 'phones',
-      values: company.value?.guestContacts.phones,
+      values: company.value?.guestContacts.phones
     })
   }
   if (company.value?.guestContacts.messages.length) {
@@ -487,7 +487,7 @@ const contacts = computed(() => {
       label: 'Написать',
       image: 'contactsMessageImage.png',
       field: 'messages',
-      values: company.value?.guestContacts.messages,
+      values: company.value?.guestContacts.messages
     })
   }
   company.value?.guestContacts.emails.forEach((v) => {
@@ -495,7 +495,7 @@ const contacts = computed(() => {
       label: v.name || '-',
       image: 'contactsFaceImage.png',
       field: 'emails',
-      values: [v],
+      values: [v]
     })
   })
   return result
@@ -522,7 +522,7 @@ onMounted(() => {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
   useEventBus(selectCompanyKey).on(
-    (e) => (companyRepo.companyForProfile = e.company),
+    (e) => (companyRepo.companyForProfile = e.company)
   )
 })
 

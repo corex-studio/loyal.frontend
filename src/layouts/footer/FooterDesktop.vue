@@ -373,11 +373,10 @@ import CButton from 'src/components/template/buttons/CButton.vue'
 import { store } from 'src/models/store'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import TopHeaderSocials from 'layouts/header/TopHeaderSocials.vue'
 import CustomIcon from 'src/components/icons/CustomIcon.vue'
 
-const route = useRoute()
 const router = useRouter()
 
 const loyalHubLogoSvg =

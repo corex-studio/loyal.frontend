@@ -1,9 +1,8 @@
 <template>
   <div
     class="px-5 pb-7 pt-10 relative-position bg-background-color text-on-background-color rounded-10"
-    style="max-width: 333px"
+    style="max-width: 338px"
   >
-
     <CIconButton
       class="absolute pa-0"
       color="transparent"
@@ -44,7 +43,7 @@
       <div class="body mt-5">
         {{ deliverySchedule.length ? 'График доставки' : 'График работы' }}
       </div>
-      <div class="column no-wrap mt-5 overflow-auto" style="max-height: 298px">
+      <div class="column no-wrap mt-5 overflow-auto" style="max-height: 305px">
         <div
           v-if="!currentDay?.mainItem && !currentDay?.timesData?.length"
           class="body"
@@ -83,6 +82,10 @@
           <div class="body">
             Минимальная сумма заказа:
             {{ currentDay?.mainItem?.minimalOrderSum }} ₽
+          </div>
+          <div class="body" v-if="currentDay?.mainItem?.minimalOrderSumForFreeDelivery">
+            Бесплатная доставка от суммы:
+            {{ currentDay?.mainItem?.minimalOrderSumForFreeDelivery }} ₽
           </div>
         </template>
         <template v-else>
@@ -170,6 +173,7 @@ type CurrentDayComputed = {
     deliveryPrice: number
     deliveryDuration: number
     minimalOrderSum: number
+    minimalOrderSumForFreeDelivery: null
   } | null
   children: {
     time: string

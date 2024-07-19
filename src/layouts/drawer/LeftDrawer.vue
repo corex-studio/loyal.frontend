@@ -91,16 +91,14 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { store } from 'src/models/store'
 import { computed, nextTick } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import TopHeaderSocials from '../header/TopHeaderSocials.vue'
-// import TopHeaderDeliveryInfo from '../header/TopHeaderDeliveryInfo.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import ContactsHeader from 'layouts/header/ContactsHeader.vue'
 import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 
 const router = useRouter()
-const route = useRoute()
 
 const blocks = computed(() => {
   return [

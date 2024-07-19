@@ -54,12 +54,11 @@
 <script lang="ts" setup>
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { CSSProperties, computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { PaymentType } from 'src/models/order/order'
 import { orderRepo } from 'src/models/order/orderRepo'
 
-const route = useRoute()
 const router = useRouter()
 
 const currentStep = computed(() => {
