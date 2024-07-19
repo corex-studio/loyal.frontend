@@ -35,14 +35,14 @@
                   ? 'border: 1px #ededed solid'
                   : ''
               "
-                class="bg-input-color border-radius2 items-center text-on-input-color row justify-between px-6 py-5 row no-wrap  gap-10"
+                class="bg-input-color border-radius2 justify-center text-on-input-color column px-6 py-5 row no-wrap gap-2"
                 style="min-height: 48px"
               >
                 <div>{{ $cart.item?.currentAddress }}</div>
-              </div>
-              <div v-if=" $cart.item.validationErrors.delivery.length"
-                   class="text-danger secondary-text mt-2">
-                {{ $cart.item?.validationErrors.delivery.join(', ') }}
+                <div v-if=" $cart.item.validationErrors.delivery.length"
+                     class="text-danger secondary-text ">
+                  {{ $cart.item?.validationErrors.delivery.join(', ') }}
+                </div>
               </div>
             </div>
           </div>
@@ -241,43 +241,46 @@
               Способ оплаты
             </div>
             <div class="col">
-              <div
-                :style="
+              <div :style="
                 $uiSettings.item?.inputType === 'outlined'
                   ? 'border: 1px #ededed solid'
                   : ''
-              "
-                class="body border-radius2 bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap full-width gap-10"
-                style="min-height: 48px"
-                @click="selectedPaymentTypeModal = true"
+              " class="column gap-2 border-radius2 bg-input-color justify-center px-6 py-5"
+                   style="min-height: 48px"
               >
-                <div class="gap-4 row items-center no-wrap">
-                  <q-icon :name="$cart.selectedPaymentType?.icon" size="20px" />
-                  {{ $cart.selectedPaymentType?.label }}
-                </div>
-                <CButton
-                  v-if="$q.screen.gt.sm"
-                  class="body pr-5"
-                  label="Изменить"
-                  text-button
-                  text-color="primary"
-                />
-                <CIcon
-                  v-else
-                  class="cursor-pointer"
-                  color="on-input-color"
-                  hover-color="primary"
-                  name="fa-regular fa-angle-right"
-                  size="24px"
+                <div
+                  class="body text-on-input-color row justify-between items-center row no-wrap full-width gap-10"
                   @click="selectedPaymentTypeModal = true"
-                />
-              </div>
-              <div v-if="$cart.item.validationErrors.payment.length" class="mt-2 text-danger secondary-text">
-                {{ $cart.item.validationErrors.payment.join(', ') }}
+                >
+                  <div class="gap-4 row items-center no-wrap">
+                    <q-icon :name="$cart.selectedPaymentType?.icon" size="20px" />
+                    {{ $cart.selectedPaymentType?.label }}
+                  </div>
+                  <CButton
+                    v-if="$q.screen.gt.sm"
+                    class="body pr-5"
+                    label="Изменить"
+                    text-button
+                    text-color="primary"
+                  />
+                  <CIcon
+                    v-else
+                    class="cursor-pointer"
+                    color="on-input-color"
+                    hover-color="primary"
+                    name="fa-regular fa-angle-right"
+                    size="24px"
+                    @click="selectedPaymentTypeModal = true"
+                  />
+                </div>
+                <div v-if="$cart.item.validationErrors.payment.length" class=" text-danger secondary-text">
+                  {{ $cart.item.validationErrors.payment.join(', ') }}
+                </div>
               </div>
 
             </div>
           </div>
+
           <div
             v-if="
               $cart.item.type !== CartType.TABLE &&
@@ -297,6 +300,20 @@
               />
             </div>
           </div>
+          <div
+            v-if="$cart.item.validationErrors.cart.length || $cart.item.validationErrors.terminal_group.length || $cart.item.validationErrors.cart_items.length"
+            class="bg-input-color text-on-input-color border-radius2 px-6 py-5 row gap-5 items-baseline body">
+            <q-icon name="fa-regular fa-exclamation-circle" size="18px" />
+            <div class="column gap-2">
+              <div
+                v-for="(el, index) in $cart.item.validationErrors.cart.concat($cart.item.validationErrors.terminal_group).concat($cart.item.validationErrors.cart_items)"
+                :key="index"
+              >
+                {{ el }}
+              </div>
+            </div>
+          </div>
+
         </div>
         <div v-if="$q.screen.gt.md" class="row full-width gap-10 mt-25">
           <CButton
@@ -362,6 +379,7 @@
           <div class="subtitle-text mb-2" style="opacity: 0.8">
             Состав заказа
           </div>
+
           <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
             <div class="row body full-width no-wrap py-3">
               <div class="row no-wrap gap-6 col-10 items-center">
@@ -432,7 +450,7 @@
                     }}
                   </div>
                   <div style="opacity: 0.6">{{ item.quantity }} шт</div>
-                  <div v-if="item.error" class="text-danger">{{ item.error }}</div>
+                  <div v-if="item.quantityError" class="text-danger">{{ item.quantityError }}</div>
                 </div>
               </div>
               <div class="col-2 column items-end no-wrap">
@@ -444,11 +462,8 @@
                   {{ beautifyNumber(item.totalSum, true) }} ₽
                 </div>
                 <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
-
               </div>
-
             </div>
-
           </template>
           <q-separator color="divider-color" />
           <div class="row full-width justify-between">
@@ -516,9 +531,7 @@
           <div class="header3 bold">
             {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
           </div>
-          <!-- <div>
-            {{ mobileViewSelectedTime }}
-          </div> -->
+
         </div>
         <CButton
           :disabled="!isArrangeAvailable"
@@ -581,8 +594,7 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { notifier } from 'src/services/notifier'
-import { isArray } from 'lodash'
-import { ca } from 'app/dist/spa/assets/index-CWcoUynY'
+
 
 const currentDay = ref('Сегодня')
 const eatInsideTabs = [
@@ -754,18 +766,6 @@ const makeAnOrder = async () => {
       notifier.error('В данный момент невозможно оформить заказ')
       return
     }
-    // await cartRepo.setParams({
-    //   delivery_time: cartRepo.item?.deliveryTime
-    //     ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-    //         .utc()
-    //         .format('YYYY-MM-DD HH:mm:ss')
-    //     : null,
-    //   comment: cartRepo.item?.comment || undefined,
-    //   pad: store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined,
-    //   sales_point: store.qrMenuData?.pad.salesPoint?.id,
-    //   type: cartRepo.item?.type,
-    // })
-
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
@@ -789,18 +789,17 @@ const makeAnOrder = async () => {
           : undefined,
       phone: phoneToSend || undefined
     })
-    // if (order.paymentUrl) {
-    //   await router.replace({
-    //     name: String(route.name),
-    //     query: { paymentUrl: order.paymentUrl },
-    //   })
-    //   paymentUrl.value = order.paymentUrl
-    //   paymentModal.value = true
-    // } else {
     void onOrderPaid(order)
-    // }
-  } catch (e) {
-    console.log(e)
+  } catch (e: any) {
+    const validationError = e.response.data
+    if (cartRepo.item)
+      cartRepo.item.validationErrors = validationError as {
+        cart: string[]
+        cart_items: string[]
+        delivery: string[]
+        payment: string[]
+        terminal_group: string[]
+      }
     cartRepo.arrangeLoading = false
     notifier.error('Ошибка при оформлении заказа')
   } finally {
@@ -901,22 +900,22 @@ const changePaymentType = (newPaymentType: PaymentObjectType) => {
 const validateCurrentCart = async () => {
   if (cartRepo.item && cartRepo.selectedPaymentType) {
     void cartRepo.validateCheckout(cartRepo.item, cartRepo.selectedPaymentType).then(() => {
-      if (cartRepo.item) {
-        // cartRepo.item.validationErrors = {
-        //   cart: ['Ошибка корзины 1', 'Ошибка корзины 2', 'Ошибка корзины 3'],
-        //   delivery: ['Ошибка доставки'],
-        //   payment: ['Ошибка оплаты'],
-        //   cart_items: ['Ошибка в корзине ITEMS'],
-        //   terminal_group: ['Ошибка группы терминалов1', 'Ошибка группы терминалов2']
-        // }
-        Object.keys(cartRepo.item.validationErrors).forEach((key) => {
-          const _key = key as keyof typeof cartRepo.item.validationErrors
-          const _val = cartRepo.item?.validationErrors[_key]
-          if (_val && _val.length && ['cart', 'cart_items', 'terminal_group'].includes(_key)) {
-            notifier.error(_val.join(', '))
-          }
-        })
-      }
+      // if (cartRepo.item) {
+      //   cartRepo.item.validationErrors = {
+      //     cart: ['CART'],
+      //     delivery: ['Ошибка доставки'],
+      //     payment: ['Ошибка оплаты'],
+      //     cart_items: ['CART_ITEMS'],
+      //     terminal_group: ['TERNIMAL_GROUPS']
+      //   }
+      // Object.keys(cartRepo.item.validationErrors).forEach((key) => {
+      //   const _key = key as keyof typeof cartRepo.item.validationErrors
+      //   const _val = cartRepo.item?.validationErrors[_key]
+      //   if (_val && _val.length && ['cart', 'cart_items', 'terminal_group'].includes(_key)) {
+      //     notifier.error(_val.join(', '))
+      //   }
+      // })
+      // }
     })
   }
 }

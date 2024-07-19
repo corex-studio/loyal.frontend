@@ -2,6 +2,7 @@ import { MenuModifierGroupItemRaw } from './../../menu/menuModifierGroup/menuMod
 import { ImageRaw } from 'src/models/image/image'
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { PriceRaw } from 'src/models/order/order'
+import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 
 export type CartItemModifier = {
   uuid: string
@@ -46,7 +47,7 @@ export type CartItemRaw = {
   available_quantity: number | null
   attached_to: string | null
   menu_item?: string | null
-  error: string | null
+  // error: string | null
 }
 
 export class CartItem implements BaseModel {
@@ -63,7 +64,8 @@ export class CartItem implements BaseModel {
   availableQuantity: number | null
   attachedTo: string | null
   menuItem: string | null
-  error: string | null
+
+  // error: string | null
 
   constructor(raw: CartItemRaw) {
     this.id = raw.uuid
@@ -79,11 +81,21 @@ export class CartItem implements BaseModel {
     this.availableQuantity = raw.available_quantity
     this.attachedTo = raw.attached_to
     this.menuItem = raw.menu_item || null
-    this.error = raw.error
+    // this.error = raw.error
   }
 
   get isDead() {
     return this.availableQuantity ? this.availableQuantity <= 0 : false
+  }
+
+  get quantityError() {
+    if (this.availableQuantity === null) return false
+    if (this.availableQuantity <= 0) {
+      return uiSettingsRepo.item?.outOfStockText || 'Товар недоступен'
+    } else if (this.availableQuantity < this.quantity) {
+      return `Доступно для заказа ${this.availableQuantity}`
+    }
+    return false
   }
 
   toJson(): Record<string, any> {
@@ -92,11 +104,11 @@ export class CartItem implements BaseModel {
       cart_item_modifiers: this.cartItemModifiers.map((v) => {
         return {
           modifier: v.modifier?.uuid,
-          quantity: v.quantity,
+          quantity: v.quantity
         }
       }),
       cart: this.cart,
-      quantity: this.quantity,
+      quantity: this.quantity
     }
   }
 }

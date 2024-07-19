@@ -252,7 +252,7 @@ const addToCartDisabledInfo = computed(() => {
     cartRepo.item?.cartItems.some(
       (v) =>
         (v.availableQuantity !== null &&
-          (v.availableQuantity <= 0 || v.availableQuantity < v.quantity)) || !!v.error
+          (v.availableQuantity <= 0 || v.availableQuantity < v.quantity))
     )
   )
     return 'Имеются недоступные позиции'
