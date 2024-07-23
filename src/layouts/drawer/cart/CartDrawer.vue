@@ -1,24 +1,25 @@
 <template>
   <div>
     <q-drawer
+      :model-value="$store.cartDrawer"
+      :width="$q.screen.lt.lg ? $q.screen.width : 581"
+      behavior="mobile"
+      class="column full-height no-wrap justify-between bg-background-color text-on-background-color"
+      no-swipe-open
+      overlay
       side="right"
       style="z-index: 999999; height: 100%"
-      overlay
-      v-model="$store.cartDrawer"
-      no-swipe-open
-      behavior="mobile"
-      :width="$q.screen.lt.lg ? $q.screen.width : 581"
-      class="column full-height no-wrap justify-between bg-background-color text-on-background-color"
+      @update:model-value="closeCartDrawer()"
     >
       <CIcon
         v-if="$q.screen.gt.md"
-        @click="$store.cartDrawer = false"
-        size="37px"
-        style="position: absolute; top: 40px; left: -50px"
-        name="fa-light fa-xmark"
-        hover-color="primary"
         class="cursor-pointer"
         color="white"
+        hover-color="primary"
+        name="fa-light fa-xmark"
+        size="37px"
+        style="position: absolute; top: 40px; left: -50px"
+        @click="closeCartDrawer()"
       />
       <div class="column pb-20">
         <div
@@ -27,20 +28,20 @@
           <div class="row items-center no-wrap gap-md-5 gap-xs-4 header3 bold">
             <CIcon
               v-if="$q.screen.lt.lg"
-              @click="$store.cartDrawer = false"
-              name="fa-regular fa-angle-left"
-              size="22px"
+              class="cursor-pointer mb-1"
               color="on-background-color"
               hover-color="primary"
-              class="cursor-pointer mb-1"
+              name="fa-regular fa-angle-left"
+              size="22px"
+              @click="closeCartDrawer()"
             />
             <div class="bold">
               {{ $q.screen.gt.sm ? 'Ваша корзина' : 'Корзина' }}
             </div>
             <template v-if="$q.screen.gt.sm">
               <div
-                style="width: 5px; height: 5px; border-radius: 50%"
                 class="bg-primary"
+                style="width: 5px; height: 5px; border-radius: 50%"
               ></div>
               <div class="bold">{{ $cart.item?.sum || 0 }}₽</div>
             </template>
@@ -48,21 +49,21 @@
           <template v-if="$q.screen.gt.sm">
             <CButton
               v-if="$cart.item?.cartItems.length"
-              @click="acceptModal = true"
-              label="Очистить"
               class="subtitle-text"
+              label="Очистить"
               text-button
               text-color="primary"
+              @click="acceptModal = true"
             />
           </template>
           <CIcon
             v-else
-            @click="acceptModal = true"
-            name="fa-regular fa-trash-alt"
-            size="22px"
+            class="cursor-pointer"
             color="on-background-color"
             hover-color="primary"
-            class="cursor-pointer"
+            name="fa-regular fa-trash-alt"
+            size="22px"
+            @click="acceptModal = true"
           />
         </div>
         <q-separator
@@ -86,8 +87,8 @@
                   color="divider-color"
                 />
                 <CartDrawerItemRow
-                  @delete="deleteCartItem(item)"
                   :item="item"
+                  @delete="deleteCartItem(item)"
                 />
               </template>
             </div>
@@ -124,39 +125,39 @@
           class="row full-width justify-center mb-md-12 mb-xs-8"
         >
           <CButton
-            @click="promocodeModal = true"
-            label="У меня есть промокод"
-            class="body"
             :style="`background-color: ${lightColor(
               $uiSettings.item?.primaryColor.color || '000',
               '27',
             )} !important`"
+            class="body"
             height="40px"
+            label="У меня есть промокод"
             text-color="primary"
+            @click="promocodeModal = true"
           />
         </div>
         <CartTotalInfo :delivery-settings="currentDeliverySettings" />
         <div
-          @click="arrange"
-          class="border-radius2 row items-center px-10 subtitle-text mt-10"
-          :style="`height: ${$q.screen.lt.md ? '40' : '52'}px; width: 100%; ${
-            addToCartDisabledInfo ? 'cursor: not-allowed' : ''
-          }`"
           :class="[
             $q.screen.gt.sm ? 'justify-between' : 'justify-center',
             addToCartDisabledInfo
               ? 'bg-secondary-button-color text-on-secondary-button-color'
               : 'bg-button-color text-on-button-color cursor-pointer',
           ]"
+          :style="`height: ${$q.screen.lt.md ? '40' : '52'}px; width: 100%; ${
+            addToCartDisabledInfo ? 'cursor: not-allowed' : ''
+          }`"
+          class="border-radius2 row items-center px-10 subtitle-text mt-10"
+          @click="arrange"
         >
           <div
-            class="row justify-center full-width"
             v-if="
               cartRepo.loading ||
               $cart.arrangeLoading ||
               loading ||
               $cart.setParamsLoading
             "
+            class="row justify-center full-width"
           >
             <q-spinner size="28px" />
           </div>
@@ -167,15 +168,15 @@
             <div>Оформить заказ</div>
             <q-badge
               v-if="$q.screen.gt.sm"
+              :class="{
+                'text-on-secondary-button-color': addToCartDisabledInfo,
+              }"
+              class="subtitle-text py-3 px-5"
               style="
                 border-radius: 8px;
                 backdrop-filter: blur(5px);
                 background-color: rgba(0, 0, 0, 0.1);
               "
-              class="subtitle-text py-3 px-5"
-              :class="{
-                'text-on-secondary-button-color': addToCartDisabledInfo,
-              }"
             >{{
                 $cart.item?.discountedTotalSum
                   ? beautifyNumber($cart.item?.discountedTotalSum, true)
@@ -190,9 +191,9 @@
   </div>
   <AcceptModal
     :model-value="acceptModal"
-    @update:model-value="acceptModal = false"
-    @accept="clearCart()"
     text="Вы точно хотите очистить корзину"
+    @accept="clearCart()"
+    @update:model-value="acceptModal = false"
   >
   </AcceptModal>
   <PromocodeModal v-model="promocodeModal" />
@@ -202,7 +203,7 @@ import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { beautifyNumber, lightColor, store } from 'src/models/store'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
@@ -251,8 +252,8 @@ const addToCartDisabledInfo = computed(() => {
   if (
     cartRepo.item?.cartItems.some(
       (v) =>
-        v.availableQuantity !== null &&
-        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity)
+        (v.availableQuantity !== null &&
+          (v.availableQuantity <= 0 || v.availableQuantity < v.quantity))
     )
   )
     return 'Имеются недоступные позиции'
@@ -339,6 +340,18 @@ watch(
   },
   { immediate: true }
 )
+
+const closeCartDrawer = () => {
+  store.cartDrawer = false
+  setScroll()
+}
+
+const setScroll = () => {
+  void nextTick(() => {
+    if (store.scrollPositionBeforeOpenProductModal)
+      window.scrollTo(0, store.scrollPositionBeforeOpenProductModal)
+  })
+}
 </script>
 
 <style lang="scss" scoped></style>
