@@ -20,13 +20,27 @@ import { menuRulesForAddingRepo } from '../menu/menuItem/menuRulesForAdding/menu
 import { authSettingsRepo } from '../authSettings/authSettingsRepo'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
-import { isCityPage } from 'src/router/helpers'
-import { useRoute, useRouter } from 'vue-router'
+import {
+  RouteLocationNormalizedLoaded,
+  Router,
+  useRoute,
+  useRouter,
+} from 'vue-router'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
+import { Company } from 'src/models/company/company'
+import { CityType } from 'src/models/companyGroup/companyGroup'
+import { cloneDeep } from 'lodash'
+import {
+  RouterResolver,
+  RouterResolverFields,
+} from 'src/models/utils/routerResolver'
+import { cityRouteParamKey, companyRouteParamKey } from 'src/router/mainRoutes'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
   initMenuPage?: boolean
+  router?: Router
+  route?: RouteLocationNormalizedLoaded
 }
 
 let interval: NodeJS.Timeout | null = null
@@ -34,11 +48,15 @@ let interval: NodeJS.Timeout | null = null
 export class AppManager {
   config: AppManagerConfig
   fictiveUrlStore = useFictiveUrlStore()
-  private route = useRoute()
-  private router = useRouter()
+  private route: RouteLocationNormalizedLoaded
+  private router: Router
+  private routerResolverFields = new RouterResolverFields()
+  private getCompanyFromLocalStorageCache: Company | null = null
 
   constructor(config: AppManagerConfig) {
     this.config = config
+    this.router = config.router || useRouter()
+    this.route = config.route || useRoute()
   }
 
   async initApp() {
@@ -46,17 +64,37 @@ export class AppManager {
     let companyGroupId = this.config.companyGroupId
     const _value = LocalStorage.getItem('Company-Group')
     if (_value && !companyGroupId) companyGroupId = String(_value)
-    if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
+    if (companyGroupId) {
+      store.setCompanyGroup(String(companyGroupId))
+      LocalStorage.remove('city')
+      LocalStorage.remove('cityAlias')
+      LocalStorage.remove('cartCompany')
+      LocalStorage.remove('cartCompanyAlias')
+    }
     if (!authentication.user && store.tableMode) {
       await authRepo.initAnonymousUser()
     }
+    const initialCityId = LocalStorage.getItem('city')
+    await Promise.all([this.tryAuth(), this.getCurrentCompanyGroup()])
+    this.checkSelectedCity(true)
+
+    if (initialCityId !== LocalStorage.getItem('city')) {
+      await this.getCurrentCompanyGroup()
+      this.checkSelectedCity()
+    }
+    this.checkSelectedCompany(true)
+
+    new RouterResolver({
+      ...this.routerResolverFields,
+      route: this.route,
+      router: this.router,
+    }).resolve()
+
     await Promise.all([
-      this.tryAuth(),
-      this.getCurrentCompanyGroup(),
       uiSettingsRepo.fetchSettings(),
       appSettingsRepo.getLinksSettings(),
       authSettingsRepo.getAuthSettings(),
-      companyGroupRepo.getRequiredFieldsSettings()
+      companyGroupRepo.getRequiredFieldsSettings(),
     ]).then(() => {
       if (
         companyGroupRepo.item?.externalId === 'tochka_vkusa' &&
@@ -64,16 +102,10 @@ export class AppManager {
       ) {
         document.body.classList.add('bebas-font')
       }
-      if (
-        companyGroupRepo.item?.id === '556af59a-eca0-49fc-b8d0-e22d4ad11d2f'
-      ) {
-        void 0
-      }
 
       if (companyRepo.item?.externalId)
         store.setCompanyGroup(companyRepo.item?.externalId)
     })
-    this.checkSelectedCity()
     if (authentication.user) {
       void this.setDeviceMeta()
       void this.setOnline()
@@ -96,7 +128,7 @@ export class AppManager {
       void cartRepo.setParams({
         type: CartType.TABLE,
         pad: padRepo.item?.id,
-        sales_point: padRepo.item?.salesPoint?.id
+        sales_point: padRepo.item?.salesPoint?.id,
       })
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
       if (padRepo.item)
@@ -113,10 +145,10 @@ export class AppManager {
     if (this.fictiveUrlStore.initialMenuItem) {
       store.openMenuItemModal()
       await menuItemRepo.retrieve(this.fictiveUrlStore.initialMenuItem, {
-        sales_point: salesPointRepo.item?.id
+        sales_point: salesPointRepo.item?.id,
       })
       await menuRulesForAddingRepo.list({
-        menu_item: menuItemRepo.item?.id
+        menu_item: menuItemRepo.item?.id,
       })
       this.fictiveUrlStore.initialMenuItem = null
     }
@@ -126,7 +158,7 @@ export class AppManager {
     if (this.fictiveUrlStore.initialMenuGroupItem) {
       const res =
         menuRepo.item?.groups?.find((v) =>
-          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem)
+          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem),
         ) || null
       if (res) {
         this.fictiveUrlStore.setVisibleMenuGroup(res)
@@ -148,53 +180,110 @@ export class AppManager {
     }
   }
 
-  checkSelectedCity() {
-    // todo refactor
-    const paramsCity = this.route.params._cityId
-    const localStorageCity =
-      localStorage.getItem('cityAlias') || localStorage.getItem('city')
-    const city = localStorageCity || (paramsCity ? String(paramsCity) : null)
+  updateLocalStorageCity(city: CityType | null | undefined) {
+    if (city) {
+      LocalStorage.set('cityAlias', city.alias || city.uuid)
+      LocalStorage.set('city', city.uuid)
+    } else {
+      LocalStorage.remove('cityAlias')
+      LocalStorage.remove('city')
+    }
+  }
 
+  updateLocalStorageCompany(company: Company | null | undefined) {
+    if (company) {
+      LocalStorage.set('cartCompanyAlias', company.alias || company.id)
+      LocalStorage.set('cartCompany', company.id)
+    } else {
+      LocalStorage.remove('cartCompanyAlias')
+      LocalStorage.remove('cartCompany')
+    }
+  }
+
+  checkSelectedCity(parseFromRoute = false) {
+    let setWithCityPage = false
     const cities = companyGroupRepo.item?.cityData.results || []
-    const foundCity = city ? companyGroupRepo.item?.findByAliasOrId(city) : null
-    if (cities.length <= 1) {
-      store.cityCheckModal = false
-      if (isCityPage(this.route)) void this.router.replaceToWithoutCityPage()
-    } else if (!city) {
-      store.cityCheckModal = true
-    } else if (!foundCity) {
-      store.cityCheckModal = true
-      void this.router.replaceToWithoutCityPage()
-    } else if (cities.length > 1) {
-      if (
-        !isCityPage(this.route) ||
-        (isCityPage(this.route) && this.route.params._cityId !== city)
-      ) {
-        if (foundCity?.alias) {
-          localStorage.setItem('city', foundCity.uuid)
-          localStorage.setItem('cityAlias', foundCity.alias || city)
-        }
-      }
-      if (foundCity.uuid !== localStorage.getItem('city')) {
-        localStorage.setItem('city', foundCity.uuid)
-        localStorage.setItem('cityAlias', foundCity.alias || foundCity.uuid)
-      }
-      void this.router.replaceToWithCityPage()
-    }
-    if (this.route.params._cityId) {
-      const currentId = String(this.route.params._cityId)
-      const city = companyGroupRepo.item?.findByAliasOrId(currentId)
-      if (city && companyGroupRepo.item) {
-        localStorage.setItem('city', city?.uuid || '')
-        localStorage.setItem('cityAlias', city?.alias || currentId)
-        companyGroupRepo.item.cityData.current = city
-      }
-      if (cities.length > 1) void this.router.replaceToWithCityPage()
-    }
-    // if (cities.length > 1 && !isCityPage(this.route)) void this.router.replaceToWithCityPage()
-    if (cities.length <= 1 && isCityPage(this.route)) void this.router.replaceToWithoutCityPage()
+    if (cities.length < 2) return
+    else setWithCityPage = true
 
+    const localStorageCityAlias = LocalStorage.getItem('cityAlias')
+    const localStorageCityId = LocalStorage.getItem('city')
+    const cityFromRoute = this.route.params[cityRouteParamKey]
 
+    let localStorageCityUpdated = false
+    if (parseFromRoute && cityFromRoute) {
+      const foundCity = cities.find(
+        (v) => v.alias === cityFromRoute || v.uuid === cityFromRoute,
+      )
+      if (foundCity) {
+        this.updateLocalStorageCity(foundCity)
+        if (companyGroupRepo.item)
+          companyGroupRepo.item.cityData.current = foundCity
+        localStorageCityUpdated = true
+      }
+    }
+
+    if (!localStorageCityUpdated) {
+      const foundCity = cities.find(
+        (v) =>
+          v.alias === localStorageCityAlias || v.uuid === localStorageCityId,
+      )
+      if (foundCity) {
+        this.updateLocalStorageCity(foundCity)
+        if (companyGroupRepo.item)
+          companyGroupRepo.item.cityData.current = foundCity
+      }
+    }
+
+    if (!LocalStorage.getItem('cityAlias')) {
+      this.updateLocalStorageCity(
+        companyGroupRepo.item?.cityData.current || cities[0],
+      )
+    }
+
+    this.routerResolverFields.withCityPage = setWithCityPage
+  }
+
+  checkSelectedCompany(parseFromRoute = false) {
+    let setWithCompanyPage = false
+    const companies = companyGroupRepo.item?.companies || []
+    if (companies.length < 2) return
+    else setWithCompanyPage = true
+
+    const localStorageCompanyAlias = LocalStorage.getItem('cartCompanyAlias')
+    const localStorageCompanyId = LocalStorage.getItem('cartCompany')
+    const companyFromRoute = this.route.params[companyRouteParamKey]
+
+    let localStorageCompanyUpdated = false
+    if (parseFromRoute && companyFromRoute) {
+      const foundCompany = companies.find(
+        (v) => v.alias === companyFromRoute || v.id === companyFromRoute,
+      )
+      if (foundCompany) {
+        this.updateLocalStorageCompany(foundCompany)
+        localStorageCompanyUpdated = true
+      } else {
+        this.updateLocalStorageCompany(companies[0])
+        localStorageCompanyUpdated = true
+      }
+    }
+
+    if (!localStorageCompanyUpdated) {
+      const foundCompany = companies.find(
+        (v) =>
+          v.alias === localStorageCompanyAlias ||
+          v.id === localStorageCompanyId,
+      )
+      if (foundCompany) {
+        this.updateLocalStorageCompany(foundCompany)
+      }
+    }
+
+    if (!LocalStorage.getItem('cartCompanyAlias')) {
+      this.updateLocalStorageCompany(companies[0])
+    }
+
+    this.routerResolverFields.withCompanyPage = setWithCompanyPage
   }
 
   setDefaultCompany() {
@@ -210,12 +299,17 @@ export class AppManager {
     }
   }
 
+  detectPageType(): RouterResolverFields {
+    this.checkSelectedCity()
+    this.checkSelectedCompany()
+    return cloneDeep(this.routerResolverFields)
+  }
+
   async tryAuth() {
     try {
       await authentication.validateTokens()
       await authentication.me()
-    } catch {
-    }
+    } catch {}
   }
 
   async setDeviceMeta() {
@@ -229,7 +323,7 @@ export class AppManager {
       mac: window.navigator.userAgent,
       timezone: `${moment().format('Z')} ${
         Intl.DateTimeFormat().resolvedOptions().timeZone
-      }`
+      }`,
     })
   }
 
@@ -278,7 +372,7 @@ export class AppManager {
         type: NewsType.DEFAULT,
         city:
           localStorage.getItem('city') ||
-          companyGroupRepo.item?.cityData.current?.uuid
+          companyGroupRepo.item?.cityData.current?.uuid,
       })
       .then((res) => {
         newsRepo.news = res.items
@@ -290,7 +384,7 @@ export class AppManager {
         type: NewsType.PROMOTION,
         city:
           localStorage.getItem('city') ||
-          companyGroupRepo.item?.cityData.current?.uuid
+          companyGroupRepo.item?.cityData.current?.uuid,
       })
       .then((res) => {
         newsRepo.promotions = res.items
@@ -303,8 +397,23 @@ export class AppManager {
     }
   }
 
+  getCompanyFromLocalStorage(ignoreCache = false) {
+    if (this.getCompanyFromLocalStorageCache && !ignoreCache)
+      return this.getCompanyFromLocalStorageCache
+    const companyId = LocalStorage.getItem('cartCompany') || null
+    if (!companyId) return null
+    const found = companyGroupRepo.item?.companies.find(
+      (v) => v.id === companyId && v.salesPoints?.length,
+    )
+    this.getCompanyFromLocalStorageCache = found || null
+    return this.getCompanyFromLocalStorageCache
+  }
+
   findCurrentSalesPoint() {
     let currentPoint: SalesPoint | null | undefined = null
+    const found = this.getCompanyFromLocalStorage()
+    if (found && found.salesPoints) return found.salesPoints[0]
+
     if (store.tableMode) {
       currentPoint = padRepo.item?.salesPoint
     } else if (cartRepo.item) {
@@ -322,7 +431,7 @@ export class AppManager {
           sales_point: store.qrData.data?.salesPoint?.id,
           type: CartType.TABLE,
           pad: store.qrData.data?.pad?.id,
-          comment: cartRepo.item?.comment || undefined
+          comment: cartRepo.item?.comment || undefined,
         })
       }
       await cartRepo.current(undefined, store.qrData?.data?.pad?.id)

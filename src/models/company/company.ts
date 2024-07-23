@@ -71,6 +71,7 @@ export type GuestContactRaw = {
 
 export type CompanyRaw = {
   uuid: string | undefined
+  alias?: string | null
   name?: string | null
   code: string | null
   external_id?: string | undefined
@@ -206,6 +207,7 @@ export class GuestContact {
 
 export class Company implements BaseModel {
   id: string | undefined
+  alias: string | null
   name: string | null
   code: string | null
   externalId?: string | undefined
@@ -243,6 +245,7 @@ export class Company implements BaseModel {
 
   constructor(raw: CompanyRaw) {
     this.id = raw.uuid || undefined
+    this.alias = raw.alias || null
     this.name = raw.name || null
     this.code = raw.code
     this.externalId = raw.external_id
