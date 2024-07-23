@@ -129,16 +129,9 @@ const onDragEnd = () => {
 const handleBlurersStates = () => {
   scrollArea.value?.addEventListener('scroll', () => {
     if (!scrollArea.value) return
-    if (scrollArea.value?.scrollWidth - scrollArea.value.scrollLeft === scrollArea.value?.offsetWidth) {
-      showRightBlurer.value = false
-    } else {
-      showRightBlurer.value = true
-    }
-    if (scrollArea.value && scrollArea.value.scrollLeft > 0) {
-      showLeftBlurer.value = true
-    } else {
-      showLeftBlurer.value = false
-    }
+    const delta = scrollArea.value?.scrollWidth - scrollArea.value.scrollLeft
+    showRightBlurer.value = delta - scrollArea.value?.offsetWidth >= 15
+    showLeftBlurer.value = scrollArea.value && scrollArea.value.scrollLeft > 0
   })
 }
 
