@@ -657,6 +657,7 @@ const changeEatInside = async (val: string) => {
     await cartRepo.setParams({
       eat_inside: cartRepo.item.eatInside
     })
+    void validateCurrentCart()
   } catch {
     notifier.error('Ошибка при задании параметров корзины')
   }
