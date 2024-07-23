@@ -192,4 +192,6 @@ const processRedirect = (route: RouteRecordRaw, key: string) => {
   if (redirect?.name) redirect.name += key
 }
 
+// console.log(mainRoutes, processRoutes())
+
 // void mainRoutesWithCity

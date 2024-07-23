@@ -11,7 +11,25 @@ import {
   withCompanyRouteKey,
 } from 'src/router/mainRoutes'
 import { LocalStorage } from 'quasar'
-import { cloneDeep, merge } from 'lodash'
+import { clone, cloneDeep, merge } from 'lodash'
+
+const routePriority = [
+  // плохо, хз как лучше
+  'withCategories',
+  'withProducts',
+  'withCity',
+  'withCompany',
+]
+
+const prepareModifiers = (modifiers: string[], deleteItems: string[] = []) => {
+  const res =  [...new Set(modifiers.sort((a, b) => routePriority.indexOf(a) - routePriority.indexOf(b)))]
+  for (const toDelete of deleteItems) {
+    const _toCheck = clone(toDelete).replace('__', '')
+    const i = res.indexOf(_toCheck)
+    if (i > -1) res.splice(i, 1)
+  }
+  return res
+}
 
 const processRouteLocation = (
   to: RouteLocationRaw,
@@ -45,6 +63,20 @@ export default boot(({ app }) => {
     const getRouteParams = () => app.config.globalProperties.$route.params
     const getRouteMeta = () => app.config.globalProperties.$route.meta
 
+    const getRouteModifiers = (name = getRouteName(), ) => {
+      name = clone(name)
+      const startFrom = name.indexOf('__')
+      if (startFrom > -1) {
+        const res = name
+          .slice(startFrom + 2)
+          .split('__')
+        res.sort((a, b) => routePriority.indexOf(a) - routePriority.indexOf(b))
+        return res
+      }
+      return []
+    }
+
+
     const prepareWithCityPageReplace = (): RouteLocationRaw => {
       const name = getRouteName().split('__')[0]
       const city =
@@ -60,6 +92,10 @@ export default boot(({ app }) => {
         _to.name += withCityRouteKey
         _to.params[cityRouteParamKey] = city as string
       }
+      const currentModifiers = getRouteModifiers(_to.name)
+      const initialModifiers = getRouteModifiers(getRouteName())
+      const modifiers = prepareModifiers([...currentModifiers, ...initialModifiers], [withCompanyRouteKey])
+      _to.name = name + '__' + modifiers.join('__')
       return _to
     }
 
@@ -79,6 +115,10 @@ export default boot(({ app }) => {
         _to.name += withCompanyRouteKey
         _to.params[companyRouteParamKey] = company as string
       }
+      const currentModifiers = getRouteModifiers(_to.name)
+      const initialModifiers = getRouteModifiers(getRouteName())
+      const modifiers = prepareModifiers([...currentModifiers, ...initialModifiers], [withCityRouteKey])
+      _to.name = name + '__' + modifiers.join('__')
       return _to
     }
 
@@ -92,7 +132,6 @@ export default boot(({ app }) => {
       return router.rawReplace(processRouteLocation(to, getRouteName()))
     }
     router.isIncludesRouteName = (first, second = getRouteName()) => {
-
       const f = first.map((v) => v.replace(withCityRouteKey, ''))
       if (f.includes('home'))
         f.push(
@@ -100,7 +139,9 @@ export default boot(({ app }) => {
           'home__withCategories__withProducts',
           'home__withNews',
         )
-      const s = second.replace(withCityRouteKey, '').replace(withCompanyRouteKey, '')
+      const s = second
+        .replace(withCityRouteKey, '')
+        .replace(withCompanyRouteKey, '')
       return f.includes(s)
     }
     router.replaceToWithCityPage = () => {
@@ -117,7 +158,11 @@ export default boot(({ app }) => {
         resName +
         (resName.endsWith(withCompanyRouteKey) ? '' : withCompanyRouteKey)
       merge(res, withCompany, { params: { _cityId: res.params?._cityId } })
-      res.name = name
+      // res.name = name + '__' + prepareModifiers(getRouteModifiers(name)).join('__')
+      const currentModifiers = getRouteModifiers(name)
+      const initialModifiers = prepareModifiers(getRouteModifiers(getRouteName()), [withCityRouteKey, withCompanyRouteKey])
+      const modifiers = prepareModifiers([...currentModifiers, ...initialModifiers])
+      res.name = getRouteName().split('__')[0] + '__' + modifiers.join('__')
       return router.rawReplace(res)
     }
     router.replaceToRawPage = () => {
