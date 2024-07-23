@@ -64,7 +64,13 @@ export class AppManager {
     let companyGroupId = this.config.companyGroupId
     const _value = LocalStorage.getItem('Company-Group')
     if (_value && !companyGroupId) companyGroupId = String(_value)
-    if (companyGroupId) store.setCompanyGroup(String(companyGroupId))
+    if (companyGroupId) {
+      store.setCompanyGroup(String(companyGroupId))
+      LocalStorage.remove('city')
+      LocalStorage.remove('cityAlias')
+      LocalStorage.remove('cartCompany')
+      LocalStorage.remove('cartCompanyAlias')
+    }
     if (!authentication.user && store.tableMode) {
       await authRepo.initAnonymousUser()
     }
