@@ -22,11 +22,18 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
 
   const route = useRoute()
 
-  const setFictiveNewsUrl = () => {
-    if (!currentNewsItem.value) return
+  const getInitialUrl = () => {
     const cityFromParams = route.params._cityId
+    const companyFromParams = route.params._companyId
     let url = '/'
     if (cityFromParams) url += String(cityFromParams) + '/'
+    if (companyFromParams) url += String(companyFromParams) + '/'
+    return url
+  }
+
+  const setFictiveNewsUrl = () => {
+    if (!currentNewsItem.value) return
+    let url = getInitialUrl()
     if (currentNewsItem.value) {
       url += `news/${currentNewsItem.value}`
     }
@@ -38,9 +45,7 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
   }
 
   const setFictiveCategoryUrl = () => {
-    const cityFromParams = route.params._cityId
-    let url = '/'
-    if (cityFromParams) url += String(cityFromParams) + '/'
+    let url = getInitialUrl()
     if (visibleMenuGroupAlias.value) {
       url += `categories/${visibleMenuGroupAlias.value}`
     } else if (visibleMenuGroupId.value) {
@@ -57,9 +62,7 @@ export const useFictiveUrlStore = defineStore('fictiveUrlStore', () => {
       (v) => v.id === menuItemRepo.item?.group,
     )
     const pk = menuItem.alias || menuItem.id
-    const cityFromParams = route.params._cityId
-    let url = '/'
-    if (cityFromParams) url += String(cityFromParams) + '/'
+    let url = getInitialUrl()
     if (menuGroupItem)
       url += `categories/${menuGroupItem.alias || menuGroupItem.id}/`
     url += `products/${pk}`
