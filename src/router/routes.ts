@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from 'vue-router'
-import { mainRoutes, mainRoutesWithCity } from 'src/router/mainRoutes'
+import { mainRoutes, processRoutes } from 'src/router/mainRoutes'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('src/layouts/MainLayout.vue'),
-    children: [...mainRoutes, ...mainRoutesWithCity],
+    children: [...mainRoutes, ...processRoutes()],
   },
   {
     path: '/qr_menu/:padId?',

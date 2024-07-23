@@ -8,6 +8,7 @@ import {
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { companyGroupApi } from './companyGroupApi'
 import { reactive } from 'vue'
+import { LocalStorage } from 'quasar'
 
 export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
   api = companyGroupApi
@@ -52,7 +53,7 @@ export class CompanyGroupRepo extends BaseRepo<CompanyGroup> {
       params: {
         only_visible: true,
         use_cities: true,
-        city: localStorage.getItem('city') || undefined,
+        city: LocalStorage.getItem('city') || undefined,
       },
     })
     this.item = new CompanyGroup(res)

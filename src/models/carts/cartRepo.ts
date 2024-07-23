@@ -11,6 +11,7 @@ import {
   DeliveryAreaSettingsRaw
 } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import { MenuItem, MenuItemRaw } from '../menu/menuItem/menuItem'
+import { LocalStorage } from 'quasar'
 
 export class CartRepo extends BaseRepo<Cart> {
   api = cartApi
@@ -77,7 +78,7 @@ export class CartRepo extends BaseRepo<Cart> {
 
   async current(sales_point?: string, pad?: string | null) {
     this.loading = true
-    const city = localStorage.getItem('city')
+    const city = LocalStorage.getItem('city')
     try {
       const res: CartRaw = await this.api.send({
         method: 'GET',

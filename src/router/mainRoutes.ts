@@ -2,8 +2,12 @@ import {
   arrangementRoutes,
   arrangementRoutesInQrMenu,
 } from 'src/router/arrangementRoutes'
-import { cloneDeep } from 'lodash'
-import { RouteRecordRaw } from 'vue-router'
+import { clone, cloneDeep, isEqual } from 'lodash'
+import {
+  RouteRecordRaw,
+} from 'vue-router'
+
+// todo было бы неплохо разбить этот файл по нескольким файлам :)
 
 export const mainRoutes = [
   {
@@ -82,29 +86,110 @@ export const mainRoutes = [
   ...arrangementRoutesInQrMenu,
 ]
 
-export const withCityRouteKey = '__withCity'
-
-export const getRouteNameVariables = (name: string) => {
-  return [name, name + withCityRouteKey]
+interface RouteNameModifier {
+  routeKey: string
+  routeParam: string
+  canBeMixed: boolean
 }
 
-const processChildren = (parent: RouteRecordRaw) => {
-  if (!parent.children) return
-  for (const el of parent.children) {
-    if (el.name && typeof el.name === 'string') el.name += withCityRouteKey
-    processChildren(el)
+class RouteNameModifierManager {
+  private _registered: RouteNameModifier[] = []
+
+  get registered() {
+    return Object.freeze(clone(this._registered))
+  }
+
+  get(key: string) {
+    const el = this._registered.find((v) => v.routeKey === key)
+    if (!el) throw Error('Item not registered')
+    return el
+  }
+
+  register(key: string, param: string, canBeMixed = false, ) {
+    this._registered.push({
+      routeKey: key,
+      routeParam: param,
+      canBeMixed,
+    })
+  }
+
+  isRegistered(key: string, param?: string) {
+    this._registered.find(
+      (v) =>
+        v.routeKey === key && ((v.routeParam === param && param) || !param),
+    )
+  }
+
+  getRouteVariables(name: string) {
+    const res = [name]
+    const forMix = this._registered
+      .filter((v) => v.canBeMixed)
+    for (const v of this._registered) res.push(name + v.routeKey)
+    for (const v of forMix) {
+      // пока так сойдет
+      const other = forMix.filter((el) => !isEqual(v, el))
+      for (const el of other) {
+        res.push(name + v.routeKey + el.routeKey)
+      }
+    }
+    return res
   }
 }
 
-export const mainRoutesWithCity = cloneDeep(mainRoutes).map((el) => {
-  if (el.name && typeof el.name === 'string') el.name += withCityRouteKey
-  const redirect = el.redirect as
+export const routeNameModifierManager = new RouteNameModifierManager()
+routeNameModifierManager.register('__withCity', '_cityId', true)
+routeNameModifierManager.register('__withCompany', '_companyId', true)
+
+export const withCityRouteKey =
+  routeNameModifierManager.get('__withCity').routeKey
+export const cityRouteParamKey =
+  routeNameModifierManager.get('__withCity').routeParam
+export const withCompanyRouteKey =
+  routeNameModifierManager.get('__withCompany').routeKey
+export const companyRouteParamKey =
+  routeNameModifierManager.get('__withCompany').routeParam
+
+const processChildren = (parent: RouteRecordRaw, key: string) => {
+  if (!parent.children) return
+  for (const el of parent.children) {
+    if (el.name && typeof el.name === 'string') el.name += key
+    processChildren(el, key)
+  }
+}
+
+export const processRoutes = (routes = mainRoutes) => {
+  const _routes = cloneDeep(routes)
+  const res: typeof _routes = []
+  for (const route of _routes) {
+    let lastRoute: RouteRecordRaw | null = null
+    for (const keyData of routeNameModifierManager.registered) {
+      const _route = cloneDeep(route)
+      const key = keyData.routeKey
+      const keyId = keyData.routeParam
+      if (_route.name && typeof _route.name === 'string') _route.name += key
+      if (_route.redirect) processRedirect(_route, key)
+      _route.path = `:${keyId}/${_route.path}`
+      processChildren(_route, key)
+      if (lastRoute && typeof lastRoute.name === 'string') {
+        const path = lastRoute.path.split('/')
+        path.splice(1, 0, `:${keyId}`)
+        lastRoute.path = path.join('/')
+        lastRoute.name += key
+        if (lastRoute.redirect) processRedirect(lastRoute, key)
+        res.push(lastRoute)
+      }
+      lastRoute = cloneDeep(_route)
+      res.push(_route)
+    }
+  }
+  return res
+}
+
+const processRedirect = (route: RouteRecordRaw, key: string) => {
+  const redirect = route.redirect as
     | ({ name: string } & Record<string, any>)
     | undefined
-  if (redirect?.name) redirect.name += withCityRouteKey
-  el.path = `:_cityId/${el.path}`
-  processChildren(el)
-  return el
-})
+  if (redirect?.name) redirect.name += key
+}
 
-void mainRoutesWithCity
+// void mainRoutesWithCity

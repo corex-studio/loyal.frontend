@@ -130,7 +130,10 @@ export class Store {
             : salesPoint?.company?.id),
       )
 
-      if (foundCompany) companyRepo.item = foundCompany
+      if (foundCompany) {
+        companyRepo.item = foundCompany
+        companyRepo.cartCompany = foundCompany
+      }
       menuRepo.item = await salesPointRepo.getMenu(salesPoint.id || '')
     }
     this.catalogLoading = false

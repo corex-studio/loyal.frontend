@@ -60,15 +60,16 @@ import CDialog from './CDialog.vue'
 import { ref, watch } from 'vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { AppManager } from 'src/models/utils/appManager'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { store } from 'src/models/store'
+import { RouterResolver } from 'src/models/utils/routerResolver'
+import { LocalStorage } from 'quasar'
 
 const props = defineProps<{
   modelValue: boolean
 }>()
 
 const route = useRoute()
-const router = useRouter()
 
 const emit = defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
@@ -86,17 +87,19 @@ watch(
   },
 )
 
+const routerResolver = new RouterResolver()
+
 const confirmSelectedCity = async () => {
   if (!currentCity.value) return
-  localStorage.setItem(
-    'city',
-    currentCity.value.uuid,
+  LocalStorage.set('city', currentCity.value.uuid)
+  LocalStorage.set(
+    'cityAlias',
+    currentCity.value.alias || currentCity.value.uuid,
   )
-  localStorage.setItem('cityAlias', currentCity.value.alias || currentCity.value.uuid)
   emit('update:modelValue', false)
-  void router.replaceToWithCityPage()
   await reRequest()
-  // history.pushState({}, '', `/${currentCity.value.uuid}`)
+  routerResolver.detect().resolve()
+
 }
 
 const reRequest = async () => {

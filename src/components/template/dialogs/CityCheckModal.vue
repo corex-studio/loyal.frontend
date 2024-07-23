@@ -39,6 +39,7 @@ import CDialog from './CDialog.vue'
 import { AppManager } from 'src/models/utils/appManager'
 import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
+import { LocalStorage } from 'quasar'
 
 defineProps<{
   modelValue: boolean
@@ -54,11 +55,11 @@ const router = useRouter()
 const confirmSuggestedCity = async () => {
   if (!companyGroupRepo.item) return
   const currentCity = companyGroupRepo.item.cityData.current
-  localStorage.setItem(
+  LocalStorage.set(
     'city',
     currentCity?.uuid || '',
   )
-  localStorage.setItem(
+  LocalStorage.set(
     'cityAlias',
     currentCity?.alias || currentCity?.uuid  || '',
   )

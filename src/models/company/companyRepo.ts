@@ -4,12 +4,29 @@ import { companyApi } from './companyApi'
 import { reactive } from 'vue'
 import { AvailablePaymentType, PaymentSettings } from '../salesPoint/salesPoint'
 import { Image, ImageRaw } from '../image/image'
+import { LocalStorage } from 'quasar'
 
 export class CompanyRepo extends BaseRepo<Company> {
   api = companyApi
   availablePaymentTypes: AvailablePaymentType[] = []
   companyForProfile: Company | null = null
-  cartCompany: Company | null = null
+  private _cartCompany: Company | null = null
+
+  get cartCompany() {
+    return this._cartCompany
+  }
+
+  set cartCompany(v) {
+    if (v?.id) {
+      LocalStorage.set('cartCompany', v.id)
+      LocalStorage.set('cartCompanyAlias', v.alias || v.id)
+    }
+    else {
+      LocalStorage.remove('cartCompany')
+      LocalStorage.remove('cartCompanyAlias')
+    }
+    this._cartCompany = v
+  }
 
   async addImage(
     company: Company,

@@ -89,9 +89,10 @@ import { orderReviewRepo } from 'src/models/order/orderReview/orderReviewRepo'
 import { setMeta } from 'src/models/metaTags/metaTags'
 import { menuRepo } from 'src/models/menu/menuRepo'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
-import { withCityRouteKey } from 'src/router/mainRoutes'
+import { withCityRouteKey, withCompanyRouteKey } from 'src/router/mainRoutes'
 import { useEventBus } from '@vueuse/core'
 import { onCloseProductModalKey } from 'src/services/eventBusKeys'
+import { RouterResolver } from 'src/models/utils/routerResolver'
 
 const ServiceSettingsModal = defineAsyncComponent(
   () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
@@ -137,7 +138,12 @@ const CartDrawer = defineAsyncComponent(
 // const webSocket = ref<WebSocket | null>(null)
 const routesWithoutContainerPaddings = computed(() => {
   const items = ['promotion', 'current_order', 'order_review', 'menu_item']
-  return items.flatMap((v) => [v, v + withCityRouteKey])
+  return items.flatMap((v) => [
+    v,
+    v + withCityRouteKey,
+    v + withCompanyRouteKey,
+    v + withCityRouteKey + withCompanyRouteKey,
+  ])
 })
 const route = useRoute()
 const ready = ref(false)
@@ -245,16 +251,19 @@ onMounted(async () => {
 //   }
 // }
 
+const routerResolver = new RouterResolver()
+
 const companySelected = (v: Company | null) => {
   if (!authentication.user) {
     if (!v || !v.salesPoints || !v.salesPoints.length) return
     void store.loadCatalog(v.salesPoints[0])
     store.selectCompanyModal = false
   } else {
-    companyRepo.cartCompany = v
     store.selectCompanyModal = false
     store.serviceSettingsModal = true
   }
+  companyRepo.cartCompany = v
+  routerResolver.detect().resolve()
 }
 
 const closeNewsModal = () => {
