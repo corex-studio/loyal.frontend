@@ -732,6 +732,7 @@ const selectClosestTime = async () => {
         .format('YYYY-MM-DD HH:mm:ss')
       : null
   })
+  await validateCurrentCart()
 }
 
 const setDeliveryTime = async (v: string | null) => {
@@ -752,6 +753,7 @@ const setDeliveryTime = async (v: string | null) => {
         .format('YYYY-MM-DD HH:mm:ss')
       : null
   })
+  await validateCurrentCart()
 }
 
 const makeAnOrder = async () => {
