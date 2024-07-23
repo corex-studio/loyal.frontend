@@ -639,7 +639,6 @@ const currentEatInsideTab = computed(() => {
 const openMenuItemModal = async (item: CartItem) => {
   if (!item.size.menu_item) return
   store.openMenuItemModal()
-
   await menuItemRepo.retrieve(item.size.menu_item, {
     sales_point: salesPointRepo.item?.id
   })
@@ -767,11 +766,16 @@ const makeAnOrder = async () => {
       SessionStorage.remove('qrMenuUserPhone')
     }
     loading.value = true
-    const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
-    if (!status) {
-      notifier.error('В данный момент невозможно оформить заказ')
+    await validateCurrentCart()
+    if (hasValidationErrors()) {
+      loading.value = false
       return
     }
+    // const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
+    // if (!status) {
+    //   notifier.error('В данный момент невозможно оформить заказ')
+    //   return
+    // }
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
@@ -905,7 +909,7 @@ const changePaymentType = (newPaymentType: PaymentObjectType) => {
 
 const validateCurrentCart = async () => {
   if (cartRepo.item && cartRepo.selectedPaymentType) {
-    void cartRepo.validateCheckout(cartRepo.item, cartRepo.selectedPaymentType).then(() => {
+    await cartRepo.validateCheckout(cartRepo.item, cartRepo.selectedPaymentType).then(() => {
       // if (cartRepo.item) {
       //   cartRepo.item.userErrors = {
       //     payment: 'payment',
