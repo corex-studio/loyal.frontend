@@ -9,13 +9,13 @@
     class="parent-block"
   >
     <div
-      @click="$store.cartDrawer = !$store.cartDrawer"
       class="cart-button row justify-center items-center cursor-pointer"
+      @click="$store.openCartDrawer()"
     >
       <CIcon
         v-if="!$cart.loading"
-        name="fa-regular fa-basket-shopping"
         color="on-primary"
+        name="fa-regular fa-basket-shopping"
         size="20px"
       />
       <q-spinner v-else color="on-primary" size="25px" />

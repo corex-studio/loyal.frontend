@@ -1,49 +1,50 @@
 <template>
   <div>
     <q-drawer
+      :model-value="$store.leftDrawer"
+      :width="$q.screen.gt.xs ? 350 : $q.screen.width"
+      behavior="mobile"
+      class="column full-height no-wrap bg-background-color text-on-background-color px-8 py-10"
+      no-swipe-open
+      overlay
       side="left"
       style="z-index: 999999; height: 100%"
-      overlay
-      v-model="$store.leftDrawer"
-      no-swipe-open
-      behavior="mobile"
-      :width="$q.screen.gt.xs ? 350 : $q.screen.width"
-      class="column full-height no-wrap bg-background-color text-on-background-color px-8 py-10"
+      @update:model-value="closeDrawer()"
     >
       <div class="row full-width justify-between items-center">
         <img
           v-if="
             $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
           "
+          :height="48"
+          :src="
+            $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
+          "
+          class="border-radius cursor-pointer"
+          style="object-fit: contain; max-width: 200px"
           @click="
             $router.push({
               name: 'home',
             })
           "
-          :height="48"
-          class="border-radius cursor-pointer"
-          style="object-fit: contain; max-width: 200px"
-          :src="
-            $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
-          "
         />
         <CIcon
-          @click="$store.leftDrawer = false"
-          name="fa-regular fa-xmark"
-          color="on-background-color"
-          size="24px"
-          hover-color="primary"
           class="cursor-pointer"
+          color="on-background-color"
+          hover-color="primary"
+          name="fa-regular fa-xmark"
+          size="24px"
+          @click="closeDrawer()"
         />
       </div>
       <div
-        @click="openCitySelectorModal()"
-        style="width: fit-content"
         class="row cursor-pointer gap-4 mt-9"
+        style="width: fit-content"
+        @click="openCitySelectorModal()"
       >
         <CIcon
-          name="fa-regular fa-location-dot"
           color="on-background-color"
+          name="fa-regular fa-location-dot"
           size="22px"
         />
         <div class="column items-start">
@@ -61,17 +62,17 @@
           />
         </div>
       </div>
-      <q-separator color="divider-color" class="my-8" />
+      <q-separator class="my-8" color="divider-color" />
       <div class="column full-width gap-12 no-wrap body">
         <CButton
-          @click="el.click()"
           v-for="(el, index) in blocks.filter((v) => !v.hidden)"
           :key="index"
+          :label="el.label"
+          class="body button"
+          style="width: fit-content"
           text-button
           text-color="on-background-color"
-          style="width: fit-content"
-          class="body button"
-          :label="el.label"
+          @click="el.click()"
         />
       </div>
       <q-separator class="my-8" />
@@ -107,9 +108,9 @@ const blocks = computed(() => {
       hidden: !authentication.user || authentication.user.isAnonymous,
       click: () => {
         router.push({
-          name: 'profilePage',
+          name: 'profilePage'
         })
-      },
+      }
     },
     {
       label: 'Бонусы',
@@ -120,36 +121,36 @@ const blocks = computed(() => {
       click: () => {
         store.bonusesDrawer = true
         store.leftDrawer = false
-      },
+      }
     },
     {
       label: 'О нас',
       click: () => {
         router.push({
-          name: 'aboutUs',
+          name: 'aboutUs'
         })
-      },
+      }
     },
     {
       label: 'Контакты',
       click: () => {
         scrollToBlock('footer')
-      },
+      }
     },
     {
       hidden: !appSettingsRepo.hasAppLinks,
       label: 'Мобильное приложение',
       click: () => {
         scrollToBlock('footer')
-      },
+      }
     },
     {
       label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
       hidden: !uiSettingsRepo.item?.becomeFranchisee,
       click: () => {
         window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
-      },
-    },
+      }
+    }
   ]
 })
 
@@ -163,7 +164,7 @@ const openCitySelectorModal = () => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (!router.isIncludesRouteName(['home'])) {
     void router.push({
-      name: 'home',
+      name: 'home'
     })
     setTimeout(() => {
       scrollToBlock(v, tab)
@@ -179,6 +180,18 @@ const scrollToBlock = (v: string, tab?: string) => {
       })
     }
   }
+}
+
+const closeDrawer = () => {
+  store.leftDrawer = false
+  setScroll()
+}
+
+const setScroll = () => {
+  void nextTick(() => {
+    if (store.scrollPositionBeforeOpenProductModal)
+      window.scrollTo(0, store.scrollPositionBeforeOpenProductModal)
+  })
 }
 </script>
 
