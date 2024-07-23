@@ -74,7 +74,7 @@
               <template v-slot:bottom>
                 <div class="row full-width gap-6">
                   <CButton
-                    :disabled="!selectedDeliveryAddress"
+                    :disabled="!selectedDeliveryAddress || !selectedDeliveryAddress.isAddressAvailable"
                     :loading="$cart.setParamsLoading || $store.catalogLoading"
                     class="col body"
                     height="48px"
@@ -345,6 +345,12 @@ watch(
       }).then(() => {
         selectCurrentTab()
         selectExistingAddress()
+        // deliveryAddressRepo.items.forEach((el, index) => {
+        //   if (index % 2 === 0)
+        //     el.salesPoint = null
+        //   else el.salesPoint = '123'
+        // })
+        // companyRepo.currentCitySalesPoints()?.forEach(el => el.id = '123')
       })
     }
   }
@@ -443,12 +449,11 @@ const changeCompany = () => {
 }
 
 const selectDeliveryAddressHandler = (v: DeliveryAddress) => {
-  const isSalesPointInCurrentCity = companyRepo.currentCitySalesPoints()?.find(el => el.id === v.salesPoint)
-  if (!v.salesPoint || !isSalesPointInCurrentCity) {
+  if (v.isAddressAvailable) {
+    selectedDeliveryAddress.value = v
+  } else {
     notifier.error('Адрес недоступен')
-    return
   }
-  selectedDeliveryAddress.value = v
 }
 
 const addAddressHandler = () => {

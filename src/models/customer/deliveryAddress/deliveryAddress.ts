@@ -1,4 +1,6 @@
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
+import { companyRepo } from 'src/models/company/companyRepo'
+import { notifier } from 'src/services/notifier'
 
 export type DeliveryAddressRaw = {
   uuid?: string | undefined
@@ -54,6 +56,12 @@ export class DeliveryAddress implements BaseModel {
     this.intercom = raw.intercom || null
     this.description = raw.description || null
     this.salesPoint = raw.sales_point || null
+  }
+
+  get isAddressAvailable(): boolean {
+    const isSalesPointInCurrentCity = companyRepo.currentCitySalesPoints()?.find(el => el.id === this.salesPoint)
+    return !!(this.salesPoint || isSalesPointInCurrentCity)
+
   }
 
   toJson(): Record<string, any> {
