@@ -49,7 +49,6 @@ export default boot(({ app }) => {
       const name = getRouteName().split('__')[0]
       const city =
         LocalStorage.getItem('cityAlias') || LocalStorage.getItem('city')
-      console.log('kek',city)
       const _to = {
         name: name,
         params: cloneDeep(getRouteParams()),
