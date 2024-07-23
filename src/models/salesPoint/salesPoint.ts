@@ -4,6 +4,7 @@ import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { Contact } from '../types'
 import { Image, ImageRaw } from '../image/image'
 import { Schedule, ScheduleRaw } from './schedule/schedule'
+import { CityType } from 'src/models/companyGroup/companyGroup'
 
 export enum SalesPointPromocodesSettingTypes {
   DISABLED = 'disabled',
@@ -18,16 +19,16 @@ export enum PromoCodeMode {
 
 export const salesPointPromocodesSettingNames = {
   [SalesPointPromocodesSettingTypes.ENABLED]: 'Включено',
-  [SalesPointPromocodesSettingTypes.DISABLED]: 'Отключено',
+  [SalesPointPromocodesSettingTypes.DISABLED]: 'Отключено'
 }
 
 export const salesPointPromocodesSettingValues = Object.keys(
-  salesPointPromocodesSettingNames,
+  salesPointPromocodesSettingNames
 ).map((v) => {
   const key = v as keyof typeof salesPointPromocodesSettingNames
   return {
     label: salesPointPromocodesSettingNames[key],
-    value: key,
+    value: key
   }
 })
 
@@ -98,6 +99,7 @@ export type SalesPointRaw = {
   contacts: Contact
   schedule: ScheduleRaw | null
   legal_entity?: string
+  city?: CityType
 }
 
 export class SalesPoint implements BaseModel {
@@ -128,6 +130,7 @@ export class SalesPoint implements BaseModel {
   contacts: Contact
   schedule: Schedule | null
   legalEntity: string
+  city: CityType | null
 
   constructor(raw: SalesPointRaw) {
     this.id = raw.uuid
@@ -162,15 +165,16 @@ export class SalesPoint implements BaseModel {
     this.schedule = raw.schedule
       ? new Schedule(raw.schedule)
       : new Schedule({
-          days: [1, 2, 3, 4, 5, 6, 7].map((v) => {
-            return {
-              active: false,
-              day: v,
-              times: [],
-            }
-          }),
+        days: [1, 2, 3, 4, 5, 6, 7].map((v) => {
+          return {
+            active: false,
+            day: v,
+            times: []
+          }
         })
+      })
     this.legalEntity = raw.legal_entity || ''
+    this.city = raw.city || null
   }
 
   get currentAddress() {
@@ -193,9 +197,9 @@ export class SalesPoint implements BaseModel {
         contact_phone: this.contacts.contact_phone,
         created_at: this.contacts.created_at,
         emails: this.contacts.emails,
-        updated_at: this.contacts.updated_at,
+        updated_at: this.contacts.updated_at
       },
-      menu: this.menu,
+      menu: this.menu
     }
   }
 }

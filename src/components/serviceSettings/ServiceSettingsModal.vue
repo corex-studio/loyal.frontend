@@ -69,7 +69,7 @@
               v-if="currentTab?.type === CartType.DELIVERY"
               :current-address="selectedDeliveryAddress"
               @edit="editAddressHandler($event)"
-              @select="selectedDeliveryAddress = $event"
+              @select="selectDeliveryAddressHandler($event)"
             >
               <template v-slot:bottom>
                 <div class="row full-width gap-6">
@@ -339,12 +339,15 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) {
-      void deliveryAddressRepo.list().then(() => {
+      void deliveryAddressRepo.list({
+        company: companyRepo.item?.id,
+        city: companyGroupRepo.item?.cityData.current?.uuid
+      }).then(() => {
         selectCurrentTab()
         selectExistingAddress()
       })
     }
-  },
+  }
 )
 
 const modalWidth = computed(() => {
@@ -379,13 +382,13 @@ const currentSalesPoints = computed(() => {
 
 const availablePickupAddresses = computed(() => {
   return companyRepo.cartCompany?.salesPoints?.filter(
-    (v) => v.settings.pickup_enabled,
+    (v) => v.settings.pickup_enabled
   )
 })
 
 const availableBookingAddresses = computed(() => {
   return companyRepo.cartCompany?.salesPoints?.filter(
-    (v) => v.settings.booking_enabled,
+    (v) => v.settings.booking_enabled
   )
 })
 
@@ -393,12 +396,12 @@ const availableCartTypes = computed(() => {
   const result: TabRaw[] = []
   if (
     companyRepo.cartCompany?.salesPoints?.some(
-      (v) => v.settings.delivery_enabled,
+      (v) => v.settings.delivery_enabled
     )
   ) {
     result.push({
       label: 'Доставка',
-      type: CartType.DELIVERY,
+      type: CartType.DELIVERY
     })
   }
   if (
@@ -409,18 +412,18 @@ const availableCartTypes = computed(() => {
         companyGroupRepo.item?.externalId === 'Onegin'
           ? 'Заказ с собой'
           : 'Самовывоз',
-      type: CartType.PICKUP,
+      type: CartType.PICKUP
     })
   }
   if (
     companyRepo.cartCompany?.salesPoints?.some(
-      (v) => v.settings.booking_enabled,
+      (v) => v.settings.booking_enabled
     ) &&
     authentication.user
   ) {
     result.push({
       label: 'Бронь',
-      type: CartType.BOOKING,
+      type: CartType.BOOKING
     })
   }
   if (companyRepo.item)
@@ -428,7 +431,7 @@ const availableCartTypes = computed(() => {
       result.push({
         label: el.type === AggregatorType.YANDEX ? 'Яндекс еда' : 'Деливери',
         type: el.type,
-        link: el.link,
+        link: el.link
       })
     })
   return result
@@ -437,6 +440,15 @@ const availableCartTypes = computed(() => {
 const changeCompany = () => {
   emit('update:modelValue', false)
   store.selectCompanyModal = true
+}
+
+const selectDeliveryAddressHandler = (v: DeliveryAddress) => {
+  const isSalesPointInCurrentCity = companyRepo.currentCitySalesPoints()?.find(el => el.id === v.salesPoint)
+  if (!v.salesPoint || !isSalesPointInCurrentCity) {
+    notifier.error('Адрес недоступен')
+    return
+  }
+  selectedDeliveryAddress.value = v
 }
 
 const addAddressHandler = () => {
@@ -501,7 +513,7 @@ const selectCurrentTab = () => {
       selectedSalesPoint.value = cartRepo.item.salesPoint || null
     }
     const foundType = availableCartTypes.value.find(
-      (el) => el.type === cartRepo.item?.type,
+      (el) => el.type === cartRepo.item?.type
     )
     if (foundType) {
       currentTab.value = foundType
@@ -530,12 +542,12 @@ const confirmSelectedAddress = async (noClose = false) => {
   ) {
     const res = await deliveryAreaRepo.byCoords([
       selectedDeliveryAddress.value?.coords?.latitude || 0,
-      selectedDeliveryAddress.value?.coords?.longitude || 0,
+      selectedDeliveryAddress.value?.coords?.longitude || 0
     ])
     const availableAreas = res.filter((el) =>
       companyRepo.cartCompany?.salesPoints
         ?.map((v) => v.id)
-        .includes(el.salesPoint),
+        .includes(el.salesPoint)
     )
     if (!res.length || !availableAreas.length) {
       notifier.error('По данному адресу не осуществляется доставка')
@@ -545,7 +557,7 @@ const confirmSelectedAddress = async (noClose = false) => {
       await cartRepo.setParams({
         sales_point: availableAreas[0].salesPoint,
         type: CartType.DELIVERY,
-        delivery_address: selectedDeliveryAddress.value?.id,
+        delivery_address: selectedDeliveryAddress.value?.id
       })
     }
     store.qrData = null
@@ -559,7 +571,7 @@ const confirmSelectedAddress = async (noClose = false) => {
     if (authentication.user) {
       await cartRepo.setParams({
         sales_point: selectedPickupAddress.value.id,
-        type: CartType.PICKUP,
+        type: CartType.PICKUP
       })
     }
     store.qrData = null
