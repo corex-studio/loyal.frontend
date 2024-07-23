@@ -70,7 +70,7 @@ import {
   nextTick,
   onMounted,
   ref,
-  watch,
+  watch
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { store } from 'src/models/store'
@@ -94,44 +94,44 @@ import { useEventBus } from '@vueuse/core'
 import { onCloseProductModalKey } from 'src/services/eventBusKeys'
 
 const ServiceSettingsModal = defineAsyncComponent(
-  () => import('src/components/serviceSettings/ServiceSettingsModal.vue'),
+  () => import('src/components/serviceSettings/ServiceSettingsModal.vue')
 )
 const SelectCompanyModal = defineAsyncComponent(
-  () => import('src/components/dialogs/SelectCompanyModal.vue'),
+  () => import('src/components/dialogs/SelectCompanyModal.vue')
 )
 const QRMobileMenu = defineAsyncComponent(
-  () => import('src/pages/qrMenu/QRMobileMenu.vue'),
+  () => import('src/pages/qrMenu/QRMobileMenu.vue')
 )
 const QRHomePadInfo = defineAsyncComponent(
-  () => import('src/pages/qrMenu/home/QRHomePadInfo.vue'),
+  () => import('src/pages/qrMenu/home/QRHomePadInfo.vue')
 )
 const MenuItemModal = defineAsyncComponent(
-  () => import('src/pages/menuItem/MenuItemModal.vue'),
+  () => import('src/pages/menuItem/MenuItemModal.vue')
 )
 const NewsModal = defineAsyncComponent(
-  () => import('src/pages/news/NewsModal.vue'),
+  () => import('src/pages/news/NewsModal.vue')
 )
 const ReviewOrderModal = defineAsyncComponent(
-  () => import('src/components/dialogs/ReviewOrderModal.vue'),
+  () => import('src/components/dialogs/ReviewOrderModal.vue')
 )
 const RegistrationModal = defineAsyncComponent(
-  () => import('src/pages/auth/RegistrationModal.vue'),
+  () => import('src/pages/auth/RegistrationModal.vue')
 )
 const LeftDrawer = defineAsyncComponent(() => import('./drawer/LeftDrawer.vue'))
 const CartOverlayButton = defineAsyncComponent(
-  () => import('./drawer/cart/CartOverlayButton.vue'),
+  () => import('./drawer/cart/CartOverlayButton.vue')
 )
 const OrderToReviewOverlay = defineAsyncComponent(
-  () => import('src/components/cards/OrderToReviewOverlay.vue'),
+  () => import('src/components/cards/OrderToReviewOverlay.vue')
 )
 const BonusesDrawer = defineAsyncComponent(
-  () => import('./drawer/bonuses/BonusesDrawer.vue'),
+  () => import('./drawer/bonuses/BonusesDrawer.vue')
 )
 const AuthModal = defineAsyncComponent(
-  () => import('src/pages/auth/AuthModal.vue'),
+  () => import('src/pages/auth/AuthModal.vue')
 )
 const CartDrawer = defineAsyncComponent(
-  () => import('./drawer/cart/CartDrawer.vue'),
+  () => import('./drawer/cart/CartDrawer.vue')
 )
 
 // const webSocket = ref<WebSocket | null>(null)
@@ -147,7 +147,7 @@ watch(
   () => route.name,
   () => {
     setMeta(route.meta)
-  },
+  }
 )
 
 watch(
@@ -159,7 +159,7 @@ watch(
     ws.ws.onmessage = (event) => {
       handleMessage(event)
     }
-  },
+  }
 )
 
 watch(
@@ -173,7 +173,7 @@ watch(
         handleMessage(event)
       }
     }
-  },
+  }
 )
 
 const footerAndHeaderHeight = computed(() => {
@@ -221,7 +221,7 @@ onMounted(async () => {
   }
   const manager = new AppManager({
     companyGroupId: route.query.group ? String(route.query.group) : undefined,
-    initMenuPage: true,
+    initMenuPage: true
   })
   await manager.initApp()
   if (authentication.user) {

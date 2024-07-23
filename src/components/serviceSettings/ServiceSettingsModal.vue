@@ -69,7 +69,7 @@
               v-if="currentTab?.type === CartType.DELIVERY"
               :current-address="selectedDeliveryAddress"
               @edit="editAddressHandler($event)"
-              @select="selectedDeliveryAddress = $event"
+              @select="selectDeliveryAddressHandler($event)"
             >
               <template v-slot:bottom>
                 <div class="row full-width gap-6">
@@ -339,7 +339,10 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) {
-      void deliveryAddressRepo.list().then(() => {
+      void deliveryAddressRepo.list({
+        company: companyRepo.item?.id,
+        city: companyGroupRepo.item?.cityData.current?.uuid
+      }).then(() => {
         selectCurrentTab()
         selectExistingAddress()
       })
@@ -437,6 +440,15 @@ const availableCartTypes = computed(() => {
 const changeCompany = () => {
   emit('update:modelValue', false)
   store.selectCompanyModal = true
+}
+
+const selectDeliveryAddressHandler = (v: DeliveryAddress) => {
+  const isSalesPointInCurrentCity = companyRepo.currentCitySalesPoints()?.find(el => el.id === v.salesPoint)
+  if (!v.salesPoint || !isSalesPointInCurrentCity) {
+    notifier.error('Адрес недоступен')
+    return
+  }
+  selectedDeliveryAddress.value = v
 }
 
 const addAddressHandler = () => {

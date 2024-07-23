@@ -17,6 +17,7 @@ export type DeliveryAddressRaw = {
   entrance?: string | null
   intercom?: string | null
   description?: string | null
+  sales_point?: string | null
 }
 
 export class DeliveryAddress implements BaseModel {
@@ -36,6 +37,7 @@ export class DeliveryAddress implements BaseModel {
   entrance: string | null
   intercom: string | null
   description: string | null
+  salesPoint: string | null
 
   constructor(raw: DeliveryAddressRaw) {
     this.id = raw.uuid
@@ -51,6 +53,7 @@ export class DeliveryAddress implements BaseModel {
     this.entrance = raw.entrance || null
     this.intercom = raw.intercom || null
     this.description = raw.description || null
+    this.salesPoint = raw.sales_point || null
   }
 
   toJson(): Record<string, any> {
@@ -66,7 +69,7 @@ export class DeliveryAddress implements BaseModel {
       floor: this.floor,
       entrance: this.entrance,
       intercom: this.intercom?.length ? this.intercom : null,
-      description: this.description?.length ? this.description : undefined,
+      description: this.description?.length ? this.description : undefined
     }
   }
 }

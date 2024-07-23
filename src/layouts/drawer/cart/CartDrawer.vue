@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-drawer
-      v-model="$store.cartDrawer"
+      :model-value="$store.cartDrawer"
       :width="$q.screen.lt.lg ? $q.screen.width : 581"
       behavior="mobile"
       class="column full-height no-wrap justify-between bg-background-color text-on-background-color"
@@ -9,6 +9,7 @@
       overlay
       side="right"
       style="z-index: 999999; height: 100%"
+      @update:model-value="closeCartDrawer()"
     >
       <CIcon
         v-if="$q.screen.gt.md"
@@ -18,7 +19,7 @@
         name="fa-light fa-xmark"
         size="37px"
         style="position: absolute; top: 40px; left: -50px"
-        @click="$store.cartDrawer = false"
+        @click="closeCartDrawer()"
       />
       <div class="column pb-20">
         <div
@@ -32,7 +33,7 @@
               hover-color="primary"
               name="fa-regular fa-angle-left"
               size="22px"
-              @click="$store.cartDrawer = false"
+              @click="closeCartDrawer()"
             />
             <div class="bold">
               {{ $q.screen.gt.sm ? 'Ваша корзина' : 'Корзина' }}
@@ -202,7 +203,7 @@ import CartDrawerItemRow from 'src/components/rows/CartDrawerItemRow.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { beautifyNumber, lightColor, store } from 'src/models/store'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { CartItem } from 'src/models/carts/cartItem/cartItem'
 import { cartItemRepo } from 'src/models/carts/cartItem/cartItemRepo'
@@ -339,6 +340,18 @@ watch(
   },
   { immediate: true }
 )
+
+const closeCartDrawer = () => {
+  store.cartDrawer = false
+  setScroll()
+}
+
+const setScroll = () => {
+  void nextTick(() => {
+    if (store.scrollPositionBeforeOpenProductModal)
+      window.scrollTo(0, store.scrollPositionBeforeOpenProductModal)
+  })
+}
 </script>
 
 <style lang="scss" scoped></style>

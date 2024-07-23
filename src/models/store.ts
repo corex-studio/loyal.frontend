@@ -16,11 +16,11 @@ import { Image } from './image/image'
 import {
   useWebSocket,
   UseWebSocketOptions,
-  UseWebSocketReturn,
+  UseWebSocketReturn
 } from '@vueuse/core'
 import { MaybeRefOrGetter } from '@vueuse/shared'
 import { openWebsocket } from 'src/services/openWebsocket'
-import { MenuItem } from 'src/models/menu/menuItem/menuItem';
+import { MenuItem } from 'src/models/menu/menuItem/menuItem'
 
 type DeliveryAreaInfoDrawerData = {
   salesPoint: SalesPoint
@@ -54,7 +54,7 @@ export class Store {
   freeItem: string | null = null
   newsModal = false
   images = {
-    empty: 'https://mtraktor.ru/images/no-image.png',
+    empty: 'https://mtraktor.ru/images/no-image.png'
   }
   catalogLoading = false
   storedMenuItem: string | null = null
@@ -76,7 +76,7 @@ export class Store {
 
   setWebSocket(
     url: MaybeRefOrGetter<string | URL | undefined>,
-    options?: UseWebSocketOptions,
+    options?: UseWebSocketOptions
   ): UnwrapRef<ReturnType<typeof useWebSocket>> {
     this.webSocket = openWebsocket(url, options)
     return this.webSocket as unknown as UnwrapRef<
@@ -88,6 +88,16 @@ export class Store {
     store.scrollPositionBeforeOpenProductModal = window.scrollY
     store.menuItemImage = item?.image || null
     this._menuItemModal = true
+  }
+
+  openCartDrawer() {
+    store.scrollPositionBeforeOpenProductModal = window.scrollY
+    this.cartDrawer = !this.cartDrawer
+  }
+
+  openLeftDrawer() {
+    store.scrollPositionBeforeOpenProductModal = window.scrollY
+    this.leftDrawer = !this.leftDrawer
   }
 
   closeMenuItemModal() {
@@ -127,7 +137,7 @@ export class Store {
           v.id ===
           (typeof salesPoint?.company === 'string'
             ? salesPoint.company
-            : salesPoint?.company?.id),
+            : salesPoint?.company?.id)
       )
 
       if (foundCompany) companyRepo.item = foundCompany
@@ -158,11 +168,11 @@ export const addHash = (v: string) => {
 }
 
 export const totalDayTimes = () => {
-  return Array.from({length: 24}, (_, i) => i).reduce((r: string[], hour) => {
-    r.push(moment({hour, minute: 0}).format('HH:mm'))
-    r.push(moment({hour, minute: 15}).format('HH:mm'))
-    r.push(moment({hour, minute: 30}).format('HH:mm'))
-    r.push(moment({hour, minute: 45}).format('HH:mm'))
+  return Array.from({ length: 24 }, (_, i) => i).reduce((r: string[], hour) => {
+    r.push(moment({ hour, minute: 0 }).format('HH:mm'))
+    r.push(moment({ hour, minute: 15 }).format('HH:mm'))
+    r.push(moment({ hour, minute: 30 }).format('HH:mm'))
+    r.push(moment({ hour, minute: 45 }).format('HH:mm'))
 
     return r
   }, [])
