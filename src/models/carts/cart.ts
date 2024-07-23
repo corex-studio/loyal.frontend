@@ -108,12 +108,11 @@ export type CartRaw = {
     description: string | null
     title: string | null
   }[]
-  validation_errors: {
-    cart?: string[]
-    cart_items?: string[]
-    delivery?: string[]
-    payment?: string[]
-    terminal_group?: string[]
+  user_errors: {
+    additional?: string[]
+    address?: string | null
+    payment?: string | null
+    time?: string | null
   }
   eat_inside: boolean
   guest_count: number
@@ -147,12 +146,11 @@ export class Cart implements BaseModel {
     description: string | null
     title: string | null
   }[]
-  validationErrors: {
-    cart: string[]
-    cart_items: string[]
-    delivery: string[]
-    payment: string[]
-    terminal_group: string[]
+  userErrors: {
+    additional: string[]
+    address: string | null
+    payment: string | null
+    time: string | null
   }
   freeItems: {
     uuid: string
@@ -215,12 +213,11 @@ export class Cart implements BaseModel {
       raw.calculation_status || CalculationStatus.INACTIVE
     this.useBonuses = raw.use_bonuses || false
     this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
-    this.validationErrors = {
-      cart: raw.validation_errors.cart || [],
-      cart_items: raw.validation_errors.cart_items || [],
-      delivery: raw.validation_errors.delivery || [],
-      payment: raw.validation_errors.payment || [],
-      terminal_group: raw.validation_errors.terminal_group || []
+    this.userErrors = {
+      additional: raw.user_errors.additional || [],
+      address: raw.user_errors.address || null,
+      payment: raw.user_errors.payment || null,
+      time: raw.user_errors.time || null
     }
   }
 

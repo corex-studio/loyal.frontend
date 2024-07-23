@@ -39,9 +39,9 @@
                 style="min-height: 48px"
               >
                 <div>{{ $cart.item?.currentAddress }}</div>
-                <div v-if=" $cart.item.validationErrors.delivery.length"
+                <div v-if=" $cart.item.userErrors.address"
                      class="text-danger secondary-text ">
-                  {{ $cart.item?.validationErrors.delivery.join(', ') }}
+                  {{ $cart.item?.userErrors.address }}
                 </div>
               </div>
             </div>
@@ -88,6 +88,10 @@
                       <div>Ближайшая</div>
                       <div>
                         {{ $cart.item.closestTimeText }}
+                      </div>
+                      <div v-if="$cart.item.userErrors.time && !$cart.item.deliveryTime"
+                           class="text-danger secondary-text">
+                        {{ $cart.item.userErrors.time }}
                       </div>
                     </div>
                     <CIcon
@@ -140,6 +144,10 @@
                       <div>{{ 'Ко времени' }}</div>
                       <div>
                         {{ $cart.item.deliveryTime || 'Выберите время' }}
+                      </div>
+                      <div v-if="$cart.item.userErrors.time && $cart.item.deliveryTime"
+                           class="text-danger secondary-text">
+                        {{ $cart.item.userErrors.time }}
                       </div>
                     </div>
                     <CIcon
@@ -273,8 +281,8 @@
                     @click="selectedPaymentTypeModal = true"
                   />
                 </div>
-                <div v-if="$cart.item.validationErrors.payment.length" class=" text-danger secondary-text">
-                  {{ $cart.item.validationErrors.payment.join(', ') }}
+                <div v-if="$cart.item.userErrors.payment" class=" text-danger secondary-text">
+                  {{ $cart.item.userErrors.payment }}
                 </div>
               </div>
 
@@ -301,19 +309,18 @@
             </div>
           </div>
           <div
-            v-if="$cart.item.validationErrors.cart.length || $cart.item.validationErrors.terminal_group.length || $cart.item.validationErrors.cart_items.length"
+            v-if="$cart.item.userErrors.additional.length"
             class="bg-input-color text-on-input-color border-radius2 px-6 py-5 row gap-5 items-baseline body">
             <q-icon name="fa-regular fa-exclamation-circle" size="18px" />
             <div class="column gap-2">
               <div
-                v-for="(el, index) in $cart.item.validationErrors.cart.concat($cart.item.validationErrors.terminal_group).concat($cart.item.validationErrors.cart_items)"
+                v-for="(el, index) in $cart.item.userErrors.additional"
                 :key="index"
               >
                 {{ el }}
               </div>
             </div>
           </div>
-
         </div>
         <div v-if="$q.screen.gt.md" class="row full-width gap-10 mt-25">
           <CButton
@@ -668,12 +675,10 @@ const isArrangeAvailable = computed(() => {
 
 const hasValidationErrors = () => {
   if (!cartRepo.item) return
-  return !!Object.keys(cartRepo.item.validationErrors).filter((key) => {
+  return !!Object.keys(cartRepo.item.userErrors).filter((key) => {
     if (!cartRepo.item) return false
-    const _key = key as keyof typeof cartRepo.item.validationErrors
-    if (_key !== 'terminal_group') {
-      return !!cartRepo.item.validationErrors[_key].length
-    }
+    const _key = key as keyof typeof cartRepo.item.userErrors
+    return typeof cartRepo.item.userErrors[_key] === 'string' ? !!cartRepo.item.userErrors[_key] : !!cartRepo.item.userErrors[_key]?.length
   }).length
 }
 
@@ -791,14 +796,14 @@ const makeAnOrder = async () => {
     })
     void onOrderPaid(order)
   } catch (e: any) {
-    const validationError = e.response.data
+    const userErrors = e.response.data
     if (cartRepo.item)
-      cartRepo.item.validationErrors = validationError as {
-        cart: string[]
-        cart_items: string[]
-        delivery: string[]
-        payment: string[]
-        terminal_group: string[]
+      cartRepo.item.userErrors = userErrors as {
+        additional: string[]
+        address: string | null
+        payment: string | null
+        promo_code: string | null
+        time: string | null
       }
     cartRepo.arrangeLoading = false
     notifier.error('Ошибка при оформлении заказа')
@@ -901,20 +906,12 @@ const validateCurrentCart = async () => {
   if (cartRepo.item && cartRepo.selectedPaymentType) {
     void cartRepo.validateCheckout(cartRepo.item, cartRepo.selectedPaymentType).then(() => {
       // if (cartRepo.item) {
-      //   cartRepo.item.validationErrors = {
-      //     cart: ['CART'],
-      //     delivery: ['Ошибка доставки'],
-      //     payment: ['Ошибка оплаты'],
-      //     cart_items: ['CART_ITEMS'],
-      //     terminal_group: ['TERNIMAL_GROUPS']
+      //   cartRepo.item.userErrors = {
+      //     payment: 'payment',
+      //     time: 'time',
+      //     address: 'address',
+      //     additional: ['additional', 'additional2', 'additional3']
       //   }
-      // Object.keys(cartRepo.item.validationErrors).forEach((key) => {
-      //   const _key = key as keyof typeof cartRepo.item.validationErrors
-      //   const _val = cartRepo.item?.validationErrors[_key]
-      //   if (_val && _val.length && ['cart', 'cart_items', 'terminal_group'].includes(_key)) {
-      //     notifier.error(_val.join(', '))
-      //   }
-      // })
       // }
     })
   }
