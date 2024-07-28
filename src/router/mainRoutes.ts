@@ -166,13 +166,14 @@ export const processRoutes = (routes = mainRoutes) => {
       const _route = cloneDeep(route)
       const key = keyData.routeKey
       const keyId = keyData.routeParam
+      // todo убрать вопросики
       if (_route.name && typeof _route.name === 'string') _route.name += key
       if (_route.redirect) processRedirect(_route, key)
-      _route.path = `:${keyId}/${_route.path}`
+      _route.path = `:${keyId}?/${_route.path}`
       processChildren(_route, key)
       if (lastRoute && typeof lastRoute.name === 'string') {
         const path = lastRoute.path.split('/')
-        path.splice(1, 0, `:${keyId}`)
+        path.splice(1, 0, `:${keyId}?`)
         lastRoute.path = path.join('/')
         lastRoute.name += key
         if (lastRoute.redirect) processRedirect(lastRoute, key)

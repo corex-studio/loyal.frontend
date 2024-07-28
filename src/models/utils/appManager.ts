@@ -66,10 +66,6 @@ export class AppManager {
     if (_value && !companyGroupId) companyGroupId = String(_value)
     if (companyGroupId) {
       store.setCompanyGroup(String(companyGroupId))
-      LocalStorage.remove('city')
-      LocalStorage.remove('cityAlias')
-      LocalStorage.remove('cartCompany')
-      LocalStorage.remove('cartCompanyAlias')
     }
     if (!authentication.user && store.tableMode) {
       await authRepo.initAnonymousUser()
@@ -276,10 +272,10 @@ export class AppManager {
       )
       if (foundCompany) {
         this.updateLocalStorageCompany(foundCompany)
+        localStorageCompanyUpdated = true
       }
     }
-
-    if (!LocalStorage.getItem('cartCompanyAlias')) {
+    if (!localStorageCompanyAlias && !localStorageCompanyUpdated) {
       this.updateLocalStorageCompany(companies[0])
     }
 
@@ -412,7 +408,7 @@ export class AppManager {
   findCurrentSalesPoint() {
     let currentPoint: SalesPoint | null | undefined = null
     const found = this.getCompanyFromLocalStorage()
-    if (found && found.salesPoints) return found.salesPoints[0]
+    if (found && found.salesPoints?.length) return found.salesPoints[0]
 
     if (store.tableMode) {
       currentPoint = padRepo.item?.salesPoint

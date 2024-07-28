@@ -35,6 +35,8 @@ const processRouteLocation = (
   to: RouteLocationRaw,
   currentRouteName: string,
 ): RouteLocationRaw => {
+  const cartCompany = LocalStorage.getItem('cartCompanyAlias') || LocalStorage.getItem('cartCompany')
+  const city = LocalStorage.getItem('cityAlias') || LocalStorage.getItem('city')
   const isCityPage = currentRouteName.includes(withCityRouteKey)
   const isCompanyPage = currentRouteName.includes(withCompanyRouteKey)
   const isCityAndCompanyPage = isCityPage && isCompanyPage
@@ -43,14 +45,17 @@ const processRouteLocation = (
     routePostfix = withCityRouteKey + withCompanyRouteKey
   else if (isCityPage) routePostfix = withCityRouteKey
   else if (isCompanyPage) routePostfix = withCompanyRouteKey
-  if (!isCityPage) return to
   if (typeof to === 'string' && !to.includes(withCityRouteKey)) {
     return (to.split('__')[0] + routePostfix) as RouteLocationRaw
   }
   if (Object.keys(to).includes('name')) {
-    const _to = to as { name: string }
+    const _to = to as { name: string, params?: Record<string, any> }
     const _toName = _to.name.split('__')[0]
     _to.name = _toName + routePostfix
+    if (!_to.params) _to.params = {}
+    if (isCityPage) _to.params._cityId = city
+    if (isCompanyPage) _to.params._companyId = cartCompany
+
     return _to as RouteLocationRaw
   }
   return to as RouteLocationRaw
