@@ -1,11 +1,11 @@
 <template>
   <div
-    @click="openDialog()"
-    class="row no-wrap justify-between items-center cursor-pointer button bg-product-tile-color px-8 col"
     :style="`height: ${$q.screen.lt.md ? '42' : '44'}px`"
+    class="row no-wrap justify-between items-center cursor-pointer button bg-input-color px-8 col"
+    @click="openDialog()"
   >
     <div
-      class="row no-wrap gap-4 body items-center text-on-product-tile-color"
+      class="row no-wrap gap-4 body items-center text-on-input-color"
       style="overflow: hidden"
     >
       <div
@@ -14,11 +14,11 @@
         style="overflow: inherit"
       >
         <CIcon
+          color="on-input-color"
           name="fa-regular fa-bag-shopping"
-          color="on-product-tile-color"
           size="22px"
         />
-        <div style="line-height: 15px" class="bold nowrap-content">
+        <div class="bold nowrap-content" style="line-height: 15px">
           {{
             $q.screen.lt.lg ? 'Способ получения' : 'Выберите способ получения'
           }}
@@ -27,11 +27,11 @@
       <template v-else>
         <div class="row no-wrap gap-md-4 gap-xs-2 items-center">
           <CIcon
+            color="on-input-color"
             name="fa-regular fa-bag-shopping"
-            color="on-product-tile-color"
             size="22px"
           />
-          <div style="white-space: nowrap" class="bold text-primary">
+          <div class="bold text-primary" style="white-space: nowrap">
             {{ $cart.item.currentDeliveryType }}
           </div>
         </div>
@@ -46,10 +46,10 @@
     </div>
     <CIcon
       v-if="$cart.item?.type !== CartType.TABLE"
-      size="22px"
-      color="on-product-tile-color"
-      name="fa-regular fa-angle-right"
+      color="on-input-color"
       hover-color="primary"
+      name="fa-regular fa-angle-right"
+      size="22px"
     />
   </div>
 </template>

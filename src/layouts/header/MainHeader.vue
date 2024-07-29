@@ -79,17 +79,17 @@
             >
               <CButton
                 v-if="$q.screen.gt.md"
-                color="product-tile-color"
+                color="input-color"
                 height="44px"
                 outlined
                 style="border-radius: 100px !important"
                 @click="openCitySelectorModal()"
               >
                 <div
-                  class="row gap-4 items-center no-wrap body text-on-product-tile-color"
+                  class="row gap-4 items-center no-wrap body text-on-input-color"
                 >
                   <CIcon
-                    color="on-product-tile-color"
+                    color="on-input-color"
                     name="fa-regular fa-city"
                     size="22px"
                   />
@@ -105,7 +105,7 @@
                       $companyGroup.item?.cityData.results.length > 1
                     "
                     class=""
-                    color="on-product-tile-color"
+                    color="on-input-color"
                     hover-color="primary"
                     name="fa-regular fa-angle-down"
                     size="22px"
