@@ -1,20 +1,20 @@
 <template>
   <CDialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
-    width="456px"
     class="text-on-background-color"
+    width="456px"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="header3 bold mb-10">Ссылки на соц. сети</div>
     <div class="column gap-8">
       <div
         v-for="(el, index) in $company.companyForProfile?.guestContacts.socials"
         :key="index"
-        @click="openSocial(el.link)"
         class="row items-center gap-6 cursor-pointer"
+        @click="openSocial(el.link)"
       >
         <div>
-          <q-img width="30px" fit="contain" :src="getImage(el.link_type)" />
+          <q-img :src="getImage(el.link_type)" fit="contain" width="30px" />
         </div>
         <div class="body">
           {{ el.name }}
@@ -44,6 +44,9 @@ const getImage = (link: LinkType | null) => {
     if (link === LinkType.TELEGRAM) fileName = 'telegramLogo.png'
     if (link === LinkType.VK) fileName = 'VKLogo.png'
     if (link === LinkType.WEBSITE) fileName = 'websiteIcon.png'
+    if (link === LinkType.INSTAGRAM) fileName = 'instagramLogo.png'
+    if (link === LinkType.WHATSAPP) fileName = 'whatsAppLogo.png'
+
     return `assets/${fileName}`
   } catch {
     return store.images.empty
