@@ -21,7 +21,7 @@
         z-index: 9;
       "
     >
-      <CIcon color="on-primary" name="fa-solid fa-cart-shopping" size="16px"/>
+      <CIcon color="on-primary" name="fa-solid fa-cart-shopping" size="16px" />
     </div>
     <q-chip
       v-if="false"
@@ -85,7 +85,7 @@
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
-            v-if="$companyGroup.item?.externalId !== 'Krendel'"
+            v-if="$companyGroup.item?.externalId !== 'Krendel' && $companyGroup.item?.externalId !== 'PrincessPizza'"
             :color="item.isDead ? 'secondary' : 'primary'"
             :loading="loading"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
@@ -117,7 +117,6 @@
             <div :class="{ bold: $q.screen.lt.md }">
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
             </div>
-
             <q-menu v-if="item.isDead && $q.screen.lt.md" v-model="err" class="pa-3 secondary-text">
               {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
             </q-menu>
@@ -146,12 +145,12 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import CTooltip from '../helpers/CTooltip.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
-import { ecommerceAdd, ecommerceClick, } from 'src/models/ecommerceEvents/ecommerceEvents'
+import { ecommerceAdd, ecommerceClick } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { useYandexMetrika } from 'yandex-metrika-vue3'
 import { useRoute } from 'vue-router'
 import { CalculationStatus } from 'src/models/carts/cart'
 import { notifier } from 'src/services/notifier'
-import { Screen } from 'quasar';
+import { Screen } from 'quasar'
 
 
 const props = defineProps<{
@@ -167,7 +166,7 @@ const onIntersection = (entry: IntersectionObserverEntry) => {
     menuItemRepo.visibleItems.push(props.item)
   } else {
     const foundIndex = menuItemRepo.visibleItems.findIndex(
-      (el) => el.id === props.item.id,
+      (el) => el.id === props.item.id
     )
     if (foundIndex > -1) {
       menuItemRepo.visibleItems.splice(foundIndex, 1)
@@ -191,14 +190,14 @@ const toCartClickHandler = async () => {
         v.id ===
         (typeof salesPointRepo.item?.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item?.company?.id || ''),
+          : salesPointRepo.item?.company?.id || '')
     )
     if (foundCompany) companyRepo.item = foundCompany
     else
       await companyRepo.retrieve(
         typeof salesPointRepo.item.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item.company?.id || '',
+          : salesPointRepo.item.company?.id || ''
       )
     store.storedMenuItem = props.item.id || null
     store.serviceSettingsModal = true
@@ -217,10 +216,10 @@ const openMenuItem = async () => {
   store.openMenuItemModal(props.item)
   store.menuItemImage = props.item.image
   await menuItemRepo.retrieve(props.item.alias || props.item.id, {
-    sales_point: salesPointRepo.item?.id,
+    sales_point: salesPointRepo.item?.id
   })
   await menuRulesForAddingRepo.list({
-    menu_item: menuItemRepo.item?.id,
+    menu_item: menuItemRepo.item?.id
   })
 }
 
@@ -233,7 +232,7 @@ const addToCart = async () => {
     await companyRepo.retrieve(
       typeof salesPointRepo.item.company === 'string'
         ? salesPointRepo.item.company
-        : salesPointRepo.item.company?.id || '',
+        : salesPointRepo.item.company?.id || ''
     )
     store.serviceSettingsModal = true
   } else if (cartRepo.item && props.item.sizes[0]) {
@@ -252,11 +251,11 @@ const addToCart = async () => {
                   modifier: el.id,
                   quantity: el.quantity,
                   price: el.price || 0,
-                  sum: String(Number(el.price) * el.quantity),
+                  sum: String(Number(el.price) * el.quantity)
                 } as CartItemModifier
               })
-              .filter((e) => e.quantity),
-          ) || [],
+              .filter((e) => e.quantity)
+          ) || []
       })
     } catch (e) {
       notifier.error('Ошибка при добавлении в корзину')
