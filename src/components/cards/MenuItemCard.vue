@@ -73,7 +73,7 @@
       <div class="row no-wrap full-width justify-between items-center">
         <div
           v-if="$q.screen.gt.sm"
-          class="subtitle-text bold text-on-background-color row gap-2 no-wrap"
+          class="subtitle-text bold text-on-product-tile-color row gap-2 no-wrap"
           itemprop="offers"
           itemscope
           itemtype="https://schema.org/Offer"
