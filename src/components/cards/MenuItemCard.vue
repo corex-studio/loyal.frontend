@@ -73,7 +73,7 @@
       <div class="row no-wrap full-width justify-between items-center">
         <div
           v-if="$q.screen.gt.sm"
-          class="subtitle-text bold text-on-background-color row gap-2 no-wrap"
+          class="subtitle-text bold text-on-product-tile-color row gap-2 no-wrap"
           itemprop="offers"
           itemscope
           itemtype="https://schema.org/Offer"
@@ -85,7 +85,7 @@
         </div>
         <div :class="{ 'full-width': $q.screen.lt.md }">
           <CButton
-            v-if="$companyGroup.item?.externalId !== 'Krendel'"
+            v-if="$companyGroup.item?.externalId !== 'Krendel' && $companyGroup.item?.externalId !== 'PrincessPizza'"
             :color="item.isDead ? 'secondary' : 'primary'"
             :loading="loading"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
@@ -117,7 +117,6 @@
             <div :class="{ bold: $q.screen.lt.md }">
               {{ $q.screen.lt.md ? `${item.sizes[0].price} ₽` : 'В корзину' }}
             </div>
-
             <q-menu v-if="item.isDead && $q.screen.lt.md" v-model="err" class="pa-3 secondary-text">
               {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
             </q-menu>

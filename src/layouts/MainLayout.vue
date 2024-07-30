@@ -218,9 +218,6 @@ const closeMenuItemModal = async () => {
 }
 
 onMounted(async () => {
-  // if (!!route.params.cityUUID) {
-  //   store.cityFromParam = String(route.params.cityUUID)
-  // }
 
   if (route.path.includes('qr_menu')) {
     store.tableMode = true

@@ -1,28 +1,27 @@
-import { LocalStorage, useMeta } from 'quasar'
+import { useMeta } from 'quasar'
 import { companyGroupRepo } from '../companyGroup/companyGroupRepo'
-import { MetaOptions } from 'quasar/dist/types/meta'
 
 export const setMeta = (initialMeta?: Record<string, any>) => {
-  const currentCompany = companyGroupRepo.item?.companies.find(v => v.id === LocalStorage.getItem('cartCompany'))
   const siteData = localStorage.getItem('siteDataResponse')
-  let siteName = currentCompany?.name || null
-  let siteDescription = currentCompany?.description || null
-  if ((siteData && !currentCompany) || (siteData && !companyGroupRepo.item?.companies.length)) {
+  let siteName = null
+  let siteDescription = null
+  if (siteData) {
     siteName = JSON.parse(siteData).title
     siteDescription = JSON.parse(siteData).description
   }
-  const metaData: MetaOptions = {
+  const metaData = {
     title: initialMeta?.title
       ? String(initialMeta?.title)
       : siteName || companyGroupRepo.item?.name || 'Loyalhub',
-    // titleTemplate: (title: any) => `${title}`,
+    titleTemplate: (title: any) => `${title}`,
     meta: {
       description: {
         name: 'description',
-        content: siteDescription,
+        content: initialMeta?.description || siteDescription || '',
       },
       keywords: { name: 'keywords', content: initialMeta?.keywords || '' },
     },
   }
+
   useMeta(metaData)
 }

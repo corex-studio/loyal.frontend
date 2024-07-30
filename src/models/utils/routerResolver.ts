@@ -47,9 +47,16 @@ export class RouterResolver extends RouterResolverFields {
 
   resolve() {
     if (this.withCityPage && this.withCompanyPage)
+      // console.log('replaceToWithCityAndCompanyPage')
       void this.router.replaceToWithCityAndCompanyPage()
-    else if (this.withCompanyPage) void this.router.replaceToWithCompanyPage()
-    else if (this.withCityPage) void this.router.replaceToWithCityPage()
-    else void this.router.replaceToRawPage()
+    else if (this.withCompanyPage)
+      // console.log('replaceToWithCompanyPage')
+      void this.router.replaceToWithCompanyPage()
+    else if (this.withCityPage)
+      // console.log('replaceToWithCityPage()')
+      void this.router.replaceToWithCityPage()
+    else
+      // console.log('replaceToRawPage()')
+      void this.router.replaceToRawPage()
   }
 }

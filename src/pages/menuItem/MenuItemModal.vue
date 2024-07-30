@@ -258,7 +258,7 @@ const q = useQuasar()
 const currentWeight = computed(() => {
   const roundedWeight = currentSize.value?.characteristics.weight.toFixed(3)
   return currentSize.value?.characteristics.unit
-    ? roundedWeight
+    ? Number(roundedWeight)
     : (Number(roundedWeight) || 0) * 1000
 })
 
