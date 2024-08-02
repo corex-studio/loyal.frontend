@@ -511,7 +511,10 @@ const selectCurrentTab = () => {
     companyRepo.cartCompany?.id === cartRepo.item.salesPoint.company
   ) {
     if (cartRepo.item.type === CartType.DELIVERY) {
-      selectedDeliveryAddress.value = cartRepo.item.deliveryAddress
+      const foundInList = deliveryAddressRepo.items.find(
+        el => el.id === cartRepo.item?.deliveryAddress?.id
+      )
+      selectedDeliveryAddress.value = foundInList || null
       selectedPickupAddress.value = null
       selectedSalesPoint.value = null
     }
