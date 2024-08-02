@@ -45,18 +45,14 @@ export class RouterResolver extends RouterResolverFields {
     return this
   }
 
-  resolve() {
+  async resolve() {
     if (this.withCityPage && this.withCompanyPage)
-      // console.log('replaceToWithCityAndCompanyPage')
-      void this.router.replaceToWithCityAndCompanyPage()
+      return await this.router.replaceToWithCityAndCompanyPage()
     else if (this.withCompanyPage)
-      // console.log('replaceToWithCompanyPage')
-      void this.router.replaceToWithCompanyPage()
+      return await this.router.replaceToWithCompanyPage()
     else if (this.withCityPage)
-      // console.log('replaceToWithCityPage()')
-      void this.router.replaceToWithCityPage()
+      return await this.router.replaceToWithCityPage()
     else
-      // console.log('replaceToRawPage()')
-      void this.router.replaceToRawPage()
+      return await this.router.replaceToRawPage()
   }
 }

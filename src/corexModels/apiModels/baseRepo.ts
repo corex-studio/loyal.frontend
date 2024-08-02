@@ -12,7 +12,7 @@ export type BaseListConfig = {
 }
 
 abstract class BaseRepo<T extends BaseModel> {
-  item: T | null = null
+  _item: T | null = null
   items: Array<T> = []
   pagination: BasePagination = BasePagination.empty()
   loading = true
@@ -26,6 +26,17 @@ abstract class BaseRepo<T extends BaseModel> {
     action: false,
   }
   abstract api: BaseModelApi<T>
+
+  get item() {
+    return this._item
+  }
+
+  set item(v) {
+    if (Object.getPrototypeOf(this).constructor.name === 'CartRepo') {
+      console.trace(v)
+    }
+    this._item = v
+  }
 
   async list(
     params: Record<string, any> = {},

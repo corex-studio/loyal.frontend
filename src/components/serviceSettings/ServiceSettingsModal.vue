@@ -7,6 +7,8 @@
     :position="$q.screen.lt.md ? 'bottom' : undefined"
     :width="modalWidth"
     no-padding
+    :no-close="$store.noCloseServiceSettingsModal"
+    :no-backdrop-dismiss="$store.noCloseServiceSettingsModal"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <template v-if="!newAddressMode">

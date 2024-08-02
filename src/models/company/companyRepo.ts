@@ -17,6 +17,7 @@ export class CompanyRepo extends BaseRepo<Company> {
   }
 
   set cartCompany(v) {
+    console.trace('setCartComapny', v)
     if (v?.id) {
       LocalStorage.set('cartCompany', v.id)
       LocalStorage.set('cartCompanyAlias', v.alias || v.id)
@@ -25,6 +26,8 @@ export class CompanyRepo extends BaseRepo<Company> {
       LocalStorage.remove('cartCompany')
       LocalStorage.remove('cartCompanyAlias')
     }
+    this.companyForProfile = v
+    this.item = v
     this._cartCompany = v
   }
 

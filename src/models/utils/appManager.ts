@@ -80,7 +80,7 @@ export class AppManager {
     }
     this.checkSelectedCompany(true)
 
-    new RouterResolver({
+    await new RouterResolver({
       ...this.routerResolverFields,
       route: this.route,
       router: this.router,
@@ -131,6 +131,11 @@ export class AppManager {
         void padRepo.synchronizeOrdersForRestaurant(padRepo.item)
     } else if (authentication.user?.isAnonymous) {
       authentication.logout()
+    }
+    const localStorageCartCompany =  LocalStorage.getItem('cartCompany')
+    if (localStorageCartCompany) {
+      const found = companyGroupRepo.item?.companies.find(v => String(v.id) === localStorageCartCompany)
+      if (found) companyRepo.cartCompany = found
     }
     if (this.config.initMenuPage) {
       await this.loadMenuPage()
@@ -353,7 +358,7 @@ export class AppManager {
   async loadMenuPage() {
     cartRepo.item = null
     const currentPoint = this.findCurrentSalesPoint()
-    await this.loadCart()
+    await this.loadCart(currentPoint)
     if (currentPoint) {
       void store.loadCatalog(currentPoint).then(() => {
         void this.handleInitialMenuItem()
@@ -420,7 +425,8 @@ export class AppManager {
     return currentPoint || null
   }
 
-  async loadCart() {
+  async loadCart(salesPoint?: SalesPoint | null) {
+    console.log(salesPoint)
     if (authentication.user) {
       if (store.qrData) {
         await cartRepo.setParams({
@@ -430,7 +436,8 @@ export class AppManager {
           comment: cartRepo.item?.comment || undefined,
         })
       }
-      await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
+      console.log('companyRepo', companyRepo.cartCompany)
+      await cartRepo.current(undefined, store.qrData?.data?.pad?.id, companyRepo.item?.id)
     } else {
       cartRepo.item = null
     }

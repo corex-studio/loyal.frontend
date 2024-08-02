@@ -76,7 +76,7 @@ export class CartRepo extends BaseRepo<Cart> {
     return this.item.cartItems.map((v) => v.size.uuid).includes(uuid)
   }
 
-  async current(sales_point?: string, pad?: string | null) {
+  async current(sales_point?: string, pad?: string | null, company?: string | null) {
     this.loading = true
     const city = LocalStorage.getItem('city')
     try {
@@ -86,6 +86,7 @@ export class CartRepo extends BaseRepo<Cart> {
         params: {
           sales_point,
           pad: pad || undefined,
+          company: company || undefined,
           city
         }
       })

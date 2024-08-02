@@ -230,27 +230,16 @@ onMounted(async () => {
   if (authentication.user) {
     void orderReviewRepo.getOrderToReview()
   }
-  // salesPointRepo.menuLoading = true
   ready.value = true
   setMeta(route.meta)
-  // postCurrentCityToParam()
 })
 
-// const postCurrentCityToParam = () => {
-//   const cityFromStorage = LocalStorage.getItem('city')
-//   if (
-//     (companyGroupRepo.item?.cityData.results?.length || 0) > 1 &&
-//     !store.cityFromParam !== cityFromStorage
-//   ) {
-//     void router.push({
-//       path: `/${cityFromStorage}`,
-//     })
-//   }
-// }
 
 const routerResolver = new RouterResolver()
 
-const companySelected = (v: Company | null) => {
+const companySelected = async (v: Company | null) => {
+  companyRepo.cartCompany = v
+  await routerResolver.detect().resolve()
   if (!authentication.user) {
     if (!v || !v.salesPoints || !v.salesPoints.length) return
     void store.loadCatalog(v.salesPoints[0])
@@ -258,9 +247,9 @@ const companySelected = (v: Company | null) => {
   } else {
     store.selectCompanyModal = false
     store.serviceSettingsModal = true
+    store.noCloseServiceSettingsModal = true
   }
-  companyRepo.cartCompany = v
-  routerResolver.detect().resolve()
+
 }
 
 const closeNewsModal = () => {
