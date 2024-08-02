@@ -117,7 +117,7 @@
             </div>
           </div>
         </div>
-        <div v-if="cartItem.quantityError" class="text-danger">{{ cartItem.quantityError }}</div>
+        <div v-if="cartItem.quantityError" class="text-danger secondary-text">{{ cartItem.quantityError }}</div>
       </div>
     </div>
   </div>

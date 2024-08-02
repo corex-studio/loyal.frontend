@@ -39,9 +39,9 @@
                 style="min-height: 48px"
               >
                 <div>{{ $cart.item?.currentAddress }}</div>
-                <div v-if=" $cart.item.userErrors.address"
+                <div v-if=" $cart.item.userErrors?.address"
                      class="text-danger secondary-text ">
-                  {{ $cart.item?.userErrors.address }}
+                  {{ $cart.item?.userErrors?.address }}
                 </div>
               </div>
             </div>
@@ -89,9 +89,9 @@
                       <div>
                         {{ $cart.item.closestTimeText }}
                       </div>
-                      <div v-if="$cart.item.userErrors.time && !$cart.item.deliveryTime"
+                      <div v-if="$cart.item.userErrors?.time && !$cart.item.deliveryTime"
                            class="text-danger secondary-text">
-                        {{ $cart.item.userErrors.time }}
+                        {{ $cart.item.userErrors?.time }}
                       </div>
                     </div>
                     <CIcon
@@ -145,9 +145,9 @@
                       <div>
                         {{ $cart.item.deliveryTime || 'Выберите время' }}
                       </div>
-                      <div v-if="$cart.item.userErrors.time && $cart.item.deliveryTime"
+                      <div v-if="$cart.item.userErrors?.time && $cart.item.deliveryTime"
                            class="text-danger secondary-text">
-                        {{ $cart.item.userErrors.time }}
+                        {{ $cart.item.userErrors?.time }}
                       </div>
                     </div>
                     <CIcon
@@ -281,8 +281,8 @@
                     @click="selectedPaymentTypeModal = true"
                   />
                 </div>
-                <div v-if="$cart.item.userErrors.payment" class=" text-danger secondary-text">
-                  {{ $cart.item.userErrors.payment }}
+                <div v-if="$cart.item.userErrors?.payment" class=" text-danger secondary-text">
+                  {{ $cart.item.userErrors?.payment }}
                 </div>
               </div>
 
@@ -309,12 +309,12 @@
             </div>
           </div>
           <div
-            v-if="$cart.item.userErrors.additional.length"
+            v-if="$cart.item.userErrors?.additional.length"
             class="bg-input-color text-on-input-color border-radius2 px-6 py-5 row gap-5 items-baseline body">
             <q-icon name="fa-regular fa-exclamation-circle" size="18px" />
             <div class="column gap-2">
               <div
-                v-for="(el, index) in $cart.item.userErrors.additional"
+                v-for="(el, index) in $cart.item.userErrors?.additional"
                 :key="index"
               >
                 {{ el }}
@@ -457,7 +457,7 @@
                     }}
                   </div>
                   <div style="opacity: 0.6">{{ item.quantity }} шт</div>
-                  <div v-if="item.quantityError" class="text-danger">{{ item.quantityError }}</div>
+                  <div v-if="item.quantityError" class="text-danger secondary-text">{{ item.quantityError }}</div>
                 </div>
               </div>
               <div class="col-2 column items-end no-wrap">
@@ -543,9 +543,9 @@
         <CButton
           :disabled="!isArrangeAvailable"
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
-          :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
           :loading="loading"
           class="col-grow body"
+          label="Оформить"
           @click="makeAnOrder()"
         />
       </div>
@@ -674,11 +674,11 @@ const isArrangeAvailable = computed(() => {
 })
 
 const hasValidationErrors = () => {
-  if (!cartRepo.item) return
+  if (!cartRepo.item || !cartRepo.item.userErrors) return
   return !!Object.keys(cartRepo.item.userErrors).filter((key) => {
     if (!cartRepo.item) return false
     const _key = key as keyof typeof cartRepo.item.userErrors
-    return typeof cartRepo.item.userErrors[_key] === 'string' ? !!cartRepo.item.userErrors[_key] : !!cartRepo.item.userErrors[_key]?.length
+    return typeof cartRepo.item.userErrors![_key] === 'string' ? !!cartRepo.item.userErrors![_key] : !!cartRepo.item.userErrors![_key]?.length
   }).length
 }
 

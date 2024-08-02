@@ -1,14 +1,14 @@
 <template>
-  <div style="max-width: 456px" class="text-on-background-color">
+  <div class="text-on-background-color" style="max-width: 456px">
     <div class="row full-width huge3 bold mb-10">Выберите заведение</div>
     <div class="column gap-10">
       <CompanyRow
-        @click="selectCompany(el)"
         v-for="(el, index) in $companyGroup.item?.companies"
         :key="index"
         :item="el"
         :selected="false"
         class="company-block"
+        @click="selectCompany(el)"
       />
     </div>
   </div>

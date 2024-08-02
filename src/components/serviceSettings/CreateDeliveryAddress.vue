@@ -341,11 +341,6 @@ onMounted(() => {
 const createAddress = async () => {
   try {
     if (props.address) {
-      // if (isPrivateHouse.value && newAddress.value) {
-      //   newAddress.value.entrance = null
-      //   newAddress.value.floor = null
-      //   newAddress.value.intercom = null
-      // }
       const res = await deliveryAddressRepo.update(newAddress.value)
       const foundAddressIndex = deliveryAddressRepo.items.findIndex(
         (v) => v.id === newAddress.value?.id

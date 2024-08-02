@@ -452,7 +452,7 @@ const selectDeliveryAddressHandler = (v: DeliveryAddress) => {
   if (v.isAddressAvailable) {
     selectedDeliveryAddress.value = v
   } else {
-    notifier.error('Адрес недоступен')
+    notifier.error('Пока не доставляем на указанный адрес')
   }
 }
 
@@ -468,9 +468,17 @@ const editAddressHandler = (v: DeliveryAddress) => {
 
 const deliveryAddressCreateHandler = async (newAddress?: DeliveryAddress) => {
   newAddressMode.value = false
-  void deliveryAddressRepo.list()
-  if (newAddress) {
-    selectedDeliveryAddress.value = newAddress
+  await deliveryAddressRepo.list(
+    {
+      company: companyRepo.item?.id,
+      city: companyGroupRepo.item?.cityData.current?.uuid
+    }
+  )
+  const foundInList = deliveryAddressRepo.items.find(
+    (el) => el.id === newAddress?.id
+  )
+  if (newAddress && foundInList?.isAddressAvailable) {
+    selectedDeliveryAddress.value = foundInList
   }
 }
 
@@ -486,11 +494,12 @@ const navigationButtonClickHandler = () => {
 }
 
 const selectExistingAddress = () => {
-  if (cartRepo.item) return
-  availablePickupAddresses.value
+  // if (cartRepo.item) return
+
   if (deliveryAddressRepo.items.length === 1) {
     selectedDeliveryAddress.value = deliveryAddressRepo.items[0]
   }
+
   if (availablePickupAddresses.value?.length === 1) {
     selectedPickupAddress.value = availablePickupAddresses.value[0]
   }
@@ -541,6 +550,7 @@ const openPreviousMenuItem = () => {
 }
 
 const confirmSelectedAddress = async (noClose = false) => {
+  const isCompanyChanged = companyRepo.item?.id !== companyRepo.cartCompany?.id
   if (
     selectedDeliveryAddress.value &&
     currentTab.value?.type === CartType.DELIVERY
@@ -563,7 +573,7 @@ const confirmSelectedAddress = async (noClose = false) => {
         sales_point: availableAreas[0].salesPoint,
         type: CartType.DELIVERY,
         delivery_address: selectedDeliveryAddress.value?.id,
-        cart: cartRepo.item?.id
+        cart: isCompanyChanged ? undefined : cartRepo.item?.id
       })
     }
     store.qrData = null
@@ -578,7 +588,7 @@ const confirmSelectedAddress = async (noClose = false) => {
       await cartRepo.setParams({
         sales_point: selectedPickupAddress.value.id,
         type: CartType.PICKUP,
-        cart: cartRepo.item?.id
+        cart: isCompanyChanged ? undefined : cartRepo.item?.id
       })
     }
     store.qrData = null

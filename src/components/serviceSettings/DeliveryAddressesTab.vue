@@ -43,7 +43,7 @@
               <div class="ellipsis-2-lines">
                 {{ el.address }}
               </div>
-              <div v-if="!el.isAddressAvailable" class="text-danger secondary-text">Адрес недоступен</div>
+              <div v-if="!el.isAddressAvailable" class="text-danger secondary-text">Пока не доставляем</div>
             </div>
 
           </div>

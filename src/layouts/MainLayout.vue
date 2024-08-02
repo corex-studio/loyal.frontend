@@ -142,7 +142,7 @@ const routesWithoutContainerPaddings = computed(() => {
     v,
     v + withCityRouteKey,
     v + withCompanyRouteKey,
-    v + withCityRouteKey + withCompanyRouteKey,
+    v + withCityRouteKey + withCompanyRouteKey
   ])
 })
 const route = useRoute()
