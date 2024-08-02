@@ -358,7 +358,7 @@ export class AppManager {
   async loadMenuPage() {
     cartRepo.item = null
     const currentPoint = this.findCurrentSalesPoint()
-    await this.loadCart(currentPoint)
+    await this.loadCart()
     if (currentPoint) {
       void store.loadCatalog(currentPoint).then(() => {
         void this.handleInitialMenuItem()
@@ -425,8 +425,7 @@ export class AppManager {
     return currentPoint || null
   }
 
-  async loadCart(salesPoint?: SalesPoint | null) {
-    console.log(salesPoint)
+  async loadCart() {
     if (authentication.user) {
       if (store.qrData) {
         await cartRepo.setParams({
@@ -436,7 +435,6 @@ export class AppManager {
           comment: cartRepo.item?.comment || undefined,
         })
       }
-      console.log('companyRepo', companyRepo.cartCompany)
       await cartRepo.current(undefined, store.qrData?.data?.pad?.id, companyRepo.item?.id)
     } else {
       cartRepo.item = null
