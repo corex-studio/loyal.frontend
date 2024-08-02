@@ -113,7 +113,7 @@ export type CartRaw = {
     address?: string | null
     payment?: string | null
     time?: string | null
-  }
+  } | null
   eat_inside: boolean
   guest_count: number
   closest_time_text?: string | null
@@ -151,7 +151,7 @@ export class Cart implements BaseModel {
     address: string | null
     payment: string | null
     time: string | null
-  }
+  } | null
   freeItems: {
     uuid: string
     active: boolean
@@ -213,12 +213,12 @@ export class Cart implements BaseModel {
       raw.calculation_status || CalculationStatus.INACTIVE
     this.useBonuses = raw.use_bonuses || false
     this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
-    this.userErrors = {
+    this.userErrors = raw.user_errors ? {
       additional: raw.user_errors.additional || [],
       address: raw.user_errors.address || null,
       payment: raw.user_errors.payment || null,
       time: raw.user_errors.time || null
-    }
+    } : null
   }
 
   get cartItemsQuantitySum() {
