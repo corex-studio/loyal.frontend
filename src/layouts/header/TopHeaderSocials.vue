@@ -8,8 +8,9 @@
       <CIcon
         @click="openLink(el.link)"
         :size="iconSize || '26px'"
+        :style="`color: ${el.color}`"
+        :color="el.color ? '' : 'secondary'"
         class="cursor-pointer"
-        color="secondary"
         hover-color="primary"
         :name="getSocialIcon(el.link_type)"
       />
@@ -36,38 +37,38 @@ const socialsTypes = ref([
   {
     type: LinkType.VK,
     icon: 'fa-brands fa-vk',
-    link: '',
+    link: ''
   },
   {
     type: LinkType.MAPS,
     icon: 'fa-solid fa-location-dot',
-    link: '',
+    link: ''
   },
   {
     type: LinkType.TELEGRAM,
     icon: 'fa-brands fa-telegram',
-    link: '',
+    link: ''
   },
   {
     type: LinkType.WEBSITE,
     icon: 'fa-solid fa-globe',
-    link: '',
+    link: ''
   },
   {
     type: LinkType.OK,
     icon: 'fa-brands fa-odnoklassniki',
-    link: '',
+    link: ''
   },
   {
     type: LinkType.INSTAGRAM,
     icon: 'fa-brands fa-instagram',
-    link: '',
+    link: ''
   },
   {
     type: LinkType.WHATSAPP,
     icon: 'fa-brands fa-whatsapp',
-    link: '',
-  },
+    link: ''
+  }
 ])
 
 const openLink = (v: string) => {
