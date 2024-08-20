@@ -23,6 +23,7 @@
         class="cursor-pointer border-radius col row items-center justify-center rounded-10 relative-position py-4"
       >
         {{ tab.label }}
+        <DeliveryTypeChip class="ml-5" :delivery_type="tab.type"></DeliveryTypeChip>
         <slot name="append"></slot>
       </div>
       <div
@@ -63,6 +64,8 @@ import { onMounted, ref, watch, computed } from 'vue'
 import { TabRaw } from './ServiceSettingsModal.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { useQuasar } from 'quasar'
+import { themeRepo } from '../../models/theme/themeRepo'
+import DeliveryTypeChip from 'components/serviceSettings/DeliveryTypeChip.vue'
 
 const props = withDefaults(
   defineProps<{
@@ -71,8 +74,8 @@ const props = withDefaults(
     routerMethod?: 'replace' | 'push'
   }>(),
   {
-    routerMethod: 'replace',
-  },
+    routerMethod: 'replace'
+  }
 )
 
 const emit = defineEmits<{
@@ -112,7 +115,7 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) selectedTab.value = v
-  },
+  }
 )
 </script>
 
