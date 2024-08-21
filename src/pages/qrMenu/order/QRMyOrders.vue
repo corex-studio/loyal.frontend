@@ -1,7 +1,13 @@
 <template>
-  <div class="mt-10">
+  <div class="mt-10 text-on-backing-color">
     <template v-if="currentOrders.length">
       <div class="header3 bold mb-5">Текущие заказы</div>
+      <div class="col mb-5 py-5" v-if="themeRepo.item?.settings.order?.redirect.length">
+        <ThemeRedirectCard
+          :class="{'mt-5': index}"
+          v-for="(el, index) in themeRepo.item?.settings.order.redirect" :item="el"
+          :key="index"></ThemeRedirectCard>
+      </div>
       <QrOrderItem
         v-for="(item, index) in currentOrders"
         :key="item.id"
@@ -48,7 +54,7 @@ import {
   OrderSystemSource,
   PaymentObjectType,
   PaymentStatusType,
-  PaymentType,
+  PaymentType
 } from 'src/models/order/order'
 import { orderRepo } from 'src/models/order/orderRepo'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -62,6 +68,8 @@ import OrderPaymentModal from 'components/OrderPaymentModal.vue'
 import { useRoute, useRouter } from 'vue-router'
 import SelectPaymentTypeModal from 'pages/arrangement/SelectPaymentTypeModal.vue'
 import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { themeRepo } from '../../../models/theme/themeRepo'
+import ThemeRedirectCard from 'components/cards/ThemeRedirectCard.vue'
 
 const loading = ref(false)
 const detailOrderModal = ref(false)
@@ -91,7 +99,7 @@ onMounted(() => {
       void router.replace({
         name: String(route.name),
         query: { ...route.query, paymentUrl: undefined },
-        params: route.params,
+        params: route.params
       })
     }
   })
@@ -117,7 +125,7 @@ const paySelectedOrder = async (paymentType: PaymentObjectType) => {
   if (!detailOrderItem.value) return
   const res = await orderRepo.applyPayments(detailOrderItem.value, {
     payment_type: paymentType.type,
-    system_source: OrderSystemSource.WEBSITE,
+    system_source: OrderSystemSource.WEBSITE
   })
   const index = currentOrders.value.findIndex((v) => v.id === res.id)
   if (index > -1) currentOrders.value[index] = res
@@ -148,9 +156,9 @@ const loadOrders = (page = 1, appendItems = false) => {
   void orderRepo.list(
     {
       sales_point: padRepo.item?.salesPoint?.id,
-      status: OrderStatusType.CLOSED,
+      status: OrderStatusType.CLOSED
     },
-    { page, appendItems },
+    { page, appendItems }
   )
 }
 

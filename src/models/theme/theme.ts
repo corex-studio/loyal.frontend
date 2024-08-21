@@ -1,6 +1,7 @@
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { CompanyThemeSchema } from 'src/models/theme/schema/company_theme_schema'
 import { OrderType } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAdding'
+import { CompanyGroupThemeSchema } from 'src/models/theme/schema/company_group_schema_schema'
 
 
 export type CompanyThemeRaw = {
@@ -32,7 +33,7 @@ export class CompanyTheme implements BaseModel {
 
 export type ThemeRaw = {
   uuid?: string
-  settings: Record<string, any>
+  settings: CompanyGroupThemeSchema
   companies: CompanyThemeRaw[]
 }
 
@@ -40,9 +41,11 @@ export type ThemeRaw = {
 export class Theme implements BaseModel {
   id: string | undefined
   companies: CompanyTheme[]
+  settings: CompanyGroupThemeSchema
 
   constructor(raw: ThemeRaw) {
     this.id = raw.uuid
+    this.settings = raw.settings
     this.companies = raw.companies.map(v => new CompanyTheme(v))
   }
 

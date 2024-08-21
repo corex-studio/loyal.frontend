@@ -6,7 +6,6 @@ import { companyRepo } from 'src/models/company/companyRepo'
 
 export class ThemeRepo extends BaseRepo<Theme> {
   api = themeApi
-  theme: Theme | undefined
   promotions: Theme[] = []
 
   async fetch() {
@@ -15,11 +14,11 @@ export class ThemeRepo extends BaseRepo<Theme> {
         method: 'get'
       }
     )
-    this.theme = new Theme(result)
+    this.item = new Theme(result)
   }
 
   get currentCompanyTheme() {
-    return this.theme?.companies.find(v => v.company === companyRepo.cartCompany?.id)
+    return this.item?.companies.find(v => v.company === companyRepo.cartCompany?.id)
   }
 }
 

@@ -16,6 +16,14 @@ export class UtilsRepo extends BaseRepo<Utils> {
     const res = await this.api.geolocate(lat, lng)
     return res
   }
+
+  async formatLink(link: string) {
+    return await this.api.send<{ link: string }>({
+      action: 'functions/format_link',
+      method: 'post',
+      data: { link }
+    })
+  }
 }
 
 export const utilsRepo = reactive(new UtilsRepo())
