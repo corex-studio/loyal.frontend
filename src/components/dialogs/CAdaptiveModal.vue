@@ -3,7 +3,7 @@
            v-model="modelValue">
     <slot></slot>
   </CDialog>
-  <CSwipeModal v-else  v-model="modelValue">
+  <CSwipeModal v-else allow-open-full-height  v-model="modelValue">
     <slot></slot>
   </CSwipeModal>
 </template>

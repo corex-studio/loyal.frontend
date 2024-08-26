@@ -1,15 +1,14 @@
 <template>
-
   <Teleport to="body">
     <Transition name="fade">
       <div
         v-if="modelValue && asModal"
         class="c-swipe-modal-backdrop"
-        style="background-color: rgba(255,255,255,0.9)"
+        style="background-color: rgba(255, 255, 255, 0.9)"
         @click.self="noClose ? void 0 : closeModal()"
         ref="backdropRef"
       >
-        {{breakPointInPx}}
+        {{ { initialHeight } }}
       </div>
     </Transition>
     <Teleport :to="backdropRef" :disabled="!backdropRef || !asModal">
@@ -41,14 +40,15 @@
           ></div>
         </div>
         <div
-          ref="contentRef"
           class="c-swipe-modal-content"
           :style="{
             overflow:
               preventContentScrollingIfClosed && !isFullHeight ? 'hidden' : '',
           }"
         >
-          <slot></slot>
+          <div ref="contentRef">
+            <slot></slot>
+          </div>
         </div>
       </dialog>
     </Teleport>
@@ -81,7 +81,7 @@ const props = withDefaults(
     preventContentScrollingIfClosed?: boolean
     fullHeight?: string
   }>(),
-  { asModal: true, fullHeight: '98dvh' },
+  { asModal: true, fullHeight: '98dvh', allowOpenFullHeight: true },
 )
 
 const animationTime = 0.22
@@ -137,19 +137,59 @@ const cleanups: Fn[] = []
 const breakPointInPx = computed(() => {
   let bp = props.breakpoint
   const windowHeight = window.innerHeight
-  if (typeof bp == undefined) {
-    const percentFromBody = windowHeight * 0.7
-    if (contentBounding.height.value > percentFromBody) return percentFromBody
+  if (bp == undefined || bp === 'auto') {
+    const contentHeight = contentBounding.height.value
+    console.log({ contentHeight })
+    return parsePxFromString(props.fullHeight)
+    // const percentFromBody = windowHeight * 0.7
+    // if (contentBounding.height.value > percentFromBody) return percentFromBody
   }
   if (typeof bp === 'number') return bp
   else if (typeof bp === 'string') {
     if (bp.endsWith('px')) return Number(bp.replace('px', ''))
     if (bp.endsWith('%')) {
-      return (bodyBounding.height.value * Number(bp.replace('%', ''))) / 100
+      return (windowHeight * Number(bp.replace('%', ''))) / 100
     }
   }
   return bp ? Number(bp) : windowHeight * 0.7
 })
+
+const parsePxFromString = (value: string) => {
+  let measure: 'percent' | 'px' = 'px'
+  if (value.endsWith('vh') || value.endsWith('wh')) {
+    measure = 'percent'
+  }
+  const _value = value.replace(/[A-Za-z]+/, '')
+  if (measure === 'px') return Number(_value)
+  else {
+    const windowHeight = window.innerHeight
+    return Number(Number(windowHeight * (Number(_value) / 100)).toFixed(2))
+  }
+}
+
+// const getBreakPointInPx = () => {
+//
+//       let bp = props.breakpoint
+//       const windowHeight = window.innerHeight
+//       if (bp == undefined || bp === 'auto') {
+//         console.trace(parsePxFromString(props.fullHeight))
+//         resolve(parsePxFromString(props.fullHeight))
+//         // const percentFromBody = windowHeight * 0.7
+//         // if (contentBounding.height.value > percentFromBody) resolve(percentFromBody)
+//       }
+//       if (typeof bp === 'number') resolve(bp)
+//       else if (typeof bp === 'string') {
+//         if (bp.endsWith('px')) resolve(Number(bp.replace('px', '')))
+//         if (bp.endsWith('%')) {
+//           resolve(
+//             (bodyBounding.height.value * Number(bp.replace('%', ''))) / 100,
+//           )
+//         }
+//       }
+//       resolve(bp ? Number(bp) : windowHeight * 0.7)
+//     }, 50)
+//   })
+// }
 
 const emitScrollEnd = () => {
   const e = new Event('scrollend')
@@ -290,18 +330,22 @@ const getSwipeSpeed = (evt: Touch, timestamp: number) => {
   return distanceDiff / (time || 1)
 }
 
-const onOpen = () => {
+const onOpen = async () => {
   if (isOpened.value) return
   isOpened.value = true
   fromInitialYDiff.value = 0
   realFromInitialYDiff.value = 0
-  if (!props.alwaysVisibleOnBreakpoint)
+  if (!props.alwaysVisibleOnBreakpoint) {
     initialHeight.value = breakPointInPx.value
+  }
   void nextTick(() => {
+    console.log(dialogRef.value)
     if (!dialogRef.value) return
+    console.log(initialHeight.value + 'px')
     dialogRef.value.style.height = initialHeight.value + 'px'
   })
-  toggleWithAnimation(true)
+  console.log(dialogRef.value)
+  await toggleWithAnimation(true)
   setListeners()
   document.body.style.overflow = 'hidden'
 }
@@ -320,11 +364,12 @@ const closeModal = () => {
   onClose()
 }
 
-
-onUpdated(() => {
-  if (props.alwaysVisibleOnBreakpoint && breakPointInPx.value) {
-    initialHeight.value = breakPointInPx.value
-    onOpen()
+onUpdated(async () => {
+  if (props.alwaysVisibleOnBreakpoint) {
+    if (breakPointInPx.value) {
+      initialHeight.value = breakPointInPx.value
+      await onOpen()
+    }
   }
 })
 
@@ -346,7 +391,7 @@ const toggleWithAnimation = async (newModelValue: boolean) => {
       styles.transform = ''
       fromInitialYDiff.value = 0
       realFromInitialYDiff.value = 0
-     if (modelValue.value === newModelValue) return
+      if (modelValue.value === newModelValue) return
       modelValue.value = newModelValue
     }, animationTime * 1000)
   })
@@ -386,8 +431,8 @@ const toggleFullHeight = async () => {
   })
 }
 
-watch(modelValue, (v) => {
-  if (v) onOpen()
+watch(modelValue, async (v) => {
+  if (v) void onOpen()
   else onClose()
 })
 
