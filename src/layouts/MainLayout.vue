@@ -1,5 +1,6 @@
 <template>
   <template v-if="ready">
+    {{$store.newsModal}}
     <PrepareUiSettings />
     <q-layout class="bg-background-color relative-position" view="lHh Lpr lFf">
       <QRHomePadInfo v-if="$store.tableMode" />
