@@ -5,7 +5,7 @@
     width="466px"
     @update:model-value="$emit('update:modelValue', $event)"
   >
-    <div class="px-xs-8 px-md-15 pb-xs-12 pb-md-15 pt-xs-4 pt-md-15">
+    <div class="px-xs-8 px-md-15 pb-xs-12 pb-md-15 pt-xs-15 pt-md-15">
       <div class="text-on-background-color">
         <div
           :style="$q.screen.lt.md ? 'text-align: center' : ''"
