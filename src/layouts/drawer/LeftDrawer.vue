@@ -75,13 +75,11 @@
           @click="el.click()"
         />
       </div>
-      <q-separator class="my-8" />
-
+      <q-separator v-if="!!guestContacts.length" class="my-8" />
       <ContactsHeader
         style="gap: 10px !important; flex-direction: column !important"
       />
       <q-separator class="my-8" />
-      <!--      <TopHeaderDeliveryInfo />-->
       <TopHeaderSocials header-mode />
     </q-drawer>
   </div>
@@ -101,6 +99,21 @@ import { appSettingsRepo } from 'src/models/appSettings/appSettingsRepo'
 
 const router = useRouter()
 
+const guestContacts = computed(() => {
+  const company = (companyGroupRepo.item?.companies || [])[0]
+  const results: typeof company.guestContacts.emails = []
+  if (!company) return results
+  for (const [key, values] of Object.entries(company.guestContacts)) {
+    if (['socials'].includes(key)) continue
+    if (!Array.isArray(values)) continue
+    for (const item of values) {
+      if (!item.foreground) continue
+      else results.push(item)
+    }
+  }
+  return results
+})
+
 const blocks = computed(() => {
   return [
     {
@@ -108,9 +121,9 @@ const blocks = computed(() => {
       hidden: !authentication.user || authentication.user.isAnonymous,
       click: () => {
         router.push({
-          name: 'profilePage'
+          name: 'profilePage',
         })
-      }
+      },
     },
     {
       label: 'Бонусы',
@@ -121,36 +134,36 @@ const blocks = computed(() => {
       click: () => {
         store.bonusesDrawer = true
         store.leftDrawer = false
-      }
+      },
     },
     {
       label: 'О нас',
       click: () => {
         router.push({
-          name: 'aboutUs'
+          name: 'aboutUs',
         })
-      }
+      },
     },
     {
       label: 'Контакты',
       click: () => {
         scrollToBlock('footer')
-      }
+      },
     },
     {
       hidden: !appSettingsRepo.hasAppLinks,
       label: 'Мобильное приложение',
       click: () => {
         scrollToBlock('footer')
-      }
+      },
     },
     {
       label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
       hidden: !uiSettingsRepo.item?.becomeFranchisee,
       click: () => {
         window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
-      }
-    }
+      },
+    },
   ]
 })
 
@@ -164,7 +177,7 @@ const openCitySelectorModal = () => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (!router.isIncludesRouteName(['home'])) {
     void router.push({
-      name: 'home'
+      name: 'home',
     })
     setTimeout(() => {
       scrollToBlock(v, tab)
