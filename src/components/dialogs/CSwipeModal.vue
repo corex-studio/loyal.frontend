@@ -6,7 +6,13 @@
         ref="backdropRef"
         class="c-swipe-modal-backdrop"
         @click.self="noClose ? void 0 : closeModal()"
-      ></div>
+      >
+        <div class="bg-white">
+        {{
+          {alwaysVisibleOnBreakpoint}
+        }}
+        </div>
+      </div>
     </Transition>
     <Teleport :disabled="!backdropRef || !asModal" :to="backdropRef">
       <dialog
@@ -16,7 +22,6 @@
         :open="modelValue || !asModal || alwaysVisibleOnBreakpoint"
         :style="{
           ...$props.style,
-          transform: !alwaysVisibleOnBreakpoint ? 'translateY(100%)' : '',
           borderRadius,
         }"
         class="c-swipe-modal bg-background-color"
@@ -368,10 +373,11 @@ onUpdated(async () => {
 })
 
 const toggleWithAnimation = async (newModelValue: boolean) => {
-  // console.trace('toggleWithAnimation')
+  console.log('toggleWithAnimation')
   void nextTick(async () => {
     if (!dialogRef.value) return
     const styles = dialogRef.value.style
+    styles.transform =  !props.alwaysVisibleOnBreakpoint ? 'translateY(100%)' : ''
 
     await nextTick(() => {
       gsap.to(dialogRef.value, {
@@ -432,6 +438,7 @@ watch(modelValue, async (v) => {
 })
 
 watch(fromInitialYDiff, (v) => {
+  console.log('watch(fromInitialYDiff')
   if (!dialogRef.value) return
   gsap.to(dialogRef.value, {
     transform: `translateY(${v * -1}px)`,
