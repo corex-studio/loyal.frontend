@@ -63,7 +63,7 @@ watch(
 
 const getBorderRadius = computed(() => {
   return q.screen.lt.md
-    ? 'unsert'
+    ? `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
     : `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
 })
 

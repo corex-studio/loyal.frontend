@@ -18,7 +18,6 @@
           ...$props.style,
           borderRadius,
           maxWidth: props.width || 'unset',
-          overflow: 'hidden',
         }"
         class="c-swipe-modal bg-background-color"
       >
