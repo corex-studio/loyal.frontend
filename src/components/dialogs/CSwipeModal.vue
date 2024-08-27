@@ -3,31 +3,28 @@
     <Transition name="fade">
       <div
         v-if="modelValue && asModal"
-        class="c-swipe-modal-backdrop"
-        style="background-color: rgba(255, 255, 255, 0.9)"
-        @click.self="noClose ? void 0 : closeModal()"
         ref="backdropRef"
-      >
-        {{ { initialHeight } }}
-      </div>
+        class="c-swipe-modal-backdrop"
+        @click.self="noClose ? void 0 : closeModal()"
+      ></div>
     </Transition>
-    <Teleport :to="backdropRef" :disabled="!backdropRef || !asModal">
+    <Teleport :disabled="!backdropRef || !asModal" :to="backdropRef">
       <dialog
         v-if="!asModal || modelValue || alwaysVisibleOnBreakpoint"
         ref="dialogRef"
-        class="c-swipe-modal bg-background-color"
         :class="{ 'as-modal': asModal, [propsClasses]: $props.class }"
+        :open="modelValue || !asModal || alwaysVisibleOnBreakpoint"
         :style="{
           ...$props.style,
           transform: !alwaysVisibleOnBreakpoint ? 'translateY(100%)' : '',
           borderRadius,
         }"
-        :open="modelValue || !asModal || alwaysVisibleOnBreakpoint"
+        class="c-swipe-modal bg-background-color"
       >
         <div
           class="full-width flex flex-center py-8"
-          style="cursor: grab"
           data-grab-immediately="true"
+          style="cursor: grab"
         >
           <div
             style="
@@ -40,11 +37,11 @@
           ></div>
         </div>
         <div
-          class="c-swipe-modal-content"
           :style="{
             overflow:
               preventContentScrollingIfClosed && !isFullHeight ? 'hidden' : '',
           }"
+          class="c-swipe-modal-content"
         >
           <div ref="contentRef">
             <slot></slot>
@@ -60,7 +57,6 @@ import {
   Arrayable,
   Fn,
   MaybeComputedElementRef,
-  MaybeElement,
   useElementBounding,
   useEventListener,
 } from '@vueuse/core'
@@ -106,10 +102,10 @@ const contentRef = ref<HTMLDivElement | null>(null)
 const bounding = useElementBounding(
   dialogRef as unknown as MaybeComputedElementRef<HTMLElement>,
 )
-const bodyBounding = useElementBounding(document.body)
-const contentBounding = useElementBounding(
-  contentRef as unknown as MaybeComputedElementRef<MaybeElement>,
-)
+// const bodyBounding = useElementBounding(document.body)
+// const contentBounding = useElementBounding(
+//   contentRef as unknown as MaybeComputedElementRef<MaybeElement>,
+// )
 
 const isContentScrolling = ref(false)
 const isFullHeight = ref(false)
@@ -138,8 +134,7 @@ const breakPointInPx = computed(() => {
   let bp = props.breakpoint
   const windowHeight = window.innerHeight
   if (bp == undefined || bp === 'auto') {
-    const contentHeight = contentBounding.height.value
-    console.log({ contentHeight })
+    // const contentHeight = contentBounding.height.value
     return parsePxFromString(props.fullHeight)
     // const percentFromBody = windowHeight * 0.7
     // if (contentBounding.height.value > percentFromBody) return percentFromBody
@@ -196,7 +191,9 @@ const emitScrollEnd = () => {
   if (scrollEndTimeout) clearTimeout(scrollEndTimeout)
   scrollEndTimeout = setTimeout(() => contentRef.value?.dispatchEvent(e), 100)
 }
+
 let scrollEndTimeout: NodeJS.Timeout | null = null
+
 const setListeners = () => {
   void nextTick(() => {
     let target: Arrayable<keyof WindowEventMap> | null = null
@@ -339,12 +336,9 @@ const onOpen = async () => {
     initialHeight.value = breakPointInPx.value
   }
   void nextTick(() => {
-    console.log(dialogRef.value)
     if (!dialogRef.value) return
-    console.log(initialHeight.value + 'px')
     dialogRef.value.style.height = initialHeight.value + 'px'
   })
-  console.log(dialogRef.value)
   await toggleWithAnimation(true)
   setListeners()
   document.body.style.overflow = 'hidden'
@@ -422,6 +416,7 @@ const toggleFullHeight = async () => {
     height: isFullHeight.value ? initialHeight.value + 'px' : props.fullHeight,
     duration: animationTime,
   })
+
   await nextTick(() => {
     setTimeout(() => {
       styles.transition = ''

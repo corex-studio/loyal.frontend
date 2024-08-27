@@ -1,14 +1,19 @@
 <template>
-  <CDialog no-padding v-if="$q.screen.gt.sm" :width="width" :height="height"
-           v-model="modelValue">
+  <CDialog
+    v-if="$q.screen.gt.sm"
+    v-model="modelValue"
+    :height="height"
+    :width="width"
+    no-padding
+  >
     <slot></slot>
   </CDialog>
-  <CSwipeModal v-else allow-open-full-height  v-model="modelValue">
+  <CSwipeModal v-else v-model="modelValue" :breakpoint="initialMobileHeight">
     <slot></slot>
   </CSwipeModal>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import CSwipeModal from 'src/components/dialogs/CSwipeModal.vue'
 
@@ -17,10 +22,8 @@ const modelValue = defineModel<boolean>()
 defineProps<{
   width?: string
   height?: string
+  initialMobileHeight?: string
 }>()
-
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style lang="scss" scoped></style>

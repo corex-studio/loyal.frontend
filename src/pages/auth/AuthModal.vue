@@ -1,129 +1,80 @@
 <template>
-  <CDialog
+  <CAdaptiveModal
+    :initial-mobile-height="'550px'"
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     width="466px"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    :maximize="$q.screen.lt.md"
-    :hide-close="$q.screen.lt.md"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
-    <div class="text-on-background-color">
-      <div
-        :style="$q.screen.lt.md ? 'text-align: center' : ''"
-        class="header3 bold"
-      >
-        Вход на сайт
-      </div>
-      <div v-if="currentStep === 1" class="column mt-4">
-        <div class="column full-width">
-          <div
-            :style="$q.screen.lt.md ? 'text-align: center' : ''"
-            class="body"
-          >
-            Введите номер телефона, чтобы войти на сайт
-          </div>
+    <div class="px-xs-8 px-md-15 pb-xs-12 pb-md-15 pt-xs-4 pt-md-15">
+      <div class="text-on-background-color">
+        <div
+          :style="$q.screen.lt.md ? 'text-align: center' : ''"
+          class="header3 bold"
+        >
+          Вход на сайт
         </div>
-        <div class="mt-md-10 mt-xs-8">
-          <CInput
-            input-class="subtitle-text text-on-input-color input "
-            :height="$q.screen.lt.md ? '44px' : '50px'"
-            outlined
-            mask="+7 (###) ###-##-##"
-            unmasked-value
-            v-model="data.phone"
-          />
-          <div class="mt-16" v-if="tabs.length > 1">
+        <div v-if="currentStep === 1" class="column mt-4">
+          <div class="column full-width">
             <div
               :style="$q.screen.lt.md ? 'text-align: center' : ''"
               class="body"
             >
-              Выберите способ авторизации
-            </div>
-            <AuthModalTabs
-              :tabs="tabs"
-              v-model="data.authType"
-              class="mt-4"
-            ></AuthModalTabs>
-          </div>
-          <div class="row no-wrap items-center mt-16 gap-6">
-            <CCheckBox v-model="data.agreement" color="primary" size="48px" />
-            <div
-              @click="data.agreement = !data.agreement"
-              class="secondary-text cursor-pointer"
-              style="opacity: 0.7"
-            >
-              Продолжая, вы соглашаетесь c
-              <span
-                @click.capture.stop="openTermsOfService()"
-                style="text-decoration: underline"
-                >пользовательским соглашением</span
-              >,
-              <span
-                @click.capture.stop="openPolicy()"
-                style="text-decoration: underline"
-                >политикой конфиденциальности</span
-              >
+              Введите номер телефона, чтобы войти на сайт
             </div>
           </div>
-        </div>
-      </div>
-      <div class="mt-4" v-else-if="data.authType === AuthType.SMS">
-        <div class="column body gap-1 full-width">
-          <div
-            :style="$q.screen.lt.md ? 'text-align: center' : ''"
-            style="opacity: 0.7"
-            class="body"
-          >
-            Код отправлен сообщением на
-          </div>
-          <div :class="{ 'justify-center': $q.screen.lt.md }" class="row gap-4">
-            <div>+7{{ data.phone }}</div>
-            <CButton
-              @click="currentStep = 1"
-              text-button
-              label="Изменить"
-              text-color="primary"
-              class="body"
+          <div class="mt-md-10 mt-xs-8">
+            <CInput
+              input-class="subtitle-text text-on-input-color input "
+              :height="$q.screen.lt.md ? '44px' : '50px'"
+              outlined
+              mask="+7 (###) ###-##-##"
+              unmasked-value
+              v-model="data.phone"
             />
+            <div class="mt-16" v-if="tabs.length > 1">
+              <div
+                :style="$q.screen.lt.md ? 'text-align: center' : ''"
+                class="body"
+              >
+                Выберите способ авторизации
+              </div>
+              <AuthModalTabs
+                :tabs="tabs"
+                v-model="data.authType"
+                class="mt-4"
+              ></AuthModalTabs>
+            </div>
+            <div class="row no-wrap items-center mt-16 gap-6">
+              <CCheckBox v-model="data.agreement" color="primary" size="48px" />
+              <div
+                @click="data.agreement = !data.agreement"
+                class="secondary-text cursor-pointer"
+                style="opacity: 0.7"
+              >
+                Продолжая, вы соглашаетесь c
+                <span
+                  @click.capture.stop="openTermsOfService()"
+                  style="text-decoration: underline"
+                  >пользовательским соглашением</span
+                >,
+                <span
+                  @click.capture.stop="openPolicy()"
+                  style="text-decoration: underline"
+                  >политикой конфиденциальности</span
+                >
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row full-width justify-center mt-12">
-          <VOtpInput
-            input-classes="otp-input"
-            ref="otpInputRef"
-            separator=""
-            inputType="number"
-            :num-inputs="4"
-            v-model:value="data.code"
-            @on-change="data.code = $event"
-            @on-complete="auth()"
-          />
-          <div
-            v-if="codeError"
-            class="col-12 text-center text-danger body mt-2"
-          >
-            Неверный код
-          </div>
-        </div>
-        <div
-          @click="delay ? void 0 : requestAuth()"
-          class="row justify-center mt-md-4 mt-xs-30 body"
-          style="text-decoration: underline"
-          :class="{ 'cursor-pointer': !delay }"
-        >
-          {{
-            !!delay ? `Отправить еще раз (${delay} сек)` : 'Отправить еще раз'
-          }}
-        </div>
-      </div>
-      <div class="mt-4" v-else-if="data.authType === AuthType.FLASHCALL">
-        <div class="column body gap-1 full-width">
-          <div
-            :style="$q.screen.lt.md ? 'text-align: center' : ''"
-            style="opacity: 0.7"
-            class="body"
-          >
-            Вам поступит звонок на номер:
+        <div class="mt-4" v-else-if="data.authType === AuthType.SMS">
+          <div class="column body gap-1 full-width">
+            <div
+              :style="$q.screen.lt.md ? 'text-align: center' : ''"
+              style="opacity: 0.7"
+              class="body"
+            >
+              Код отправлен сообщением на
+            </div>
             <div
               :class="{ 'justify-center': $q.screen.lt.md }"
               class="row gap-4"
@@ -137,111 +88,164 @@
                 class="body"
               />
             </div>
-            Введите последние 4 цифры номера, с которого идёт звонок.
           </div>
-          <div class="text-h5 text-center">
-            <span style="opacity: 0.5">+7 000 000 </span>
-            <span
-              class="bg-backing-color text-on-backing-color px-4 rounded-borders"
-              >XX-XX</span
-            >
-          </div>
-        </div>
-        <div class="row full-width justify-center mt-12">
-          <VOtpInput
-            input-classes="otp-input"
-            ref="otpInputRef"
-            separator=""
-            inputType="number"
-            :num-inputs="4"
-            v-model:value="data.code"
-            @on-change="data.code = $event"
-            @on-complete="auth()"
-          />
-          <div
-            v-if="codeError"
-            class="col-12 text-center text-danger body mt-2"
-          >
-            Неверный код
-          </div>
-        </div>
-        <div
-          @click="delay ? void 0 : sendSmsCode()"
-          class="row justify-center mt-md-4 mt-xs-30 body"
-          style="text-decoration: underline"
-          :class="{ 'cursor-pointer': !delay }"
-        >
-          {{
-            !!delay
-              ? `Отправить смс с кодом (${delay} сек)`
-              : 'Отправить смс с кодом'
-          }}
-        </div>
-      </div>
-      <div class="mt-4" v-else-if="data.authType === AuthType.TELEGRAM">
-        <div class="column body gap-1 full-width">
-          <div :class="{ 'justify-center': $q.screen.lt.md }" class="row gap-4">
-            <div>+7{{ data.phone }}</div>
-            <CButton
-              @click="currentStep = 1"
-              text-button
-              label="Изменить"
-              text-color="primary"
-              class="body"
+          <div class="row full-width justify-center mt-12">
+            <VOtpInput
+              input-classes="otp-input"
+              ref="otpInputRef"
+              separator=""
+              inputType="number"
+              :num-inputs="4"
+              v-model:value="data.code"
+              @on-change="data.code = $event"
+              @on-complete="auth()"
             />
+            <div
+              v-if="codeError"
+              class="col-12 text-center text-danger body mt-2"
+            >
+              Неверный код
+            </div>
           </div>
           <div
-            :style="$q.screen.lt.md ? 'text-align: center' : ''"
-            style="opacity: 0.7"
-            class="body"
+            @click="delay ? void 0 : requestAuth()"
+            class="row justify-center mt-md-4 mt-xs-30 body"
+            style="text-decoration: underline"
+            :class="{ 'cursor-pointer': !delay }"
           >
-            Переход в телеграм. Пожалуйста не закрывайте страницу.
+            {{
+              !!delay ? `Отправить еще раз (${delay} сек)` : 'Отправить еще раз'
+            }}
           </div>
         </div>
-        <div class="row mt-10 justify-center full-width">
-          <QSpinner size="32" />
+        <div class="mt-4" v-else-if="data.authType === AuthType.FLASHCALL">
+          <div class="column body gap-1 full-width">
+            <div
+              :style="$q.screen.lt.md ? 'text-align: center' : ''"
+              style="opacity: 0.7"
+              class="body"
+            >
+              Вам поступит звонок на номер:
+              <div
+                :class="{ 'justify-center': $q.screen.lt.md }"
+                class="row gap-4"
+              >
+                <div>+7{{ data.phone }}</div>
+                <CButton
+                  @click="currentStep = 1"
+                  text-button
+                  label="Изменить"
+                  text-color="primary"
+                  class="body"
+                />
+              </div>
+              Введите последние 4 цифры номера, с которого идёт звонок.
+            </div>
+            <div class="text-h5 text-center">
+              <span style="opacity: 0.5">+7 000 000 </span>
+              <span
+                class="bg-backing-color text-on-backing-color px-4 rounded-borders"
+                >XX-XX</span
+              >
+            </div>
+          </div>
+          <div class="row full-width justify-center mt-12">
+            <VOtpInput
+              input-classes="otp-input"
+              ref="otpInputRef"
+              separator=""
+              inputType="number"
+              :num-inputs="4"
+              v-model:value="data.code"
+              @on-change="data.code = $event"
+              @on-complete="auth()"
+            />
+            <div
+              v-if="codeError"
+              class="col-12 text-center text-danger body mt-2"
+            >
+              Неверный код
+            </div>
+          </div>
+          <div
+            @click="delay ? void 0 : sendSmsCode()"
+            class="row justify-center mt-md-4 mt-xs-30 body"
+            style="text-decoration: underline"
+            :class="{ 'cursor-pointer': !delay }"
+          >
+            {{
+              !!delay
+                ? `Отправить смс с кодом (${delay} сек)`
+                : 'Отправить смс с кодом'
+            }}
+          </div>
         </div>
+        <div class="mt-4" v-else-if="data.authType === AuthType.TELEGRAM">
+          <div class="column body gap-1 full-width">
+            <div
+              :class="{ 'justify-center': $q.screen.lt.md }"
+              class="row gap-4"
+            >
+              <div>+7{{ data.phone }}</div>
+              <CButton
+                @click="currentStep = 1"
+                text-button
+                label="Изменить"
+                text-color="primary"
+                class="body"
+              />
+            </div>
+            <div
+              :style="$q.screen.lt.md ? 'text-align: center' : ''"
+              style="opacity: 0.7"
+              class="body"
+            >
+              Переход в телеграм. Пожалуйста не закрывайте страницу.
+            </div>
+          </div>
+          <div class="row mt-10 justify-center full-width">
+            <QSpinner size="32" />
+          </div>
 
-        <a
-          v-if="sessionLink"
-          :href="sessionLink"
-          target="_blank"
-          class="row justify-center mt-10 body cursor-pointer"
-          style="text-decoration: underline"
-        >
-          Нажмите, если не сработал переход в телеграм
-        </a>
+          <a
+            v-if="sessionLink"
+            :href="sessionLink"
+            target="_blank"
+            class="row justify-center mt-10 body cursor-pointer"
+            style="text-decoration: underline"
+          >
+            Нажмите, если не сработал переход в телеграм
+          </a>
+        </div>
       </div>
+      <CButton
+        v-if="
+          currentStep === 1 ||
+          (data.authType &&
+            [AuthType.SMS, AuthType.FLASHCALL].includes(data.authType))
+        "
+        @click="stepHandler()"
+        height="50px"
+        width="100%"
+        :disabled="
+          !data.agreement ||
+          !data.phone ||
+          data.phone.length < 10 ||
+          !data.authType
+        "
+        label="Войти"
+        class="subtitle-text mt-10"
+        color="primary"
+        text-color="on-primary"
+        :loading="loading"
+      />
     </div>
-
-    <CButton
-      v-if="
-        currentStep === 1 ||
-        (data.authType &&
-          [AuthType.SMS, AuthType.FLASHCALL].includes(data.authType))
-      "
-      @click="stepHandler()"
-      height="50px"
-      width="100%"
-      :disabled="
-        !data.agreement ||
-        !data.phone ||
-        data.phone.length < 10 ||
-        !data.authType
-      "
-      label="Войти"
-      class="subtitle-text mt-10"
-      color="primary"
-      text-color="on-primary"
-      :loading="loading"
-    />
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
 import { QSpinner } from 'quasar'
 import { handleMessage } from 'src/models/webSocket/webSocketRepo'
 import CButton from 'src/components/template/buttons/CButton.vue'
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { authentication } from 'src/models/authentication/authentication'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import { computed, nextTick, onBeforeUnmount, ref, watch } from 'vue'
@@ -258,6 +262,7 @@ import { AuthType } from 'src/models/authSettings/authSettings'
 import AuthModalTabs from './AuthModalTabs.vue'
 import { openWebsocket } from 'src/services/openWebsocket'
 import { notifier } from 'src/services/notifier'
+import CAdaptiveModal from 'src/components/dialogs/CAdaptiveModal.vue'
 
 const props = defineProps<{
   modelValue: boolean

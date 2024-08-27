@@ -1,35 +1,24 @@
 <template>
   <CAdaptiveModal
+    :initial-mobile-height="'500px'"
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
+    height="600px"
     width="650px"
-    height="600px">
-<!--    <div-->
-<!--      v-if="$q.screen.lt.md"-->
-<!--      @click="$emit('update:modelValue', false)"-->
-<!--      class="close-button row box-shadow items-center justify-center cursor-pointer"-->
-<!--    >-->
-<!--      <CIcon-->
-<!--        color="on-background-color"-->
-<!--        hover-color="primary"-->
-<!--        class="mt-1"-->
-<!--        name="fa-regular fa-angle-down"-->
-<!--        size="24px"-->
-<!--      />-->
-<!--    </div>-->
+    @update:model-value="$emit('update:modelValue', $event)"
+  >
     <q-img
       :src="
         $promotion.item
           ? $promotion.item.image?.image || $store.images.empty
           : $news.item?.image?.image || $store.images.empty
       "
-      style="max-height: 400px"
       fit="cover"
+      style="max-height: 400px"
     >
       <template v-slot:error>
         <q-img
-          :style="`border-radius: ${getBorderRadius}`"
           :src="$store.images.empty"
+          :style="`border-radius: ${getBorderRadius}`"
           fit="cover"
           height="300px"
         />
@@ -47,16 +36,16 @@
         </div>
         <div v-else v-html="$news.item?.fullDescription"></div>
       </div>
+      <q-input v-model="lel" />
     </div>
   </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 import { useRoute, useRouter } from 'vue-router'
-import CAdaptiveModal from 'components/dialogs/CAdaptiveModal.vue';
+import CAdaptiveModal from 'components/dialogs/CAdaptiveModal.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -65,6 +54,8 @@ const props = defineProps<{
 defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
+
+const lel = ref('')
 
 const fictiveUrlStore = useFictiveUrlStore()
 const route = useRoute()
@@ -78,9 +69,7 @@ watch(
   () => props.modelValue,
   async () => {
     if (!props.modelValue) {
-      if (
-        String(route.name) === 'home__withNews'
-      ) {
+      if (String(route.name) === 'home__withNews') {
         await router.push({ name: 'home' })
       }
       fictiveUrlStore.setFictiveCategoryUrl()
