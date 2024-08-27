@@ -226,6 +226,8 @@ const setListeners = () => {
 }
 
 const onTouchMove = (e: TouchEvent) => {
+  //TODO: костыль
+  if (!isDragging.value) return
   if (!e.touches.length) return
   e.preventDefault()
   isMoving.value = true
@@ -262,6 +264,8 @@ const onTouchStart = (e: TouchEvent) => {
 }
 
 const onTouchEnd = () => {
+  //TODO: костыль
+  if (!isDragging.value) return
   if (!isMoving.value) {
     return
   }
