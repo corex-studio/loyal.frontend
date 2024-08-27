@@ -1,5 +1,5 @@
 <template>
-  <div class="px-xs-8 px-md-0 py-md-0 py-xs-12">
+  <div class="px-xs-8 px-md-0 pt-md-0 pb-md-0 pt-xs-12 pb-xs-12">
     <div v-if="$q.screen.lt.md" class="row full-width mb-8 gap-4 items-center">
       <CIcon
         @click="$emit('back')"

@@ -1,5 +1,13 @@
 <template>
-  <CDialog
+  <CAdaptiveModal
+    :initial-mobile-height="'80%'"
+    :model-value="modelValue"
+    height="600px"
+    :width="$q.screen.gt.md ? '1150px' : '500px'"
+    @update:model-value="$emit('update:modelValue', $event)"
+    :height-percent="'100%'"
+  >
+    <!-- <CDialog
     :height="$q.screen.gt.md ? '600px' : undefined"
     :hide-close="$q.screen.lt.md"
     :maximize="$q.screen.lt.xl"
@@ -11,26 +19,13 @@
     height-percent="100%"
     no-padding
     @update:model-value="$emit('update:modelValue', $event)"
-  >
+  > -->
     <div
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
       class="no-wrap full-width relative-position text-on-background-color"
       itemscope
       itemtype="https://schema.org/Product"
     >
-      <div
-        v-if="$q.screen.lt.md"
-        class="close-button row box-shadow items-center justify-center cursor-pointer"
-        @click="$emit('update:modelValue', false)"
-      >
-        <CIcon
-          class="mt-1"
-          color="on-background-color"
-          hover-color="primary"
-          name="fa-regular fa-angle-down"
-          size="24px"
-        />
-      </div>
       <img
         :ratio="1"
         :src="currentImage"
@@ -44,7 +39,6 @@
         itemprop="image"
         style="width: 100%"
       />
-
       <div
         v-if="!$menuItem.loadings.retrieve"
         :style="`border-radius: ${
@@ -63,8 +57,7 @@
             itemprop="weight"
             style="opacity: 0.5"
           >
-            {{
-              currentWeight
+            {{ currentWeight
             }}{{
               currentSize.characteristics.unit
                 ? unitTypeNamesShort[currentSize.characteristics.unit]
@@ -79,9 +72,12 @@
           >
             {{ $menuItem.item?.description }}
           </div>
-
-          <MenuItemCharacteristics v-if="currentSize && $companyGroup.item?.externalId !== 'tochka_vkusa'"
-                                   :size="currentSize" />
+          <MenuItemCharacteristics
+            v-if="
+              currentSize && $companyGroup.item?.externalId !== 'tochka_vkusa'
+            "
+            :size="currentSize"
+          />
           <MenuItemRelatedItems
             v-if="
               $cart.item &&
@@ -159,24 +155,33 @@
                   </div>
                 </div>
                 <template v-if="$q.screen.lt.md">
-                  <q-menu v-if="$menuItem.item?.isDead" v-model="isDeadErr" class="pa-3 secondary-text">
+                  <q-menu
+                    v-if="$menuItem.item?.isDead"
+                    v-model="isDeadErr"
+                    class="pa-3 secondary-text"
+                  >
                     {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
                   </q-menu>
-                  <q-menu v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem" v-model="isNotInMenuErr"
-                          class="pa-3 secondary-text">
+                  <q-menu
+                    v-else-if="
+                      !menuItemRepo.item?.isItemInMenu && !store.freeItem
+                    "
+                    v-model="isNotInMenuErr"
+                    class="pa-3 secondary-text"
+                  >
                     Недоступно к заказу
                   </q-menu>
                 </template>
-
-
               </CButton>
               <template v-if="$q.screen.gt.sm">
                 <CTooltip v-if="$menuItem.item?.isDead"
-                >Товар недоступен
+                  >Товар недоступен
                 </CTooltip>
                 <CTooltip
-                  v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem"
-                >Недоступно к заказу
+                  v-else-if="
+                    !menuItemRepo.item?.isItemInMenu && !store.freeItem
+                  "
+                  >Недоступно к заказу
                 </CTooltip>
               </template>
             </div>
@@ -202,10 +207,9 @@
       </div>
     </div>
     <div v-if="$q.screen.lt.lg" ref="touchSpot"></div>
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import MenuItemCharacteristics from './MenuItemCharacteristics.vue'
 import { ItemSize, unitTypeNamesShort } from 'src/models/menu/menu'
 import { computed, ref, watch } from 'vue'
@@ -226,17 +230,17 @@ import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { useMeta, useQuasar } from 'quasar'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import {
   ecommerceAdd,
-  ecommerceDetail
+  ecommerceDetail,
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { CalculationStatus } from 'src/models/carts/cart'
 import { notifier } from 'src/services/notifier'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import CAdaptiveModal from 'src/components/dialogs/CAdaptiveModal.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -266,8 +270,8 @@ const currentImage = computed(() => {
   return menuItemRepo.loadings.retrieve
     ? store.menuItemImage?.thumbnail || store.images.empty
     : menuItemRepo.item?.image?.image ||
-    store.menuItemImage?.thumbnail ||
-    store.images.empty
+        store.menuItemImage?.thumbnail ||
+        store.images.empty
 })
 
 const currentMenuRulesForAdding = computed(() => {
@@ -294,7 +298,7 @@ const getBottomBlockBorderRadius = computed(() => {
 const currentModifierGroups = computed(() => {
   return currentSize.value?.modifierGroups?.filter(
     (v) =>
-      !v.isHidden && !!v.items.length && v.items.some((el) => !el.is_hidden)
+      !v.isHidden && !!v.items.length && v.items.some((el) => !el.is_hidden),
   )
 })
 
@@ -303,8 +307,8 @@ const currentPrice = computed(() => {
     ((currentSize.value?.price || 0) +
       sum(
         currentSize.value?.modifierGroups?.flatMap((v) =>
-          v.items.map((el) => el.quantity * (el.price || 0))
-        )
+          v.items.map((el) => el.quantity * (el.price || 0)),
+        ),
       )) *
     quantity.value
   )
@@ -329,18 +333,18 @@ watch(
           meta: {
             description: {
               name: 'description',
-              content: menuItemRepo.item.description || ''
+              content: menuItemRepo.item.description || '',
             },
             keywords: {
               name: 'keywords',
-              content: ''
-            }
-          }
+              content: '',
+            },
+          },
         }
         useMeta(metaData)
       }
     }
-  }
+  },
 )
 
 const isAddToCardDisabled = computed(() => {
@@ -354,7 +358,7 @@ const isAddToCardDisabled = computed(() => {
     currentSize.value?.modifierGroups?.some(
       (v) =>
         v.restrictions?.min_quantity &&
-        sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity
+        sum(v.items.map((el) => el.quantity)) < v.restrictions.min_quantity,
     ) ||
     !quantity.value
   )
@@ -381,14 +385,14 @@ const addToCart = async () => {
         v.id ===
         (typeof salesPointRepo.item?.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item?.company?.id || '')
+          : salesPointRepo.item?.company?.id || ''),
     )
     if (foundCompany) companyRepo.item = foundCompany
     else
       await companyRepo.retrieve(
         typeof salesPointRepo.item.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item.company?.id || ''
+          : salesPointRepo.item.company?.id || '',
       )
     store.serviceSettingsModal = true
     store.storedMenuItem = menuItemRepo.item?.id || null
@@ -409,12 +413,12 @@ const addToCart = async () => {
                   modifier: el.id,
                   quantity: el.quantity,
                   price: el.price || 0,
-                  sum: String(Number(el.price) * el.quantity)
+                  sum: String(Number(el.price) * el.quantity),
                 } as CartItemModifier
               })
-              .filter((e) => e.quantity)
+              .filter((e) => e.quantity),
           ) || [],
-        free_item: store.freeItem || undefined
+        free_item: store.freeItem || undefined,
       })
       quantity.value = 1
     } catch (e) {

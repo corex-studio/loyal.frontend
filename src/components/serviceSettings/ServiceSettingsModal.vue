@@ -1,5 +1,14 @@
 <template>
-  <CDialog
+  <CAdaptiveModal
+    :initial-mobile-height="'400px'"
+    :model-value="modelValue"
+    :height="modalHeight"
+    :width="modalWidth"
+    :no-close="$store.noCloseServiceSettingsModal"
+    :no-backdrop-dismiss="$store.noCloseServiceSettingsModal"
+    @update:model-value="$emit('update:modelValue', $event)"
+  >
+    <!-- <CDialog
     :height="modalHeight"
     :hide-close="$q.screen.lt.md"
     :maximize="$q.screen.lt.lg"
@@ -10,7 +19,7 @@
     :no-close="$store.noCloseServiceSettingsModal"
     :no-backdrop-dismiss="$store.noCloseServiceSettingsModal"
     @update:model-value="$emit('update:modelValue', $event)"
-  >
+  > -->
     <template v-if="!newAddressMode">
       <div
         v-if="$q.screen.gt.sm"
@@ -271,11 +280,10 @@
         @updated="deliveryAddressCreateHandler()"
       />
     </template>
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
 import { CartType } from 'src/models/carts/cart'
-import CDialog from '../template/dialogs/CDialog.vue'
 import { computed, ref, watch } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { authentication } from 'src/models/authentication/authentication'
@@ -305,6 +313,7 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import DeliveryTypeSelector from './DeliveryTypeSelector.vue'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { notifier } from 'src/services/notifier'
+import CAdaptiveModal from '../dialogs/CAdaptiveModal.vue'
 
 export type TabRaw = {
   label: string | null
@@ -355,20 +364,20 @@ const modalWidth = computed(() => {
     : newAddressMode.value
       ? '1094px'
       : currentTab.value?.type === CartType.PICKUP ||
-      (currentTab.value?.type === CartType.BOOKING &&
-        bookingMode.value === 'bookingList')
+          (currentTab.value?.type === CartType.BOOKING &&
+            bookingMode.value === 'bookingList')
         ? '1300px'
         : '649px'
 })
 
 const modalHeight = computed(() => {
   return q.screen.lt.md &&
-  ((currentTab.value?.type === CartType.PICKUP &&
+    ((currentTab.value?.type === CartType.PICKUP &&
       mobileViewTypeConfirmed.value) ||
-    (currentTab.value?.type === CartType.BOOKING &&
-      mobileViewTypeConfirmed.value &&
-      bookingMode.value === 'bookingList') ||
-    newAddressMode.value)
+      (currentTab.value?.type === CartType.BOOKING &&
+        mobileViewTypeConfirmed.value &&
+        bookingMode.value === 'bookingList') ||
+      newAddressMode.value)
     ? '100vh'
     : 'unset'
 })
