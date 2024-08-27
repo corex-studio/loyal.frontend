@@ -13,6 +13,7 @@
           : $news.item?.image?.image || $store.images.empty
       "
       fit="cover"
+      :style="`border-radius: ${getBorderRadius}`"
       style="max-height: 400px"
     >
       <template v-slot:error>
@@ -36,13 +37,12 @@
         </div>
         <div v-else v-html="$news.item?.fullDescription"></div>
       </div>
-      <q-input v-model="lel" />
     </div>
   </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
-import { computed, ref, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 import { useRoute, useRouter } from 'vue-router'
 import CAdaptiveModal from 'components/dialogs/CAdaptiveModal.vue'
@@ -54,8 +54,6 @@ const props = defineProps<{
 defineEmits<{
   (evt: 'update:modelValue', value: boolean): void
 }>()
-
-const lel = ref('')
 
 const fictiveUrlStore = useFictiveUrlStore()
 const route = useRoute()

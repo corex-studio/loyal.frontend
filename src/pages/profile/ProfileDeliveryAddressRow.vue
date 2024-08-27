@@ -14,7 +14,7 @@
         {{ item.address }}
       </div>
     </div>
-    <MenuActions :structure="structure" icon-only />
+    <MenuActions :structure="structure" icon-only autoclose />
   </div>
 </template>
 <script lang="ts" setup>

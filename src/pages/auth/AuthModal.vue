@@ -1,6 +1,6 @@
 <template>
   <CAdaptiveModal
-    :initial-mobile-height="'550px'"
+    :initial-mobile-height="'520px'"
     :model-value="modelValue"
     width="466px"
     @update:model-value="$emit('update:modelValue', $event)"

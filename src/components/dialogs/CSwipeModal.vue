@@ -6,11 +6,7 @@
         ref="backdropRef"
         class="c-swipe-modal-backdrop"
         @click.self="noClose ? void 0 : closeModal()"
-      >
-        <div class="bg-white">
-          {{ { alwaysVisibleOnBreakpoint } }}
-        </div>
-      </div>
+      ></div>
     </Transition>
     <Teleport :disabled="!backdropRef || !asModal" :to="backdropRef">
       <dialog
@@ -21,21 +17,24 @@
         :style="{
           ...$props.style,
           borderRadius,
+          maxWidth: props.width || 'unset',
+          overflow: 'hidden',
         }"
         class="c-swipe-modal bg-background-color"
       >
         <div
-          class="full-width flex flex-center py-8"
+          class="full-width flex flex-center pt-5 pb-10"
           data-grab-immediately="true"
-          style="cursor: grab"
+          style="cursor: grab; position: absolute; top: 0; z-index: 10"
         >
           <div
+            data-grab-immediately="true"
             style="
               width: 32px;
               height: 4px;
               border-radius: 2px;
               background: #ccc;
-              z-index: -1;
+              z-index: 1;
             "
           ></div>
         </div>
@@ -46,7 +45,7 @@
           }"
           class="c-swipe-modal-content"
         >
-          <div ref="contentRef">
+          <div ref="contentRef" class="full-height">
             <slot></slot>
           </div>
         </div>
@@ -57,7 +56,6 @@
 <script lang="ts" setup>
 import { computed, nextTick, onUpdated, ref, watch } from 'vue'
 import {
-  Arrayable,
   Fn,
   MaybeComputedElementRef,
   useElementBounding,
@@ -79,6 +77,7 @@ const props = withDefaults(
     alwaysVisibleOnBreakpoint?: boolean
     preventContentScrollingIfClosed?: boolean
     fullHeight?: string
+    width?: string
   }>(),
   { asModal: true, fullHeight: '98dvh', allowOpenFullHeight: true },
 )
@@ -199,7 +198,7 @@ let scrollEndTimeout: NodeJS.Timeout | null = null
 
 const setListeners = () => {
   void nextTick(() => {
-    let target: Arrayable<keyof WindowEventMap> | null = null
+    let target: any = null
     if (!backdropRef.value) {
       target = dialogRef
     } else target = backdropRef
@@ -371,7 +370,6 @@ onUpdated(async () => {
 })
 
 const toggleWithAnimation = async (newModelValue: boolean) => {
-  console.log('toggleWithAnimation')
   void nextTick(async () => {
     if (!dialogRef.value) return
     const styles = dialogRef.value.style
@@ -438,7 +436,6 @@ watch(modelValue, async (v) => {
 })
 
 watch(fromInitialYDiff, (v) => {
-  console.log('watch(fromInitialYDiff')
   if (!dialogRef.value) return
   gsap.to(dialogRef.value, {
     transform: `translateY(${v * -1}px)`,
@@ -472,7 +469,7 @@ defineExpose({
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: 99999;
+  z-index: 1;
   border: unset;
 
   &:after {
@@ -490,17 +487,18 @@ defineExpose({
 
 .c-swipe-modal-backdrop {
   background: rgba(0, 0, 0, 0.8);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100dvw;
   height: 100dvh;
-  z-index: 10000;
+  z-index: 5000;
 }
 
 .c-swipe-modal-content {
   overflow-y: auto;
-  max-height: calc(100% - 36px);
+  // max-height: calc(100% - 36px);
+  height: 100%;
 }
 
 .fade-enter-active,

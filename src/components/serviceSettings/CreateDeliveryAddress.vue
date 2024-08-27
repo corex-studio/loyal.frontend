@@ -6,8 +6,8 @@
   >
     <div
       v-if="newAddress"
-      :style="$q.screen.lt.md ? 'max-height: 55vh' : 'width: 47%'"
-      class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 py-xs-12 px-xs-8"
+      :style="$q.screen.lt.md ? '' : 'width: 47%'"
+      class="column no-wrap justify-between text-on-background-color pa-lg-15 pa-md-10 pb-xs-12 pt-xs-12 px-xs-8"
       style="overflow-y: auto"
     >
       <div class="column full-width gap-md-8 gap-xs-6">
@@ -115,6 +115,7 @@
     <div
       :style="$q.screen.lt.md ? `` : 'height: 600px; width: 53%'"
       class="col"
+      ref="mapParentRef"
     >
       <div
         id="map"
@@ -148,7 +149,11 @@ const props = defineProps<{
   backCallback?: () => void
 }>()
 
-// const { coords, resume, pause } = useGeolocation()
+const emit = defineEmits<{
+  (evt: 'updated'): void
+  (evt: 'created', val: DeliveryAddress): void
+}>()
+
 const geolocation = useGeolocation({ immediate: false })
 const preventGeolocationErrorNotify = ref(false)
 const currentCoords = ref<{
@@ -156,10 +161,8 @@ const currentCoords = ref<{
   lng: number
 }>()
 
-const emit = defineEmits<{
-  (evt: 'updated'): void
-  (evt: 'created', val: DeliveryAddress): void
-}>()
+const mapParentRef = ref<HTMLDivElement | null>(null)
+const resizeObserver = ref<ResizeObserver | null>(null)
 
 const drawnItems = new L.FeatureGroup()
 const newAddress = ref<DeliveryAddress | null>(null)
@@ -248,11 +251,6 @@ const loadAddressDataByCoords = async () => {
   selectAddress(res, 13)
 }
 
-// const privateHouseClickHandler = () => {
-//   if (!newAddress.value) return
-//   isPrivateHouse.value = !isPrivateHouse.value
-// }
-
 const drawPoint = (zoom?: number) => {
   const values: {
     id: number | string | undefined
@@ -280,9 +278,7 @@ const drawPoint = (zoom?: number) => {
     })
 }
 
-// onBeforeUnmount(() => {
-//   pause()
-// })
+// let timeout: NodeJS.Timeout | null = null
 
 onMounted(() => {
   if (!props.address) {
@@ -313,7 +309,6 @@ onMounted(() => {
       }
     }
     map.lmap.addLayer(drawnItems)
-    // if (!props.address) void geolocate()
     drawPoint(13)
     map.lmap.invalidateSize()
     map.lmap.on(
@@ -332,16 +327,21 @@ onMounted(() => {
       },
     )
   }, 200)
+  resizeObserver.value = new ResizeObserver(() => {
+    // if (timeout) clearTimeout(timeout)
+    // timeout = setTimeout(() => {
+    map?.lmap.invalidateSize()
+    // }, 10)
+  })
+
+  if (mapParentRef.value) {
+    resizeObserver.value.observe(mapParentRef.value)
+  }
 })
 
 const createAddress = async () => {
   try {
     if (props.address) {
-      // if (isPrivateHouse.value && newAddress.value) {
-      //   newAddress.value.entrance = null
-      //   newAddress.value.floor = null
-      //   newAddress.value.intercom = null
-      // }
       const res = await deliveryAddressRepo.update(newAddress.value)
       const foundAddressIndex = deliveryAddressRepo.items.findIndex(
         (v) => v.id === newAddress.value?.id,
@@ -380,6 +380,7 @@ const selectAddress = (v: Address, zoom?: number) => {
 }
 
 const redrawPoint = (zoom?: number) => {
+  if (!map) return
   map.lmap.eachLayer((layer: Layer) => {
     if (layer instanceof map.L.Marker) layer.remove()
   })

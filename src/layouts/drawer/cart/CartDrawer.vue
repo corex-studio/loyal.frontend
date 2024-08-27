@@ -8,7 +8,7 @@
       no-swipe-open
       overlay
       side="right"
-      style="z-index: 999999; height: 100%"
+      style="z-index: 49 !important; height: 100%"
       @update:model-value="closeCartDrawer()"
     >
       <CIcon
@@ -163,7 +163,7 @@
           </div>
           <template v-else>
             <CTooltip v-if="addToCartDisabledInfo"
-            >{{ addToCartDisabledInfo }}
+              >{{ addToCartDisabledInfo }}
             </CTooltip>
             <div>Оформить заказ</div>
             <q-badge
@@ -177,7 +177,7 @@
                 backdrop-filter: blur(5px);
                 background-color: rgba(0, 0, 0, 0.1);
               "
-            >{{
+              >{{
                 $cart.item?.discountedTotalSum
                   ? beautifyNumber($cart.item?.discountedTotalSum, true)
                   : '0'
@@ -236,7 +236,7 @@ watch(
     if (v) {
       selectPaymentType.value = false
     }
-  }
+  },
 )
 
 const filteredUpsales = computed(() => {
@@ -244,7 +244,7 @@ const filteredUpsales = computed(() => {
     (el) =>
       !cartRepo.item?.cartItems.map((v) => v.menuItem).includes(el.id) &&
       !el.isDead &&
-      el.isItemInMenu
+      el.isItemInMenu,
   )
 })
 
@@ -252,8 +252,8 @@ const addToCartDisabledInfo = computed(() => {
   if (
     cartRepo.item?.cartItems.some(
       (v) =>
-        (v.availableQuantity !== null &&
-          (v.availableQuantity <= 0 || v.availableQuantity < v.quantity))
+        v.availableQuantity !== null &&
+        (v.availableQuantity <= 0 || v.availableQuantity < v.quantity),
     )
   )
     return 'Имеются недоступные позиции'
@@ -262,7 +262,7 @@ const addToCartDisabledInfo = computed(() => {
       !currentDeliverySettings.value?.find(
         (v) =>
           cartRepo.item &&
-          v.minimalOrderSum < cartRepo.item.discountedSumWithoutBonuses
+          v.minimalOrderSum < cartRepo.item.discountedSumWithoutBonuses,
       )
     ) {
       return 'Не набрана минимальная сумма'
@@ -288,10 +288,10 @@ const deleteCartItem = async (item: CartItem) => {
     notifier.success('Блюдо удалено из корзины')
     await cartRepo.current(
       store.qrData?.data?.salesPoint?.id,
-      store.qrData?.data?.pad?.id
+      store.qrData?.data?.pad?.id,
     )
     const foundIndex = cartRepo.item?.cartItems.findIndex(
-      (v) => v.id === item.id
+      (v) => v.id === item.id,
     )
     if (foundIndex !== undefined && foundIndex > -1)
       cartRepo.item?.cartItems.splice(foundIndex, 1)
@@ -318,7 +318,7 @@ const arrange = () => {
   }
   if (addToCartDisabledInfo.value) return
   void router.push({
-    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage'
+    name: store.tableMode ? 'qrMenuArrangementPage' : 'arrangementPage',
   })
 }
 
@@ -331,14 +331,14 @@ watch(
 
     if (v && cartRepo.item?.isDelivery) {
       currentDeliverySettings.value = await cartRepo.getDeliverySettings(
-        cartRepo.item
+        cartRepo.item,
       )
     }
     if (v) {
       await cartRepo.getUpsales()
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const closeCartDrawer = () => {

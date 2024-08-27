@@ -4,11 +4,19 @@
     v-model="modelValue"
     :height="height"
     :width="width"
+    :no-close="noClose"
+    :no-backdrop-dismiss="noBackdropDismiss"
+    :height-percent="heightPercent"
     no-padding
   >
     <slot></slot>
   </CDialog>
-  <CSwipeModal v-else v-model="modelValue" :breakpoint="initialMobileHeight">
+  <CSwipeModal
+    v-else
+    :width="width"
+    v-model="modelValue"
+    :breakpoint="initialMobileHeight"
+  >
     <slot></slot>
   </CSwipeModal>
 </template>
@@ -23,6 +31,9 @@ defineProps<{
   width?: string
   height?: string
   initialMobileHeight?: string
+  noBackdropDismiss?: boolean
+  noClose?: boolean
+  heightPercent?: string
 }>()
 </script>
 

@@ -22,6 +22,7 @@
       class="px-5 pt-5 pb-5 box-shadow bg-background-color"
       style="gap: 12px"
       v-model="menu"
+      :auto-close="autoclose"
       @update:model-value="$emit('updateMenu', $event)"
     >
       <div class="column">
@@ -82,6 +83,7 @@ defineProps<{
   height?: string
   width?: string
   hideMenu?: boolean
+  autoclose?: boolean
 }>()
 
 defineEmits<{

@@ -1,23 +1,19 @@
 <template>
-  <CDialog
+  <CAdaptiveModal
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     width="1094px"
-    no-padding
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    :maximize="$q.screen.lt.md"
-    :height="$q.screen.lt.md ? '100%' : undefined"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <CreateDeliveryAddress
       :back-callback="() => $emit('update:modelValue', false)"
       :address="address"
       @updated="$emit('create')"
     />
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
+import CAdaptiveModal from 'src/components/dialogs/CAdaptiveModal.vue'
 import CreateDeliveryAddress from 'src/components/serviceSettings/CreateDeliveryAddress.vue'
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { DeliveryAddress } from 'src/models/customer/deliveryAddress/deliveryAddress'
 
 defineProps<{
