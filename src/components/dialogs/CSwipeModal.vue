@@ -8,9 +8,7 @@
         @click.self="noClose ? void 0 : closeModal()"
       >
         <div class="bg-white">
-        {{
-          {alwaysVisibleOnBreakpoint}
-        }}
+          {{ { alwaysVisibleOnBreakpoint } }}
         </div>
       </div>
     </Transition>
@@ -377,7 +375,9 @@ const toggleWithAnimation = async (newModelValue: boolean) => {
   void nextTick(async () => {
     if (!dialogRef.value) return
     const styles = dialogRef.value.style
-    styles.transform =  !props.alwaysVisibleOnBreakpoint ? 'translateY(100%)' : ''
+    styles.transform = !props.alwaysVisibleOnBreakpoint
+      ? 'translateY(100%)'
+      : ''
 
     await nextTick(() => {
       gsap.to(dialogRef.value, {
