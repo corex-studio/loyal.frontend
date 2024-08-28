@@ -13,6 +13,7 @@
           : $news.item?.image?.image || $store.images.empty
       "
       fit="cover"
+      class="no-download"
       :style="`border-radius: ${getBorderRadius}`"
       style="max-height: 400px"
     >

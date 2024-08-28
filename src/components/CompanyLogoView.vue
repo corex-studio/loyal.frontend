@@ -2,10 +2,12 @@
   <img
     v-if="$company.item?.logo?.thumbnail || $company.item?.image?.thumbnail"
     :height="$q.screen.gt.md ? '52' : '48'"
-    :src="$store.tableMode ? $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail :
-      $q.screen.lt.lg
-        ? $company.item?.image?.thumbnail
-        : $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
+    :src="
+      $store.tableMode
+        ? $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
+        : $q.screen.lt.lg
+          ? $company.item?.image?.thumbnail
+          : $company.item?.logo?.thumbnail || $company.item?.image?.thumbnail
     "
     alt="Логотип"
     class="cursor-pointer"

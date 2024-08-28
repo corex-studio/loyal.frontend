@@ -8,6 +8,7 @@
         :style="`min-width: ${$q.screen.lt.md ? '64px' : '90px'}`"
         :width="$q.screen.lt.md ? '64px' : '90px'"
         class="border-radius2 cursor-pointer"
+        @contextmenu.prevent
         fit="cover"
         @click="openItemModal(item.size.menu_item)"
       >
@@ -40,7 +41,7 @@
                     (v) =>
                       `${v.modifier?.name}${
                         v.quantity > 1 ? ' x ' + v.quantity : ''
-                      }`
+                      }`,
                   )
                   .join(', ')
               }}
@@ -102,9 +103,8 @@
                         :src="$store.images.empty"
                         fit="cover"
                         style="max-width: 40px; min-width: 40px; height: 40px"
-                      ></q-img>
-                    </span></template
-                  >
+                      ></q-img> </span
+                  ></template>
                 </q-img>
                 <div>
                   {{ el.size.name }}
@@ -145,7 +145,7 @@ const emit = defineEmits(['delete'])
 const openItemModal = async (menuItemId: string | null) => {
   store.openMenuItemModal()
   await menuItemRepo.retrieve(menuItemId || '', {
-    sales_point: salesPointRepo.item?.id
+    sales_point: salesPointRepo.item?.id,
   })
 }
 
@@ -157,7 +157,7 @@ watch(
   () => props.item,
   (v) => {
     cartItem.value = v
-  }
+  },
 )
 
 const updateQuantity = async (v: number) => {
