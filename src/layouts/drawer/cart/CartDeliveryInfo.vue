@@ -6,14 +6,17 @@
     <img
       v-if="$company.item?.image?.thumbnail"
       height="50"
-      class="border-radius2"
+      class="border-radius2 no-download"
       style="object-fit: contain"
       :src="$company.item?.image?.thumbnail"
     />
     <div style="height: fit-content" class="body column gap-2">
       <div class="row bold items-center">
         {{ cartDateInfo }}
-        <DeliveryTypeChip class="secondary-text ml-3" :delivery_type="cartRepo.item?.type"></DeliveryTypeChip>
+        <DeliveryTypeChip
+          class="secondary-text ml-3"
+          :delivery_type="cartRepo.item?.type"
+        ></DeliveryTypeChip>
       </div>
       <div class="row secondary-text no-wrap gap-2 ellipsis-2-lines">
         <span>Адрес: </span>

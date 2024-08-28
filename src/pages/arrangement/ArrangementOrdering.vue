@@ -192,10 +192,7 @@
                     <div
                       ref="menuRef"
                       class="column no-wrap full-width"
-                      style="
-                        overflow-y: scroll;
-                        max-height: 40dvh;
-                      "
+                      style="overflow-y: scroll; max-height: 40dvh"
                     >
                       <div
                         v-for="(el, index) in totalDayTimes()"
@@ -388,6 +385,7 @@
                   class="border-radius cursor-pointer"
                   fit="cover"
                   @click="openMenuItemModal(item)"
+                  @contextmenu.prevent
                 >
                   <template v-slot:error>
                     <span>
@@ -434,7 +432,7 @@
                           (v) =>
                             `${v.modifier?.name}${
                               v.quantity > 1 ? ' x ' + v.quantity : ''
-                            }`
+                            }`,
                         )
                         .join(', ')
                     }}
@@ -489,7 +487,7 @@
               {{
                 beautifyNumber(
                   $cart.item?.totalDiscountWithoutBonuses || 0,
-                  true
+                  true,
                 )
               }}
               ₽
@@ -563,7 +561,7 @@ import {
   beautifyNumber,
   getTimesBetween,
   store,
-  totalDayTimes
+  totalDayTimes,
 } from 'src/models/store'
 import { computed, onMounted, ref, watch } from 'vue'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
@@ -591,13 +589,13 @@ const eatInsideTabs = [
   {
     label: 'В зале',
     icon: 'fa-regular fa-utensils',
-    iconSize: '20px'
+    iconSize: '20px',
   },
   {
     label: 'С собой',
     icon: 'fa-regular fa-person-walking-luggage',
-    iconSize: '20px'
-  }
+    iconSize: '20px',
+  },
 ]
 const availableHours = ref<AvailableHours | null>(null)
 const timeBlockMobileSpot = ref<HTMLDivElement>()
@@ -608,7 +606,7 @@ const deliveryAddressesModal = ref(false)
 const menu = ref(false)
 const menuRef = ref<HTMLDivElement | null>(null)
 const qrMenuUserPhone = ref<string | null>(
-  SessionStorage.getItem('qrMenuUserPhone') || '7'
+  SessionStorage.getItem('qrMenuUserPhone') || '7',
 )
 
 const comment = ref<string | null>(null)
@@ -624,10 +622,10 @@ const openMenuItemModal = async (item: CartItem) => {
   store.openMenuItemModal()
 
   await menuItemRepo.retrieve(item.size.menu_item, {
-    sales_point: salesPointRepo.item?.id
+    sales_point: salesPointRepo.item?.id,
   })
   await menuRulesForAddingRepo.list({
-    menu_item: menuItemRepo.item?.id
+    menu_item: menuItemRepo.item?.id,
   })
 }
 
@@ -638,7 +636,7 @@ const changeEatInside = async (val: string) => {
     }
     cartRepo.item.eatInside = val === 'В зале'
     await cartRepo.setParams({
-      eat_inside: cartRepo.item.eatInside
+      eat_inside: cartRepo.item.eatInside,
     })
   } catch {
     notifier.error('Ошибка при задании параметров корзины')
@@ -651,7 +649,7 @@ const isArrangeAvailable = computed(() => {
     cartRepo.item?.cartItems.every(
       (v) =>
         !v.isDead &&
-        (v.availableQuantity ? v.quantity <= v.availableQuantity : true)
+        (v.availableQuantity ? v.quantity <= v.availableQuantity : true),
     )
   )
 })
@@ -668,11 +666,11 @@ const orderTypeText = computed(() => {
 const availableTimes = computed(() => {
   return currentDay.value === 'Сегодня'
     ? availableHours.value?.today.flatMap((v) => {
-      return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
-    })
+        return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
+      })
     : availableHours.value?.tomorrow.flatMap((v) => {
-      return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
-    })
+        return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
+      })
 })
 
 const paymentTypes = computed(() => {
@@ -686,14 +684,14 @@ watch(
       setTimeout(() => {
         if (!availableTimes.value || !menuRef.value) return
         const foundTimeElement = menuRef.value.getElementsByClassName(
-          availableTimes.value[0]
+          availableTimes.value[0],
         )
         if (foundTimeElement) {
           foundTimeElement[0].scrollIntoView()
         }
       }, 0)
     }
-  }
+  },
 )
 
 const selectClosestTime = async () => {
@@ -702,9 +700,9 @@ const selectClosestTime = async () => {
   await cartRepo.setParams({
     delivery_time: cartRepo.item?.deliveryTime
       ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-        .utc()
-        .format('YYYY-MM-DD HH:mm:ss')
-      : null
+          .utc()
+          .format('YYYY-MM-DD HH:mm:ss')
+      : null,
   })
 }
 
@@ -722,9 +720,9 @@ const setDeliveryTime = async (v: string | null) => {
   await cartRepo.setParams({
     delivery_time: cartRepo.item?.deliveryTime
       ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-        .utc()
-        .format('YYYY-MM-DD HH:mm:ss')
-      : null
+          .utc()
+          .format('YYYY-MM-DD HH:mm:ss')
+      : null,
   })
 }
 
@@ -767,18 +765,18 @@ const makeAnOrder = async () => {
             ? undefined
             : cartRepo.selectedPaymentType?.type === PaymentType.CARD
               ? 'card'
-              : 'web_form'
+              : 'web_form',
       },
       comment: comment.value,
       extra_data: {
-        system_source: store.qrMenuData ? 'qr_menu' : 'website'
+        system_source: store.qrMenuData ? 'qr_menu' : 'website',
       },
       pad: store.tableMode
         ? padRepo.item?.id
         : store.qrData
           ? store.qrData.data?.pad?.id
           : undefined,
-      phone: phoneToSend || undefined
+      phone: phoneToSend || undefined,
     })
     // if (order.paymentUrl) {
     //   await router.replace({
@@ -807,32 +805,32 @@ const onOrderPaid = async (order: Order) => {
     if (store.qrData && store.qrData.data?.pad) {
       await cartRepo.current(
         store.qrData.data?.salesPoint?.id,
-        store.qrData.data?.pad?.id
+        store.qrData.data?.pad?.id,
       )
       void router.replace({
         name: 'successOrderPage',
         params: {
-          orderId: order.id
+          orderId: order.id,
         },
-        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined
+        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
     } else if (store.tableMode) {
       void router.replace({
         name: 'myQrMenuOrders',
-        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined
+        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
       await cartRepo.current(
         padRepo.item?.salesPoint?.id,
-        padRepo.item?.id || undefined
+        padRepo.item?.id || undefined,
       )
     } else {
       cartRepo.item = null
       void router.replace({
         name: 'successOrderPage',
         params: {
-          orderId: order.id
+          orderId: order.id,
         },
-        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined
+        query: order.paymentUrl ? { paymentUrl: order.paymentUrl } : undefined,
       })
     }
   }, 350)
@@ -847,7 +845,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
   }
   const res = await deliveryAreaRepo.byCoords([
     address.coords?.latitude || 0,
-    address.coords?.longitude || 0
+    address.coords?.longitude || 0,
   ])
   if (!res.length) {
     notifier.error('По данному адресу не осуществляется доставка')
@@ -858,7 +856,7 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
     await cartRepo.setParams({
       sales_point: res[0].salesPoint,
       type: CartType.DELIVERY,
-      delivery_address: address.id
+      delivery_address: address.id,
     })
   } catch {
     notifier.error('Ошибка')
@@ -871,7 +869,7 @@ watch(selectedPaymentTypeModal, async (v) => {
   if (v) {
     await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
     const foundOnlinePaymentType = paymentTypes.value.find(
-      (v) => v.type === PaymentType.ONLINE
+      (v) => v.type === PaymentType.ONLINE,
     )
     if (
       cartRepo.selectedPaymentType?.type === PaymentType.ONLINE &&
@@ -891,7 +889,7 @@ onMounted(async () => {
   void deliveryAddressRepo.list()
   await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
   const foundOnlinePaymentType = paymentTypes.value.find(
-    (v) => v.type === PaymentType.ONLINE
+    (v) => v.type === PaymentType.ONLINE,
   )
   if (foundOnlinePaymentType) {
     cartRepo.selectedPaymentType = foundOnlinePaymentType

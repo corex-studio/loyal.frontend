@@ -34,7 +34,7 @@
         }; min-width: ${
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
         }; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}; height: ${$q.screen.lt.lg ? '450px' : '100%'}`"
-        class="col"
+        class="col no-download"
         fit="cover"
         itemprop="image"
         style="width: 100%"
