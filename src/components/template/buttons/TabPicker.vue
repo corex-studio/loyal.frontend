@@ -10,23 +10,24 @@
       <div
         v-for="tab in localTabs"
         :key="tab.label"
-        @click="selectTabHandler(tab)"
+        :class="[
+          selectedTab === tab.label || tab.force
+            ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
+            : 'text-on-selector-color',
+          gap ? `gap-${gap}` : 'gap-4',
+        ]"
         :style="[
-          selectedTab === tab.label
+          selectedTab === tab.label || tab.force
             ? 'transition: background-color 0.4s ease-out'
             : 'transition: background-color 0.3s ease-out',
         ]"
-        :class="[
-          selectedTab === tab.label
-            ? 'bg-selector-active-color text-on-selector-active-color box-shadow'
-            : 'text-on-selector-color',
-        ]"
-        class="cursor-pointer border-radius2 col row no-wrap gap-4 items-center justify-center rounded-10 body relative-position bold"
+        class="cursor-pointer border-radius2 col row no-wrap items-center justify-center rounded-10 body relative-position bold"
+        @click="selectTabHandler(tab)"
       >
         <CIcon
           v-if="tab.icon"
           :color="
-            selectedTab === tab.label
+            selectedTab === tab.label || tab.force
               ? 'on-selector-active-color'
               : 'on-selector-color'
           "
@@ -34,6 +35,16 @@
           :size="tab.iconSize || '18px'"
         />
         {{ tab.label }}
+        <CIcon
+          v-if="tab.iconRight"
+          :color="
+            selectedTab === tab.label || tab.force
+              ? 'on-selector-active-color'
+              : 'on-selector-color'
+          "
+          :name="tab.iconRight"
+          :size="tab.iconSize || '18px'"
+        />
         <slot name="append"></slot>
       </div>
     </div>
@@ -52,28 +63,32 @@ const props = withDefaults(
     tabs:
       | string[]
       | {
-          label: string
-          to?: { name: string; [x: string]: any }
-          [x: string]: any
-          icon?: string
-          iconSize?: string
-        }[]
+      label: string
+      to?: { name: string; [x: string]: any }
+      [x: string]: any
+      icon?: string
+      iconRight?: string
+      iconSize?: string
+      force?: boolean
+
+    }[]
     modelValue?: string
     routerMethod?: 'replace' | 'push'
     width?: string
     externalLabel?: string | null
     height?: string
+    gap?: string
   }>(),
   {
     routerMethod: 'replace',
     width: '300px',
-    height: '40px',
-  },
+    height: '40px'
+  }
 )
 
 const localTabs = computed(() => {
   return props.tabs.map((el) =>
-    typeof el === 'string' ? { label: el, to: undefined } : el,
+    typeof el === 'string' ? { label: el, to: undefined } : el
   )
 })
 
@@ -94,7 +109,9 @@ onMounted(() => {
     selectedTab.value = props.modelValue
   } else {
     // todo проверить, что правильно
-    const found = localTabs.value.find((el) => el.to && router.isIncludesRouteName([el.to.name]))
+    const found = localTabs.value.find(
+      (el) => el.to && router.isIncludesRouteName([el.to.name])
+    )
     if (found) selectedTab.value = found.label
     else
       selectedTab.value = localTabs.value.length
@@ -107,7 +124,7 @@ watch(
   () => props.modelValue,
   (v) => {
     if (v) selectedTab.value = v
-  },
+  }
 )
 </script>
 

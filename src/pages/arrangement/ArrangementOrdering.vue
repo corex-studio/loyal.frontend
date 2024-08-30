@@ -38,25 +38,6 @@
               style="min-height: 48px"
             >
               <div>{{ $cart.item?.currentAddress }}</div>
-              <!-- <template v-if="isDelivery">
-                <CButton
-                  v-if="$q.screen.gt.sm"
-                  @click="deliveryAddressesModal = true"
-                  text-button
-                  label="Изменить"
-                  class="body pr-5"
-                  text-color="primary"
-                />
-                <CIcon
-                  v-else
-                  @click="deliveryAddressesModal = true"
-                  name="fa-regular fa-angle-right"
-                  size="24px"
-                  color="on-input-color"
-                  hover-color="primary"
-                  class="cursor-pointer"
-                />
-              </template> -->
             </div>
           </div>
           <teleport
@@ -178,42 +159,61 @@
                   </template>
                   <q-menu
                     v-model="menu"
-                    :fit="$q.screen.gt.sm"
-                    :style="`width: ${$q.screen.lt.md ? '250px' : ''}`"
+                    v-if="availableArrangementDays.length"
+                    :fit="
+                      $q.screen.gt.sm && availableArrangementDays.length < 3
+                    "
+                    :style="`width: ${availableArrangementDays.length < 3 ? ($q.screen.lt.md ? '250px' : '') : '100%'}`"
                     class="pa-6"
+                    max-width="350px"
                     style="overflow-y: hidden"
                   >
                     <TabPicker
-                      :model-value="currentDay"
-                      :tabs="['Сегодня', 'Завтра']"
-                      @update-tab="currentDay = $event"
+                      :model-value="currentDayType"
+                      :tabs="availableArrangementDays"
+                      gap="2"
+                      width="100%"
+                      @update-tab="selectCurrentDayType($event)"
                     />
-
                     <div
                       ref="menuRef"
                       class="column no-wrap full-width"
                       style="overflow-y: scroll; max-height: 40dvh"
                     >
-                      <div
-                        v-for="(el, index) in totalDayTimes()"
-                        :key="index"
-                        :class="[
-                          el,
-                          {
-                            'bold selected-time border-radius2':
-                              el === $cart.item.deliveryTime?.slice(11, 16),
-                          },
-                        ]"
-                        :style="
-                          !availableTimes?.includes(el)
-                            ? 'opacity: 0.5; cursor: not-allowed !important'
-                            : ''
-                        "
-                        class="full-width body cursor-pointer pa-6 time-row"
-                        @click="setDeliveryTime(el)"
+                      <template
+                        v-if="currentDayType !== 'Выбрать' || currentDayDate"
                       >
-                        {{ el }}
-                      </div>
+                        <div
+                          v-for="(el, index) in totalDayTimes()"
+                          :key="index"
+                          :class="[
+                            el,
+                            {
+                              'bold selected-time border-radius2':
+                                el === $cart.item.deliveryTime?.slice(11, 16),
+                            },
+                          ]"
+                          :style="
+                            !availableTimes?.includes(el)
+                              ? 'opacity: 0.5; cursor: not-allowed !important'
+                              : ''
+                          "
+                          class="full-width body cursor-pointer pa-6 time-row"
+                          @click="setDeliveryTime(el)"
+                        >
+                          {{ el }}
+                        </div>
+                      </template>
+                      <q-date
+                        v-else
+                        v-model="currentDayDate"
+                        @update:model-value="loadDateAvailableHours()"
+                        :options="getDateOptions"
+                        flat
+                        mask="YYYY-MM-DD"
+                        minimal
+                        style="width: 100%"
+                      ></q-date>
                     </div>
                   </q-menu>
                 </div>
@@ -518,9 +518,6 @@
           <div class="header3 bold">
             {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
           </div>
-          <!-- <div>
-            {{ mobileViewSelectedTime }}
-          </div> -->
         </div>
         <CButton
           :disabled="!isArrangeAvailable"
@@ -583,8 +580,11 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { notifier } from 'src/services/notifier'
+import { cloneDeep } from 'lodash'
 
-const currentDay = ref('Сегодня')
+const currentDayType = ref('Сегодня')
+const currentDayDate = ref<string | null>(null)
+
 const eatInsideTabs = [
   {
     label: 'В зале',
@@ -598,6 +598,7 @@ const eatInsideTabs = [
   },
 ]
 const availableHours = ref<AvailableHours | null>(null)
+const initialAvailableHours = ref<AvailableHours | null>(null)
 const timeBlockMobileSpot = ref<HTMLDivElement>()
 const selectedPaymentTypeModal = ref(false)
 const loading = ref(false)
@@ -611,16 +612,105 @@ const qrMenuUserPhone = ref<string | null>(
 
 const comment = ref<string | null>(null)
 
+const availableArrangementDays = computed(() => {
+  const datePickerConf = salesPointRepo.item?.settings.delivery_date_picker
+  if (datePickerConf) {
+    let totalDayTypes = [
+      {
+        label: 'Сегодня',
+      },
+      {
+        label: 'Завтра',
+      },
+      {
+        label: currentDayDate.value
+          ? moment(currentDayDate.value).format('DD.MM')
+          : 'Выбрать',
+        iconRight: 'fa-regular fa-calendar',
+        force: currentDayType.value === 'Выбрать' || !!currentDayDate.value,
+      },
+    ]
+    if (datePickerConf.end_offset) {
+      totalDayTypes = totalDayTypes.slice(0, datePickerConf.end_offset)
+      if (datePickerConf.end_offset < datePickerConf.start_offset) {
+        return totalDayTypes
+      }
+    }
+    if (datePickerConf.start_offset) {
+      totalDayTypes = totalDayTypes.slice(datePickerConf.start_offset)
+    }
+    if (!datePickerConf.end_offset && !datePickerConf.start_offset) {
+      totalDayTypes = []
+    }
+    return totalDayTypes
+
+    //   return datePickerConf.end_offset > 1
+    // ? [
+    //     {
+    //       label: 'Сегодня',
+    //     },
+    //     {
+    //       label: 'Завтра',
+    //     },
+    //     {
+    //       label: currentDayDate.value
+    //         ? moment(currentDayDate.value).format('DD.MM')
+    //         : 'Выбрать',
+    //       iconRight: 'fa-regular fa-calendar',
+    //       force:
+    //         currentDayType.value === 'Выбрать' || !!currentDayDate.value,
+    //     },
+    //   ]
+    //     : ['Сегодня', 'Завтра']
+    // } else {
+    //   return ['Сегодня']
+    // }
+  } else {
+    return ['Сегодня', 'Завтра']
+  }
+})
+
 const currentEatInsideTab = computed(() => {
   return cartRepo.item?.eatInside
     ? eatInsideTabs[0].label
     : eatInsideTabs[1].label
 })
 
+const loadDateAvailableHours = async () => {
+  if (!currentDayDate.value) return
+  const date = moment(currentDayDate.value).format('YYYY-MM-DD')
+  availableHours.value = await salesPointRepo.getAvailableWorkingHours(
+    date,
+    cartRepo.item?.salesPoint.id,
+  )
+}
+
+const getDateOptions = (date: string) => {
+  return (
+    date >= moment().add(2, 'day').format('YYYY/MM/DD') &&
+    date <=
+      moment()
+        .add(
+          salesPointRepo.item?.settings.delivery_date_picker?.end_offset,
+          'day',
+        )
+        .format('YYYY/MM/DD')
+  )
+}
+
+const selectCurrentDayType = (v: string) => {
+  currentDayDate.value = null
+  if (!['Сегодня', 'Завтра', 'Выбрать'].includes(v)) {
+    currentDayType.value = 'Выбрать'
+  } else {
+    currentDayType.value = v
+    availableHours.value = initialAvailableHours.value
+  }
+}
+
 const openMenuItemModal = async (item: CartItem) => {
   if (!item.size.menu_item) return
   store.openMenuItemModal()
-
   await menuItemRepo.retrieve(item.size.menu_item, {
     sales_point: salesPointRepo.item?.id,
   })
@@ -664,7 +754,8 @@ const orderTypeText = computed(() => {
 })
 
 const availableTimes = computed(() => {
-  return currentDay.value === 'Сегодня'
+  return currentDayType.value === 'Сегодня' ||
+    currentDayType.value === 'Выбрать'
     ? availableHours.value?.today.flatMap((v) => {
         return getTimesBetween(v.start.slice(11, 16), v.end.slice(11, 16))
       })
@@ -711,10 +802,15 @@ const setDeliveryTime = async (v: string | null) => {
   if (v && !availableTimes.value?.includes(v)) return
   const today = moment().format('DD.MM.YYYY')
   const tomorrow = moment().add(1, 'day').format('DD.MM.YYYY')
-  if (currentDay.value === 'Сегодня') {
+  if (currentDayType.value === 'Сегодня') {
     cartRepo.item.deliveryTime = [today, v].join(' ')
-  } else {
+  } else if (currentDayType.value === 'Завтра') {
     cartRepo.item.deliveryTime = [tomorrow, v].join(' ')
+  } else {
+    cartRepo.item.deliveryTime = [
+      moment(currentDayDate.value).format('DD.MM.YYYY'),
+      v,
+    ].join(' ')
   }
   menu.value = false
   await cartRepo.setParams({
@@ -743,17 +839,6 @@ const makeAnOrder = async () => {
       notifier.error('В данный момент невозможно оформить заказ')
       return
     }
-    // await cartRepo.setParams({
-    //   delivery_time: cartRepo.item?.deliveryTime
-    //     ? moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
-    //         .utc()
-    //         .format('YYYY-MM-DD HH:mm:ss')
-    //     : null,
-    //   comment: cartRepo.item?.comment || undefined,
-    //   pad: store.qrData?.data?.pad?.id || store.qrMenuData?.pad.id || undefined,
-    //   sales_point: store.qrMenuData?.pad.salesPoint?.id,
-    //   type: cartRepo.item?.type,
-    // })
 
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
@@ -778,16 +863,7 @@ const makeAnOrder = async () => {
           : undefined,
       phone: phoneToSend || undefined,
     })
-    // if (order.paymentUrl) {
-    //   await router.replace({
-    //     name: String(route.name),
-    //     query: { paymentUrl: order.paymentUrl },
-    //   })
-    //   paymentUrl.value = order.paymentUrl
-    //   paymentModal.value = true
-    // } else {
     void onOrderPaid(order)
-    // }
   } catch (e) {
     console.log(e)
     cartRepo.arrangeLoading = false
@@ -885,6 +961,7 @@ watch(selectedPaymentTypeModal, async (v) => {
 onMounted(async () => {
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
+    initialAvailableHours.value = cloneDeep(res)
   })
   void deliveryAddressRepo.list()
   await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
