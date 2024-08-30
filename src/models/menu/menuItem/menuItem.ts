@@ -30,7 +30,7 @@ export class MenuItem implements BaseModel {
   product: Product | string | null
   sku: string | null
   image: Image | null
-  images?: Image[]
+  images: Image[]
   description: string | null
   externalId: string | null
   group: string | null
@@ -52,7 +52,7 @@ export class MenuItem implements BaseModel {
           : null
     this.sku = raw.sku
     this.image = raw.image ? new Image(raw.image) : null
-    this.images = raw.images?.map((v) => new Image(v))
+    this.images = raw.images ? raw.images?.map((v) => new Image(v)) : []
     this.description = raw.description
     this.externalId = raw.external_id
     this.group = raw.group
@@ -82,7 +82,7 @@ export class MenuItem implements BaseModel {
       sizes: this.sizes,
       description: this.description,
       externalId: this.externalId,
-      group: this.group,
+      group: this.group
     }
   }
 }

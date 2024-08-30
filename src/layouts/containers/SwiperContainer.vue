@@ -7,43 +7,43 @@
       <slot name="top"></slot>
       <div class="row gap-4 no-wrap">
         <CIconButton
-          @click="prevPage"
-          icon="fa-regular fa-chevron-left"
-          outline
           class="outlined-button"
+          icon="fa-regular fa-chevron-left"
           icon-color="on-background-color"
           icon-size="20px"
+          outline
           size="46px"
+          @click="prevPage"
         />
         <CIconButton
-          @click="nextPage"
-          icon="fa-regular fa-chevron-right"
-          outline
           class="outlined-button"
+          icon="fa-regular fa-chevron-right"
           icon-color="on-background-color"
           icon-size="20px"
+          outline
           size="46px"
+          @click="nextPage"
         />
       </div>
     </div>
     <swiper
-      @swiper="onSwiper"
-      :space-between="spaceBetween || 20"
+      :centered-slides="centeredSlides"
+      :class="noNavigation ? 'no-navigation' : 'navigation'"
+      :initial-slide="initialSlide"
       :loop="loop"
-      :slides-per-view="slidesPerView || 3"
-      :pagination="{
-        clickable: true,
-      }"
+      :modules="modules"
       :mousewheel="{
         releaseOnEdges: true,
         sensitivity: 0.5,
         forceToAxis: true,
       }"
-      :initial-slide="initialSlide"
-      :modules="modules"
+      :pagination="{
+        clickable: true,
+      }"
+      :slides-per-view="slidesPerView || 3"
+      :space-between="spaceBetween === undefined ? 20 : spaceBetween"
       navigation
-      :centered-slides="centeredSlides"
-      :class="noNavigation ? 'no-navigation' : 'navigation'"
+      @swiper="onSwiper"
     >
       <swiper-slide
         v-for="(item, index) in items"
@@ -56,7 +56,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { Swiper, SwiperSlide } from 'swiper/vue'
 import { Swiper as SwiperClass } from 'swiper'
 import { Navigation, Pagination, Mousewheel } from 'swiper/modules'
@@ -103,7 +103,7 @@ const onSwiper = (swiper: SwiperClass) => {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .swiper-click :deep(.swiper-pagination) {
   margin-left: -23% !important;
   z-index: 0;
@@ -131,7 +131,7 @@ const onSwiper = (swiper: SwiperClass) => {
   height: 10px;
   width: 10px;
   margin-top: -40px;
-  border: 20px rgba(255, 255, 255, 0.85) solid;
+  border: 20px rgba(255, 255, 255, 0.7) solid;
   border-radius: 50%;
 }
 
@@ -148,7 +148,7 @@ const onSwiper = (swiper: SwiperClass) => {
   height: 10px;
   width: 10px;
   margin-top: -40px;
-  border: 20px rgba(255, 255, 255, 0.85) solid;
+  border: 20px rgba(255, 255, 255, 0.7) solid;
   border-radius: 50%;
 }
 

@@ -58,7 +58,7 @@ import {
   Fn,
   MaybeComputedElementRef,
   useElementBounding,
-  useEventListener,
+  useEventListener
 } from '@vueuse/core'
 import gsap from 'gsap'
 import { isApple } from 'src/services/isApple'
@@ -78,13 +78,13 @@ const props = withDefaults(
     fullHeight?: string
     width?: string
   }>(),
-  { asModal: true, fullHeight: '98dvh', allowOpenFullHeight: true },
+  { asModal: true, fullHeight: '98dvh', allowOpenFullHeight: true }
 )
 
 const animationTime = 0.22
 
 const _noClose = computed(
-  () => !props.asModal || props.noClose || props.alwaysVisibleOnBreakpoint,
+  () => !props.asModal || props.noClose || props.alwaysVisibleOnBreakpoint
 )
 
 const propsClasses = computed(() => {
@@ -101,7 +101,7 @@ const backdropRef = ref<HTMLDivElement | null>(null)
 const contentRef = ref<HTMLDivElement | null>(null)
 
 const bounding = useElementBounding(
-  dialogRef as unknown as MaybeComputedElementRef<HTMLElement>,
+  dialogRef as unknown as MaybeComputedElementRef<HTMLElement>
 )
 // const bodyBounding = useElementBounding(document.body)
 // const contentBounding = useElementBounding(
@@ -124,7 +124,7 @@ const currentSpeed = ref(0)
 
 const lastDistanceData = ref({
   timestamp: 0,
-  distance: 0,
+  distance: 0
 })
 
 const q = useQuasar()
@@ -213,14 +213,14 @@ const setListeners = () => {
           emitScrollEnd()
           // debounce(emitScrollEnd, 50)
         }
-      }),
+      })
     )
     cleanups.push(
       useEventListener(
         contentRef,
         'scrollend',
-        () => (isContentScrolling.value = false),
-      ),
+        () => (isContentScrolling.value = false)
+      )
     )
   })
 }
@@ -293,7 +293,7 @@ const onTouchEnd = () => {
   } else if (isFullHeight.value) {
     if (isContentScrolling.value && !isContentOnTop) return
     const diffInPercentFromHeight = Math.abs(
-      (realFromInitialYDiff.value / bounding.height.value) * 100,
+      (realFromInitialYDiff.value / bounding.height.value) * 100
     )
     if (diffInPercentFromHeight > 80) {
       closeModal()
@@ -324,7 +324,7 @@ const getSwipeSpeed = (evt: Touch, timestamp: number) => {
   const currentDistanceData = { timestamp: timestamp, distance }
   const time = currentDistanceData.timestamp - lastDistanceData.value.timestamp
   const distanceDiff = Math.abs(
-    currentDistanceData.distance - lastDistanceData.value.distance,
+    currentDistanceData.distance - lastDistanceData.value.distance
   )
   lastDistanceData.value = currentDistanceData
   lastSwipeY.value = evt.clientY
@@ -383,7 +383,7 @@ const toggleWithAnimation = async (newModelValue: boolean) => {
     await nextTick(() => {
       gsap.to(dialogRef.value, {
         transform: `translateY(${newModelValue ? '0' : '100'}%)`,
-        duration: animationTime,
+        duration: animationTime
       })
     })
 
@@ -409,7 +409,7 @@ const toggleFullHeight = async () => {
     if (dialogRef.value) {
       gsap.to(dialogRef.value, {
         height: bounding.height.value + 'px',
-        duration: animationTime,
+        duration: animationTime
       })
     }
     {
@@ -421,7 +421,7 @@ const toggleFullHeight = async () => {
     initialHeight.value = bounding.height.value
   gsap.to(dialogRef.value, {
     height: isFullHeight.value ? initialHeight.value + 'px' : props.fullHeight,
-    duration: animationTime,
+    duration: animationTime
   })
 
   await nextTick(() => {
@@ -442,7 +442,7 @@ watch(fromInitialYDiff, (v) => {
   if (!dialogRef.value) return
   gsap.to(dialogRef.value, {
     transform: `translateY(${v * -1}px)`,
-    duration: animationTime,
+    duration: animationTime
   })
 })
 
@@ -453,7 +453,7 @@ const contentScrollTo = (value: ScrollToOptions) => {
 
 const borderRadius = computed(() => {
   const v = uiSettingsRepo.item?.borderRadius || 0
-  return `${v}px ${v}px 0 0`
+  return `${v + 10}px ${v + 10}px 0 0`
 })
 
 defineExpose({
@@ -462,7 +462,7 @@ defineExpose({
   isOpened,
   isFullHeight,
   contentScrollTo,
-  contentRef,
+  contentRef
 })
 </script>
 <style lang="scss" scoped>
