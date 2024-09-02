@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="!$route.matched.find((el) => el.name === 'arrangementPage')"
+    v-if="!$route.matched.find((el) => el.name === 'arrangementPage' || el.name === 'arrangementPage__withCompany')"
     class="c-container"
   >
     <div class="row justify-between items-center bg-background-color py-6">
@@ -12,6 +12,7 @@
         >
           <div
             v-if="index"
+            class="bg-secondary"
             style="
               min-width: 7px;
               min-height: 7px;
@@ -19,9 +20,8 @@
               max-height: 7px;
               border-radius: 50%;
             "
-            class="bg-secondary"
           ></div>
-          <CButton @click="el.click()" text-button text-color="secondary-text">
+          <CButton text-button text-color="secondary-text" @click="el.click()">
             <div class="body bold">{{ el.label }}</div>
           </CButton>
         </div>
@@ -53,9 +53,9 @@ const blocks = computed(() => {
       visible: true,
       click: () => {
         router.push({
-          name: 'aboutUs',
+          name: 'aboutUs'
         })
-      },
+      }
     },
     {
       label: 'Контакты',
@@ -64,7 +64,7 @@ const blocks = computed(() => {
         !!companyRepo.item?.guestContacts.phones.length,
       click: () => {
         scrollToBlock('footer')
-      },
+      }
     },
     {
       label:
@@ -78,8 +78,8 @@ const blocks = computed(() => {
           appSettingsRepo.linksData.ios_download_link),
       click: () => {
         scrollToBlock('footer')
-      },
-    },
+      }
+    }
   ]
 })
 
@@ -87,7 +87,7 @@ const scrollToBlock = (v: string, tab?: string) => {
   if (!router.isIncludesRouteName(['home'])) {
     void router
       .push({
-        name: 'home',
+        name: 'home'
       })
       .then(() => {
         setTimeout(() => {
