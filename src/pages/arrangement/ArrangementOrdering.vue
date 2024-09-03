@@ -352,8 +352,7 @@
         </div>
       </div>
       <div
-        v-if="$q.screen.gt.sm"
-        class="pl-lg-30 col-lg-5 col-xs-12 mt-xs-20 mt-lg-0 pb-xs-20 pb-lg-0"
+        class="pl-lg-30 col-lg-5 col-xs-12 mt-md-20 mt-xs-10 mt-lg-0 pb-md-20 pb-lg-0"
       >
         <div
           :class="{ 'box-shadow': $q.screen.gt.md }"
@@ -362,97 +361,104 @@
               ? 'border: 1px #f5f5f5 solid'
               : ''
           "
-          class="column full-width border-radius gap-6 px-lg-8 py-lg-10 pa-xs-10"
+          class="column full-width border-radius gap-6 px-lg-8 py-lg-10 pa-md-10 pa-xs-6"
         >
-          <div class="subtitle-text mb-2" style="opacity: 0.8">
-            Состав заказа
-          </div>
-          <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
-            <div class="row body full-width no-wrap py-3">
-              <div class="row no-wrap gap-6 col-10 items-center">
-                <q-img
-                  :class="{ dimmed: item.isDead }"
-                  :height="
-                    $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
-                  "
-                  :src="item.size.image?.thumbnail || $store.images.empty"
-                  :style="`min-width: ${
-                    $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
-                  }`"
-                  :width="
-                    $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
-                  "
-                  class="border-radius cursor-pointer"
-                  fit="cover"
-                  @click="openMenuItemModal(item)"
-                  @contextmenu.prevent
-                >
-                  <template v-slot:error>
-                    <span>
-                      <q-img
-                        :height="
-                          $q.screen.gt.md
-                            ? '65px'
-                            : $q.screen.md
-                              ? '60px'
-                              : '55px'
-                        "
-                        :src="$store.images.empty"
-                        :style="`min-width: ${
-                          $q.screen.gt.md
-                            ? '65px'
-                            : $q.screen.md
-                              ? '60px'
-                              : '55px'
-                        }`"
-                        :width="
-                          $q.screen.gt.md
-                            ? '65px'
-                            : $q.screen.md
-                              ? '60px'
-                              : '55px'
-                        "
-                        class="user-image"
-                        fit="cover"
-                      ></q-img>
-                    </span>
-                  </template>
-                </q-img>
-                <div class="column gap-1">
-                  <div class="ellipsis-2-lines">
-                    {{ item.size.name }}
-                  </div>
-                  <div
-                    v-if="item.cartItemModifiers.length"
-                    class="secondary-text text-on-background-color"
-                  >
-                    {{
-                      item.cartItemModifiers
-                        .map(
-                          (v) =>
-                            `${v.modifier?.name}${
-                              v.quantity > 1 ? ' x ' + v.quantity : ''
-                            }`
-                        )
-                        .join(', ')
-                    }}
-                  </div>
-                  <div style="opacity: 0.6">{{ item.quantity }} шт</div>
-                </div>
-              </div>
-              <div class="col-2 column items-end no-wrap">
-                <div
-                  v-if="item.totalSum !== item.discountedTotalSum"
-                  class="text-strike"
-                  style="opacity: 0.5"
-                >
-                  {{ beautifyNumber(item.totalSum, true) }} ₽
-                </div>
-                <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
-              </div>
+          <template v-if="$q.screen.gt.sm">
+            <div class="subtitle-text mb-2" style="opacity: 0.8">
+              Состав заказа
             </div>
+            <template
+              v-for="(item, index) in $cart.item?.cartItems"
+              :key="index"
+            >
+              <div class="row body full-width no-wrap py-3">
+                <div class="row no-wrap gap-6 col-10 items-center">
+                  <q-img
+                    :class="{ dimmed: item.isDead }"
+                    :height="
+                      $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
+                    "
+                    :src="item.size.image?.thumbnail || $store.images.empty"
+                    :style="`min-width: ${
+                      $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
+                    }`"
+                    :width="
+                      $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
+                    "
+                    class="border-radius cursor-pointer"
+                    fit="cover"
+                    @click="openMenuItemModal(item)"
+                    @contextmenu.prevent
+                  >
+                    <template v-slot:error>
+                      <span>
+                        <q-img
+                          :height="
+                            $q.screen.gt.md
+                              ? '65px'
+                              : $q.screen.md
+                                ? '60px'
+                                : '55px'
+                          "
+                          :src="$store.images.empty"
+                          :style="`min-width: ${
+                            $q.screen.gt.md
+                              ? '65px'
+                              : $q.screen.md
+                                ? '60px'
+                                : '55px'
+                          }`"
+                          :width="
+                            $q.screen.gt.md
+                              ? '65px'
+                              : $q.screen.md
+                                ? '60px'
+                                : '55px'
+                          "
+                          class="user-image"
+                          fit="cover"
+                        ></q-img>
+                      </span>
+                    </template>
+                  </q-img>
+                  <div class="column gap-1">
+                    <div class="ellipsis-2-lines">
+                      {{ item.size.name }}
+                    </div>
+                    <div
+                      v-if="item.cartItemModifiers.length"
+                      class="secondary-text text-on-background-color"
+                    >
+                      {{
+                        item.cartItemModifiers
+                          .map(
+                            (v) =>
+                              `${v.modifier?.name}${
+                                v.quantity > 1 ? ' x ' + v.quantity : ''
+                              }`
+                          )
+                          .join(', ')
+                      }}
+                    </div>
+                    <div style="opacity: 0.6">{{ item.quantity }} шт</div>
+                  </div>
+                </div>
+                <div class="col-2 column items-end no-wrap">
+                  <div
+                    v-if="item.totalSum !== item.discountedTotalSum"
+                    class="text-strike"
+                    style="opacity: 0.5"
+                  >
+                    {{ beautifyNumber(item.totalSum, true) }} ₽
+                  </div>
+                  <div>
+                    {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
+                  </div>
+                </div>
+              </div>
+            </template>
+            <q-separator color="divider-color" />
           </template>
-          <q-separator color="divider-color" />
           <div class="row full-width justify-between">
             <div class="body bold">Сумма заказа</div>
             <div class="body bold">
@@ -477,7 +483,6 @@
               -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
             </div>
           </div>
-
           <div
             v-if="$cart.item?.totalDiscountWithoutBonuses"
             class="row full-width justify-between"
@@ -491,6 +496,15 @@
                 )
               }}
               ₽
+            </div>
+          </div>
+          <div
+            v-if="$cart.item.fee"
+            class="row full-width justify-between text-secondary"
+          >
+            <div class="body bold">Сервисный сбор</div>
+            <div class="body bold">
+              {{ beautifyNumber($cart.item.fee || 0, true) }} ₽
             </div>
           </div>
           <div class="row full-width justify-between">
@@ -538,13 +552,16 @@
     v-model="selectedPaymentTypeModal"
     :current-type="$cart.selectedPaymentType"
     :types="paymentTypes"
-    @select="$cart.selectedPaymentType = $event"
+    @select="paymentTypeSelectHandler($event)"
   />
   <DeliveryAddressesModal
     v-model="deliveryAddressesModal"
     @address-selected="changeDeliveryAddress($event)"
   />
-  <OrderTimeWarning v-model="timeWarningModal" @accept="(timeWarningModal = false,makeAnOrder())" />
+  <OrderTimeWarning
+    v-model="timeWarningModal"
+    @accept="(timeWarningModal = false), makeAnOrder()"
+  />
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
@@ -553,7 +570,7 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { Order, PaymentType } from 'src/models/order/order'
+import { Order, PaymentObjectType, PaymentType } from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
@@ -656,7 +673,6 @@ const currentEatInsideTab = computed(() => {
     : eatInsideTabs[1].label
 })
 
-
 const isArrangeAvailable = computed(() => {
   return (
     !!cartRepo.selectedPaymentType &&
@@ -692,6 +708,15 @@ const paymentTypes = computed(() => {
   return salesPointRepo.paymentTypes
 })
 
+const currentPaymentService = computed(() => {
+  return cartRepo.selectedPaymentType?.type === PaymentType.CASH ||
+  cartRepo.selectedPaymentType?.type === PaymentType.PAY_LATER
+    ? undefined
+    : cartRepo.selectedPaymentType?.type === PaymentType.CARD
+      ? 'card'
+      : 'web_form'
+})
+
 watch(
   () => menu.value,
   (v) => {
@@ -725,6 +750,17 @@ watch(selectedPaymentTypeModal, async (v) => {
     }
   }
 })
+
+const paymentTypeSelectHandler = async (type: PaymentObjectType) => {
+  if (!cartRepo.item) return
+  cartRepo.selectedPaymentType = type
+  const result = await cartRepo.computeFinallySum({
+    payment_type: cartRepo.selectedPaymentType.type,
+    payment_service: currentPaymentService.value
+  })
+  cartRepo.item.discountedTotalSum = result.finally_sum
+  cartRepo.item.fee = result.fee
+}
 
 const loadDateAvailableHours = async () => {
   if (!currentDayDate.value) return
@@ -822,8 +858,13 @@ const setDeliveryTime = async (v: string | null) => {
 
 const arrangeClickHandler = async () => {
   if (cartRepo.item?.deliveryTime) {
-    const diffHours = moment(cartRepo.item.deliveryTime, 'DD.MM.YYYY HH:mm').diff(moment(), 'hours')
-    const mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours || 3
+    const diffHours = moment(
+      cartRepo.item.deliveryTime,
+      'DD.MM.YYYY HH:mm'
+    ).diff(moment(), 'hours')
+    const mustBeConfirmedIfMoreThenHours =
+      salesPointRepo.item?.settings.delivery_date_picker
+        ?.must_be_confirmed_if_more_then_hours || 3
     if (diffHours > mustBeConfirmedIfMoreThenHours) {
       timeWarningModal.value = true
     } else {
@@ -855,13 +896,7 @@ const makeAnOrder = async () => {
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
         type: cartRepo.selectedPaymentType?.type,
-        payment_service:
-          cartRepo.selectedPaymentType?.type === PaymentType.CASH ||
-          cartRepo.selectedPaymentType?.type === PaymentType.PAY_LATER
-            ? undefined
-            : cartRepo.selectedPaymentType?.type === PaymentType.CARD
-              ? 'card'
-              : 'web_form'
+        payment_service: currentPaymentService.value
       },
       comment: comment.value,
       extra_data: {
@@ -952,7 +987,6 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
   }
 }
 
-
 onMounted(async () => {
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
     availableHours.value = res
@@ -968,6 +1002,13 @@ onMounted(async () => {
   } else {
     cartRepo.selectedPaymentType = paymentTypes.value[0]
   }
+  const result = await cartRepo.computeFinallySum({
+    payment_type: cartRepo.selectedPaymentType.type,
+    payment_service: currentPaymentService.value
+  })
+  if (!cartRepo.item) return
+  cartRepo.item.discountedTotalSum = result.finally_sum
+  cartRepo.item.fee = result.fee
 })
 </script>
 

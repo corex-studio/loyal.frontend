@@ -6,7 +6,7 @@ import {
   Cart,
   CartParams,
   CartRaw,
-  CartType,
+  CartType, ComputedFinallySumRaw
 } from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { cartApi } from './cartApi'
@@ -15,7 +15,7 @@ import { store } from '../store'
 import { padRepo } from '../pads/padRepo'
 import {
   DeliveryAreaSettings,
-  DeliveryAreaSettingsRaw,
+  DeliveryAreaSettingsRaw
 } from 'src/models/deliveryAreas/deliveryAreaSettings/deliveryAreaSettings'
 import { MenuItem, MenuItemRaw } from '../menu/menuItem/menuItem'
 import { LocalStorage } from 'quasar'
@@ -32,8 +32,8 @@ export class CartRepo extends BaseRepo<Cart> {
   isItemInCart(id: string): CartItem | undefined {
     return this.item
       ? this.item?.cartItems
-          .filter((el) => !el.attachedTo)
-          .find((v) => v.size.menu_item === id)
+        .filter((el) => !el.attachedTo)
+        .find((v) => v.size.menu_item === id)
       : undefined
   }
 
@@ -53,7 +53,7 @@ export class CartRepo extends BaseRepo<Cart> {
     const res: CartRaw = await this.api.send({
       method: 'PUT',
       action: 'set_params',
-      data: { ...data },
+      data: { ...data }
     })
 
     this.item = new Cart(res)
@@ -69,7 +69,7 @@ export class CartRepo extends BaseRepo<Cart> {
     }>({
       method: 'GET',
       id: v.id,
-      action: 'delivery_settings',
+      action: 'delivery_settings'
     })
     return results.delivery_settings.map((v) => new DeliveryAreaSettings(v))
   }
@@ -86,7 +86,7 @@ export class CartRepo extends BaseRepo<Cart> {
   async current(
     sales_point?: string,
     pad?: string | null,
-    company?: string | null,
+    company?: string | null
   ) {
     this.loading = true
     const city = LocalStorage.getItem('city')
@@ -98,8 +98,8 @@ export class CartRepo extends BaseRepo<Cart> {
           sales_point,
           pad: pad || undefined,
           company: company || undefined,
-          city,
-        },
+          city
+        }
       })
       this.item = new Cart(res)
     } catch {
@@ -114,8 +114,8 @@ export class CartRepo extends BaseRepo<Cart> {
       method: 'GET',
       action: 'get_available_hours',
       params: {
-        sales_point: salesPointId,
-      },
+        sales_point: salesPointId
+      }
     })
   }
 
@@ -124,7 +124,7 @@ export class CartRepo extends BaseRepo<Cart> {
     const res: OrderRaw = await this.api.send({
       method: 'POST',
       action: 'arrange',
-      data,
+      data
     })
     this.arrangeLoading = false
     return new Order(res)
@@ -133,7 +133,7 @@ export class CartRepo extends BaseRepo<Cart> {
   async clear() {
     const res: CartRaw = await this.api.send({
       method: 'PUT',
-      action: `${this.item?.id}/clear`,
+      action: `${this.item?.id}/clear`
     })
     return new Cart(res)
   }
@@ -143,10 +143,19 @@ export class CartRepo extends BaseRepo<Cart> {
       results: MenuItemRaw[]
     } = await this.api.send({
       method: 'GET',
-      action: `${this.item?.id}/upsales`,
+      action: `${this.item?.id}/upsales`
     })
     this.upsales = res.results.map((v) => new MenuItem(v))
     return this.upsales
+  }
+
+  async computeFinallySum(data: Record<string, any>): Promise<ComputedFinallySumRaw> {
+    return await this.api.send({
+      method: 'POST',
+      action: 'compute_finally_sum_for_payment',
+      id: this.item?.id,
+      data
+    })
   }
 }
 
