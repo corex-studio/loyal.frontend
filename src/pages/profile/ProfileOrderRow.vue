@@ -1,5 +1,10 @@
 <template>
-  <div class="bordered pa-10 border-radius column full-width">
+  <div class="bordered pa-10 border-radius column full-width cursor-pointer" @click="$router.push({
+    name: 'orderDetail',
+    params: {
+      orderId: order.id
+    }
+  })">
     <div class="row full-width justify-between items-center header3 mb-2">
       <div class="bold">
         {{ order.deliveryType }}
@@ -9,50 +14,51 @@
       </div>
     </div>
     <div
-      style="opacity: 0.6"
       class="row full-width justify-between items-center body mb-2"
+      style="opacity: 0.6"
     >
       <div>{{ order.salesPoint.customAddress }}</div>
       <div>{{ order.deliveryTime }}</div>
     </div>
-    <q-separator color="divider-color" class="my-6" />
+    <q-separator class="my-6" color="divider-color" />
     <div class="row full-width justify-between">
       <div class="row items-center gap-6 no-wrap">
         <q-img
-          width="40px"
-          height="40px"
-          style="min-width: 40px; min-height: 40px"
+          :src="order.salesPoint.image?.thumbnail || $store.images.empty"
           class="border-radius"
           fit="cover"
-          :src="order.salesPoint.image?.thumbnail || $store.images.empty"
+          height="40px"
+          style="min-width: 40px; min-height: 40px"
+          width="40px"
         >
           <template v-slot:error>
             <span>
               <q-img
                 :ratio="1"
-                fit="cover"
-                style="min-width: 40px; min-height: 40px"
-                height="40px"
-                width="40px"
                 :src="$store.images.empty"
+                fit="cover"
+                height="40px"
+                style="min-width: 40px; min-height: 40px"
+                width="40px"
               ></q-img>
-            </span> </template
-        ></q-img>
+            </span></template
+          >
+        </q-img>
         <div class="column gap-1">
           <div class="subtitle-text bold">
-            Заказ № {{ order.number || '-' }}
+            Заказ № {{ order.number || 'б/н' }}
           </div>
-          <div style="opacity: 0.6" class="body">
+          <div class="body" style="opacity: 0.6">
             {{ order.getPaymentStatus?.label }}
           </div>
         </div>
       </div>
       <div class="column gap-4 items-end body">
         <div
-          class="px-5 py-3 row items-center gap-2"
           :style="`color: ${
             order.orderStatus.color
           };background-color: ${lightColor(order.orderStatus.color, '20')}`"
+          class="px-5 py-3 row items-center gap-2"
           style="border-radius: 8px"
         >
           {{ order.orderStatus.name }}
@@ -64,11 +70,11 @@
     </div>
     <CButton
       v-if="shouldBeReviewed"
-      @click="openReviewModal()"
-      class="mt-8 body"
-      label="Оценить заказ"
-      height="40px"
       :width="$q.screen.lt.md ? '100%' : '150px'"
+      class="mt-8 body"
+      height="40px"
+      label="Оценить заказ"
+      @click="openReviewModal()"
     />
   </div>
 </template>
@@ -89,7 +95,7 @@ const shouldBeReviewed = computed(() => {
 
 const openReviewModal = () => {
   const foundOrder = orderRepo.ordersToReview.find(
-    (v) => v.id === props.order.id,
+    (v) => v.id === props.order.id
   )
   if (foundOrder) {
     orderRepo.orderToReview = foundOrder

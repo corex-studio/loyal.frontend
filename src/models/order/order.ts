@@ -42,36 +42,36 @@ export enum OrderStatusType {
 export const orderStatusTypeNames = {
   [OrderStatusType.CREATED]: {
     label: 'Создан',
-    color: 'accent3',
+    color: 'accent3'
   },
   [OrderStatusType.VALIDATED]: {
     label: 'Проверен',
-    color: 'accent',
+    color: 'accent'
   },
   [OrderStatusType.ACCEPTED]: {
     label: 'Принят',
-    color: 'accent10',
+    color: 'accent10'
   },
   [OrderStatusType.COOKING]: {
     label: 'Готовится',
-    color: 'yellow',
+    color: 'yellow'
   },
   [OrderStatusType.READY]: {
     label: 'Готов',
-    color: 'primary',
+    color: 'primary'
   },
   [OrderStatusType.ON_WAY]: {
     label: 'В пути',
-    color: 'orange',
+    color: 'orange'
   },
   [OrderStatusType.DECLINED]: {
     label: 'Отменен',
-    color: 'red',
+    color: 'red'
   },
   [OrderStatusType.CLOSED]: {
     label: 'Завершен',
-    color: 'green',
-  },
+    color: 'green'
+  }
 }
 
 export enum PaymentType {
@@ -95,7 +95,7 @@ export const paymentTypeNames = {
   [PaymentType.CARD]: 'Картой',
   [PaymentType.ONLINE]: 'Онлайн',
   [PaymentType.PAY_LATER]: 'Внести в счет',
-  [PaymentType.NET_MONET]: 'netmonet',
+  [PaymentType.NET_MONET]: 'netmonet'
 }
 
 export const paymentTypes = Object.keys(paymentTypeNames).map((el) => {
@@ -144,7 +144,7 @@ export class OrdersFilter {
         : undefined,
       sales_point: this.sales_point?.id,
       type: this.delivery_type?.id,
-      status: this.order_status?.id,
+      status: this.order_status?.id
     }
   }
 }
@@ -244,6 +244,7 @@ export type OrderRaw = {
   comment?: string | null
   total_discount_without_bonuses?: number
   internal_number?: string | null
+  fee?: number | null
 }
 
 export class Order implements BaseModel {
@@ -273,6 +274,7 @@ export class Order implements BaseModel {
   comment: string | null
   totalDiscountWithoutBonuses: number | undefined
   internal_number: string | null
+  fee: number
 
   constructor(raw: OrderRaw) {
     this.id = raw.uuid
@@ -306,6 +308,11 @@ export class Order implements BaseModel {
     this.comment = raw.comment || null
     this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
     this.internal_number = raw.internal_number || null
+    this.fee = raw.fee || 0
+  }
+
+  get discountedTotalSumWithFee() {
+    return this.discountedTotalSum + this.fee
   }
 
   get getPaymentStatus() {
@@ -313,31 +320,31 @@ export class Order implements BaseModel {
       return {
         color: 'gray-light',
         label: 'Не оплачен',
-        textColor: 'black',
+        textColor: 'black'
       }
     if (this.paymentStatus === PaymentStatusType.FULL_PAID)
       return {
         color: 'green',
         label: 'Оплачен',
-        textColor: 'white',
+        textColor: 'white'
       }
     if (this.paymentStatus === PaymentStatusType.WAITING)
       return {
         color: 'yellow',
         label: 'В ожидании',
-        textColor: 'black',
+        textColor: 'black'
       }
     if (this.paymentStatus === PaymentStatusType.REFUND)
       return {
         color: 'red',
         label: 'Возвращен',
-        textColor: 'white',
+        textColor: 'white'
       }
     if (this.paymentStatus === PaymentStatusType.PART_PAID)
       return {
         color: 'primary',
         label: 'Частично оплачен',
-        textColor: 'white',
+        textColor: 'white'
       }
   }
 
@@ -347,31 +354,31 @@ export class Order implements BaseModel {
       return {
         label: 'Онлайн',
         icon: 'fa-light fa-mobile',
-        color: 'success',
+        color: 'success'
       }
     if (type === PaymentType.CARD)
       return {
         label: 'Картой курьеру',
         icon: 'fa-light fa-credit-card',
-        color: 'primary',
+        color: 'primary'
       }
     if (type === PaymentType.CASH)
       return {
         label: 'Наличными',
         icon: 'fa-light fa-coin',
-        color: 'accent2',
+        color: 'accent2'
       }
     if (type === PaymentType.NET_MONET)
       return {
         label: 'net monet',
         icon: 'fa-light fa-diagram-project',
-        color: 'danger',
+        color: 'danger'
       }
     if (type === PaymentType.PAY_LATER)
       return {
         label: 'Оплата позже',
         icon: 'fa-light fa-timer',
-        color: 'gray-dark',
+        color: 'gray-dark'
       }
   }
 
@@ -400,7 +407,7 @@ export class Order implements BaseModel {
 
   toJson(): Record<string, any> {
     return {
-      id: this.id,
+      id: this.id
     }
   }
 }
