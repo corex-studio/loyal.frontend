@@ -45,7 +45,7 @@ defineEmits<{
 }>()
 
 const getFormatedDate = () => {
-  const date = moment(cartRepo.item?.deliveryTime, 'DD.MM.YYYY HH:mm')
+  const date = moment(cartRepo.item?.deliveryTime || cartRepo.item?.closestDate, 'DD.MM.YYYY HH:mm')
   const now = moment()
   if (date.format('DD.MM.YYYY') === now.format('DD.MM.YYYY')) return 'Заказ будет готов сегодня в ' + date.format('HH:mm')
   if (date.format('DD.MM.YYYY') === now.add(1, 'days').format('DD.MM.YYYY')) return 'Заказ будет готов завтра в ' + date.format('HH:mm')

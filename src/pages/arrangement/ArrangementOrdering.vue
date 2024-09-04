@@ -821,14 +821,11 @@ const setDeliveryTime = async (v: string | null) => {
 }
 
 const arrangeClickHandler = async () => {
-  if (cartRepo.item?.deliveryTime) {
-    const diffHours = moment(cartRepo.item.deliveryTime, 'DD.MM.YYYY HH:mm').diff(moment(), 'hours')
-    const mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours || 3
-    if (diffHours > mustBeConfirmedIfMoreThenHours) {
-      timeWarningModal.value = true
-    } else {
-      await makeAnOrder()
-    }
+  if (!cartRepo.item) return
+  const diffHours = moment(cartRepo.item.deliveryTime || cartRepo.item.closestDate, 'DD.MM.YYYY HH:mm').diff(moment(), 'hours')
+  const mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours || 3
+  if (diffHours > mustBeConfirmedIfMoreThenHours) {
+    timeWarningModal.value = true
   } else {
     await makeAnOrder()
   }
