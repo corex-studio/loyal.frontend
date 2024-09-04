@@ -1,6 +1,6 @@
 <template>
   <div
-    :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+    :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
     class="pa-10 border-radius mt-lg-15 mt-md-12 mt-xs-8 gap-10 column"
   >
     <div class="column full-width items-center gap-5">

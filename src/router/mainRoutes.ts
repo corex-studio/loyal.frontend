@@ -1,10 +1,10 @@
 import {
   arrangementRoutes,
-  arrangementRoutesInQrMenu,
+  arrangementRoutesInQrMenu
 } from 'src/router/arrangementRoutes'
 import { clone, cloneDeep, isEqual } from 'lodash'
 import {
-  RouteRecordRaw,
+  RouteRecordRaw
 } from 'vue-router'
 
 // todo было бы неплохо разбить этот файл по нескольким файлам :)
@@ -13,39 +13,44 @@ export const mainRoutes = [
   {
     path: '',
     name: 'home',
-    component: () => import('src/pages/home/Home.vue'),
+    component: () => import('src/pages/home/Home.vue')
   },
   {
     path: 'categories/:_categoryId',
     name: 'home__withCategories',
-    component: () => import('src/pages/home/Home.vue'),
+    component: () => import('src/pages/home/Home.vue')
   },
   {
     path: 'categories/:_categoryId/products/:_productId',
     name: 'home__withCategories__withProducts',
-    component: () => import('src/pages/home/Home.vue'),
+    component: () => import('src/pages/home/Home.vue')
   },
   {
     path: 'news/:_newsId',
     name: 'home__withNews',
-    component: () => import('src/pages/home/Home.vue'),
+    component: () => import('src/pages/home/Home.vue')
   },
   {
     path: 'profile',
     name: 'profilePage',
     redirect: {
-      name: 'profileData',
+      name: 'profileData'
     },
     children: [
       {
         path: 'data',
         name: 'profileData',
-        component: () => import('src/pages/profile/ProfileData.vue'),
+        component: () => import('src/pages/profile/ProfileData.vue')
       },
       {
         path: 'orders',
         name: 'ordersHistory',
-        component: () => import('src/pages/profile/ProfileOrdersHistory.vue'),
+        component: () => import('src/pages/profile/ProfileOrdersHistory.vue')
+      },
+      {
+        path: 'orders/:orderId',
+        name: 'orderDetail',
+        component: () => import('src/pages/profile/OrderDetail.vue')
       },
       // {
       //   path: 'cards',
@@ -56,15 +61,15 @@ export const mainRoutes = [
         path: 'addresses',
         name: 'profileAddresses',
         component: () =>
-          import('src/pages/profile/ProfileDeliveryAddresses.vue'),
-      },
+          import('src/pages/profile/ProfileDeliveryAddresses.vue')
+      }
     ],
-    component: () => import('src/pages/profile/ProfilePage.vue'),
+    component: () => import('src/pages/profile/ProfilePage.vue')
   },
   {
     path: 'about',
     name: 'aboutUs',
-    component: () => import('src/pages/profile/ProfileAboutUs.vue'),
+    component: () => import('src/pages/profile/ProfileAboutUs.vue')
     // meta: {
     //   title: 'О нас',
     //   description: 'Страница с данными о компании',
@@ -80,10 +85,10 @@ export const mainRoutes = [
   {
     path: 'my_qr',
     name: 'myQrPage',
-    component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue'),
+    component: () => import('src/pages/loyaltyCard/LoyaltyCardMyQr.vue')
   },
   ...arrangementRoutes,
-  ...arrangementRoutesInQrMenu,
+  ...arrangementRoutesInQrMenu
 ]
 
 interface RouteNameModifier {
@@ -105,18 +110,18 @@ class RouteNameModifierManager {
     return el
   }
 
-  register(key: string, param: string, canBeMixed = false, ) {
+  register(key: string, param: string, canBeMixed = false) {
     this._registered.push({
       routeKey: key,
       routeParam: param,
-      canBeMixed,
+      canBeMixed
     })
   }
 
   isRegistered(key: string, param?: string) {
     this._registered.find(
       (v) =>
-        v.routeKey === key && ((v.routeParam === param && param) || !param),
+        v.routeKey === key && ((v.routeParam === param && param) || !param)
     )
   }
 

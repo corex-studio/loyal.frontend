@@ -453,52 +453,8 @@
             </div>
           </template>
           <q-separator color="divider-color" />
-          <div class="row full-width justify-between">
-            <div class="body bold">Сумма заказа</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item.sum, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item.type === CartType.DELIVERY"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Стоимость доставки</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item?.deliveryPrice, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item?.appliedBonuses"
-            class="row full-width justify-between text-primary"
-          >
-            <div class="body bold">Списано бонусов</div>
-            <div class="body bold">
-              -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
-            </div>
-          </div>
+          <OrderTotalInfo :item="$cart.item" />
 
-          <div
-            v-if="$cart.item?.totalDiscountWithoutBonuses"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Скидка</div>
-            <div class="body bold">
-              {{
-                beautifyNumber(
-                  $cart.item?.totalDiscountWithoutBonuses || 0,
-                  true
-                )
-              }}
-              ₽
-            </div>
-          </div>
-          <div class="row full-width justify-between">
-            <div class="body bold">К оплате</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -583,6 +539,7 @@ import { menuItemRepo } from 'src/models/menu/menuItem/menuItemRepo'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { notifier } from 'src/services/notifier'
+import OrderTotalInfo from 'pages/arrangement/OrderTotalInfo.vue'
 
 const currentDay = ref('Сегодня')
 const eatInsideTabs = [

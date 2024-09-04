@@ -39,9 +39,11 @@ body.bebas-font {
 body:not(.bebas-font) {
   .bold {
     font-family: 'Gilroy-Bold' !important;
+
     .q-field__label {
       @extend .bold;
     }
+
     &.q-btn div {
       @extend .bold;
     }
@@ -88,6 +90,7 @@ body:not(.bebas-font) {
   font-weight: 500;
   font-size: 16px;
   line-height: 22px;
+
   .q-field__label,
   &.q-btn div {
     @extend .body;
@@ -115,6 +118,7 @@ body:not(.bebas-font) {
   font-weight: 400;
   font-size: 14px;
   line-height: 19.6px;
+
   .q-field__label,
   .q-field__native,
   textarea::placeholder {
@@ -126,6 +130,7 @@ body:not(.bebas-font) {
   font-weight: 400;
   font-size: 12px;
   line-height: 14px;
+
   .q-field__label,
   &.q-btn div {
     @extend .caption-text;
@@ -148,6 +153,7 @@ textarea::placeholder {
   font-weight: 400;
   font-size: 10px;
   line-height: 12.19px;
+
   .q-field__label {
     @extend .caption-text2;
   }
@@ -258,16 +264,19 @@ body.screen--sm {
     font-size: 14px;
     line-height: 19.6px;
   }
+
   .card-text {
     font-weight: 400;
     font-size: 10px;
     line-height: 12.19px;
   }
+
   .mobile-catalog-text {
     font-style: normal !important;
     font-weight: 500 !important;
     font-size: 10px !important;
     line-height: 120% !important;
+
     &.q-btn div {
       @extend .mobile-catalog-text;
     }
@@ -294,7 +303,7 @@ body.screen--xs {
 
   .subtitle-text {
     font-weight: 500;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 21px;
   }
 
@@ -314,26 +323,31 @@ body.screen--xs {
     font-size: 11px;
     line-height: 12.19px;
   }
+
   .body {
     font-weight: 400;
     font-size: 16px;
     line-height: 21px;
   }
+
   .secondary-text {
     font-weight: 400;
     font-size: 14px;
     line-height: 19.6px;
   }
+
   .card-text {
     font-weight: 400;
     font-size: 10px;
     line-height: 12.19px;
   }
+
   .mobile-catalog-text {
     font-style: normal !important;
     font-weight: 500 !important;
     font-size: 10px !important;
     line-height: 120% !important;
+
     &.q-btn div {
       @extend .mobile-catalog-text;
     }
