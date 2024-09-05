@@ -209,6 +209,10 @@ export class Cart implements BaseModel {
     this.totalDiscountWithoutBonuses = raw.total_discount_without_bonuses
   }
 
+  get discountedTotalSumWithFee() {
+    return this.discountedTotalSum + (this.fee || 0)
+  }
+
   get cartItemsQuantitySum() {
     return sum(
       this.cartItems.filter((el) => !el.attachedTo).map((v) => v.quantity)

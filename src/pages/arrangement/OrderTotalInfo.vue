@@ -39,10 +39,19 @@
         ₽
       </div>
     </div>
+    <div
+      v-if="item.fee && !isOrder"
+      class="row full-width justify-between text-secondary"
+    >
+      <div class="body bold">Сервисный сбор</div>
+      <div class="body bold">
+        {{ beautifyNumber(item.fee || 0, true) }} ₽
+      </div>
+    </div>
     <div class="row full-width justify-between">
       <div class="body bold">{{ isOrder ? 'Итого' : 'К оплате' }}</div>
       <div class="body bold">
-        {{ beautifyNumber('discountedTotalSumWithFee' in item ? item.discountedTotalSumWithFee : item.discountedTotalSum, true)
+        {{ beautifyNumber(item.discountedTotalSumWithFee, true)
         }} ₽
       </div>
     </div>
@@ -60,7 +69,7 @@ const props = defineProps<{
 }>()
 
 const isOrder = computed(() => {
-  return 'discountedTotalSumWithFee' in props.item
+  return 'items' in props.item
 })
 </script>
 

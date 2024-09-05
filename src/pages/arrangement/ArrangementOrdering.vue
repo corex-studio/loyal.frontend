@@ -363,30 +363,31 @@
           "
           class="column full-width border-radius gap-6 px-lg-8 py-lg-10 pa-md-10 pa-xs-6"
         >
-          <div class="subtitle-text mb-2" style="opacity: 0.8">
-            Состав заказа
-          </div>
-          <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
-            <div class="row body full-width no-wrap py-3">
-              <div class="row no-wrap gap-6 col-10 items-center">
-                <q-img
-                  :class="{ dimmed: item.isDead }"
-                  :height="
+          <template v-if="$q.screen.gt.sm">
+            <div class="subtitle-text mb-2" style="opacity: 0.8">
+              Состав заказа
+            </div>
+            <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
+              <div class="row body full-width no-wrap py-3">
+                <div class="row no-wrap gap-6 col-10 items-center">
+                  <q-img
+                    :class="{ dimmed: item.isDead }"
+                    :height="
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   "
-                  :src="item.size.image?.thumbnail || $store.images.empty"
-                  :style="`min-width: ${
+                    :src="item.size.image?.thumbnail || $store.images.empty"
+                    :style="`min-width: ${
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   }`"
-                  :width="
+                    :width="
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   "
-                  class="border-radius cursor-pointer"
-                  fit="cover"
-                  @click="openMenuItemModal(item)"
-                  @contextmenu.prevent
-                >
-                  <template v-slot:error>
+                    class="border-radius cursor-pointer"
+                    fit="cover"
+                    @click="openMenuItemModal(item)"
+                    @contextmenu.prevent
+                  >
+                    <template v-slot:error>
                     <span>
                       <q-img
                         :height="
@@ -415,101 +416,6 @@
                         fit="cover"
                       ></q-img>
                     </span>
-                  </template>
-                </q-img>
-                <div class="column gap-1">
-                  <div class="ellipsis-2-lines">
-                    {{ item.size.name }}
-                  </div>
-                  <div
-                    v-if="item.cartItemModifiers.length"
-                    class="secondary-text text-on-background-color"
-                  >
-                    {{
-                      item.cartItemModifiers
-                        .map(
-                          (v) =>
-                            `${v.modifier?.name}${
-                              v.quantity > 1 ? ' x ' + v.quantity : ''
-                            }`
-                        )
-                        .join(', ')
-                    }}
-                  </div>
-                  <div style="opacity: 0.6">{{ item.quantity }} шт</div>
-                </div>
-              </div>
-              <div class="col-2 column items-end no-wrap">
-                <div
-                  v-if="item.totalSum !== item.discountedTotalSum"
-                  class="text-strike"
-                  style="opacity: 0.5"
-                >
-                  {{ beautifyNumber(item.totalSum, true) }} ₽
-                </div>
-                <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
-              </div>
-            </div>
-          </template>
-          <q-separator color="divider-color" />
-          <OrderTotalInfo :item="$cart.item" />
-
-          <template v-if="$q.screen.gt.sm">
-            <div class="subtitle-text mb-2" style="opacity: 0.8">
-              Состав заказа
-            </div>
-            <template
-              v-for="(item, index) in $cart.item?.cartItems"
-              :key="index"
-            >
-              <div class="row body full-width no-wrap py-3">
-                <div class="row no-wrap gap-6 col-10 items-center">
-                  <q-img
-                    :class="{ dimmed: item.isDead }"
-                    :height="
-                      $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
-                    "
-                    :src="item.size.image?.thumbnail || $store.images.empty"
-                    :style="`min-width: ${
-                      $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
-                    }`"
-                    :width="
-                      $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
-                    "
-                    class="border-radius cursor-pointer"
-                    fit="cover"
-                    @click="openMenuItemModal(item)"
-                    @contextmenu.prevent
-                  >
-                    <template v-slot:error>
-                      <span>
-                        <q-img
-                          :height="
-                            $q.screen.gt.md
-                              ? '65px'
-                              : $q.screen.md
-                                ? '60px'
-                                : '55px'
-                          "
-                          :src="$store.images.empty"
-                          :style="`min-width: ${
-                            $q.screen.gt.md
-                              ? '65px'
-                              : $q.screen.md
-                                ? '60px'
-                                : '55px'
-                          }`"
-                          :width="
-                            $q.screen.gt.md
-                              ? '65px'
-                              : $q.screen.md
-                                ? '60px'
-                                : '55px'
-                          "
-                          class="user-image"
-                          fit="cover"
-                        ></q-img>
-                      </span>
                     </template>
                   </q-img>
                   <div class="column gap-1">
@@ -542,68 +448,13 @@
                   >
                     {{ beautifyNumber(item.totalSum, true) }} ₽
                   </div>
-                  <div>
-                    {{ beautifyNumber(item.discountedTotalSum, true) }} ₽
-                  </div>
+                  <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
                 </div>
               </div>
             </template>
             <q-separator color="divider-color" />
           </template>
-          <div class="row full-width justify-between">
-            <div class="body bold">Сумма заказа</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item.sum, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item.type === CartType.DELIVERY"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Стоимость доставки</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item?.deliveryPrice, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item?.appliedBonuses"
-            class="row full-width justify-between text-primary"
-          >
-            <div class="body bold">Списано бонусов</div>
-            <div class="body bold">
-              -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item?.totalDiscountWithoutBonuses"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Скидка</div>
-            <div class="body bold">
-              {{
-                beautifyNumber(
-                  $cart.item?.totalDiscountWithoutBonuses || 0,
-                  true
-                )
-              }}
-              ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item.fee"
-            class="row full-width justify-between text-secondary"
-          >
-            <div class="body bold">Сервисный сбор</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item.fee || 0, true) }} ₽
-            </div>
-          </div>
-          <div class="row full-width justify-between">
-            <div class="body bold">К оплате</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
-            </div>
-          </div>
+          <OrderTotalInfo :item="$cart.item" />
         </div>
       </div>
     </div>
