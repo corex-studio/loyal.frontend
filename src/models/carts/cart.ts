@@ -118,6 +118,7 @@ export type CartRaw = {
   closest_time_text?: string | null
   use_bonuses?: boolean
   total_discount_without_bonuses?: number
+  closest_date?: string | null
 }
 
 export class Cart implements BaseModel {
@@ -159,6 +160,7 @@ export class Cart implements BaseModel {
   calculationStatus: CalculationStatus
   useBonuses: boolean
   totalDiscountWithoutBonuses: number | undefined
+  closestDate: string | null
   fee?: number
 
   constructor(raw: CartRaw) {
@@ -177,6 +179,12 @@ export class Cart implements BaseModel {
     this.deliveryTime = raw.delivery_time
       ? moment
         .utc(raw.delivery_time, 'YYYY-MM-DD HH:mm:ss')
+        .local()
+        .format('DD.MM.YYYY HH:mm')
+      : null
+    this.closestDate = raw.closest_date
+      ? moment
+        .utc(raw.closest_date, 'YYYY-MM-DD HH:mm:ss')
         .local()
         .format('DD.MM.YYYY HH:mm')
       : null
