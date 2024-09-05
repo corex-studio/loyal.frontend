@@ -57,8 +57,9 @@
           <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
           <OrderNotPaid
             v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
-            :show-retry="!!$route.query.paymentUrl && !$cart.item"
-            @retry="paymentModal = true"
+            :retry-loading="retryLoading"
+            :show-retry="!$cart.item"
+            @retry="retryClickHandler()"
           />
           <!-- ЗАКАЗ ОТМЕНЕН -->
           <OrderCancelled
@@ -126,7 +127,7 @@
                 class="border-radius2"
                 fit="contain"
                 height="65px"
-                style="min-width: 65px;"
+                style="min-width: 65px"
                 width="65px"
               >
                 <template v-slot:error>
@@ -135,7 +136,7 @@
                       :src="$store.images.empty"
                       fit="cover"
                       height="65px"
-                      style="min-width: 65px;"
+                      style="min-width: 65px"
                       width="65px"
                     ></q-img> </span
                   ></template>
@@ -192,33 +193,25 @@
         })
       "
     />
-    <!-- <div
-      v-if="
-        $route.query.paymentUrl &&
-        !$cart.item &&
-        $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID
-      "
-      class="mt-10 full-width"
-    >
-      <CButton
-        label="Открыть окно для оплаты заказа"
-        :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
-        width="100%"
-        class="body"
-        @click="paymentModal = true"
-      />
-    </div> -->
   </div>
-
   <OrderPaymentModal
     :model-value="paymentModal"
     :payment-url="paymentUrl"
     @update:model-value="paymentModalCloseHandler()"
   />
+  <SelectPaymentTypeModal v-model="selectPaymentTypeModal" :current-type="$cart.selectedPaymentType"
+                          :types="$salesPoint.paymentTypes"
+                          @select="changePaymentType($event)" />
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
-import { orderStatusTypeNames, OrderStatusType } from 'src/models/order/order'
+import {
+  orderStatusTypeNames,
+  OrderStatusType,
+  PaymentObjectType,
+  OrderPaymentService,
+  PaymentType, OrderSystemSource
+} from 'src/models/order/order'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import OrderStepper from './OrderStepper.vue'
@@ -233,18 +226,21 @@ import OrderPaymentModal from 'components/OrderPaymentModal.vue'
 import OrderNotPaid from './OrderNotPaid.vue'
 import OrderCancelled from './OrderCancelled.vue'
 import OrderPaymentTimer from './OrderPaymentTimer.vue'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
+import { notifier } from 'src/services/notifier'
 import OrderTotalInfo from 'pages/arrangement/OrderTotalInfo.vue'
 
 const route = useRoute()
-
 const router = useRouter()
-
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
-
 const showPaymentTimer = ref(false)
-
+const selectPaymentTypeModal = ref(false)
 let interval: NodeJS.Timeout | null = null
+const retryLoading = ref(false)
+
 const checkOnPaymentUrlInPath = () => {
   if (!orderRepo.item && !interval) {
     interval = setInterval(() => checkOnPaymentUrlInPath(), 100)
@@ -265,6 +261,45 @@ const checkOnPaymentUrlInPath = () => {
   }
 }
 
+const retryClickHandler = () => {
+  if (salesPointRepo.paymentTypes.length > 1) {
+    selectPaymentTypeModal.value = true
+  } else {
+    paymentModal.value = true
+  }
+}
+
+const changePaymentType = async (type: PaymentObjectType) => {
+  try {
+    retryLoading.value = true
+    if (!orderRepo.item) throw new Error('Order object is null')
+    cartRepo.selectedPaymentType = type
+    let paymentService: OrderPaymentService | undefined = undefined
+    if (type.type === PaymentType.CARD) {
+      paymentService = OrderPaymentService.CARD
+    } else if (type.type === PaymentType.ONLINE || type.type === PaymentType.NET_MONET) {
+      paymentService = OrderPaymentService.WEB_FORM
+    }
+    const result = await orderRepo.applyPayments(orderRepo.item, {
+      payment_service: paymentService,
+      payment_type: type.type,
+      system_source: OrderSystemSource.WEBSITE
+    })
+    void router.replace({
+      name: 'successOrderPage',
+      params: {
+        orderId: result.id
+      },
+      query: result.paymentUrl ? { paymentUrl: result.paymentUrl } : undefined
+    })
+    orderRepo.item = result
+  } catch {
+    notifier.error('Ошибка при изменении типа оплаты')
+  } finally {
+    retryLoading.value = false
+  }
+}
+
 const clearBeforeRouterResolve = router.afterEach(() => {
   checkOnPaymentUrlInPath()
 })
@@ -278,6 +313,13 @@ const paymentModalCloseHandler = () => {
   showPaymentTimer.value = true
 }
 
+const preloadOrder = async () => {
+  if (!orderRepo.item) {
+    await orderRepo.retrieve(String(route.params.orderId))
+  }
+  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
+}
+
 onMounted(() => {
   checkOnPaymentUrlInPath()
   useEventBus(orderUpdatedKey).on(({ order }) => {
@@ -286,9 +328,7 @@ onMounted(() => {
       paymentModal.value = false
     }
   })
-  if (!orderRepo.item) {
-    void orderRepo.retrieve(String(route.params.orderId))
-  }
+  void preloadOrder()
 })
 </script>
 

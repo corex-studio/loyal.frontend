@@ -249,7 +249,6 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import SelectCompanyModal from 'components/dialogs/SelectCompanyModal.vue'
 import CButton from 'components/template/buttons/CButton.vue'
 import PrepareUiSettings from 'components/template/PrepareUiSettings.vue'
-import CIcon from 'components/template/helpers/CIcon.vue'
 import CIconButton from 'components/template/buttons/CIconButton.vue'
 
 const info = ref<TermsOfServiceInfo | null>(null)

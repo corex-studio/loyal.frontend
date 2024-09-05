@@ -1,6 +1,13 @@
 import { CartItem } from './cartItem/cartItem'
 import { Order, OrderRaw, PaymentObjectType } from './../order/order'
-import { AvailableHours, CalculationStatus, Cart, CartParams, CartRaw, CartType } from './cart'
+import {
+  AvailableHours,
+  CalculationStatus,
+  Cart,
+  CartParams,
+  CartRaw,
+  CartType, ComputedFinallySumRaw
+} from './cart'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
 import { cartApi } from './cartApi'
 import { reactive } from 'vue'
@@ -49,8 +56,8 @@ export class CartRepo extends BaseRepo<Cart> {
       data: { ...data }
     })
 
-    this.item = new Cart(res)
-    if (this.item.calculationStatus !== CalculationStatus.IN_PROGRESS) {
+    this.updateCart(new Cart(res))
+    if (this.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {
       this.setParamsLoading = false
     }
     return this.item
@@ -76,7 +83,11 @@ export class CartRepo extends BaseRepo<Cart> {
     return this.item.cartItems.map((v) => v.size.uuid).includes(uuid)
   }
 
-  async current(sales_point?: string, pad?: string | null, company?: string | null) {
+  async current(
+    sales_point?: string,
+    pad?: string | null,
+    company?: string | null
+  ) {
     this.loading = true
     const city = LocalStorage.getItem('city')
     try {
@@ -136,6 +147,22 @@ export class CartRepo extends BaseRepo<Cart> {
     })
     this.upsales = res.results.map((v) => new MenuItem(v))
     return this.upsales
+  }
+
+  async computeFinallySum(data: Record<string, any>): Promise<ComputedFinallySumRaw> {
+    return await this.api.send({
+      method: 'POST',
+      action: 'compute_finally_sum_for_payment',
+      id: this.item?.id,
+      data
+    })
+  }
+
+  updateCart(instance: Cart) {
+    if (this.item && this.item.id === instance.id) {
+      instance.fee = this.item.fee
+    }
+    cartRepo.item = instance
   }
 }
 

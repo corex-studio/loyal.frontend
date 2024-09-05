@@ -28,8 +28,8 @@ export type WebSocketMessage = {
 export const handleMessage = (v: MessageEvent<string>) => {
   const response = JSON.parse(v.data) as WebSocketMessage
   if (response.type === 'cart.updated') {
-    cartRepo.item = new Cart(response.data as CartRaw)
-    cartRepo.item.errors.forEach((error) => {
+    cartRepo.updateCart(new Cart(response.data as CartRaw))
+    cartRepo.item?.errors.forEach((error) => {
       if (error.title === 'Промокод') {
         cartRepo.promocodeError = true
       } else if (error.description) notifier.error(error.description)
