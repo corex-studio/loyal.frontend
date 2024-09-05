@@ -1,28 +1,28 @@
 <template>
   <CDialog
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     width="422px"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="header3 text-center mb-10 px-10 text-on-background-color">
       {{ text || 'Вы подтверждаете действие?' }}
     </div>
     <div class="row gap-sm-10 gap-xs-5 flex-center">
       <CButton
-        label="Отменить"
         :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
-        class="body"
-        @click="$emit('update:modelValue', false)"
-        color="secondary-button-color"
-        text-color="on-secondary-button-color"
         :width="$q.screen.xs ? '100%' : '46%'"
+        class="body"
+        color="secondary-button-color"
+        label="Отменить"
+        text-color="on-secondary-button-color"
+        @click="$emit('update:modelValue', false)"
       />
       <CButton
+        :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
+        :width="$q.screen.xs ? '100%' : '46%'"
         class="body"
         label="Подтвердить"
-        :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
         @click="acceptHandler"
-        :width="$q.screen.xs ? '100%' : '46%'"
       />
     </div>
   </CDialog>

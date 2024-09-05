@@ -14,6 +14,7 @@
     <div class="row justify-center full-width gap-8">
       <div v-if="showRetry" class="column gap-3 text-center">
         <CIconButton
+          :loading="retryLoading"
           circle
           color="backing-color"
           icon="fa-regular fa-rotate-right"
@@ -27,21 +28,7 @@
           оплату
         </div>
       </div>
-      <!-- <div class="column gap-3 text-center">
-        <CIconButton
-          @click="$emit('cancel')"
-          icon="fa-regular fa-xmark"
-          size="50px"
-          color="backing-color"
-          circle
-          icon-color="on-backing-color"
-          icon-size="26px"
-        />
-        <div class="secondary-text text-on-background-color">
-          Отменить <br />
-          заказ
-        </div>
-      </div> -->
+
     </div>
   </div>
 </template>
@@ -50,6 +37,7 @@ import CIconButton from 'src/components/template/buttons/CIconButton.vue'
 
 defineProps<{
   showRetry?: boolean
+  retryLoading?: boolean
 }>()
 
 defineEmits<{
