@@ -176,7 +176,7 @@
                       @update-tab="selectCurrentDayType($event)"
                     />
                     <div class="mt-7 ml-3 text-secondary"
-                         v-if="currentDayType === 'Сегодня'">Выберите
+                         v-if="timePickerIsHidden">Выберите
                       день
                     </div>
                     <div v-else
@@ -604,6 +604,11 @@ const availableArrangementDays = computed(() => {
   }
   return baseData
 })
+
+const timePickerIsHidden = computed(() => {
+  return currentDayType.value === 'Сегодня' && availableArrangementDays.value[0]?.label !== 'Сегодня'
+})
+
 
 const currentEatInsideTab = computed(() => {
   return cartRepo.item?.eatInside
