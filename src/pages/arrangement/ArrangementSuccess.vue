@@ -58,7 +58,7 @@
           <OrderNotPaid
             v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
             :retry-loading="retryLoading"
-            :show-retry="!!$route.query.paymentUrl && !$cart.item"
+            :show-retry="!$cart.item"
             @retry="retryClickHandler()"
           />
           <!-- ЗАКАЗ ОТМЕНЕН -->
@@ -313,18 +313,22 @@ const paymentModalCloseHandler = () => {
   showPaymentTimer.value = true
 }
 
+const preloadOrder = async () => {
+  if (!orderRepo.item) {
+    await orderRepo.retrieve(String(route.params.orderId))
+  }
+  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
+}
+
 onMounted(() => {
   checkOnPaymentUrlInPath()
-  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
   useEventBus(orderUpdatedKey).on(({ order }) => {
     orderRepo.item = order
     if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
       paymentModal.value = false
     }
   })
-  if (!orderRepo.item) {
-    void orderRepo.retrieve(String(route.params.orderId))
-  }
+  void preloadOrder()
 })
 </script>
 

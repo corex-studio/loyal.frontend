@@ -56,8 +56,8 @@ export class CartRepo extends BaseRepo<Cart> {
       data: { ...data }
     })
 
-    this.item = new Cart(res)
-    if (this.item.calculationStatus !== CalculationStatus.IN_PROGRESS) {
+    this.updateCart(new Cart(res))
+    if (this.item?.calculationStatus !== CalculationStatus.IN_PROGRESS) {
       this.setParamsLoading = false
     }
     return this.item
@@ -156,6 +156,13 @@ export class CartRepo extends BaseRepo<Cart> {
       id: this.item?.id,
       data
     })
+  }
+
+  updateCart(instance: Cart) {
+    if (this.item && this.item.id === instance.id) {
+      instance.fee = this.item.fee
+    }
+    cartRepo.item = instance
   }
 }
 

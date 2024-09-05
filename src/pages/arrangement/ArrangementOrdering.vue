@@ -61,7 +61,7 @@
               >
                 <div
                   :class="[
-                    !$cart.item.deliveryTime
+                    !$cart.item.deliveryTime && !menu
                       ? 'selected-element'
                       : { 'bordered-block': $q.screen.lt.md },
                     $q.screen.lt.md
@@ -114,7 +114,7 @@
                       availableHours?.tomorrow.length)
                   "
                   :class="[
-                    $cart.item.deliveryTime
+                    $cart.item.deliveryTime || menu
                       ? 'selected-element'
                       : { 'bordered-block': $q.screen.lt.md },
                     $q.screen.lt.md
@@ -175,10 +175,14 @@
                       width="100%"
                       @update-tab="selectCurrentDayType($event)"
                     />
-                    <div
-                      ref="menuRef"
-                      class="column no-wrap full-width"
-                      style="overflow-y: scroll; max-height: 40dvh"
+                    <div class="mt-7 ml-3 text-secondary"
+                         v-if="currentDayType === 'Сегодня'">Выберите
+                      день
+                    </div>
+                    <div v-else
+                         ref="menuRef"
+                         class="column no-wrap full-width"
+                         style="overflow-y: scroll; max-height: 40dvh"
                     >
                       <template
                         v-if="currentDayType !== 'Выбрать' || currentDayDate"
@@ -576,38 +580,29 @@ const comment = ref<string | null>(null)
 
 const availableArrangementDays = computed(() => {
   const datePickerConf = salesPointRepo.item?.settings.delivery_date_picker
-  if (datePickerConf) {
-    let totalDayTypes = [
-      {
-        label: 'Сегодня'
-      },
-      {
-        label: 'Завтра'
-      },
-      {
-        label: currentDayDate.value
-          ? moment(currentDayDate.value).format('DD.MM')
-          : 'Выбрать',
-        iconRight: 'fa-regular fa-calendar',
-        force: currentDayType.value === 'Выбрать' || !!currentDayDate.value
-      }
-    ]
-    if (datePickerConf.end_offset) {
-      totalDayTypes = totalDayTypes.slice(0, datePickerConf.end_offset)
-      if (datePickerConf.end_offset < datePickerConf.start_offset) {
-        return totalDayTypes
-      }
+  let baseData: { label: string, iconRight?: string, force?: boolean }[] = [{ label: 'Сегодня' }, { label: 'Завтра' }]
+  if (!datePickerConf) return baseData
+  baseData.push({
+    label: currentDayDate.value
+      ? moment(currentDayDate.value).format('DD.MM')
+      : 'Выбрать',
+    iconRight: 'fa-regular fa-calendar',
+    force: currentDayType.value === 'Выбрать' || !!currentDayDate.value
+  })
+
+  if (datePickerConf.end_offset) {
+    baseData = baseData.slice(0, datePickerConf.end_offset + 1)
+    if (datePickerConf.end_offset < datePickerConf.start_offset) {
+      return baseData
     }
     if (datePickerConf.start_offset) {
-      totalDayTypes = totalDayTypes.slice(datePickerConf.start_offset)
+      baseData = baseData.slice(datePickerConf.start_offset)
     }
     if (!datePickerConf.end_offset && !datePickerConf.start_offset) {
-      totalDayTypes = []
+      baseData = []
     }
-    return totalDayTypes
-  } else {
-    return ['Сегодня', 'Завтра']
   }
+  return baseData
 })
 
 const currentEatInsideTab = computed(() => {
@@ -694,15 +689,14 @@ watch(selectedPaymentTypeModal, async (v) => {
   }
 })
 
+watch(currentDayType, () => {
+  if (cartRepo.item)
+    cartRepo.item.deliveryTime = null
+})
+
 const paymentTypeSelectHandler = async (type: PaymentObjectType) => {
-  if (!cartRepo.item) return
   cartRepo.selectedPaymentType = type
-  const result = await cartRepo.computeFinallySum({
-    payment_type: cartRepo.selectedPaymentType.type,
-    payment_service: currentPaymentService.value
-  })
-  cartRepo.item.discountedTotalSum = result.finally_sum
-  cartRepo.item.fee = result.fee
+  void loadFinallySum()
 }
 
 const loadDateAvailableHours = async () => {
@@ -802,7 +796,8 @@ const setDeliveryTime = async (v: string | null) => {
 const arrangeClickHandler = async () => {
   if (!cartRepo.item) return
   const diffHours = moment(cartRepo.item.deliveryTime || cartRepo.item.closestDate, 'DD.MM.YYYY HH:mm').diff(moment(), 'hours')
-  const mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours || 3
+  let mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours
+  if (mustBeConfirmedIfMoreThenHours === undefined) mustBeConfirmedIfMoreThenHours = 3
   if (diffHours > mustBeConfirmedIfMoreThenHours) {
     timeWarningModal.value = true
   } else {
@@ -937,14 +932,17 @@ onMounted(async () => {
   } else {
     cartRepo.selectedPaymentType = paymentTypes.value[0]
   }
+  void loadFinallySum()
+})
+
+const loadFinallySum = async () => {
   const result = await cartRepo.computeFinallySum({
-    payment_type: cartRepo.selectedPaymentType.type,
+    payment_type: cartRepo.selectedPaymentType?.type || null,
     payment_service: currentPaymentService.value
   })
   if (!cartRepo.item) return
-  cartRepo.item.discountedTotalSum = result.finally_sum
   cartRepo.item.fee = result.fee
-})
+}
 </script>
 
 <style lang="scss" scoped>

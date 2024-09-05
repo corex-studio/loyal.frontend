@@ -6,7 +6,7 @@
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="pa-md-15 pt-xs-12 pb-xs-12 px-xs-8">
-      <div class="header3 bold pb-10">Способ оплаты</div>
+      <div class="header3 bold pb-10 text-on-background-color">Способ оплаты</div>
       <div class="column full-width gap-5">
         <div
           v-for="(el, index) in types"
@@ -44,7 +44,7 @@ import { PaymentObjectType } from 'src/models/order/order'
 import { ref, watch } from 'vue'
 
 const props = defineProps<{
-  modelValue: boolean
+  modelValue?: boolean | undefined
   types: PaymentObjectType[]
   currentType?: PaymentObjectType | null
 }>()
@@ -63,7 +63,7 @@ watch(
       if (props.currentType) selectedPaymentType.value = props.currentType
       else selectedPaymentType.value = null
     }
-  },
+  }
 )
 
 const select = () => {

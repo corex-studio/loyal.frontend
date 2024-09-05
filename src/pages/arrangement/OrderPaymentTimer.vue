@@ -23,7 +23,7 @@ const emit = defineEmits<{
   (evt: 'done'): void
 }>()
 
-const TIMER_TIMEOUT = 30
+const TIMER_TIMEOUT = 20
 
 const currentSecond = ref(TIMER_TIMEOUT)
 let timer: NodeJS.Timeout | null = null

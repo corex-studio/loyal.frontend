@@ -1,6 +1,7 @@
 <template>
   <div class="column full-width gap-6 no-wrap">
-    <div v-if="!isOrder" class="row full-width justify-between">
+    <!--    {{item}}-->
+    <div v-if="item.sum != item.discountedTotalSumWithFee" class="row full-width justify-between">
       <div class="body bold">Сумма заказа</div>
       <div class="body bold">
         {{ beautifyNumber(item.sum || 0, true) }} ₽
@@ -40,7 +41,7 @@
       </div>
     </div>
     <div
-      v-if="item.fee && !isOrder"
+      v-if="item.fee"
       class="row full-width justify-between text-secondary"
     >
       <div class="body bold">Сервисный сбор</div>

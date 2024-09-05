@@ -42,6 +42,7 @@
               ? 'on-selector-active-color'
               : 'on-selector-color'
           "
+          class="ml-2 mb-1"
           :name="tab.iconRight"
           :size="tab.iconSize || '18px'"
         />
