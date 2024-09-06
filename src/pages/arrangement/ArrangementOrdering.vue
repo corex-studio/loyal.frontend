@@ -189,8 +189,8 @@
                       width="100%"
                       @update-tab="selectCurrentDayType($event)"
                     />
-                    <div class="mt-7 ml-3 text-secondary"
-                         v-if="timePickerIsHidden">Выберите
+                    <div v-if="timePickerIsHidden"
+                         class="mt-7 ml-3 text-secondary">Выберите
                       день
                     </div>
                     <div v-else
@@ -520,8 +520,8 @@
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
           :loading="loading"
           class="col-grow body"
-          @click="arrangeClickHandler()"
           label="Оформить"
+          @click="arrangeClickHandler()"
         />
       </div>
     </div>
@@ -806,7 +806,6 @@ const selectCurrentDayType = (v: string) => {
     availableHours.value = initialAvailableHours.value
   }
 }
-
 
 
 const selectClosestTime = async () => {

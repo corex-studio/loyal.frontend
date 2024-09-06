@@ -1,6 +1,5 @@
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
 import { companyRepo } from 'src/models/company/companyRepo'
-import { notifier } from 'src/services/notifier'
 
 export type DeliveryAddressRaw = {
   uuid?: string | undefined
