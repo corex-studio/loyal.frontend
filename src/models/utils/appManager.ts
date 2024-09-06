@@ -24,7 +24,7 @@ import {
   RouteLocationNormalizedLoaded,
   Router,
   useRoute,
-  useRouter,
+  useRouter
 } from 'vue-router'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
 import { Company } from 'src/models/company/company'
@@ -32,9 +32,10 @@ import { CityType } from 'src/models/companyGroup/companyGroup'
 import { cloneDeep } from 'lodash'
 import {
   RouterResolver,
-  RouterResolverFields,
+  RouterResolverFields
 } from 'src/models/utils/routerResolver'
 import { cityRouteParamKey, companyRouteParamKey } from 'src/router/mainRoutes'
+import { themeRepo } from 'src/models/theme/themeRepo'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -80,17 +81,18 @@ export class AppManager {
     }
     this.checkSelectedCompany(true)
 
-    new RouterResolver({
+    await new RouterResolver({
       ...this.routerResolverFields,
       route: this.route,
-      router: this.router,
+      router: this.router
     }).resolve()
 
     await Promise.all([
+      themeRepo.fetch(),
       uiSettingsRepo.fetchSettings(),
       appSettingsRepo.getLinksSettings(),
       authSettingsRepo.getAuthSettings(),
-      companyGroupRepo.getRequiredFieldsSettings(),
+      companyGroupRepo.getRequiredFieldsSettings()
     ]).then(() => {
       if (
         companyGroupRepo.item?.externalId === 'tochka_vkusa' &&
@@ -124,13 +126,18 @@ export class AppManager {
       void cartRepo.setParams({
         type: CartType.TABLE,
         pad: padRepo.item?.id,
-        sales_point: padRepo.item?.salesPoint?.id,
+        sales_point: padRepo.item?.salesPoint?.id
       })
       store.getCompanyGroup(String(companyGroupRepo.item?.externalId))
       if (padRepo.item)
         void padRepo.synchronizeOrdersForRestaurant(padRepo.item)
     } else if (authentication.user?.isAnonymous) {
       authentication.logout()
+    }
+    const localStorageCartCompany = LocalStorage.getItem('cartCompany')
+    if (localStorageCartCompany) {
+      const found = companyGroupRepo.item?.companies.find(v => String(v.id) === localStorageCartCompany)
+      if (found) companyRepo.cartCompany = found
     }
     if (this.config.initMenuPage) {
       await this.loadMenuPage()
@@ -141,10 +148,10 @@ export class AppManager {
     if (this.fictiveUrlStore.initialMenuItem) {
       store.openMenuItemModal()
       await menuItemRepo.retrieve(this.fictiveUrlStore.initialMenuItem, {
-        sales_point: salesPointRepo.item?.id,
+        sales_point: salesPointRepo.item?.id
       })
       await menuRulesForAddingRepo.list({
-        menu_item: menuItemRepo.item?.id,
+        menu_item: menuItemRepo.item?.id
       })
       this.fictiveUrlStore.initialMenuItem = null
     }
@@ -154,7 +161,7 @@ export class AppManager {
     if (this.fictiveUrlStore.initialMenuGroupItem) {
       const res =
         menuRepo.item?.groups?.find((v) =>
-          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem),
+          [v.id, v.alias].includes(this.fictiveUrlStore.initialMenuGroupItem)
         ) || null
       if (res) {
         this.fictiveUrlStore.setVisibleMenuGroup(res)
@@ -209,7 +216,7 @@ export class AppManager {
     let localStorageCityUpdated = false
     if (parseFromRoute && cityFromRoute) {
       const foundCity = cities.find(
-        (v) => v.alias === cityFromRoute || v.uuid === cityFromRoute,
+        (v) => v.alias === cityFromRoute || v.uuid === cityFromRoute
       )
       if (foundCity) {
         this.updateLocalStorageCity(foundCity)
@@ -222,7 +229,7 @@ export class AppManager {
     if (!localStorageCityUpdated) {
       const foundCity = cities.find(
         (v) =>
-          v.alias === localStorageCityAlias || v.uuid === localStorageCityId,
+          v.alias === localStorageCityAlias || v.uuid === localStorageCityId
       )
       if (foundCity) {
         this.updateLocalStorageCity(foundCity)
@@ -233,7 +240,7 @@ export class AppManager {
 
     if (!LocalStorage.getItem('cityAlias')) {
       this.updateLocalStorageCity(
-        companyGroupRepo.item?.cityData.current || cities[0],
+        companyGroupRepo.item?.cityData.current || cities[0]
       )
     }
 
@@ -253,7 +260,7 @@ export class AppManager {
     let localStorageCompanyUpdated = false
     if (parseFromRoute && companyFromRoute) {
       const foundCompany = companies.find(
-        (v) => v.alias === companyFromRoute || v.id === companyFromRoute,
+        (v) => v.alias === companyFromRoute || v.id === companyFromRoute
       )
       if (foundCompany) {
         this.updateLocalStorageCompany(foundCompany)
@@ -268,7 +275,7 @@ export class AppManager {
       const foundCompany = companies.find(
         (v) =>
           v.alias === localStorageCompanyAlias ||
-          v.id === localStorageCompanyId,
+          v.id === localStorageCompanyId
       )
       if (foundCompany) {
         this.updateLocalStorageCompany(foundCompany)
@@ -305,7 +312,8 @@ export class AppManager {
     try {
       await authentication.validateTokens()
       await authentication.me()
-    } catch {}
+    } catch {
+    }
   }
 
   async setDeviceMeta() {
@@ -319,7 +327,7 @@ export class AppManager {
       mac: window.navigator.userAgent,
       timezone: `${moment().format('Z')} ${
         Intl.DateTimeFormat().resolvedOptions().timeZone
-      }`,
+      }`
     })
   }
 
@@ -368,7 +376,7 @@ export class AppManager {
         type: NewsType.DEFAULT,
         city:
           localStorage.getItem('city') ||
-          companyGroupRepo.item?.cityData.current?.uuid,
+          companyGroupRepo.item?.cityData.current?.uuid
       })
       .then((res) => {
         newsRepo.news = res.items
@@ -380,7 +388,7 @@ export class AppManager {
         type: NewsType.PROMOTION,
         city:
           localStorage.getItem('city') ||
-          companyGroupRepo.item?.cityData.current?.uuid,
+          companyGroupRepo.item?.cityData.current?.uuid
       })
       .then((res) => {
         newsRepo.promotions = res.items
@@ -399,7 +407,7 @@ export class AppManager {
     const companyId = LocalStorage.getItem('cartCompany') || null
     if (!companyId) return null
     const found = companyGroupRepo.item?.companies.find(
-      (v) => v.id === companyId && v.salesPoints?.length,
+      (v) => v.id === companyId && v.salesPoints?.length
     )
     this.getCompanyFromLocalStorageCache = found || null
     return this.getCompanyFromLocalStorageCache
@@ -427,10 +435,10 @@ export class AppManager {
           sales_point: store.qrData.data?.salesPoint?.id,
           type: CartType.TABLE,
           pad: store.qrData.data?.pad?.id,
-          comment: cartRepo.item?.comment || undefined,
+          comment: cartRepo.item?.comment || undefined
         })
       }
-      await cartRepo.current(undefined, store.qrData?.data?.pad?.id)
+      await cartRepo.current(undefined, store.qrData?.data?.pad?.id, companyRepo.item?.id)
     } else {
       cartRepo.item = null
     }

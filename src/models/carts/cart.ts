@@ -40,6 +40,12 @@ export type WalletPaymentRaw = {
   wallet: WalletRaw
 }
 
+export type ComputedFinallySumRaw = {
+  finally_sum: number
+  discounted_total_sum: number
+  fee: number
+}
+
 export type AvailableHours = {
   today: [
     {
@@ -119,6 +125,7 @@ export type CartRaw = {
   closest_time_text?: string | null
   use_bonuses?: boolean
   total_discount_without_bonuses?: number
+  closest_date?: string | null
 }
 
 export class Cart implements BaseModel {
@@ -166,6 +173,8 @@ export class Cart implements BaseModel {
   calculationStatus: CalculationStatus
   useBonuses: boolean
   totalDiscountWithoutBonuses: number | undefined
+  closestDate: string | null
+  fee?: number
 
   constructor(raw: CartRaw) {
     this.id = raw.uuid
@@ -183,6 +192,12 @@ export class Cart implements BaseModel {
     this.deliveryTime = raw.delivery_time
       ? moment
         .utc(raw.delivery_time, 'YYYY-MM-DD HH:mm:ss')
+        .local()
+        .format('DD.MM.YYYY HH:mm')
+      : null
+    this.closestDate = raw.closest_date
+      ? moment
+        .utc(raw.closest_date, 'YYYY-MM-DD HH:mm:ss')
         .local()
         .format('DD.MM.YYYY HH:mm')
       : null
@@ -219,6 +234,10 @@ export class Cart implements BaseModel {
       payment: raw.user_errors.payment || null,
       time: raw.user_errors.time || null
     } : null
+  }
+
+  get discountedTotalSumWithFee() {
+    return this.discountedTotalSum + (this.fee || 0)
   }
 
   get cartItemsQuantitySum() {

@@ -57,30 +57,41 @@
       </div>
       <div>
         <h6 class="my-0 bold">Документы:</h6>
-        <div class="col no-wrap items-center gap-5 mt-10">
+        <div class="col no-wrap items-center gap-5 mt-8">
           <div>
             <a
               :href="linkToPolicy"
               class="my-0"
               style="font-size: 14px"
               target="_blank"
-              >Политика в отношении обработки персональных данных</a
+            >Политика в отношении обработки персональных данных
+              <CIconButton circle class="cursor-pointer" hover-icon-color="primary"
+                           icon="fa-regular fa-arrow-up-right" size="30px" />
+            </a
             >
+
           </div>
-          <div class="mt-8">
+          <div class="mt-6">
             <a
               :href="linkToTermsOfUse"
               class="mt-8"
               style="font-size: 14px"
               target="_blank"
-              >Пользовательское соглашение</a
+            >Пользовательское соглашение
+              <CIconButton circle class="cursor-pointer" hover-icon-color="primary"
+                           icon="fa-regular fa-arrow-up-right" size="30px" />
+            </a
             >
+          </div>
+          <div class="mt-6">
             <a
               :href="linkToOffer"
-              class="mt-8"
               style="font-size: 14px"
               target="_blank"
-              >Публичная оферта</a
+            >Публичная оферта
+              <CIconButton circle class="cursor-pointer" hover-icon-color="primary"
+                           icon="fa-regular fa-arrow-up-right" size="30px" />
+            </a
             >
           </div>
         </div>
@@ -184,8 +195,8 @@
         </div>
         <div
           v-if="!loading"
-          class="row full-width"
           :key="$company.companyForProfile?.id"
+          class="row full-width"
         >
           <ProfileAddressesOnMap class="full-width">
             <template v-slot:title>
@@ -198,14 +209,14 @@
                   "
                 >
                   <CButton
-                    class="body"
                     :label="$company.companyForProfile?.name || undefined"
-                    text-button
-                    icon-right="fal fa-chevron-down"
-                    @click="selectCompanyModalModelValue = true"
-                    text-color="on-background-color"
-                    icon-color="on-background-color"
+                    class="body"
                     hover-text-color="primary"
+                    icon-color="on-background-color"
+                    icon-right="fal fa-chevron-down"
+                    text-button
+                    text-color="on-background-color"
+                    @click="selectCompanyModalModelValue = true"
                   />
                 </div>
               </div>
@@ -221,8 +232,8 @@
   <SelectCompanyModal
     v-model="selectCompanyModalModelValue"
     :selected-company="$company.companyForProfile || undefined"
-    @select="$company.companyForProfile = $event"
     close-on-select
+    @select="$company.companyForProfile = $event"
   />
 </template>
 <script lang="ts" setup>
@@ -238,6 +249,7 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import SelectCompanyModal from 'components/dialogs/SelectCompanyModal.vue'
 import CButton from 'components/template/buttons/CButton.vue'
 import PrepareUiSettings from 'components/template/PrepareUiSettings.vue'
+import CIconButton from 'components/template/buttons/CIconButton.vue'
 
 const info = ref<TermsOfServiceInfo | null>(null)
 const loading = ref(false)
@@ -246,25 +258,25 @@ const selectCompanyModalModelValue = ref(false)
 
 const linkToPolicy = computed(() => {
   return `https://${window.location.host}/${String(
-    route.params.externalId,
+    route.params.externalId
   )}/policy`
 })
 
 const linkToTermsOfUse = computed(() => {
   return `https://${window.location.host}/${String(
-    route.params.externalId,
+    route.params.externalId
   )}/terms_of_use`
 })
 
 const linkToOffer = computed(() => {
   return `https://${window.location.host}/${String(
-    route.params.externalId,
+    route.params.externalId
   )}/offer`
 })
 
 const getLegalEntity = (v: SalesPointRaw) => {
   return info.value?.legal_entities.find((val) =>
-    val.sales_points.map((el) => el.uuid).includes(v.uuid),
+    val.sales_points.map((el) => el.uuid).includes(v.uuid)
   )
 }
 
@@ -272,7 +284,7 @@ onMounted(async () => {
   if (!route.params.externalId) return
   loading.value = true
   await new AppManager({
-    companyGroupId: String(route.params.externalId),
+    companyGroupId: String(route.params.externalId)
   }).initApp()
   companyRepo.companyForProfile = companyRepo.item
   if (
@@ -282,7 +294,7 @@ onMounted(async () => {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
   info.value = await companyGroupRepo.getTermsOfServiceInfo(
-    String(route.params.externalId),
+    String(route.params.externalId)
   )
 
   loading.value = false

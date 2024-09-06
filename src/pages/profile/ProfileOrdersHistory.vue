@@ -1,5 +1,4 @@
 <template>
-
   <div
     :style="`max-width: ${$q.screen.lt.lg ? '' : '628px'}`"
     class="column full-width text-on-background-color"
@@ -62,7 +61,7 @@ import Pagination from 'src/components/inputs/Pagination.vue'
 import ProfileOrderRow from './ProfileOrderRow.vue'
 import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { authentication } from 'src/models/authentication/authentication'
-import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo';
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 type OrderType = 'all' | 'pickup' | 'delivery' | 'booking'
 
@@ -75,24 +74,24 @@ const orderTypes = computed(() => {
     val: OrderType
   }[] = [{
     label: 'Все',
-    val: 'all',
-  },]
+    val: 'all'
+  }]
   if (companiesSalesPoints.value?.some(v => v?.settings.pickup_enabled)) {
     res.push({
       label: 'Самовывоз',
-      val: 'pickup',
+      val: 'pickup'
     })
   }
   if (companiesSalesPoints.value?.some(v => v?.settings.delivery_enabled)) {
     res.push({
       label: 'Доставка',
-      val: 'delivery',
+      val: 'delivery'
     })
   }
   if (companiesSalesPoints.value?.some(v => v?.settings.booking_enabled)) {
     res.push({
       label: 'Бронь',
-      val: 'booking',
+      val: 'booking'
     })
   }
   return res
@@ -110,13 +109,13 @@ const setPage = async (page = 1, appendItems = false) => {
 const loadOrders = async (page = 1, appendItems = false) => {
   await orderRepo.list(
     {
-      type: currentType.value === 'all' ? undefined : currentType.value,
+      type: currentType.value === 'all' ? undefined : currentType.value
     },
     {
       page: page ? page : orderRepo.pagination.page,
       appendItems: appendItems,
-      pageSize: 10,
-    },
+      pageSize: 10
+    }
   )
 }
 

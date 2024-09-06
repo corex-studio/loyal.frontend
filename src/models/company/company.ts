@@ -35,6 +35,7 @@ export type GuestContactRaw = {
     link_type: string | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   phones: {
     value?: string
@@ -43,6 +44,7 @@ export type GuestContactRaw = {
     link_type: string | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   emails: {
     value?: string
@@ -51,6 +53,7 @@ export type GuestContactRaw = {
     link_type: string | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   socials: {
     value?: string
@@ -59,6 +62,7 @@ export type GuestContactRaw = {
     link_type: LinkType
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   others: {
     value?: string
@@ -66,6 +70,7 @@ export type GuestContactRaw = {
     link: string
     link_type: LinkType | null
     foreground: boolean
+    color: string | null
   }[]
 }
 
@@ -116,6 +121,7 @@ export class GuestContact {
     link_type: string | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   phones: {
     value?: string
@@ -124,6 +130,7 @@ export class GuestContact {
     link_type: string | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   emails: {
     value?: string
@@ -132,6 +139,7 @@ export class GuestContact {
     link_type: string | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   socials: {
     value?: string
@@ -140,6 +148,7 @@ export class GuestContact {
     link_type: LinkType | null
     foreground: boolean
     image: string | null
+    color: string | null
   }[]
   others: {
     value?: string
@@ -147,6 +156,7 @@ export class GuestContact {
     link: string
     link_type: LinkType | null
     foreground: boolean
+    color: string | null
   }[]
 
   constructor(raw: GuestContactRaw) {
@@ -200,7 +210,7 @@ export class GuestContact {
           foreground: v.foreground,
           image: v.image
         }
-      }),
+      })
     }
   }
 }
@@ -264,19 +274,19 @@ export class Company implements BaseModel {
       created_at: '',
       show_items_with_no_image: false,
       updated_at: '',
-      uuid: '',
+      uuid: ''
     }
     this.paymentSettings = raw.payment_settings || null
     this.contacts = raw.contacts
       ? raw.contacts
       : {
-          uuid: undefined,
-          active: false,
-          emails: [],
-          contact_phone: null,
-          created_at: '',
-          updated_at: '',
-        }
+        uuid: undefined,
+        active: false,
+        emails: [],
+        contact_phone: null,
+        created_at: '',
+        updated_at: ''
+      }
     this.description = raw.description || ''
     this.conditions = raw.conditions
     this.createdAt = raw.created_at
@@ -288,8 +298,8 @@ export class Company implements BaseModel {
         messages: [],
         phones: [],
         socials: [],
-        others: [],
-      },
+        others: []
+      }
     )
     this.deliveryAggregators = raw.delivery_aggregators || []
   }
@@ -307,7 +317,7 @@ export class Company implements BaseModel {
       images: this.images,
       description: this.description || undefined,
       settings: { ...this.settings, uuid: undefined },
-      contacts: { ...this.contacts, uuid: undefined },
+      contacts: { ...this.contacts, uuid: undefined }
     }
   }
 }

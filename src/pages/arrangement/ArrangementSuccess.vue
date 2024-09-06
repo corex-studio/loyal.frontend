@@ -57,8 +57,9 @@
           <!-- ЗАКАЗ НЕ ОПЛАЧЕН -->
           <OrderNotPaid
             v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
-            :show-retry="!!$route.query.paymentUrl && !$cart.item"
-            @retry="paymentModal = true"
+            :retry-loading="retryLoading"
+            :show-retry="!$cart.item"
+            @retry="retryClickHandler()"
           />
           <!-- ЗАКАЗ ОТМЕНЕН -->
           <OrderCancelled
@@ -67,7 +68,7 @@
           <!-- ЗАКАЗ ПРИНЯТ -->
           <div
             v-else
-            :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+            :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
             class="pa-10 column items-center full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
           >
             <div class="header3 bold mb-2">
@@ -90,7 +91,7 @@
     </div>
     <div
       :style="`border: 1px #${
-        $uiSettings.item?.secondaryColor.color
+        $uiSettings.item?.dividerColor.color
       } solid; max-width: ${$q.screen.gt.md ? '550px' : ''} `"
       class="column full-width mt-md-12 mt-xs-8 mb-lg-20 mb-xs-8 mb-md-12 no-wrap gap-4 pa-10 border-radius box-shadow"
     >
@@ -107,7 +108,7 @@
     </div>
     <div :style="$q.screen.lt.lg ? '' : 'max-width: 550px'" class="full-width">
       <div
-        :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+        :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
         class="col border-radius box-shadow pa-md-10 pa-xs-8 column"
         style="height: fit-content"
       >
@@ -123,9 +124,10 @@
             <div class="row gap-6 no-wrap items-center">
               <q-img
                 :src="el.size.image?.thumbnail || $store.images.empty"
+                class="border-radius2"
                 fit="contain"
                 height="65px"
-                style="min-width: 65px;"
+                style="min-width: 65px"
                 width="65px"
               >
                 <template v-slot:error>
@@ -134,7 +136,7 @@
                       :src="$store.images.empty"
                       fit="cover"
                       height="65px"
-                      style="min-width: 65px;"
+                      style="min-width: 65px"
                       width="65px"
                     ></q-img> </span
                   ></template>
@@ -173,34 +175,7 @@
             </div>
           </div>
           <q-separator color="divider-color" />
-          <div class="row full-width justify-between items-center gap-6 body">
-            <div class="bold">Сумма заказа</div>
-            <div class="bold">
-              {{ beautifyNumber($order.item.totalSum, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$order.item?.type === CartType.DELIVERY"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Стоимость доставки</div>
-            <div class="body bold">
-              {{ beautifyNumber($order.item?.deliveryPrice, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$order.item.appliedBonuses"
-            class="row full-width justify-between items-center gap-6 body text-primary"
-          >
-            <div class="bold">Списано баллов</div>
-            <div class="bold">-{{ $order.item.appliedBonuses }} ₽</div>
-          </div>
-          <div class="row full-width justify-between items-center gap-6 body">
-            <div class="bold">К оплате</div>
-            <div class="bold">
-              {{ beautifyNumber($order.item.discountedTotalSum, true) }} ₽
-            </div>
-          </div>
+          <OrderTotalInfo :item="$order.item" />
         </div>
       </div>
     </div>
@@ -218,33 +193,25 @@
         })
       "
     />
-    <!-- <div
-      v-if="
-        $route.query.paymentUrl &&
-        !$cart.item &&
-        $order.item?.paymentStatus !== PaymentStatusType.FULL_PAID
-      "
-      class="mt-10 full-width"
-    >
-      <CButton
-        label="Открыть окно для оплаты заказа"
-        :style="$q.screen.lt.lg ? '' : 'max-width: 305px'"
-        width="100%"
-        class="body"
-        @click="paymentModal = true"
-      />
-    </div> -->
   </div>
-
   <OrderPaymentModal
     :model-value="paymentModal"
     :payment-url="paymentUrl"
     @update:model-value="paymentModalCloseHandler()"
   />
+  <SelectPaymentTypeModal v-model="selectPaymentTypeModal" :current-type="$cart.selectedPaymentType"
+                          :types="$salesPoint.paymentTypes"
+                          @select="changePaymentType($event)" />
 </template>
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
-import { orderStatusTypeNames, OrderStatusType } from 'src/models/order/order'
+import {
+  orderStatusTypeNames,
+  OrderStatusType,
+  PaymentObjectType,
+  OrderPaymentService,
+  PaymentType, OrderSystemSource
+} from 'src/models/order/order'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import OrderStepper from './OrderStepper.vue'
@@ -259,17 +226,21 @@ import OrderPaymentModal from 'components/OrderPaymentModal.vue'
 import OrderNotPaid from './OrderNotPaid.vue'
 import OrderCancelled from './OrderCancelled.vue'
 import OrderPaymentTimer from './OrderPaymentTimer.vue'
+import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
+import { notifier } from 'src/services/notifier'
+import OrderTotalInfo from 'pages/arrangement/OrderTotalInfo.vue'
 
 const route = useRoute()
-
 const router = useRouter()
-
 const paymentUrl = ref<string | null>(null)
 const paymentModal = ref(false)
-
 const showPaymentTimer = ref(false)
-
+const selectPaymentTypeModal = ref(false)
 let interval: NodeJS.Timeout | null = null
+const retryLoading = ref(false)
+
 const checkOnPaymentUrlInPath = () => {
   if (!orderRepo.item && !interval) {
     interval = setInterval(() => checkOnPaymentUrlInPath(), 100)
@@ -290,6 +261,45 @@ const checkOnPaymentUrlInPath = () => {
   }
 }
 
+const retryClickHandler = () => {
+  if (salesPointRepo.paymentTypes.length > 1) {
+    selectPaymentTypeModal.value = true
+  } else {
+    paymentModal.value = true
+  }
+}
+
+const changePaymentType = async (type: PaymentObjectType) => {
+  try {
+    retryLoading.value = true
+    if (!orderRepo.item) throw new Error('Order object is null')
+    cartRepo.selectedPaymentType = type
+    let paymentService: OrderPaymentService | undefined = undefined
+    if (type.type === PaymentType.CARD) {
+      paymentService = OrderPaymentService.CARD
+    } else if (type.type === PaymentType.ONLINE || type.type === PaymentType.NET_MONET) {
+      paymentService = OrderPaymentService.WEB_FORM
+    }
+    const result = await orderRepo.applyPayments(orderRepo.item, {
+      payment_service: paymentService,
+      payment_type: type.type,
+      system_source: OrderSystemSource.WEBSITE
+    })
+    void router.replace({
+      name: 'successOrderPage',
+      params: {
+        orderId: result.id
+      },
+      query: result.paymentUrl ? { paymentUrl: result.paymentUrl } : undefined
+    })
+    orderRepo.item = result
+  } catch {
+    notifier.error('Ошибка при изменении типа оплаты')
+  } finally {
+    retryLoading.value = false
+  }
+}
+
 const clearBeforeRouterResolve = router.afterEach(() => {
   checkOnPaymentUrlInPath()
 })
@@ -303,6 +313,13 @@ const paymentModalCloseHandler = () => {
   showPaymentTimer.value = true
 }
 
+const preloadOrder = async () => {
+  if (!orderRepo.item) {
+    await orderRepo.retrieve(String(route.params.orderId))
+  }
+  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
+}
+
 onMounted(() => {
   checkOnPaymentUrlInPath()
   useEventBus(orderUpdatedKey).on(({ order }) => {
@@ -311,9 +328,7 @@ onMounted(() => {
       paymentModal.value = false
     }
   })
-  if (!orderRepo.item) {
-    void orderRepo.retrieve(String(route.params.orderId))
-  }
+  void preloadOrder()
 })
 </script>
 

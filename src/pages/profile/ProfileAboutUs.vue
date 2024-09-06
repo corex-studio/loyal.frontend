@@ -142,7 +142,10 @@
       </div>
     </div>
     <div
-      v-if="$companyGroup.item?.externalId !== 'tochka_vkusa' && $companyGroup.item?.externalId !== 'ThreePizzas'"
+      v-if="
+        $companyGroup.item?.externalId !== 'tochka_vkusa' &&
+        $companyGroup.item?.externalId !== 'ThreePizzas'
+      "
       class="c-container"
     >
       <div
@@ -150,7 +153,6 @@
         :style="$q.screen.lt.md ? '' : 'overflow-x: auto'"
         class="row full-width gap-lg-16 gap-md-10 gap-xs-6 items-center pb-2 no-scrollbar mt-lg-20 mt-md-15 mt-xs-10 mb-lg-29 mb-md-25 mb-xs-10"
       >
-
         <div
           v-for="(el, index) in features"
           :key="index"
@@ -182,7 +184,8 @@
     <div
       :class="{
         'mt-lg-29 mt-md-25 mt-xs-10':
-          $companyGroup.item?.externalId === 'tochka_vkusa' || $companyGroup.item?.externalId === 'ThreePizzas',
+          $companyGroup.item?.externalId === 'tochka_vkusa' ||
+          $companyGroup.item?.externalId === 'ThreePizzas',
       }"
       class="bg-backing-color full-width py-lg-30 pt-xs-15 pb-md-11"
     >
@@ -196,7 +199,11 @@
             class="column gap-md-9 gap-xs-6"
           >
             <div class="huge bold">{{ company.name }}</div>
-            <div class="header3" style="white-space: pre-line" v-html="company.description" />
+            <div
+              class="header3"
+              style="white-space: pre-line"
+              v-html="company.description"
+            />
           </div>
           <div
             v-if="$q.screen.gt.sm"
@@ -210,7 +217,7 @@
                 $company.item?.image?.image ||
                 $store.images.empty
               "
-              class="border-radius"
+              class="border-radius no-download"
               fit="contain"
               height="100%"
             />
@@ -269,8 +276,7 @@
                 </template>
               </q-img>
             </div>
-          </template
-          >
+          </template>
         </SwiperContainer>
       </div>
     </div>
@@ -282,6 +288,7 @@
         "
         :src="$uiSettings.item?.socialButtonImage?.image"
         class="border-radius cursor-pointer mt-lg-60 mt-md-25 mt-xs-15"
+        @contextmenu.prevent
         fit="cover"
         width="100%"
         @click="socialsModal = true"
@@ -310,7 +317,7 @@
                   :key="index"
                   :href="el.link"
                   class="subtitle-text text-on-background-color"
-                >{{ el.value }}</a
+                  >{{ el.value }}</a
                 >
               </template>
               <template v-else>
@@ -336,9 +343,11 @@
         </div>
       </div>
     </div>
-    <div v-if="company.conditions !== undefined && !!company.conditions?.length"
-         id="conditions"
-         class="c-container column gap-10  mt-lg-30 mt-md-25 mt-xs-15">
+    <div
+      v-if="company.conditions !== undefined && !!company.conditions?.length"
+      id="conditions"
+      class="c-container column gap-10 mt-lg-30 mt-md-25 mt-xs-15"
+    >
       <div class="huge3 bold">Условия</div>
       <div style="white-space: pre-line" v-html="company.conditions"></div>
     </div>
@@ -390,14 +399,14 @@ const router = useRouter()
 const days = Object.keys(daysNames).map((key) => {
   return {
     label: daysNames[Number(key) as keyof typeof daysNames],
-    val: Number(key)
+    val: Number(key),
   }
 })
 
 const currentSchedule = computed(() => {
   if (!company.value?.salesPoints) return
   return company.value?.salesPoints[0].schedule?.days.find(
-    (el) => el.day === moment().day()
+    (el) => el.day === moment().day(),
   )
 })
 
@@ -416,14 +425,14 @@ const features = computed(() => {
       icon: 'fa-regular fa-badge-percent',
       click: () => {
         void router.push({
-          name: 'home'
+          name: 'home',
         })
-      }
-    }
+      },
+    },
   ]
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.delivery_enabled
+      (v) => v.settings.delivery_enabled,
     )
   ) {
     result.push({
@@ -431,30 +440,32 @@ const features = computed(() => {
       text: 'Заказа',
       icon: 'fa-regular fa-truck',
       click: () => {
-        companyRepo.companyForProfile?.conditions?.length ? scrollToBlock('conditions') : void 0
-      }
+        companyRepo.companyForProfile?.conditions?.length
+          ? scrollToBlock('conditions')
+          : void 0
+      },
     })
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.pickup_enabled
+      (v) => v.settings.pickup_enabled,
     )
   ) {
     result.push({
       title: 'Самовывоз',
       text: 'Заказа',
-      icon: 'fa-regular fa-person-carry-box'
+      icon: 'fa-regular fa-person-carry-box',
     })
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.booking_enabled
+      (v) => v.settings.booking_enabled,
     )
   ) {
     result.push({
       title: 'Бронирование',
       text: 'Стола',
-      icon: 'fa-regular fa-table-picnic'
+      icon: 'fa-regular fa-table-picnic',
     })
   }
   return result
@@ -479,7 +490,7 @@ const contacts = computed(() => {
       label: 'Позвонить нам',
       image: 'contactsPhoneImage.png',
       field: 'phones',
-      values: company.value?.guestContacts.phones
+      values: company.value?.guestContacts.phones,
     })
   }
   if (company.value?.guestContacts.messages.length) {
@@ -487,7 +498,7 @@ const contacts = computed(() => {
       label: 'Написать',
       image: 'contactsMessageImage.png',
       field: 'messages',
-      values: company.value?.guestContacts.messages
+      values: company.value?.guestContacts.messages,
     })
   }
   company.value?.guestContacts.emails.forEach((v) => {
@@ -495,7 +506,7 @@ const contacts = computed(() => {
       label: v.name || '-',
       image: 'contactsFaceImage.png',
       field: 'emails',
-      values: [v]
+      values: [v],
     })
   })
   return result
@@ -522,7 +533,7 @@ onMounted(() => {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
   useEventBus(selectCompanyKey).on(
-    (e) => (companyRepo.companyForProfile = e.company)
+    (e) => (companyRepo.companyForProfile = e.company),
   )
 })
 

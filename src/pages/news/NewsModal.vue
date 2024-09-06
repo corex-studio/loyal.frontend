@@ -1,47 +1,33 @@
 <template>
-  <CDialog
+  <CAdaptiveModal
+    :initial-mobile-height="'500px'"
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
-    width="650px"
     height="600px"
-    no-padding
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    :maximize="$q.screen.lt.md"
-    :hide-close="$q.screen.lt.md"
+    width="650px"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
-    <div
-      v-if="$q.screen.lt.md"
-      @click="$emit('update:modelValue', false)"
-      class="close-button row box-shadow items-center justify-center cursor-pointer"
-    >
-      <CIcon
-        color="on-background-color"
-        hover-color="primary"
-        class="mt-1"
-        name="fa-regular fa-angle-down"
-        size="24px"
-      />
-    </div>
     <q-img
       :src="
         $promotion.item
           ? $promotion.item.image?.image || $store.images.empty
           : $news.item?.image?.image || $store.images.empty
       "
-      style="max-height: 400px"
       fit="cover"
+      class="no-download"
+      :style="`border-radius: ${getBorderRadius}`"
+      style="max-height: 400px"
     >
       <template v-slot:error>
         <q-img
-          :style="`border-radius: ${getBorderRadius}`"
           :src="$store.images.empty"
+          :style="`border-radius: ${getBorderRadius}`"
           fit="cover"
           height="300px"
         />
       </template>
     </q-img>
     <div
-      class="column no-wrap col-grow justify-between gap-6 full-width bg-background-color text-on-background-color pa-15 relative-position"
+      class="column no-wrap col-grow justify-between gap-6 full-width bg-background-color text-on-background-color pa-lg-15 pa-xs-10 relative-position"
     >
       <div class="column full-width gap-6 pb-15">
         <div class="header3 bold">
@@ -53,15 +39,14 @@
         <div v-else v-html="$news.item?.fullDescription"></div>
       </div>
     </div>
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { computed, watch } from 'vue'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 import { useRoute, useRouter } from 'vue-router'
+import CAdaptiveModal from 'components/dialogs/CAdaptiveModal.vue'
 
 const props = defineProps<{
   modelValue: boolean
@@ -83,9 +68,7 @@ watch(
   () => props.modelValue,
   async () => {
     if (!props.modelValue) {
-      if (
-        String(route.name) === 'home__withNews'
-      ) {
+      if (String(route.name) === 'home__withNews') {
         await router.push({ name: 'home' })
       }
       fictiveUrlStore.setFictiveCategoryUrl()

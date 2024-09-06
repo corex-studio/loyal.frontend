@@ -26,6 +26,8 @@ export class CompanyRepo extends BaseRepo<Company> {
       LocalStorage.remove('cartCompany')
       LocalStorage.remove('cartCompanyAlias')
     }
+    this.companyForProfile = v
+    this.item = v
     this._cartCompany = v
   }
 

@@ -49,13 +49,14 @@
     >
       <q-img
         :src="$uiSettings.item?.loyaltyCardImage?.thumbnail"
-        class="absolute border-radius"
+        class="absolute border-radius no-download"
         fit="cover"
         position="left"
         style="z-index: 0; width: 100%; height: 100%; top: 0; left: 0"
       />
       <q-img
         fit="contain"
+        class="no-download"
         :src="$uiSettings.item?.loyaltyCardLogo?.thumbnail"
         style="max-height: 130px"
       />
@@ -74,6 +75,7 @@
         <img
           width="130"
           height="130"
+          class="no-download"
           style="min-width: 130px"
           :src="qrCode"
           alt="QR Code"

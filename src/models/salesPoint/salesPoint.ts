@@ -44,6 +44,11 @@ export type SalesPointSettings = {
   promo_codes: PromoCodeMode
   allow_set_guest_count: boolean
   allow_pickup_orders_inside: boolean
+  delivery_date_picker?: {
+    end_offset: number
+    must_be_confirmed_if_more_then_hours: number
+    start_offset: number
+  } | null
 }
 
 export type AvailablePaymentType = {

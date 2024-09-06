@@ -123,20 +123,15 @@
             <template v-if="$q.screen.gt.md">
               <div
                 class="column full-height justify-between cursor-pointer items-center no-wrap relative-position"
-                @click="
-                  $cart.loading
-                    ? void 0
-                    : $store.openCartDrawer()
-                "
+                @click="$cart.loading ? void 0 : $store.openCartDrawer()"
               >
                 <template v-if="!$cart.loading">
                   <q-badge
                     v-if="$cart.item?.cartItemsQuantitySum"
                     class="cart-badge row justify-center"
                     color="primary"
-                  >{{ $cart.item?.cartItemsQuantitySum }}
-                  </q-badge
-                  >
+                    >{{ $cart.item?.cartItemsQuantitySum }}
+                  </q-badge>
                   <CIcon
                     color="on-background-color"
                     name="fa-regular fa-basket-shopping"
@@ -156,9 +151,8 @@
                   v-if="previewBalance"
                   class="balance-badge row justify-center"
                   color="primary"
-                >{{ previewBalance }}
-                </q-badge
-                >
+                  >{{ previewBalance }}
+                </q-badge>
                 <CIcon
                   color="on-background-color"
                   name="fa-regular fa-gift"

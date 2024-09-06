@@ -2,6 +2,7 @@
   <div
     :class="{ col: $q.screen.lt.md }"
     :style="$q.screen.gt.sm ? 'width: 53%; height: inherit' : 'width: 100%'"
+    ref="mapParentRef"
   >
     <div
       id="map"
@@ -14,7 +15,7 @@
 <script lang="ts" setup>
 import { CorexLeafletMap } from 'src/models/corexLeafletMap/corexLeafletMap'
 import L, { Layer } from 'leaflet'
-import { computed, onMounted, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { companyRepo } from 'src/models/company/companyRepo'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { SalesPoint } from 'src/models/salesPoint/salesPoint'
@@ -28,6 +29,8 @@ const props = defineProps<{
 
 const emit = defineEmits(['select'])
 
+const mapParentRef = ref<HTMLDivElement | null>(null)
+const resizeObserver = ref<ResizeObserver | null>(null)
 let map: CorexLeafletMap
 const drawnItems = new L.FeatureGroup()
 const q = useQuasar()
@@ -60,7 +63,7 @@ watch(
 
 const getBorderRadius = computed(() => {
   return q.screen.lt.md
-    ? 'unsert'
+    ? `${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0 0`
     : `0px ${uiSettingsRepo.item?.borderRadius}px ${uiSettingsRepo.item?.borderRadius}px 0`
 })
 
@@ -117,6 +120,8 @@ const initDraw = () => {
   })
 }
 
+// let timeout: NodeJS.Timeout | null = null
+
 onMounted(() => {
   setTimeout(() => {
     map = new CorexLeafletMap()
@@ -126,6 +131,17 @@ onMounted(() => {
     map.lmap.addControl(initDraw())
     map.lmap.invalidateSize()
   }, 200)
+
+  resizeObserver.value = new ResizeObserver(() => {
+    // if (timeout) clearTimeout(timeout)
+    // timeout = setTimeout(() => {
+    map?.lmap.invalidateSize()
+    // }, 10)
+  })
+
+  if (mapParentRef.value) {
+    resizeObserver.value.observe(mapParentRef.value)
+  }
 })
 </script>
 

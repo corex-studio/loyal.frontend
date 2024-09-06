@@ -1,15 +1,10 @@
 <template>
-  <CDialog
-    :height="$q.screen.gt.md ? '600px' : undefined"
-    :hide-close="$q.screen.lt.md"
-    :maximize="$q.screen.lt.xl"
+  <CAdaptiveModal
+    :height-percent="'100%'"
+    :initial-mobile-height="'80%'"
     :model-value="modelValue"
-    :no-overflow="$q.screen.gt.md"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
     :width="$q.screen.gt.md ? '1150px' : '500px'"
-    dialog-class="no-scrollbar"
-    height-percent="100%"
-    no-padding
+    height="600px"
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <div
@@ -18,33 +13,49 @@
       itemscope
       itemtype="https://schema.org/Product"
     >
-      <div
-        v-if="$q.screen.lt.md"
-        class="close-button row box-shadow items-center justify-center cursor-pointer"
-        @click="$emit('update:modelValue', false)"
-      >
-        <CIcon
-          class="mt-1"
-          color="on-background-color"
-          hover-color="primary"
-          name="fa-regular fa-angle-down"
-          size="24px"
-        />
-      </div>
-      <img
-        :ratio="1"
-        :src="currentImage"
-        :style="`border-radius: ${getImageBorderRadius}; max-width: ${
+      <SwiperContainer
+        v-if="$menuItem.item && $menuItem.item.images.length > 1"
+        :initial-slide="0"
+        :items="$menuItem.item.images"
+        :slides-per-view="1"
+        :space-between="0"
+        :style="`max-width: ${
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
         }; min-width: ${
           $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
-        }; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}; height: ${$q.screen.lt.lg ? '450px' : '100%'}`"
-        class="col"
+        }; overflow: hidden; height: ${$q.screen.lt.lg ? '' : '100%'};border-radius: ${$q.screen.lt.md ? getImageBorderRadius : 'unset'} `"
+        loop
+      >
+        <template v-slot:item="{ item } : { item : Image }">
+          <img
+            :ratio="1"
+            :src="getCurrentImage(item)"
+            :style="`; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}; height: ${$q.screen.lt.lg ? '' : '100%'};max-width: ${
+          $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
+        }; min-width: ${
+          $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
+        };`"
+            class="col no-download"
+            fit="cover"
+            itemprop="image"
+            style="width: 100%"
+          />
+        </template>
+      </SwiperContainer>
+      <img
+        v-else-if="$menuItem.item"
+        :ratio="1"
+        :src="getCurrentImage($menuItem.item.image)"
+        :style="`border-radius: ${getImageBorderRadius}; max-width: ${
+                      $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
+                    }; min-width: ${
+                      $q.screen.gt.md ? '600px' : $q.screen.md ? '500px' : undefined
+                    }; margin-bottom: ${$q.screen.lt.md ? '-20px' : 'unset'}; height: ${$q.screen.lt.lg ? '450px' : '100%'}`"
+        class="col no-download"
         fit="cover"
         itemprop="image"
         style="width: 100%"
       />
-
       <div
         v-if="!$menuItem.loadings.retrieve"
         :style="`border-radius: ${
@@ -63,8 +74,7 @@
             itemprop="weight"
             style="opacity: 0.5"
           >
-            {{
-              currentWeight
+            {{ currentWeight
             }}{{
               currentSize.characteristics.unit
                 ? unitTypeNamesShort[currentSize.characteristics.unit]
@@ -79,9 +89,12 @@
           >
             {{ $menuItem.item?.description }}
           </div>
-
-          <MenuItemCharacteristics v-if="currentSize && $companyGroup.item?.externalId !== 'tochka_vkusa'"
-                                   :size="currentSize" />
+          <MenuItemCharacteristics
+            v-if="
+              currentSize && $companyGroup.item?.externalId !== 'tochka_vkusa'
+            "
+            :size="currentSize"
+          />
           <MenuItemRelatedItems
             v-if="
               $cart.item &&
@@ -159,23 +172,32 @@
                   </div>
                 </div>
                 <template v-if="$q.screen.lt.md">
-                  <q-menu v-if="$menuItem.item?.isDead" v-model="isDeadErr" class="pa-3 secondary-text">
+                  <q-menu
+                    v-if="$menuItem.item?.isDead"
+                    v-model="isDeadErr"
+                    class="pa-3 secondary-text"
+                  >
                     {{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
                   </q-menu>
-                  <q-menu v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem" v-model="isNotInMenuErr"
-                          class="pa-3 secondary-text">
+                  <q-menu
+                    v-else-if="
+                      !menuItemRepo.item?.isItemInMenu && !store.freeItem
+                    "
+                    v-model="isNotInMenuErr"
+                    class="pa-3 secondary-text"
+                  >
                     Недоступно к заказу
                   </q-menu>
                 </template>
-
-
               </CButton>
               <template v-if="$q.screen.gt.sm">
                 <CTooltip v-if="$menuItem.item?.isDead"
                 >Товар недоступен
                 </CTooltip>
                 <CTooltip
-                  v-else-if="!menuItemRepo.item?.isItemInMenu && !store.freeItem"
+                  v-else-if="
+                    !menuItemRepo.item?.isItemInMenu && !store.freeItem
+                  "
                 >Недоступно к заказу
                 </CTooltip>
               </template>
@@ -202,10 +224,9 @@
       </div>
     </div>
     <div v-if="$q.screen.lt.lg" ref="touchSpot"></div>
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import MenuItemCharacteristics from './MenuItemCharacteristics.vue'
 import { ItemSize, unitTypeNamesShort } from 'src/models/menu/menu'
 import { computed, ref, watch } from 'vue'
@@ -226,7 +247,6 @@ import { CartItemModifier } from 'src/models/carts/cartItem/cartItem'
 import { useMeta, useQuasar } from 'quasar'
 import { uiSettingsRepo } from 'src/models/uiSettings/uiSettingsRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
-import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CTooltip from 'src/components/helpers/CTooltip.vue'
 import MenuItemRelatedItems from './MenuItemRelatedItems.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
@@ -237,6 +257,9 @@ import {
 import { CalculationStatus } from 'src/models/carts/cart'
 import { notifier } from 'src/services/notifier'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import CAdaptiveModal from 'src/components/dialogs/CAdaptiveModal.vue'
+import SwiperContainer from 'layouts/containers/SwiperContainer.vue'
+import { Image } from 'src/models/image/image'
 
 const props = defineProps<{
   modelValue: boolean
@@ -262,13 +285,6 @@ const currentWeight = computed(() => {
     : (Number(roundedWeight) || 0) * 1000
 })
 
-const currentImage = computed(() => {
-  return menuItemRepo.loadings.retrieve
-    ? store.menuItemImage?.thumbnail || store.images.empty
-    : menuItemRepo.item?.image?.image ||
-    store.menuItemImage?.thumbnail ||
-    store.images.empty
-})
 
 const currentMenuRulesForAdding = computed(() => {
   if (!cartRepo.item) return
@@ -359,6 +375,15 @@ const isAddToCardDisabled = computed(() => {
     !quantity.value
   )
 })
+
+const getCurrentImage = (image: Image | null) => {
+  return menuItemRepo.loadings.retrieve
+    ? store.menuItemImage?.thumbnail || store.images.empty
+    : image?.image ||
+    store.menuItemImage?.thumbnail ||
+    store.images.empty
+}
+
 
 const addToCart = async () => {
   if (q.screen.lt.md) {

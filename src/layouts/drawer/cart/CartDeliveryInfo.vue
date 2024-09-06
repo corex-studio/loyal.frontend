@@ -6,17 +6,23 @@
     <img
       v-if="$company.item?.image?.thumbnail"
       height="50"
-      class="border-radius2"
+      class="border-radius2 no-download"
       style="object-fit: contain"
       :src="$company.item?.image?.thumbnail"
     />
     <div style="height: fit-content" class="body column gap-2">
-      <div class="bold">{{ cartDateInfo }}</div>
-      <div class="row no-wrap gap-2">
-        <div>Адрес:</div>
-        <div class="ellipsis-2-lines">
+      <div class="row bold items-center">
+        {{ cartDateInfo }}
+        <DeliveryTypeChip
+          class="secondary-text ml-3"
+          :delivery_type="cartRepo.item?.type"
+        ></DeliveryTypeChip>
+      </div>
+      <div class="row secondary-text no-wrap gap-2 ellipsis-2-lines">
+        <span>Адрес: </span>
+        <span class="">
           {{ $cart.item?.currentAddress }}
-        </div>
+        </span>
       </div>
     </div>
   </div>
@@ -27,6 +33,7 @@ import { cartRepo } from 'src/models/carts/cartRepo'
 import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
+import DeliveryTypeChip from 'components/serviceSettings/DeliveryTypeChip.vue'
 
 const cartDateInfo = computed(() => {
   return `${cartRepo.item?.currentDeliveryType}`

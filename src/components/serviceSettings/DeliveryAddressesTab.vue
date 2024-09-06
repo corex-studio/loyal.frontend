@@ -1,7 +1,7 @@
 <template>
   <div
-    :class="{ 'px-xs-8 px-md-0 py-md-0 py-xs-12': !noPadding }"
     class="full-width"
+    :class="{ 'px-xs-8 px-md-0 pt-md-0 pb-md-0 pb-xs-12 pt-xs-12': !noPadding }"
   >
     <div
       v-if="$q.screen.lt.md"

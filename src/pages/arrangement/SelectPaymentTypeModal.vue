@@ -1,47 +1,50 @@
 <template>
-  <CDialog
+  <CAdaptiveModal
+    :initial-mobile-height="'350px'"
     :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
     width="429px"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
-    <template v-slot:header> Способ оплаты </template>
-    <div class="column full-width gap-5">
-      <div
-        v-for="(el, index) in types"
-        :key="index"
-        @click="selectedPaymentType = el"
-        class="row justify-between no-wrap items-center px-8 py-6 cursor-pointer"
-      >
-        <div class="row gap-6 body text-on-background-color">
-          <q-icon color="on-background-color" :name="el.icon" size="20px" />
-          {{ el.label }}
+    <div class="pa-md-15 pt-xs-12 pb-xs-12 px-xs-8">
+      <div class="header3 bold pb-10 text-on-background-color">Способ оплаты</div>
+      <div class="column full-width gap-5">
+        <div
+          v-for="(el, index) in types"
+          :key="index"
+          @click="selectedPaymentType = el"
+          class="row justify-between no-wrap items-center px-8 py-6 cursor-pointer"
+        >
+          <div class="row gap-6 body text-on-background-color">
+            <q-icon color="on-background-color" :name="el.icon" size="20px" />
+            {{ el.label }}
+          </div>
+          <RoundedSelector
+            check
+            height="26px"
+            width="26px"
+            :model-value="selectedPaymentType?.type === el.type"
+          />
         </div>
-        <RoundedSelector
-          check
-          height="26px"
-          width="26px"
-          :model-value="selectedPaymentType?.type === el.type"
-        />
       </div>
+      <CButton
+        @click="select()"
+        width="100%"
+        label="Выбрать"
+        :disabled="!selectedPaymentType"
+        class="mt-12 body"
+      />
     </div>
-    <CButton
-      @click="select()"
-      width="100%"
-      label="Выбрать"
-      :disabled="!selectedPaymentType"
-      class="mt-12 body"
-    />
-  </CDialog>
+  </CAdaptiveModal>
 </template>
 <script lang="ts" setup>
+import CAdaptiveModal from 'src/components/dialogs/CAdaptiveModal.vue'
 import CButton from 'src/components/template/buttons/CButton.vue'
 import RoundedSelector from 'src/components/template/buttons/RoundedSelector.vue'
-import CDialog from 'src/components/template/dialogs/CDialog.vue'
 import { PaymentObjectType } from 'src/models/order/order'
 import { ref, watch } from 'vue'
 
 const props = defineProps<{
-  modelValue: boolean
+  modelValue?: boolean | undefined
   types: PaymentObjectType[]
   currentType?: PaymentObjectType | null
 }>()
@@ -60,7 +63,7 @@ watch(
       if (props.currentType) selectedPaymentType.value = props.currentType
       else selectedPaymentType.value = null
     }
-  },
+  }
 )
 
 const select = () => {

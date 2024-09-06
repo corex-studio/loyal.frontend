@@ -2,7 +2,7 @@
   <div class="pt-lg-20">
     <div
       :class="$q.screen.lt.lg ? 'column' : 'row'"
-      class="no-wrap full-width gap-lg-40 gap-xs-12 gap-md-18"
+      class="no-wrap full-width gap-lg-30 gap-xs-12 gap-md-18"
     >
       <ProfileMenu />
       <div class="col">
@@ -15,9 +15,9 @@
         $deliveryAddress.loadings.list ||
         $paymentCard.loadings.list
       "
-      style="position: fixed; top: 44%; left: 43%; z-index: 9999"
       color="primary"
       size="12%"
+      style="position: fixed; top: 44%; left: 43%; z-index: 9999"
     />
   </div>
 </template>

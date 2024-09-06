@@ -68,18 +68,18 @@ export class News implements BaseModel {
     this.active = raw.active
     this.publishedAt = raw.published_at
       ? moment
-          .utc(raw.published_at, 'YYYY-MM-DD HH:mm:ss')
-          .local()
-          .format('DD.MM.YYYY HH:mm')
+        .utc(raw.published_at, 'YYYY-MM-DD HH:mm:ss')
+        .local()
+        .format('DD.MM.YYYY HH:mm')
       : ''
     this.companyGroup = raw.company_group
     this.fullDescription = raw.full_description ? raw.full_description : ''
     this.startDate = raw.start_date
     this.endDate = raw.end_date
       ? moment
-          .utc(raw.end_date, 'YYYY-MM-DD HH:mm:ss')
-          .local()
-          .format('DD.MM.YYYY')
+        .utc(raw.end_date, 'YYYY-MM-DD HH:mm:ss')
+        .local()
+        .format('DD.MM.YYYY')
       : null
     this.createdAt = this.createdAt = moment
       .utc(raw.created_at, 'YYYY-MM-DD HH:mm:ss')
@@ -90,9 +90,9 @@ export class News implements BaseModel {
     this.isHtml = raw.is_html
     this.sendDate = raw.send_date
       ? moment
-          .utc(raw.send_date, 'YYYY-MM-DD HH:mm:ss')
-          .local()
-          .format('DD.MM.YYYY HH:mm')
+        .utc(raw.send_date, 'YYYY-MM-DD HH:mm:ss')
+        .local()
+        .format('DD.MM.YYYY HH:mm')
       : null
     this.viewsCount = raw.views_count
     this.type = raw.type
@@ -118,9 +118,9 @@ export class News implements BaseModel {
         : null,
       send_date: this.sendDate
         ? moment(this.sendDate, 'DD.MM.YYYY HH:mm:ss')
-            .utc()
-            .format('YYYY-MM-DD HH:mm:ss')
-        : null,
+          .utc()
+          .format('YYYY-MM-DD HH:mm:ss')
+        : null
     }
   }
 }

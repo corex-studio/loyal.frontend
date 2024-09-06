@@ -8,8 +8,9 @@
       <CIcon
         @click="openLink(el.link)"
         :size="iconSize || '26px'"
+        :style="`color: ${el.color}`"
+        :color="el.color ? '' : 'secondary'"
         class="cursor-pointer"
-        color="secondary"
         hover-color="primary"
         :name="getSocialIcon(el.link_type)"
       />

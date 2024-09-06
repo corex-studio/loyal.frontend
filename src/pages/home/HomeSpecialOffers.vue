@@ -47,6 +47,7 @@
             :style="`border-radius:${getBorderRadius}; object-position: left 50%;`"
             position="left"
             fit="cover"
+            class="no-download"
             :alt="item.title"
             :ratio="isNewsDesktopView ? undefined : 16 / 9"
           >
@@ -86,17 +87,19 @@ import { store } from 'src/models/store'
 import { newsRepo } from 'src/models/news/newsRepo'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
 
-const SwiperContainer = defineAsyncComponent(() => import('src/layouts/containers/SwiperContainer.vue'))
+const SwiperContainer = defineAsyncComponent(
+  () => import('src/layouts/containers/SwiperContainer.vue'),
+)
 
 const q = useQuasar()
 
 onMounted(() => {
-    if (fictiveUrlStore.currentNewsItem) {
-      void newsRepo.retrieve(fictiveUrlStore.currentNewsItem).then(() => {
-        fictiveUrlStore.setFictiveNewsUrl()
-        store.newsModal = true
-      })
-    }
+  if (fictiveUrlStore.currentNewsItem) {
+    void newsRepo.retrieve(fictiveUrlStore.currentNewsItem).then(() => {
+      fictiveUrlStore.setFictiveNewsUrl()
+      store.newsModal = true
+    })
+  }
 })
 
 const tabs = computed(() => {
@@ -145,7 +148,7 @@ const getBorderRadius = computed(() => {
 const fictiveUrlStore = useFictiveUrlStore()
 
 const goToItem = (item: News) => {
-  void newsRepo.retrieve(item.id).then(v => {
+  void newsRepo.retrieve(item.id).then((v) => {
     fictiveUrlStore.currentNewsItem = v.alias || v.id
     fictiveUrlStore.setFictiveNewsUrl()
   })

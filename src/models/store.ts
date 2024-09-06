@@ -48,6 +48,7 @@ export class Store {
   leftDrawer = false
   bonusesModal = false
   serviceSettingsModal = false
+  noCloseServiceSettingsModal = false
   selectCompanyModal = false
   verticalScroll = 0
   offersTab = 'Новости'

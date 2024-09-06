@@ -98,7 +98,7 @@ const confirmSelectedCity = async () => {
   )
   emit('update:modelValue', false)
   await reRequest()
-  routerResolver.detect().resolve()
+  void routerResolver.detect().resolve()
 
 }
 
