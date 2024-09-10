@@ -22,14 +22,20 @@
             <!--              </div>-->
             <!--            </div>-->
             <div v-if="data.error_message" class="text-danger row gap-3 no-wrap">
-              <CIcon color="danger" name="fa-regular fa-triangle-exclamation" size="18px" />
-              <div class="text-danger secondary-text mt-1 ">{{ data.error_message }}</div>
+              <CIcon :color="data.error_message.level === 'warning' ? 'yellow' : 'danger'"
+                     name="fa-regular fa-triangle-exclamation" size="18px" />
+              <div :class="data.error_message.level === 'warning' ? 'text-yellow' : 'text-danger'"
+                   class="secondary-text mt-1 ">{{ data.error_message.text }}
+              </div>
 
             </div>
           </div>
-          <div v-if="excludedItems.length">
-            <div class="body">Следующие позиции не будут добавлены</div>
-            <div class="column full-width no-wrap mt-4 pr-3" style="max-height: 240px; overflow-y: auto">
+          <div v-if="excludedItems.length && data.repeat_available">
+            <!--            <div class="secondary-text">Некоторые блюда из вашего предыдущего заказа недоступны. Вы можете дополнить-->
+            <!--              заказ другими-->
+            <!--              позициями из меню или оформить заказ с блюдами которые есть в наличии.-->
+            <!--            </div>-->
+            <div class="column full-width no-wrap pr-3" style="max-height: 240px; overflow-y: auto">
               <OrderItem
                 v-for="(item, index) in excludedItems"
                 :key="index" :item="item" small
