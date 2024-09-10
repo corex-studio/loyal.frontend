@@ -49,6 +49,7 @@ export type OrderAvailabilityRaw = {
     order?: string[]
     date?: string[]
   }
+  error_message: string | null
   repeat_available: boolean
   sales_point_available: boolean
 }

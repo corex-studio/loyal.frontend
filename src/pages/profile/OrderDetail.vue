@@ -85,11 +85,12 @@
           />
           <CButton
             v-if="!availabilityData?.order_is_outdated"
+            :loading="repeatLoading"
             :width="$q.screen.lt.md ? '100%' : '250px'"
             class="body"
             height="40px"
             label="Повторить заказ"
-            @click="repeatOrderModal = true"
+            @click="repeatOrderClickHandler()"
           />
         </div>
       </div>
@@ -107,24 +108,51 @@
       </div>
     </div>
   </div>
-  <OrderRepeatModal v-model="repeatOrderModal" :data="availabilityData" />
+  <OrderRepeatModal v-model="repeatOrderModal" :data="availabilityData" @accept="repeatOrder()" />
 </template>
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
 import { orderRepo } from 'src/models/order/orderRepo'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import CIcon from 'components/template/helpers/CIcon.vue'
 import { lightColor, store } from 'src/models/store'
 import CButton from 'components/template/buttons/CButton.vue'
-import { OrderAvailabilityRaw, OrderItemRaw } from 'src/models/order/order'
+import { OrderAvailabilityRaw } from 'src/models/order/order'
 import OrderTotalInfo from 'pages/arrangement/OrderTotalInfo.vue'
 import OrderRepeatModal from 'pages/profile/OrderRepeatModal.vue'
 import OrderItem from 'pages/profile/OrderItem.vue'
+import { cartRepo } from 'src/models/carts/cartRepo'
+import { notifier } from 'src/services/notifier'
 
 const route = useRoute()
 const availabilityData = ref<OrderAvailabilityRaw | null>(null)
 const repeatOrderModal = ref(false)
+const repeatLoading = ref(false)
+const router = useRouter()
+
+const repeatOrderClickHandler = async () => {
+  if (!availabilityData.value?.active_cart_exists && !availabilityData.value?.error_message && availabilityData.value?.available_item_ids.length === orderRepo.item?.items?.length) {
+    await repeatOrder()
+  } else {
+    repeatOrderModal.value = true
+  }
+}
+
+const repeatOrder = async () => {
+  try {
+    repeatOrderModal.value = false
+    repeatLoading.value = true
+    cartRepo.item = await orderRepo.repeat()
+    void router.push({
+      name: 'arrangementPage'
+    })
+  } catch {
+    notifier.error('Не удалось повторить заказ')
+  } finally {
+    repeatLoading.value = false
+  }
+}
 
 const openReviewModal = () => {
   const foundOrder = orderRepo.ordersToReview.find(
