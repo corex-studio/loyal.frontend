@@ -51,8 +51,7 @@ const getImage = (link: LinkType | null) => {
     if (link === LinkType.WEBSITE) fileName = 'websiteIcon.png'
     if (link === LinkType.INSTAGRAM) fileName = 'instagramLogo.png'
     if (link === LinkType.WHATSAPP) fileName = 'whatsAppLogo.png'
-
-    return `assets/${fileName}`
+    return `/assets/${fileName}`
   } catch {
     return store.images.empty
   }

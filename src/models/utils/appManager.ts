@@ -185,6 +185,7 @@ export class AppManager {
 
   updateLocalStorageCity(city: CityType | null | undefined) {
     if (city) {
+      console.log('city', city)
       LocalStorage.set('cityAlias', city.alias || city.uuid)
       LocalStorage.set('city', city.uuid)
     } else {
@@ -255,7 +256,8 @@ export class AppManager {
 
     const localStorageCompanyAlias = LocalStorage.getItem('cartCompanyAlias')
     const localStorageCompanyId = LocalStorage.getItem('cartCompany')
-    const companyFromRoute = this.route.params[companyRouteParamKey]
+    // Если alias у компании и города совпадет, то сработает некорректно. Это быстрый фикс для Кирина по запросу от 6 сентября 23 59
+    const companyFromRoute = this.route.params[companyRouteParamKey] || this.route.params[cityRouteParamKey]
 
     let localStorageCompanyUpdated = false
     if (parseFromRoute && companyFromRoute) {

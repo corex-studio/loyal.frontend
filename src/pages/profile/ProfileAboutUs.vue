@@ -11,17 +11,17 @@
         }); height: ${$q.screen.gt.md ? '388' : '320'}px`"
         class="border-radius main-image-block row justify-center items-center full-width relative-position"
       >
-        <CIconButton
-          v-if="$companyGroup.item && $companyGroup.item.companies.length > 1"
-          class="outlined-button"
-          icon="fa-regular fa-angle-left"
-          icon-color="white"
-          icon-size="24px"
-          outline
-          size="48px"
-          style="position: absolute; top: 10px; left: 10px; z-index: 2"
-          @click="$company.companyForProfile = null"
-        />
+        <!--        <CIconButton-->
+        <!--          v-if="$companyGroup.item && $companyGroup.item.companies.length > 1"-->
+        <!--          class="outlined-button"-->
+        <!--          icon="fa-regular fa-angle-left"-->
+        <!--          icon-color="white"-->
+        <!--          icon-size="24px"-->
+        <!--          outline-->
+        <!--          size="48px"-->
+        <!--          style="position: absolute; top: 10px; left: 10px; z-index: 2"-->
+        <!--          @click="$company.companyForProfile = null"-->
+        <!--        />-->
         <div
           class="col-xs-8 col-lg-9 col-xs-11 column items-center text-white py-18 glassed-block"
         >
@@ -35,7 +35,7 @@
           >
             <template v-if="$companyGroup.item?.externalId !== 'HooDoo'">
               <div
-                v-for="(el, index) in company.salesPoints?.slice(0, 2)"
+                v-for="(el, index) in previewSalesPoints"
                 :key="index"
                 class="subtitle-text row justify-center gap-4 items-center"
               >
@@ -45,7 +45,7 @@
                 </div>
               </div>
               <CIcon
-                v-if="company.salesPoints.length > 2"
+                v-if="$companyGroup.item?.externalId === 'Kirin' ? company.salesPoints.length > 4 : company.salesPoints.length > 2"
                 class="cursor-pointer"
                 color="white"
                 hover-color="primary"
@@ -54,7 +54,7 @@
               >
                 <q-menu auto-close class="pa-5 column gap-4" max-width="400px">
                   <div
-                    v-for="(el, index) in company.salesPoints.slice(2)"
+                    v-for="(el, index) in company.salesPoints.slice($companyGroup.item?.externalId === 'Kirin' ? 4 : 2)"
                     :key="index"
                     class="secondary-text text-on-background-color"
                     style="white-space: nowrap"
@@ -288,10 +288,10 @@
         "
         :src="$uiSettings.item?.socialButtonImage?.image"
         class="border-radius cursor-pointer mt-lg-60 mt-md-25 mt-xs-15"
-        @contextmenu.prevent
         fit="cover"
         width="100%"
         @click="socialsModal = true"
+        @contextmenu.prevent
       >
       </q-img>
     </div>
@@ -317,7 +317,7 @@
                   :key="index"
                   :href="el.link"
                   class="subtitle-text text-on-background-color"
-                  >{{ el.value }}</a
+                >{{ el.value }}</a
                 >
               </template>
               <template v-else>
@@ -399,14 +399,14 @@ const router = useRouter()
 const days = Object.keys(daysNames).map((key) => {
   return {
     label: daysNames[Number(key) as keyof typeof daysNames],
-    val: Number(key),
+    val: Number(key)
   }
 })
 
 const currentSchedule = computed(() => {
   if (!company.value?.salesPoints) return
   return company.value?.salesPoints[0].schedule?.days.find(
-    (el) => el.day === moment().day(),
+    (el) => el.day === moment().day()
   )
 })
 
@@ -425,14 +425,14 @@ const features = computed(() => {
       icon: 'fa-regular fa-badge-percent',
       click: () => {
         void router.push({
-          name: 'home',
+          name: 'home'
         })
-      },
-    },
+      }
+    }
   ]
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.delivery_enabled,
+      (v) => v.settings.delivery_enabled
     )
   ) {
     result.push({
@@ -443,29 +443,29 @@ const features = computed(() => {
         companyRepo.companyForProfile?.conditions?.length
           ? scrollToBlock('conditions')
           : void 0
-      },
+      }
     })
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.pickup_enabled,
+      (v) => v.settings.pickup_enabled
     )
   ) {
     result.push({
       title: 'Самовывоз',
       text: 'Заказа',
-      icon: 'fa-regular fa-person-carry-box',
+      icon: 'fa-regular fa-person-carry-box'
     })
   }
   if (
     companyRepo.companyForProfile?.salesPoints?.some(
-      (v) => v.settings.booking_enabled,
+      (v) => v.settings.booking_enabled
     )
   ) {
     result.push({
       title: 'Бронирование',
       text: 'Стола',
-      icon: 'fa-regular fa-table-picnic',
+      icon: 'fa-regular fa-table-picnic'
     })
   }
   return result
@@ -490,7 +490,7 @@ const contacts = computed(() => {
       label: 'Позвонить нам',
       image: 'contactsPhoneImage.png',
       field: 'phones',
-      values: company.value?.guestContacts.phones,
+      values: company.value?.guestContacts.phones
     })
   }
   if (company.value?.guestContacts.messages.length) {
@@ -498,7 +498,7 @@ const contacts = computed(() => {
       label: 'Написать',
       image: 'contactsMessageImage.png',
       field: 'messages',
-      values: company.value?.guestContacts.messages,
+      values: company.value?.guestContacts.messages
     })
   }
   company.value?.guestContacts.emails.forEach((v) => {
@@ -506,10 +506,14 @@ const contacts = computed(() => {
       label: v.name || '-',
       image: 'contactsFaceImage.png',
       field: 'emails',
-      values: [v],
+      values: [v]
     })
   })
   return result
+})
+
+const previewSalesPoints = computed(() => {
+  return companyGroupRepo.item?.externalId === 'Kirin' ? company.value?.salesPoints?.slice(0, 4) : company.value?.salesPoints?.slice(0, 2)
 })
 
 const companySelected = (v: Company | null) => {
@@ -533,7 +537,7 @@ onMounted(() => {
     companyRepo.companyForProfile = companyGroupRepo.item.companies[0]
   }
   useEventBus(selectCompanyKey).on(
-    (e) => (companyRepo.companyForProfile = e.company),
+    (e) => (companyRepo.companyForProfile = e.company)
   )
 })
 
