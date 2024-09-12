@@ -187,7 +187,7 @@ const requestGeolocation = (auto = false) => {
     geoloading.value = true
   } else if (!auto) {
     notifier.error(
-      'Автоматическое определение геопозиции не поддерживается на вашем устройстве',
+      'Автоматическое определение геопозиции не поддерживается на вашем устройстве'
     )
   }
 }
@@ -196,16 +196,20 @@ watch(
   () => geolocation.coords.value,
   () => {
     geolocation.pause()
-    geolocate()
+    setTimeout(() => {
+      if (map)
+        geolocate()
+    }, 250)
+
   },
-  { deep: true },
+  { deep: true }
 )
 
 watch(
   () => geolocation.error.value,
   () => {
     processGeolocationError()
-  },
+  }
 )
 
 const processGeolocationError = () => {
@@ -233,7 +237,7 @@ const geolocate = async () => {
   if (geolocation.coords.value.latitude !== Infinity) {
     currentCoords.value = {
       lat: geolocation.coords.value.latitude,
-      lng: geolocation.coords.value.longitude,
+      lng: geolocation.coords.value.longitude
     }
     await loadAddressDataByCoords()
   } else {
@@ -246,7 +250,7 @@ const loadAddressDataByCoords = async () => {
   if (!currentCoords.value) return
   const res = await utilsRepo.geolocate(
     currentCoords.value.lat,
-    currentCoords.value.lng,
+    currentCoords.value.lng
   )
   selectAddress(res, 13)
 }
@@ -262,19 +266,19 @@ const drawPoint = (zoom?: number) => {
   if (newAddress.value?.coords?.latitude || newAddress.value?.coords?.longitude)
     values.push({
       id: newAddress.value.id,
-      coords: newAddress.value.coords,
+      coords: newAddress.value.coords
     })
   const collection = map.pointCollection(values)
   const layer = map.pointLayer(
     collection,
     null,
     `#${uiSettingsRepo.item?.primaryColor.color}`,
-    'home',
+    'home'
   )
   map.lmap.addLayer(layer)
   if (values.length)
     map.lmap.fitBounds(layer.getBounds(), {
-      maxZoom: zoom || map.lmap.getZoom(),
+      maxZoom: zoom || map.lmap.getZoom()
     })
 }
 
@@ -296,7 +300,7 @@ onMounted(() => {
     floor: props.address?.floor || null,
     entrance: props.address?.entrance || null,
     intercom: props.address?.intercom || null,
-    description: props.address?.description || '',
+    description: props.address?.description || ''
   })
   setTimeout(() => {
     map = new CorexLeafletMap()
@@ -317,14 +321,14 @@ onMounted(() => {
         if (!newAddress.value) return
         newAddress.value.coords = {
           latitude: v.latlng.lat,
-          longitude: v.latlng.lng,
+          longitude: v.latlng.lng
         }
         const res = await utilsRepo.geolocate(v.latlng.lat, v.latlng.lng)
         const addressWithCorrectCoords: Address = {
-          ...res,
+          ...res
         }
         selectAddress(addressWithCorrectCoords)
-      },
+      }
     )
   }, 200)
   resizeObserver.value = new ResizeObserver(() => {
@@ -344,7 +348,7 @@ const createAddress = async () => {
     if (props.address) {
       const res = await deliveryAddressRepo.update(newAddress.value)
       const foundAddressIndex = deliveryAddressRepo.items.findIndex(
-        (v) => v.id === newAddress.value?.id,
+        (v) => v.id === newAddress.value?.id
       )
       if (foundAddressIndex > -1) {
         deliveryAddressRepo.items[foundAddressIndex] = res
@@ -362,6 +366,9 @@ const createAddress = async () => {
     } else {
       notifier.error('Ошибка при создании адреса')
     }
+  } finally {
+    deliveryAddressRepo.loadings.update = false
+    deliveryAddressRepo.loadings.create = false
   }
 }
 
@@ -371,7 +378,7 @@ const selectAddress = (v: Address, zoom?: number) => {
   newAddress.value.city = v.city
   newAddress.value.coords = {
     latitude: v.coords[1],
-    longitude: v.coords[0],
+    longitude: v.coords[0]
   }
   newAddress.value.flat = v.flat
   newAddress.value.street = v.street

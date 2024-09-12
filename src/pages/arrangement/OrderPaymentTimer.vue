@@ -23,7 +23,7 @@ const emit = defineEmits<{
   (evt: 'done'): void
 }>()
 
-const TIMER_TIMEOUT = 20
+const TIMER_TIMEOUT = 15
 
 const currentSecond = ref(TIMER_TIMEOUT)
 let timer: NodeJS.Timeout | null = null
@@ -42,7 +42,7 @@ const startTimer = () => {
 }
 
 const progressLineWidth = computed(() => {
-  return `${((TIMER_TIMEOUT - currentSecond.value) / 30) * 100}%`
+  return `${((TIMER_TIMEOUT - currentSecond.value) / TIMER_TIMEOUT) * 100}%`
 })
 
 onMounted(() => {

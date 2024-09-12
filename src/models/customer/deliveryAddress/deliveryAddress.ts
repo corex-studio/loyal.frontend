@@ -1,4 +1,5 @@
 import { BaseModel } from 'src/corexModels/apiModels/baseModel'
+import { companyRepo } from 'src/models/company/companyRepo'
 
 export type DeliveryAddressRaw = {
   uuid?: string | undefined
@@ -17,6 +18,7 @@ export type DeliveryAddressRaw = {
   entrance?: string | null
   intercom?: string | null
   description?: string | null
+  sales_point?: string | null
 }
 
 export class DeliveryAddress implements BaseModel {
@@ -36,6 +38,7 @@ export class DeliveryAddress implements BaseModel {
   entrance: string | null
   intercom: string | null
   description: string | null
+  salesPoint: string | null
 
   constructor(raw: DeliveryAddressRaw) {
     this.id = raw.uuid
@@ -51,6 +54,13 @@ export class DeliveryAddress implements BaseModel {
     this.entrance = raw.entrance || null
     this.intercom = raw.intercom || null
     this.description = raw.description || null
+    this.salesPoint = raw.sales_point || null
+  }
+
+  get isAddressAvailable(): boolean {
+    const isSalesPointInCurrentCity = companyRepo.currentCitySalesPoints()?.find(el => el.id === this.salesPoint)
+    return !!(this.salesPoint || isSalesPointInCurrentCity)
+
   }
 
   toJson(): Record<string, any> {
@@ -66,7 +76,7 @@ export class DeliveryAddress implements BaseModel {
       floor: this.floor,
       entrance: this.entrance,
       intercom: this.intercom?.length ? this.intercom : null,
-      description: this.description?.length ? this.description : undefined,
+      description: this.description?.length ? this.description : undefined
     }
   }
 }

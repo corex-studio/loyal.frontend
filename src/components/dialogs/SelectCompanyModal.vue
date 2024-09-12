@@ -1,11 +1,11 @@
 <template>
   <CDialog
-    :model-value="modelValue"
-    @update:model-value="$emit('update:modelValue', $event)"
-    :width="'400px'"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    :maximize="$q.screen.lt.md"
     :hide-close="$q.screen.lt.md || noClose"
+    :maximize="$q.screen.lt.md"
+    :model-value="modelValue"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
+    :width="'400px'"
+    @update:model-value="$emit('update:modelValue', $event)"
   >
     <div class="column full-width">
       <div class="header bold mb-md-15 mb-xs-10">Выберите заведение</div>
@@ -16,19 +16,19 @@
         >
           <q-separator v-if="index && $q.screen.lt.md" color="divider-color" />
           <CompanyRow
-            @click="selectCompany(item)"
             :item="item"
             :selected="selectedCompany?.id === item.id"
+            @click="selectCompany(item)"
           />
         </template>
       </div>
       <CButton
-        @click="emitSelectedCompany"
-        :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"
         :disabled="!selectedCompany"
         :height="$q.screen.lt.md ? '40px' : '48px'"
-        width="100%"
+        :label="$q.screen.lt.md ? 'Выбрать' : 'Выбрать заведение'"
         class="body mt-15"
+        width="100%"
+        @click="emitSelectedCompany"
       />
     </div>
   </CDialog>
@@ -62,7 +62,7 @@ watch(
   (v) => {
     if (v && props.selectedCompany)
       selectedCompany.value = props.selectedCompany
-  },
+  }
 )
 
 watch(
@@ -71,7 +71,7 @@ watch(
     if (v && companyRepo.item) {
       selectedCompany.value = companyRepo.item
     }
-  },
+  }
 )
 
 const selectCompany = (v: Company) => {
@@ -80,7 +80,7 @@ const selectCompany = (v: Company) => {
 
 const emitSelectedCompany = () => {
   useEventBus(selectCompanyKey).emit({
-    company: selectedCompany.value as Company,
+    company: selectedCompany.value as Company
   })
   emit('select', selectedCompany.value)
   if (props.closeOnSelect) emit('update:modelValue', false)
