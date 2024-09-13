@@ -72,7 +72,10 @@ export class OrderRepo extends BaseRepo<Order> {
     const res: OrderAvailabilityRaw = await this.api.send({
       method: 'GET',
       action: 'check_repeat_availability',
-      id: this.item?.id
+      id: this.item?.id,
+      headers: {
+        'Accept-Language': 'ru'
+      }
     })
     return res
   }
