@@ -21,6 +21,42 @@ export enum OrderPaymentService {
   CARD = 'card',
 }
 
+export const orderAvailabilityReasonNames = {
+  ['order_creation']: 'Создание заказа',
+  ['order_type']: 'Тип заказа',
+  ['cart']: 'Корзина',
+  ['menu']: 'Меню',
+  ['sales_point']: 'Точка продаж',
+  ['items']: 'Позиции',
+  ['order']: 'Заказ',
+  ['date']: 'Дата'
+
+}
+
+export type OrderAvailabilityRaw = {
+  active_cart_exists: boolean
+  available_item_ids: string[]
+  order_id: string
+  order_is_outdated: boolean
+  order_is_valid: boolean
+  reasons: {
+    order_creation?: string[]
+    order_type?: string[]
+    cart?: string[]
+    menu?: string[]
+    sales_point?: string[]
+    items?: string[]
+    order?: string[]
+    date?: string[]
+  }
+  error_message: {
+    level: 'error' | 'warning'
+    text: string
+  } | null
+  repeat_available: boolean
+  sales_point_available: boolean
+}
+
 export type PaymentObjectType = {
   label: string
   type: PaymentType
