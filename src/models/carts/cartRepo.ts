@@ -164,6 +164,20 @@ export class CartRepo extends BaseRepo<Cart> {
     }
     cartRepo.item = instance
   }
+
+  async validateCheckout(v: Cart, paymentType: PaymentObjectType): Promise<Cart> {
+    const result = await this.api.send<CartRaw>({
+      method: 'POST',
+      id: v.id,
+      data: {
+        payment_type: paymentType.type
+      },
+      action: 'validate_checkout'
+    })
+    this.item = new Cart(result)
+    return this.item
+  }
+
 }
 
 export const cartRepo = reactive(new CartRepo())

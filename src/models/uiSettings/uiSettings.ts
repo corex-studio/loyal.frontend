@@ -202,7 +202,6 @@ export class UiSetting implements BaseModel {
   orderCompletePostPaymentBannerText: string | null
   exclusive: boolean
 
-
   constructor(raw: UiSettingsRaw) {
     this.id = raw.uuid
     this.primaryColor = new Color(raw.primary_color)
