@@ -145,7 +145,9 @@ const repeatOrder = async () => {
     repeatLoading.value = true
     cartRepo.item = await orderRepo.repeat()
     void router.push({
-      name: 'arrangementPage'
+      name: 'home'
+    }).then(() => {
+      store.cartDrawer = true
     })
   } catch {
     notifier.error('Не удалось повторить заказ')
