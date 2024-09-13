@@ -74,7 +74,7 @@ export class OrderRepo extends BaseRepo<Order> {
       action: 'check_repeat_availability',
       id: this.item?.id,
       headers: {
-        'Accept-Language': 'ru'
+        'Accept-Language': 'ru-ru'
       }
     })
     return res
@@ -98,7 +98,7 @@ export class OrderRepo extends BaseRepo<Order> {
       action: 'repeat',
       id: this.item?.id,
       headers: {
-        'Accept-Language': 'ru'
+        'Accept-Language': 'ru-ru'
       }
     })
     return new Cart(res)
