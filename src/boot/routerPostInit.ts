@@ -67,6 +67,7 @@ export default boot(({ app }) => {
     const getRouteName = () => String(app.config.globalProperties.$route.name)
     const getRouteParams = () => app.config.globalProperties.$route.params
     const getRouteMeta = () => app.config.globalProperties.$route.meta
+    const getRouteQuery = () => app.config.globalProperties.$route.query
 
     const getRouteModifiers = (name = getRouteName(), ) => {
       name = clone(name)
@@ -90,6 +91,7 @@ export default boot(({ app }) => {
         name: name,
         params: cloneDeep(getRouteParams()),
         meta: cloneDeep(getRouteMeta()),
+        query: cloneDeep(getRouteQuery())
       }
       if (!city) {
         console.error('City is empty')
@@ -113,6 +115,7 @@ export default boot(({ app }) => {
         name: name,
         params: cloneDeep(getRouteParams()),
         meta: cloneDeep(getRouteMeta()),
+        query: cloneDeep(getRouteQuery())
       }
       if (!company) {
         console.error('Company is empty')
@@ -176,6 +179,7 @@ export default boot(({ app }) => {
         name: name,
         params: getRouteParams(),
         meta: cloneDeep(getRouteMeta()),
+        query: cloneDeep(getRouteQuery()),
       }
       _to.name = name.split('__')[0]
       if (_to.params) {

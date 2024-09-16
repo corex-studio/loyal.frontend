@@ -10,3 +10,6 @@ export const orderUpdatedKey: EventBusKey<{ order: Order }> =
 
 export const onCloseProductModalKey: EventBusKey<{ order: Order }> =
   Symbol('onCloseProductModalKey')
+
+export const initMetrikaKey: EventBusKey<{ order: Order }> =
+  Symbol('initMetrikaKey')

@@ -82,8 +82,6 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useYandexMetrika } from 'yandex-metrika-vue3'
-import { useRoute } from 'vue-router'
 
 const emit = defineEmits(['click'])
 
@@ -146,8 +144,6 @@ const props = defineProps({
   iconLoading: Boolean,
 })
 
-const metrika = useYandexMetrika()
-const route = useRoute()
 const _hover = ref(false)
 
 const iconGap_ = computed(() => {
@@ -230,7 +226,6 @@ const _disabled = computed(() => {
 
 const clickHandler = () => {
   if (props.iconLoading) return
-  metrika.hit(route.fullPath)
   emit('click')
 }
 </script>

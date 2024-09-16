@@ -36,6 +36,8 @@ import {
 } from 'src/models/utils/routerResolver'
 import { cityRouteParamKey, companyRouteParamKey } from 'src/router/mainRoutes'
 import { themeRepo } from 'src/models/theme/themeRepo'
+import { useEventBus } from '@vueuse/core'
+import { initMetrikaKey } from 'src/services/eventBusKeys'
 
 export type AppManagerConfig = {
   companyGroupId?: string | null
@@ -86,6 +88,7 @@ export class AppManager {
       route: this.route,
       router: this.router
     }).resolve()
+    useEventBus(initMetrikaKey).emit()
 
     await Promise.all([
       themeRepo.fetch(),

@@ -12,6 +12,8 @@ import {
   useYandexMetrika,
 } from 'yandex-metrika-vue3'
 import { useFictiveUrlStore } from 'stores/fictiveUrlStore'
+import { useEventBus } from '@vueuse/core'
+import { initMetrikaKey } from 'src/services/eventBusKeys'
 
 const metrika = useYandexMetrika()
 const fictiveUrlStore = useFictiveUrlStore()
@@ -33,7 +35,12 @@ const handleInitialNews = () => {
   }
 }
 
+let allowInitMetrika = false
+
 onMounted(() => {
+  useEventBus(initMetrikaKey).on(() => {
+    allowInitMetrika = true
+  })
   storeInitialProduct()
   handleInitialNews()
   const platformIs = useQuasar().platform.is
@@ -47,7 +54,6 @@ onMounted(() => {
     document.body.classList.add('safari')
   }
   initMetrika()
-
 })
 
 let interval: NodeJS.Timeout
@@ -55,15 +61,17 @@ let interval: NodeJS.Timeout
 const initMetrika = () => {
   interval = setInterval(() => {
     const value = window._metrikaKey
-    if (value !== undefined) {
+    if (value !== undefined && (allowInitMetrika)) {
       clearInterval(interval)
       if (value) {
         const cfg = getYandexMetrikaDefaultConfig(router)
         cfg.id = value
         updateYandexMerikaByConfig(cfg as any)
-        metrika.hit(route.fullPath)
+        setTimeout(() => {
+          metrika.hit(route.fullPath)
+        })
       }
     }
-  }, 100)
+  }, 50)
 }
 </script>
