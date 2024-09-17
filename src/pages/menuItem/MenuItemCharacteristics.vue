@@ -73,13 +73,18 @@
 <script lang="ts" setup>
 import { ItemSize, nutritionsNames } from 'src/models/menu/menu'
 import { NotritionRaw } from 'src/models/order/order'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, watch } from 'vue'
 
 const props = defineProps<{
   size: ItemSize
 }>()
 
 const currentNutrition = ref<NotritionRaw | null>(null)
+
+watch(() => props.size, () => {
+  if (actualNutritions.value.length)
+    currentNutrition.value = actualNutritions.value[0]
+})
 
 const actualNutritions = computed(() => {
   return props.size?.nutritions.filter((v) => {
