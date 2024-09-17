@@ -9,7 +9,7 @@
   >
     <div
       :class="$q.screen.lt.lg ? 'column' : 'row full-height '"
-      class="no-wrap full-width relative-position text-on-background-color"
+      class="no-wrap full-width relative-position text-on-background-color pr-1"
       itemscope
       itemtype="https://schema.org/Product"
     >
@@ -61,10 +61,10 @@
         :style="`border-radius: ${
           $q.screen.lt.md ? getImageBorderRadius : 'unset'
         }`"
-        class="column no-wrap col justify-between full-height px-md-15 px-xs-8 pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0 relative-position bg-background-color"
+        class="column no-wrap col justify-between full-height  pt-md-15 pt-xs-8 pb-xs-50 pb-lg-0 relative-position bg-background-color item-scroll-bar"
         style="overflow-x: auto"
       >
-        <div class="column full-width">
+        <div class="column full-width px-md-15 px-xs-8">
           <div class="huge3 bold mb-2" itemprop="name">
             {{ $menuItem.item?.name }}
           </div>
@@ -105,7 +105,7 @@
           />
           <div
             v-if="$menuItem.item && $menuItem.item.sizes.length > 1"
-            class="relative-position mt-8"
+            class="relative-position mt-8 full-width"
           >
             <ItemSizeSelector
               :model-value="currentSize || undefined"
@@ -133,7 +133,7 @@
             }; bottom: 0px; left: 0px; border-radius:${
               $q.screen.lt.md ? 'unset' : getBottomBlockBorderRadius
             }`"
-            class="row items-center gap-sm-15 gap-xs-5 bg-background-color py-lg-12 py-xs-10 bottom-block"
+            class="row items-center gap-sm-15 gap-xs-5 bg-background-color py-lg-12 py-xs-10 bottom-block px-md-15 px-xs-8 "
           >
             <ChangeAmount
               v-if="!$store.freeItem"
@@ -478,5 +478,25 @@ const addToCart = async () => {
 
 .dimmed {
   filter: grayscale(90%);
+}
+
+.item-scroll-bar {
+  &::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 7px;
+    height: 6px;
+    background-color: var(--background-color);
+  }
+
+  &::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb {
+    background-color: var(--primary);
+    border-radius: 10px;
+  }
 }
 </style>
