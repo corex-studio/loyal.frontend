@@ -88,10 +88,10 @@
               $companyGroup.item?.externalId !== 'Krendel' &&
               $companyGroup.item?.externalId !== 'PrincessPizza'
             "
-            :color="item.isDead ? 'secondary-button-color' : 'primary'"
+            :color="item.isDead ? 'secondary' : 'primary'"
             :loading="loading"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
-            :text-color="item.isDead ? 'on-secondary-button-color' : 'on-primary'"
+            :text-color="item.isDead ? 'on-secondary' : 'on-primary'"
             :width="$q.screen.lt.md ? '100%' : undefined"
             class="body"
             height="40px"
@@ -111,10 +111,10 @@
           </CButton>
           <CButton
             v-else
-            :color="item.isDead ? 'secondary-button-color' : 'accent'"
+            :color="item.isDead ? 'secondary' : 'accent'"
             :loading="loading"
             :style="` ${item.isDead ? 'cursor: not-allowed' : ''}`"
-            :text-color="item.isDead ? 'on-secondary-button-color' : 'on-accent'"
+            :text-color="item.isDead ? 'on-secondary' : 'on-accent'"
             :width="$q.screen.lt.md ? '100%' : undefined"
             class="body"
             height="40px"
