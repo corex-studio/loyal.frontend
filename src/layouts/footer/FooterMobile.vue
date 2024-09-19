@@ -4,7 +4,7 @@
       <div v-if="!$store.tableMode" class="col column gap-8">
         <div class="header3 bold">Информация</div>
         <div class="column full-width gap-6">
-          <div v-for="(el, index) in infoBlocks" :key="index">
+          <div v-for="(el, index) in infoBlocks.filter((el) => !el.hidden)" :key="index">
             <CButton
               :label="el.label"
               class="body"
@@ -38,13 +38,6 @@
             <a :href="item.link" class="body" style="opacity: 0.7">
               {{ item.value }}
             </a>
-            <!-- <div
-              @click="openLink(item.link)"
-              style="opacity: 0.7"
-              class="body cursor-pointer"
-            >
-              {{ item.value }}
-            </div> -->
           </template>
           <template
             v-for="(item, index) in $company.item?.guestContacts.socials"
@@ -192,6 +185,7 @@ import { companyRepo } from 'src/models/company/companyRepo'
 import { store } from 'src/models/store'
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const router = useRouter()
 let qrCode: any = null
@@ -208,7 +202,8 @@ const infoBlocks = computed(() => {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
-      }
+      },
+      hidden: companyGroupRepo.item?.externalId === 'ThreePizzas'
     },
     {
       label: 'О заведении',
