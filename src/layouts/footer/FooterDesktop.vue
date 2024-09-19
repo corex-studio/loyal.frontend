@@ -376,6 +376,7 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import TopHeaderSocials from 'layouts/header/TopHeaderSocials.vue'
 import CustomIcon from 'src/components/icons/CustomIcon.vue'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 
 const router = useRouter()
 
@@ -394,7 +395,8 @@ const infoBlocks = computed(() => {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
-      }
+      },
+      hidden: companyGroupRepo.item?.externalId === 'ThreePizzas'
     },
     {
       label: 'О заведении',
