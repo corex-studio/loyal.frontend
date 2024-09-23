@@ -1,6 +1,6 @@
 <template>
   <div
-    :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+    :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
     class="pa-10 column full-width box-shadow items-center border-radius mt-lg-15 mt-md-12 mt-xs-8 gap-6"
   >
     <div class="column gap-2 text-center">
@@ -28,7 +28,7 @@
           оплату
         </div>
       </div>
-   
+
     </div>
   </div>
 </template>

@@ -34,7 +34,7 @@ export class RouterResolver extends RouterResolverFields {
       throw Error(
         'Init this class from vue template life cycle or provide route and router.',
       )
-    this.appManager = new AppManager({route: this.route, router: this.router})
+    this.appManager = new AppManager({ route: this.route, router: this.router })
   }
 
   detect() {
@@ -50,9 +50,7 @@ export class RouterResolver extends RouterResolverFields {
       return await this.router.replaceToWithCityAndCompanyPage()
     else if (this.withCompanyPage)
       return await this.router.replaceToWithCompanyPage()
-    else if (this.withCityPage)
-      return await this.router.replaceToWithCityPage()
-    else
-      return await this.router.replaceToRawPage()
+    else if (this.withCityPage) return await this.router.replaceToWithCityPage()
+    else return await this.router.replaceToRawPage()
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div
-    :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+    :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
     class="pa-10 border-radius mt-lg-15 mt-md-12 mt-xs-8 gap-10 column"
   >
     <div class="column full-width items-center gap-5">
@@ -23,7 +23,7 @@ const emit = defineEmits<{
   (evt: 'done'): void
 }>()
 
-const TIMER_TIMEOUT = 30
+const TIMER_TIMEOUT = 15
 
 const currentSecond = ref(TIMER_TIMEOUT)
 let timer: NodeJS.Timeout | null = null
@@ -42,7 +42,7 @@ const startTimer = () => {
 }
 
 const progressLineWidth = computed(() => {
-  return `${((TIMER_TIMEOUT - currentSecond.value) / 30) * 100}%`
+  return `${((TIMER_TIMEOUT - currentSecond.value) / TIMER_TIMEOUT) * 100}%`
 })
 
 onMounted(() => {

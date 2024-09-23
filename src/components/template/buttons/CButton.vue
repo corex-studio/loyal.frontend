@@ -1,17 +1,5 @@
 <template>
   <q-btn
-    @mouseover="_hover = true"
-    @mouseleave="_hover = false"
-    :ripple="ripple"
-    :unelevated="unelevated"
-    :outline="outline"
-    :color="_color"
-    :text-color="_textColor"
-    @click="clickHandler"
-    :to="to"
-    :loading="loading"
-    :disabled="_disabled"
-    class="c-btn border-radius2"
     :class="{
       borderedButton: outline,
       block: textButton && !to,
@@ -20,13 +8,24 @@
       'text-button': textButton,
       outlined: outlined,
     }"
+    :color="_color"
+    :disabled="_disabled"
+    :loading="loading"
+    :outline="outline"
+    :ripple="ripple"
     :style="`width:${_width}; height:${_height};font-size:${textSize}; padding:${
       textButton || noPadding ? '0px;' : '4px 16px;'
     } ${absolute ? 'position: absolute !important;' : ''} ${loading || iconLoading ? 'cursor: progress;' : ''}`"
+    :text-color="_textColor"
+    :to="to"
+    :unelevated="unelevated"
+    class="c-btn border-radius2"
+    @click="clickHandler"
+    @mouseleave="_hover = false"
+    @mouseover="_hover = true"
   >
     <slot name="append"></slot>
     <div
-      class="button-label"
       :class="`${contentClass ? contentClass : ''} ${
         contentFullWidth ? 'full-width' : ''
       }`"
@@ -39,18 +38,20 @@
               breakSpaces ? 'white-space: break-spaces;' : ''
             }`
       "
+      class="button-label"
     >
-      <div :class="`mr-${iconGap_}`" v-if="icon">
+      <div v-if="icon" :class="`mr-${iconGap_}`">
         <q-icon
           v-if="icon && !iconLoading"
-          :name="icon"
           :color="iconColor"
+          :name="icon"
           :style="`font-size:${iconSize} !important;`"
           class="transition-1"
         />
         <q-spinner v-if="iconLoading" />
       </div>
       <span
+        v-if="label"
         :class="
           ellipsis
             ? ellipsis > 1
@@ -58,19 +59,18 @@
               : 'ellipsis'
             : ''
         "
-        style="width: 100%"
         :style="{
           'line-height': labelLineHeight ? labelLineHeight : 'inherit',
         }"
-        v-if="label"
-        >{{ label }}</span
+        style="width: 100%"
+      >{{ label }}</span
       >
       <slot></slot>
       <div v-if="iconRight" :class="`ml-${iconGap_}`">
         <q-icon
           v-if="iconRight && !iconLoading"
-          :name="iconRight"
           :color="iconColor"
+          :name="iconRight"
           :style="`font-size:${iconSize} !important;`"
         />
         <q-spinner v-if="iconLoading" />
@@ -82,38 +82,36 @@
 
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useYandexMetrika } from 'yandex-metrika-vue3'
-import { useRoute } from 'vue-router'
 
 const emit = defineEmits(['click'])
 
 const props = defineProps({
   ripple: {
     default: false,
-    type: Boolean,
+    type: Boolean
   },
   flat: Boolean,
   round: Boolean,
   unelevated: {
     default: true,
-    type: Boolean,
+    type: Boolean
   },
   outline: Boolean,
   outlined: Boolean,
   color: {
     default: 'button-color',
-    type: String,
+    type: String
   },
   icon: String,
   iconRight: String,
   textColor: {
     default: 'on-button-color',
-    type: String,
+    type: String
   },
   to: [String, Object],
   loading: Boolean,
   hoverColor: {
-    type: String,
+    type: String
   },
   iconColor: String,
   hoverTextColor: String,
@@ -121,12 +119,12 @@ const props = defineProps({
   height: String,
   width: {
     default: 'unset',
-    type: String,
+    type: String
   },
   textSize: String,
   iconSize: {
     default: '16px',
-    type: String,
+    type: String
   },
   label: [Number, String],
   textButton: Boolean,
@@ -143,11 +141,9 @@ const props = defineProps({
   ellipsis: Number,
   iconGap: [Number, String],
   labelLineHeight: String,
-  iconLoading: Boolean,
+  iconLoading: Boolean
 })
 
-const metrika = useYandexMetrika()
-const route = useRoute()
 const _hover = ref(false)
 
 const iconGap_ = computed(() => {
@@ -155,7 +151,7 @@ const iconGap_ = computed(() => {
   if (!props.iconGap) return '3'
   if (Number.isNaN(Number(props.iconGap)))
     console.warn(
-      'Icon gap prop expected number or numerical string, got string',
+      'Icon gap prop expected number or numerical string, got string'
     )
   return props.iconGap
 })
@@ -230,7 +226,6 @@ const _disabled = computed(() => {
 
 const clickHandler = () => {
   if (props.iconLoading) return
-  metrika.hit(route.fullPath)
   emit('click')
 }
 </script>
@@ -262,6 +257,7 @@ const clickHandler = () => {
 .c-btn .right-icon {
   margin-left: 6px !important;
 }
+
 .borderedButton:hover {
   color: $accent4 !important;
 }
@@ -276,7 +272,10 @@ const clickHandler = () => {
 }
 
 .c-btn:disabled:not(.block):not(.bg-secondary2) {
-  filter: contrast(70%);
+  //filter: contrast(100%);
+  background: var(--secondary) !important;
+  color: var(--on-secondary) !important;
+  opacity: 1 !important;
 }
 
 .c-btn.underline:after {
@@ -314,6 +313,7 @@ const clickHandler = () => {
   div {
     @extend .ellipsis;
   }
+
   span {
     @extend .ellipsis;
   }

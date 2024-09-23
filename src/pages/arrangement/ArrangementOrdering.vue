@@ -28,16 +28,22 @@
               <CIcon color="on-background-color" name="fa-regular fa-home" />
               <div class="body bold mt-2">Адрес</div>
             </div>
-            <div
-              :style="
+            <div class="col">
+              <div
+                :style="
                 $uiSettings.item?.inputType === 'outlined'
                   ? 'border: 1px #ededed solid'
                   : ''
               "
-              class="bg-input-color border-radius2 items-center text-on-input-color row justify-between px-6 py-5 row no-wrap col gap-10"
-              style="min-height: 48px"
-            >
-              <div>{{ $cart.item?.currentAddress }}</div>
+                class="bg-input-color border-radius2 justify-center text-on-input-color column px-6 py-5 row no-wrap gap-2"
+                style="min-height: 48px"
+              >
+                <div>{{ $cart.item?.currentAddress }}</div>
+                <div v-if=" $cart.item.userErrors?.address"
+                     class="text-danger secondary-text ">
+                  {{ $cart.item?.userErrors?.address }}
+                </div>
+              </div>
             </div>
           </div>
           <teleport
@@ -61,7 +67,7 @@
               >
                 <div
                   :class="[
-                    !$cart.item.deliveryTime
+                    !$cart.item.deliveryTime && !menu
                       ? 'selected-element'
                       : { 'bordered-block': $q.screen.lt.md },
                     $q.screen.lt.md
@@ -82,6 +88,10 @@
                       <div>Ближайшая</div>
                       <div>
                         {{ $cart.item.closestTimeText }}
+                      </div>
+                      <div v-if="$cart.item.userErrors?.time && !$cart.item.deliveryTime"
+                           class="text-danger secondary-text">
+                        {{ $cart.item.userErrors?.time }}
                       </div>
                     </div>
                     <CIcon
@@ -114,7 +124,7 @@
                       availableHours?.tomorrow.length)
                   "
                   :class="[
-                    $cart.item.deliveryTime
+                    $cart.item.deliveryTime || menu
                       ? 'selected-element'
                       : { 'bordered-block': $q.screen.lt.md },
                     $q.screen.lt.md
@@ -134,6 +144,10 @@
                       <div>{{ 'Ко времени' }}</div>
                       <div>
                         {{ $cart.item.deliveryTime || 'Выберите время' }}
+                      </div>
+                      <div v-if="$cart.item.userErrors?.time && $cart.item.deliveryTime"
+                           class="text-danger secondary-text">
+                        {{ $cart.item.userErrors?.time }}
                       </div>
                     </div>
                     <CIcon
@@ -175,10 +189,14 @@
                       width="100%"
                       @update-tab="selectCurrentDayType($event)"
                     />
-                    <div
-                      ref="menuRef"
-                      class="column no-wrap full-width"
-                      style="overflow-y: scroll; max-height: 40dvh"
+                    <div v-if="timePickerIsHidden"
+                         class="mt-7 ml-3 text-secondary">Выберите
+                      день
+                    </div>
+                    <div v-else
+                         ref="menuRef"
+                         class="column no-wrap full-width"
+                         style="overflow-y: scroll; max-height: 40dvh"
                     >
                       <template
                         v-if="currentDayType !== 'Выбрать' || currentDayDate"
@@ -250,38 +268,47 @@
             <div :class="{ bold: $q.screen.lt.md }" class="col-md-4">
               Способ оплаты
             </div>
-            <div
-              :style="
+            <div class="col">
+              <div :style="
                 $uiSettings.item?.inputType === 'outlined'
                   ? 'border: 1px #ededed solid'
                   : ''
-              "
-              class="body border-radius2 bg-input-color text-on-input-color row justify-between items-center px-6 py-5 row no-wrap col gap-10"
-              style="min-height: 48px"
-              @click="selectedPaymentTypeModal = true"
-            >
-              <div class="gap-4 row items-center no-wrap">
-                <q-icon :name="$cart.selectedPaymentType?.icon" size="20px" />
-                {{ $cart.selectedPaymentType?.label }}
+              " class="column gap-2 border-radius2 bg-input-color justify-center px-6 py-5"
+                   style="min-height: 48px"
+              >
+                <div
+                  class="body text-on-input-color row justify-between items-center row no-wrap full-width gap-10"
+                  @click="selectedPaymentTypeModal = true"
+                >
+                  <div class="gap-4 row items-center no-wrap">
+                    <q-icon :name="$cart.selectedPaymentType?.icon" size="20px" />
+                    {{ $cart.selectedPaymentType?.label }}
+                  </div>
+                  <CButton
+                    v-if="$q.screen.gt.sm"
+                    class="body pr-5"
+                    label="Изменить"
+                    text-button
+                    text-color="primary"
+                  />
+                  <CIcon
+                    v-else
+                    class="cursor-pointer"
+                    color="on-input-color"
+                    hover-color="primary"
+                    name="fa-regular fa-angle-right"
+                    size="24px"
+                    @click="selectedPaymentTypeModal = true"
+                  />
+                </div>
+                <div v-if="$cart.item.userErrors?.payment" class=" text-danger secondary-text">
+                  {{ $cart.item.userErrors?.payment }}
+                </div>
               </div>
-              <CButton
-                v-if="$q.screen.gt.sm"
-                class="body pr-5"
-                label="Изменить"
-                text-button
-                text-color="primary"
-              />
-              <CIcon
-                v-else
-                class="cursor-pointer"
-                color="on-input-color"
-                hover-color="primary"
-                name="fa-regular fa-angle-right"
-                size="24px"
-                @click="selectedPaymentTypeModal = true"
-              />
+
             </div>
           </div>
+
           <div
             v-if="
               $cart.item.type !== CartType.TABLE &&
@@ -301,6 +328,19 @@
               />
             </div>
           </div>
+          <div
+            v-if="$cart.item.userErrors?.additional.length"
+            class="bg-input-color text-on-input-color border-radius2 px-6 py-5 row gap-5 items-baseline body">
+            <q-icon name="fa-regular fa-exclamation-circle" size="18px" />
+            <div class="column gap-2">
+              <div
+                v-for="(el, index) in $cart.item.userErrors?.additional"
+                :key="index"
+              >
+                {{ el }}
+              </div>
+            </div>
+          </div>
         </div>
         <div v-if="$q.screen.gt.md" class="row full-width gap-10 mt-25">
           <CButton
@@ -315,7 +355,6 @@
               })
             "
           />
-
           <CButton
             :disabled="!isArrangeAvailable"
             :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
@@ -352,8 +391,7 @@
         </div>
       </div>
       <div
-        v-if="$q.screen.gt.sm"
-        class="pl-lg-30 col-lg-5 col-xs-12 mt-xs-20 mt-lg-0 pb-xs-20 pb-lg-0"
+        class="pl-lg-30 col-lg-5 col-xs-12 mt-md-20 mt-xs-10 mt-lg-0 pb-md-20 pb-lg-0"
       >
         <div
           :class="{ 'box-shadow': $q.screen.gt.md }"
@@ -362,32 +400,33 @@
               ? 'border: 1px #f5f5f5 solid'
               : ''
           "
-          class="column full-width border-radius gap-6 px-lg-8 py-lg-10 pa-xs-10"
+          class="column full-width border-radius gap-6 px-lg-8 py-lg-10 pa-md-10 pa-xs-6"
         >
-          <div class="subtitle-text mb-2" style="opacity: 0.8">
-            Состав заказа
-          </div>
-          <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
-            <div class="row body full-width no-wrap py-3">
-              <div class="row no-wrap gap-6 col-10 items-center">
-                <q-img
-                  :class="{ dimmed: item.isDead }"
-                  :height="
+          <template v-if="$q.screen.gt.sm">
+            <div class="subtitle-text mb-2" style="opacity: 0.8">
+              Состав заказа
+            </div>
+            <template v-for="(item, index) in $cart.item?.cartItems" :key="index">
+              <div class="row body full-width no-wrap py-3">
+                <div class="row no-wrap gap-6 col-10 items-center">
+                  <q-img
+                    :class="{ dimmed: item.isDead }"
+                    :height="
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   "
-                  :src="item.size.image?.thumbnail || $store.images.empty"
-                  :style="`min-width: ${
+                    :src="item.size.image?.thumbnail || $store.images.empty"
+                    :style="`min-width: ${
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   }`"
-                  :width="
+                    :width="
                     $q.screen.gt.md ? '65px' : $q.screen.md ? '60px' : '55px'
                   "
-                  class="border-radius cursor-pointer"
-                  fit="cover"
-                  @click="openMenuItemModal(item)"
-                  @contextmenu.prevent
-                >
-                  <template v-slot:error>
+                    class="border-radius cursor-pointer"
+                    fit="cover"
+                    @click="openMenuItemModal(item)"
+                    @contextmenu.prevent
+                  >
+                    <template v-slot:error>
                     <span>
                       <q-img
                         :height="
@@ -416,89 +455,46 @@
                         fit="cover"
                       ></q-img>
                     </span>
-                  </template>
-                </q-img>
-                <div class="column gap-1">
-                  <div class="ellipsis-2-lines">
-                    {{ item.size.name }}
+                    </template>
+                  </q-img>
+                  <div class="column gap-1">
+                    <div class="ellipsis-2-lines">
+                      {{ item.size.name }}
+                    </div>
+                    <div
+                      v-if="item.cartItemModifiers.length"
+                      class="secondary-text text-on-background-color"
+                    >
+                      {{
+                        item.cartItemModifiers
+                          .map(
+                            (v) =>
+                              `${v.modifier?.name}${
+                                v.quantity > 1 ? ' x ' + v.quantity : ''
+                              }`
+                          )
+                          .join(', ')
+                      }}
+                    </div>
+                    <div style="opacity: 0.6">{{ item.quantity }} шт</div>
+                    <div v-if="item.quantityError" class="text-danger secondary-text">{{ item.quantityError }}</div>
                   </div>
+                </div>
+                <div class="col-2 column items-end no-wrap">
                   <div
-                    v-if="item.cartItemModifiers.length"
-                    class="secondary-text text-on-background-color"
+                    v-if="item.totalSum !== item.discountedTotalSum"
+                    class="text-strike"
+                    style="opacity: 0.5"
                   >
-                    {{
-                      item.cartItemModifiers
-                        .map(
-                          (v) =>
-                            `${v.modifier?.name}${
-                              v.quantity > 1 ? ' x ' + v.quantity : ''
-                            }`
-                        )
-                        .join(', ')
-                    }}
+                    {{ beautifyNumber(item.totalSum, true) }} ₽
                   </div>
-                  <div style="opacity: 0.6">{{ item.quantity }} шт</div>
+                  <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
                 </div>
               </div>
-              <div class="col-2 column items-end no-wrap">
-                <div
-                  v-if="item.totalSum !== item.discountedTotalSum"
-                  class="text-strike"
-                  style="opacity: 0.5"
-                >
-                  {{ beautifyNumber(item.totalSum, true) }} ₽
-                </div>
-                <div>{{ beautifyNumber(item.discountedTotalSum, true) }} ₽</div>
-              </div>
-            </div>
+            </template>
+            <q-separator color="divider-color" />
           </template>
-          <q-separator color="divider-color" />
-          <div class="row full-width justify-between">
-            <div class="body bold">Сумма заказа</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item.sum, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item.type === CartType.DELIVERY"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Стоимость доставки</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item?.deliveryPrice, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$cart.item?.appliedBonuses"
-            class="row full-width justify-between text-primary"
-          >
-            <div class="body bold">Списано бонусов</div>
-            <div class="body bold">
-              -{{ beautifyNumber($cart.item?.appliedBonuses, true) }} ₽
-            </div>
-          </div>
-
-          <div
-            v-if="$cart.item?.totalDiscountWithoutBonuses"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Скидка</div>
-            <div class="body bold">
-              {{
-                beautifyNumber(
-                  $cart.item?.totalDiscountWithoutBonuses || 0,
-                  true
-                )
-              }}
-              ₽
-            </div>
-          </div>
-          <div class="row full-width justify-between">
-            <div class="body bold">К оплате</div>
-            <div class="body bold">
-              {{ beautifyNumber($cart.item?.discountedTotalSum, true) }} ₽
-            </div>
-          </div>
+          <OrderTotalInfo :item="$cart.item" />
         </div>
       </div>
     </div>
@@ -522,9 +518,9 @@
         <CButton
           :disabled="!isArrangeAvailable"
           :height="$q.screen.md ? '44px' : $q.screen.lt.md ? '40px' : '48px'"
-          :label="$q.screen.lt.md ? 'Оформить заказ' : 'Оплатить'"
           :loading="loading"
           class="col-grow body"
+          label="Оформить"
           @click="arrangeClickHandler()"
         />
       </div>
@@ -538,13 +534,16 @@
     v-model="selectedPaymentTypeModal"
     :current-type="$cart.selectedPaymentType"
     :types="paymentTypes"
-    @select="$cart.selectedPaymentType = $event"
+    @select="paymentTypeSelectHandler($event)"
   />
   <DeliveryAddressesModal
     v-model="deliveryAddressesModal"
     @address-selected="changeDeliveryAddress($event)"
   />
-  <OrderTimeWarning v-model="timeWarningModal" @accept="(timeWarningModal = false,makeAnOrder())" />
+  <OrderTimeWarning
+    v-model="timeWarningModal"
+    @accept="(timeWarningModal = false), makeAnOrder()"
+  />
 </template>
 <script lang="ts" setup>
 import moment from 'moment'
@@ -553,7 +552,7 @@ import CIcon from 'src/components/template/helpers/CIcon.vue'
 import CInput from 'src/components/template/inputs/CInput.vue'
 import { AvailableHours, CartType } from 'src/models/carts/cart'
 import { cartRepo } from 'src/models/carts/cartRepo'
-import { Order, PaymentType } from 'src/models/order/order'
+import { Order, PaymentObjectType, PaymentType } from 'src/models/order/order'
 import {
   beautifyNumber,
   getTimesBetween,
@@ -582,6 +581,7 @@ import { QrMenuAuthType } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 import { notifier } from 'src/services/notifier'
 import { cloneDeep } from 'lodash'
 import OrderTimeWarning from 'pages/arrangement/OrderTimeWarning.vue'
+import OrderTotalInfo from 'pages/arrangement/OrderTotalInfo.vue'
 
 const currentDayType = ref('Сегодня')
 const currentDayDate = ref<string | null>(null)
@@ -616,39 +616,35 @@ const comment = ref<string | null>(null)
 
 const availableArrangementDays = computed(() => {
   const datePickerConf = salesPointRepo.item?.settings.delivery_date_picker
-  if (datePickerConf) {
-    let totalDayTypes = [
-      {
-        label: 'Сегодня'
-      },
-      {
-        label: 'Завтра'
-      },
-      {
-        label: currentDayDate.value
-          ? moment(currentDayDate.value).format('DD.MM')
-          : 'Выбрать',
-        iconRight: 'fa-regular fa-calendar',
-        force: currentDayType.value === 'Выбрать' || !!currentDayDate.value
-      }
-    ]
-    if (datePickerConf.end_offset) {
-      totalDayTypes = totalDayTypes.slice(0, datePickerConf.end_offset)
-      if (datePickerConf.end_offset < datePickerConf.start_offset) {
-        return totalDayTypes
-      }
+  let baseData: { label: string, iconRight?: string, force?: boolean }[] = [{ label: 'Сегодня' }, { label: 'Завтра' }]
+  if (!datePickerConf) return baseData
+  baseData.push({
+    label: currentDayDate.value
+      ? moment(currentDayDate.value).format('DD.MM')
+      : 'Выбрать',
+    iconRight: 'fa-regular fa-calendar',
+    force: currentDayType.value === 'Выбрать' || !!currentDayDate.value
+  })
+
+  if (datePickerConf.end_offset) {
+    baseData = baseData.slice(0, datePickerConf.end_offset + 1)
+    if (datePickerConf.end_offset < datePickerConf.start_offset) {
+      return baseData
     }
     if (datePickerConf.start_offset) {
-      totalDayTypes = totalDayTypes.slice(datePickerConf.start_offset)
+      baseData = baseData.slice(datePickerConf.start_offset)
     }
     if (!datePickerConf.end_offset && !datePickerConf.start_offset) {
-      totalDayTypes = []
+      baseData = []
     }
-    return totalDayTypes
-  } else {
-    return ['Сегодня', 'Завтра']
   }
+  return baseData
 })
+
+const timePickerIsHidden = computed(() => {
+  return currentDayType.value === 'Сегодня' && availableArrangementDays.value[0]?.label !== 'Сегодня'
+})
+
 
 const currentEatInsideTab = computed(() => {
   return cartRepo.item?.eatInside
@@ -656,6 +652,30 @@ const currentEatInsideTab = computed(() => {
     : eatInsideTabs[1].label
 })
 
+const openMenuItemModal = async (item: CartItem) => {
+  if (!item.size.menu_item) return
+  store.openMenuItemModal()
+  await menuItemRepo.retrieve(item.size.menu_item, {
+    sales_point: salesPointRepo.item?.id
+  })
+  await menuRulesForAddingRepo.list({
+    menu_item: menuItemRepo.item?.id
+  })
+}
+
+const changeEatInside = async (val: string) => {
+  try {
+    if (!cartRepo.item) {
+      throw new Error('Object is null')
+    }
+    cartRepo.item.eatInside = val === 'В зале'
+    await cartRepo.setParams({
+      eat_inside: cartRepo.item.eatInside
+    })
+  } catch {
+    notifier.error('Ошибка при задании параметров корзины')
+  }
+}
 
 const isArrangeAvailable = computed(() => {
   return (
@@ -664,9 +684,18 @@ const isArrangeAvailable = computed(() => {
       (v) =>
         !v.isDead &&
         (v.availableQuantity ? v.quantity <= v.availableQuantity : true)
-    )
+    ) && !hasValidationErrors()
   )
 })
+
+const hasValidationErrors = () => {
+  if (!cartRepo.item || !cartRepo.item.userErrors) return
+  return !!Object.keys(cartRepo.item.userErrors).filter((key) => {
+    if (!cartRepo.item) return false
+    const _key = key as keyof typeof cartRepo.item.userErrors
+    return typeof cartRepo.item.userErrors![_key] === 'string' ? !!cartRepo.item.userErrors![_key] : !!cartRepo.item.userErrors![_key]?.length
+  }).length
+}
 
 const isDelivery = computed(() => {
   return cartRepo.item?.type === CartType.DELIVERY
@@ -690,6 +719,15 @@ const availableTimes = computed(() => {
 
 const paymentTypes = computed(() => {
   return salesPointRepo.paymentTypes
+})
+
+const currentPaymentService = computed(() => {
+  return cartRepo.selectedPaymentType?.type === PaymentType.CASH ||
+  cartRepo.selectedPaymentType?.type === PaymentType.PAY_LATER
+    ? undefined
+    : cartRepo.selectedPaymentType?.type === PaymentType.CARD
+      ? 'card'
+      : 'web_form'
 })
 
 watch(
@@ -726,6 +764,17 @@ watch(selectedPaymentTypeModal, async (v) => {
   }
 })
 
+watch(currentDayType, () => {
+  if (cartRepo.item)
+    cartRepo.item.deliveryTime = null
+})
+
+const paymentTypeSelectHandler = async (type: PaymentObjectType) => {
+  cartRepo.selectedPaymentType = type
+  void loadFinallySum()
+  void validateCurrentCart()
+}
+
 const loadDateAvailableHours = async () => {
   if (!currentDayDate.value) return
   const date = moment(currentDayDate.value).format('YYYY-MM-DD')
@@ -758,30 +807,6 @@ const selectCurrentDayType = (v: string) => {
   }
 }
 
-const openMenuItemModal = async (item: CartItem) => {
-  if (!item.size.menu_item) return
-  store.openMenuItemModal()
-  await menuItemRepo.retrieve(item.size.menu_item, {
-    sales_point: salesPointRepo.item?.id
-  })
-  await menuRulesForAddingRepo.list({
-    menu_item: menuItemRepo.item?.id
-  })
-}
-
-const changeEatInside = async (val: string) => {
-  try {
-    if (!cartRepo.item) {
-      throw new Error('Object is null')
-    }
-    cartRepo.item.eatInside = val === 'В зале'
-    await cartRepo.setParams({
-      eat_inside: cartRepo.item.eatInside
-    })
-  } catch {
-    notifier.error('Ошибка при задании параметров корзины')
-  }
-}
 
 const selectClosestTime = async () => {
   if (!cartRepo.item) return
@@ -793,6 +818,7 @@ const selectClosestTime = async () => {
         .format('YYYY-MM-DD HH:mm:ss')
       : null
   })
+  await validateCurrentCart()
 }
 
 const setDeliveryTime = async (v: string | null) => {
@@ -818,12 +844,14 @@ const setDeliveryTime = async (v: string | null) => {
         .format('YYYY-MM-DD HH:mm:ss')
       : null
   })
+  await validateCurrentCart()
 }
 
 const arrangeClickHandler = async () => {
   if (!cartRepo.item) return
   const diffHours = moment(cartRepo.item.deliveryTime || cartRepo.item.closestDate, 'DD.MM.YYYY HH:mm').diff(moment(), 'hours')
-  const mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours || 3
+  let mustBeConfirmedIfMoreThenHours = salesPointRepo.item?.settings.delivery_date_picker?.must_be_confirmed_if_more_then_hours
+  if (mustBeConfirmedIfMoreThenHours === undefined) mustBeConfirmedIfMoreThenHours = 3
   if (diffHours > mustBeConfirmedIfMoreThenHours) {
     timeWarningModal.value = true
   } else {
@@ -843,22 +871,16 @@ const makeAnOrder = async () => {
       SessionStorage.remove('qrMenuUserPhone')
     }
     loading.value = true
-    const status = await salesPointRepo.status(cartRepo.item?.salesPoint.id)
-    if (!status) {
-      notifier.error('В данный момент невозможно оформить заказ')
+    await validateCurrentCart()
+    if (hasValidationErrors()) {
+      loading.value = false
       return
     }
     const order = await cartRepo.arrange({
       sales_point: cartRepo.item?.salesPoint.id,
       payment_data: {
         type: cartRepo.selectedPaymentType?.type,
-        payment_service:
-          cartRepo.selectedPaymentType?.type === PaymentType.CASH ||
-          cartRepo.selectedPaymentType?.type === PaymentType.PAY_LATER
-            ? undefined
-            : cartRepo.selectedPaymentType?.type === PaymentType.CARD
-              ? 'card'
-              : 'web_form'
+        payment_service: currentPaymentService.value
       },
       comment: comment.value,
       extra_data: {
@@ -872,8 +894,16 @@ const makeAnOrder = async () => {
       phone: phoneToSend || undefined
     })
     void onOrderPaid(order)
-  } catch (e) {
-    console.log(e)
+  } catch (e: any) {
+    const userErrors = e.response.data
+    if (cartRepo.item)
+      cartRepo.item.userErrors = userErrors as {
+        additional: string[]
+        address: string | null
+        payment: string | null
+        promo_code: string | null
+        time: string | null
+      }
     cartRepo.arrangeLoading = false
     notifier.error('Ошибка при оформлении заказа')
   } finally {
@@ -949,6 +979,37 @@ const changeDeliveryAddress = async (address: DeliveryAddress) => {
   }
 }
 
+watch(selectedPaymentTypeModal, async (v) => {
+  if (v) {
+    await salesPointRepo.getAvailablePayments(cartRepo.item?.salesPoint.id)
+    const foundOnlinePaymentType = paymentTypes.value.find(
+      (v) => v.type === PaymentType.ONLINE
+    )
+    if (
+      cartRepo.selectedPaymentType?.type === PaymentType.ONLINE &&
+      !foundOnlinePaymentType
+    ) {
+      if (paymentTypes.value.length)
+        cartRepo.selectedPaymentType = paymentTypes.value[0]
+      else cartRepo.selectedPaymentType = null
+    }
+  }
+})
+
+const validateCurrentCart = async () => {
+  if (cartRepo.item && cartRepo.selectedPaymentType) {
+    await cartRepo.validateCheckout(cartRepo.item, cartRepo.selectedPaymentType).then(() => {
+      // if (cartRepo.item) {
+      //   cartRepo.item.userErrors = {
+      //     payment: 'payment',
+      //     time: 'time',
+      //     address: 'address',
+      //     additional: ['additional', 'additional2', 'additional3']
+      //   }
+      // }
+    })
+  }
+}
 
 onMounted(async () => {
   void cartRepo.getAvailableHours(cartRepo.item?.salesPoint.id).then((res) => {
@@ -965,7 +1026,18 @@ onMounted(async () => {
   } else {
     cartRepo.selectedPaymentType = paymentTypes.value[0]
   }
+  void loadFinallySum()
+  void validateCurrentCart()
 })
+
+const loadFinallySum = async () => {
+  const result = await cartRepo.computeFinallySum({
+    payment_type: cartRepo.selectedPaymentType?.type || null,
+    payment_service: currentPaymentService.value
+  })
+  if (!cartRepo.item) return
+  cartRepo.item.fee = result.fee
+}
 </script>
 
 <style lang="scss" scoped>

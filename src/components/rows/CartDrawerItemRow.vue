@@ -117,6 +117,7 @@
             </div>
           </div>
         </div>
+        <div v-if="cartItem.quantityError" class="text-danger secondary-text">{{ cartItem.quantityError }}</div>
       </div>
     </div>
   </div>
@@ -151,6 +152,7 @@ const openItemModal = async (menuItemId: string | null) => {
 
 onMounted(() => {
   cartItem.value = props.item
+  // cartItem.value.error = 'тестовая ошибка'
 })
 
 watch(

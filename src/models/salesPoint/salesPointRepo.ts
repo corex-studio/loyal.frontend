@@ -25,21 +25,21 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
         label: 'Онлайн',
         type: PaymentType.ONLINE,
         class: 'bg-online-button-color text-on-online-button-color',
-        icon: 'fa-light fa-ruble-sign',
+        icon: 'fa-light fa-ruble-sign'
       })
     if (salesPointRepo.paymentSettings?.card_enabled)
       result.push({
         label: 'Картой при получении',
         type: PaymentType.CARD,
         class: 'bg-card-button-color text-on-card-button-color',
-        icon: 'fa-light fa-credit-card',
+        icon: 'fa-light fa-credit-card'
       })
     if (salesPointRepo.paymentSettings?.cash_enabled)
       result.push({
         label: 'Наличными при получении',
         type: PaymentType.CASH,
         class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-money-bill',
+        icon: 'fa-light fa-money-bill'
       })
     if (
       salesPointRepo.paymentSettings?.pay_later_enabled &&
@@ -50,7 +50,7 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
         label: 'Внести в счет',
         type: PaymentType.PAY_LATER,
         class: 'bg-cash-button-color text-on-cash-button-color',
-        icon: 'fa-light fa-money-bill',
+        icon: 'fa-light fa-money-bill'
       })
 
     return result
@@ -62,7 +62,7 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
     } = await this.api.send({
       method: 'GET',
       action: 'status',
-      id: sales_point,
+      id: sales_point
     })
 
     return res.order_creation_available
@@ -74,7 +74,7 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
     } = await this.api.send({
       method: 'GET',
       action: 'external_payment_types',
-      id: this.item?.id,
+      id: this.item?.id
     })
 
     this.externalPaymentTypes = res.results
@@ -86,17 +86,18 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       method: 'POST',
       action: 'set_payment_settings',
       id: this.item?.id,
-      data,
+      data
     })
   }
+
   async setSchedule(data: ScheduleDay[]): Promise<Schedule> {
     const res: ScheduleRaw = await this.api.send({
       method: 'POST',
       action: 'set_schedule',
       id: this.item?.id,
       data: {
-        days: data.map((v) => v.toJson()),
-      },
+        days: data.map((v) => v.toJson())
+      }
     })
     return new Schedule(res)
   }
@@ -110,7 +111,7 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       method: 'POST',
       action: 'add_image',
       id: this.item?.id,
-      data,
+      data
     })
   }
 
@@ -119,7 +120,7 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       method: 'POST',
       action: 'delete_image',
       id: this.item?.id,
-      data: { image: image.id },
+      data: { image: image.id }
     })
   }
 
@@ -134,8 +135,8 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
         pad: store.qrData?.data?.pad?.id || undefined,
         delivery_type: store.qrData
           ? 'table'
-          : cartRepo.item?.type || undefined,
-      },
+          : cartRepo.item?.type || undefined
+      }
     })
     this.menuLoading = false
     return new Menu(res)
@@ -148,8 +149,8 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
       id: salesPointId,
       params: {
         cart: cartRepo.item?.id || undefined,
-        delivery_type: cartRepo.item?.type || undefined,
-      },
+        delivery_type: cartRepo.item?.type || undefined
+      }
     })
     salesPointRepo.paymentSettings = res
     return res
@@ -157,13 +158,13 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
 
   async getAvailableWorkingHours(
     date: string | null,
-    salesPointId?: string,
+    salesPointId?: string
   ): Promise<AvailableHours> {
     const res: AvailableHours = await this.api.send({
       method: 'GET',
       action: 'available_working_hours',
       id: salesPointId,
-      params: { date },
+      params: { date }
     })
     return res
   }

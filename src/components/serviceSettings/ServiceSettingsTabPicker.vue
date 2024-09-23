@@ -64,7 +64,6 @@ import { onMounted, ref, watch, computed } from 'vue'
 import { TabRaw } from './ServiceSettingsModal.vue'
 import CIcon from '../template/helpers/CIcon.vue'
 import { useQuasar } from 'quasar'
-import { themeRepo } from '../../models/theme/themeRepo'
 import DeliveryTypeChip from 'components/serviceSettings/DeliveryTypeChip.vue'
 
 const props = withDefaults(

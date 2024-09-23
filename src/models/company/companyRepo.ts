@@ -4,6 +4,7 @@ import { companyApi } from './companyApi'
 import { reactive } from 'vue'
 import { AvailablePaymentType, PaymentSettings } from '../salesPoint/salesPoint'
 import { Image, ImageRaw } from '../image/image'
+import { companyGroupRepo } from 'src/models/companyGroup/companyGroupRepo'
 import { LocalStorage } from 'quasar'
 
 export class CompanyRepo extends BaseRepo<Company> {
@@ -33,7 +34,7 @@ export class CompanyRepo extends BaseRepo<Company> {
   async addImage(
     company: Company,
     image: File,
-    isMain = false,
+    isMain = false
   ): Promise<ImageRaw> {
     const data = new FormData()
     data.append('image', image)
@@ -43,7 +44,7 @@ export class CompanyRepo extends BaseRepo<Company> {
       method: 'POST',
       action: 'add_image',
       id: company.id,
-      data,
+      data
     })
   }
 
@@ -52,7 +53,7 @@ export class CompanyRepo extends BaseRepo<Company> {
       method: 'POST',
       action: 'delete_image',
       id: company.id,
-      data: { image: image.id },
+      data: { image: image.id }
     })
   }
 
@@ -61,7 +62,7 @@ export class CompanyRepo extends BaseRepo<Company> {
       method: 'POST',
       action: 'set_guest_contacts',
       id: this.item?.id,
-      data: data.toJson(),
+      data: data.toJson()
     })
   }
 
@@ -71,7 +72,7 @@ export class CompanyRepo extends BaseRepo<Company> {
     } = await this.api.send({
       method: 'GET',
       action: 'available_payment_types',
-      id: this.item?.id,
+      id: this.item?.id
     })
 
     this.availablePaymentTypes = res.results
@@ -83,7 +84,7 @@ export class CompanyRepo extends BaseRepo<Company> {
       method: 'POST',
       action: 'set_payment_settings',
       id: this.item?.id,
-      data,
+      data
     })
   }
 
@@ -91,7 +92,7 @@ export class CompanyRepo extends BaseRepo<Company> {
     await this.api.send({
       method: 'POST',
       action: 'load_menus',
-      id: this.item?.id,
+      id: this.item?.id
     })
   }
 
@@ -99,8 +100,12 @@ export class CompanyRepo extends BaseRepo<Company> {
     await this.api.send({
       method: 'POST',
       action: 'load_nomenclature',
-      id: this.item?.id,
+      id: this.item?.id
     })
+  }
+
+  currentCitySalesPoints() {
+    return this.item?.salesPoints?.filter(el => el.city?.uuid === companyGroupRepo.item?.cityData.current?.uuid)
   }
 }
 

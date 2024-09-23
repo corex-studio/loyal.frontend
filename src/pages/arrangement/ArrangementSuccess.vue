@@ -58,7 +58,7 @@
           <OrderNotPaid
             v-if="$order.item.paymentStatus === PaymentStatusType.NOT_PAID"
             :retry-loading="retryLoading"
-            :show-retry="!!$route.query.paymentUrl && !$cart.item"
+            :show-retry="!$cart.item"
             @retry="retryClickHandler()"
           />
           <!-- ЗАКАЗ ОТМЕНЕН -->
@@ -68,7 +68,7 @@
           <!-- ЗАКАЗ ПРИНЯТ -->
           <div
             v-else
-            :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+            :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
             class="pa-10 column items-center full-width box-shadow border-radius mt-lg-15 mt-md-12 mt-xs-8"
           >
             <div class="header3 bold mb-2">
@@ -91,7 +91,7 @@
     </div>
     <div
       :style="`border: 1px #${
-        $uiSettings.item?.secondaryColor.color
+        $uiSettings.item?.dividerColor.color
       } solid; max-width: ${$q.screen.gt.md ? '550px' : ''} `"
       class="column full-width mt-md-12 mt-xs-8 mb-lg-20 mb-xs-8 mb-md-12 no-wrap gap-4 pa-10 border-radius box-shadow"
     >
@@ -108,7 +108,7 @@
     </div>
     <div :style="$q.screen.lt.lg ? '' : 'max-width: 550px'" class="full-width">
       <div
-        :style="`border: 1px #${$uiSettings.item?.secondaryColor.color} solid`"
+        :style="`border: 1px #${$uiSettings.item?.dividerColor.color} solid`"
         class="col border-radius box-shadow pa-md-10 pa-xs-8 column"
         style="height: fit-content"
       >
@@ -124,6 +124,7 @@
             <div class="row gap-6 no-wrap items-center">
               <q-img
                 :src="el.size.image?.thumbnail || $store.images.empty"
+                class="border-radius2"
                 fit="contain"
                 height="65px"
                 style="min-width: 65px"
@@ -174,34 +175,7 @@
             </div>
           </div>
           <q-separator color="divider-color" />
-          <div class="row full-width justify-between items-center gap-6 body">
-            <div class="bold">Сумма заказа</div>
-            <div class="bold">
-              {{ beautifyNumber($order.item.totalSum, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$order.item?.type === CartType.DELIVERY"
-            class="row full-width justify-between"
-          >
-            <div class="body bold">Стоимость доставки</div>
-            <div class="body bold">
-              {{ beautifyNumber($order.item?.deliveryPrice, true) }} ₽
-            </div>
-          </div>
-          <div
-            v-if="$order.item.appliedBonuses"
-            class="row full-width justify-between items-center gap-6 body text-primary"
-          >
-            <div class="bold">Списано баллов</div>
-            <div class="bold">-{{ $order.item.appliedBonuses }} ₽</div>
-          </div>
-          <div class="row full-width justify-between items-center gap-6 body">
-            <div class="bold">К оплате</div>
-            <div class="bold">
-              {{ beautifyNumber($order.item.discountedTotalSum, true) }} ₽
-            </div>
-          </div>
+          <OrderTotalInfo :item="$order.item" />
         </div>
       </div>
     </div>
@@ -256,6 +230,7 @@ import { salesPointRepo } from 'src/models/salesPoint/salesPointRepo'
 import { cartRepo } from 'src/models/carts/cartRepo'
 import SelectPaymentTypeModal from './SelectPaymentTypeModal.vue'
 import { notifier } from 'src/services/notifier'
+import OrderTotalInfo from 'pages/arrangement/OrderTotalInfo.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -338,18 +313,22 @@ const paymentModalCloseHandler = () => {
   showPaymentTimer.value = true
 }
 
+const preloadOrder = async () => {
+  if (!orderRepo.item) {
+    await orderRepo.retrieve(String(route.params.orderId))
+  }
+  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
+}
+
 onMounted(() => {
   checkOnPaymentUrlInPath()
-  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
   useEventBus(orderUpdatedKey).on(({ order }) => {
     orderRepo.item = order
     if (order.paymentStatus == PaymentStatusType.FULL_PAID) {
       paymentModal.value = false
     }
   })
-  if (!orderRepo.item) {
-    void orderRepo.retrieve(String(route.params.orderId))
-  }
+  void preloadOrder()
 })
 </script>
 

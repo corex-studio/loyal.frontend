@@ -28,7 +28,7 @@
       class="info-chip subtitle-text"
       color="red"
       text-color="white"
-      >Новинка
+    >Новинка
     </q-chip>
 
     <q-img
@@ -132,7 +132,7 @@
             </q-menu>
           </CButton>
           <CTooltip v-if="item.isDead && $q.screen.gt.sm"
-            >{{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
+          >{{ $uiSettings.item?.outOfStockText || 'Товар недоступен' }}
           </CTooltip>
         </div>
       </div>
@@ -157,7 +157,7 @@ import CIcon from '../template/helpers/CIcon.vue'
 import { menuRulesForAddingRepo } from 'src/models/menu/menuItem/menuRulesForAdding/menuRulesForAddingRepo'
 import {
   ecommerceAdd,
-  ecommerceClick,
+  ecommerceClick
 } from 'src/models/ecommerceEvents/ecommerceEvents'
 import { useYandexMetrika } from 'yandex-metrika-vue3'
 import { useRoute } from 'vue-router'
@@ -178,7 +178,7 @@ const onIntersection = (entry: IntersectionObserverEntry) => {
     menuItemRepo.visibleItems.push(props.item)
   } else {
     const foundIndex = menuItemRepo.visibleItems.findIndex(
-      (el) => el.id === props.item.id,
+      (el) => el.id === props.item.id
     )
     if (foundIndex > -1) {
       menuItemRepo.visibleItems.splice(foundIndex, 1)
@@ -201,14 +201,14 @@ const toCartClickHandler = async () => {
         v.id ===
         (typeof salesPointRepo.item?.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item?.company?.id || ''),
+          : salesPointRepo.item?.company?.id || '')
     )
     if (foundCompany) companyRepo.item = foundCompany
     else
       await companyRepo.retrieve(
         typeof salesPointRepo.item.company === 'string'
           ? salesPointRepo.item.company
-          : salesPointRepo.item.company?.id || '',
+          : salesPointRepo.item.company?.id || ''
       )
     store.storedMenuItem = props.item.id || null
     store.serviceSettingsModal = true
@@ -227,10 +227,10 @@ const openMenuItem = async () => {
   store.openMenuItemModal(props.item)
   store.menuItemImage = props.item.image
   await menuItemRepo.retrieve(props.item.alias || props.item.id, {
-    sales_point: salesPointRepo.item?.id,
+    sales_point: salesPointRepo.item?.id
   })
   await menuRulesForAddingRepo.list({
-    menu_item: menuItemRepo.item?.id,
+    menu_item: menuItemRepo.item?.id
   })
 }
 
@@ -243,7 +243,7 @@ const addToCart = async () => {
     await companyRepo.retrieve(
       typeof salesPointRepo.item.company === 'string'
         ? salesPointRepo.item.company
-        : salesPointRepo.item.company?.id || '',
+        : salesPointRepo.item.company?.id || ''
     )
     store.serviceSettingsModal = true
   } else if (cartRepo.item && props.item.sizes[0]) {
@@ -262,11 +262,11 @@ const addToCart = async () => {
                   modifier: el.id,
                   quantity: el.quantity,
                   price: el.price || 0,
-                  sum: String(Number(el.price) * el.quantity),
+                  sum: String(Number(el.price) * el.quantity)
                 } as CartItemModifier
               })
-              .filter((e) => e.quantity),
-          ) || [],
+              .filter((e) => e.quantity)
+          ) || []
       })
     } catch (e) {
       notifier.error('Ошибка при добавлении в корзину')
