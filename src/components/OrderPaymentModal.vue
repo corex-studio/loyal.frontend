@@ -1,25 +1,26 @@
 <template>
   <CDialog
-    :disable-overflow="$q.platform.is.safari"
     v-model="modelValue"
-    :position="$q.screen.lt.md ? 'bottom' : undefined"
-    width="900px"
-    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
-    no-backdrop-dismiss
     :card-styles="`flex-direction: column; ${$q.screen.lt.md ? `height: ${$q.screen.height * 0.9}px;` : ''}`"
+    :disable-overflow="$q.platform.is.safari"
+    :height="`${$q.screen.gt.sm ? `${$q.screen.height * 0.75 > 1150 ? 1150 : $q.screen.height * 0.75}px ` : ''}`"
+    :position="$q.screen.lt.md ? 'bottom' : undefined"
     content-wrapper-styles="flex-grow:1; display: flex"
+    no-backdrop-dismiss
+    no-padding
+    width="900px"
   >
     <div class="flex" style="flex-grow: 1">
       <iframe
-        style="border: 0"
-        class="full-width full-height"
         v-if="modelValue && paymentUrl"
         :src="paymentUrl"
+        class="full-width full-height"
+        style="border: 0"
       ></iframe>
     </div>
   </CDialog>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
 import CDialog from 'components/template/dialogs/CDialog.vue'
 
 defineProps<{
