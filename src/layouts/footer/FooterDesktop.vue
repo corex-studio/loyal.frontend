@@ -425,9 +425,9 @@ const scrollToBlock = (v: string, tab?: string) => {
     void router.push({
       name: 'home'
     })
-    setTimeout(() => {
-      scrollToBlock(v, tab)
-    }, 300)
+    // setTimeout(() => {
+    //   scrollToBlock(v, tab)
+    // }, 300)
   } else {
     const groupElement = document.getElementById(v)
     if (groupElement) {
