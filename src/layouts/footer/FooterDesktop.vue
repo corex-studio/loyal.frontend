@@ -166,7 +166,7 @@
       </template>
       <div
         v-else
-        class="row col-grow gap-md-15 gap-lg-5 justify-between no-wrap"
+        class="row col-grow gap-md-15 gap-lg-5 justify-between no-wrap text-on-bottom-menu-color"
       >
         <div class="column text-on-bottom-menu-color" style="width: 186px">
           <div class="bold subtitle-text mb-6">Информация</div>
@@ -239,22 +239,23 @@
             v-if="$company.item?.guestContacts.phones.length"
             class="column gap-6"
           >
-            <div class="subtitle-text bold">
-              {{
-                $company.item?.guestContacts.phones.length > 1
-                  ? 'Контактные телефоны'
-                  : 'Контактный телефон'
-              }}
-            </div>
-            <a
+            <template
               v-for="(item, index) in $company.item?.guestContacts.phones"
               :key="index"
-              :href="item.link"
-              class="body"
-              style="opacity: 0.6"
             >
-              {{ item.value }}
-            </a>
+              <div class="subtitle-text bold">
+                {{ item.name }}
+              </div>
+              <a
+                v-for="(item, index) in $company.item?.guestContacts.phones"
+                :key="index"
+                :href="item.link"
+                class="body"
+                style="opacity: 0.6"
+              >
+                {{ item.value }}
+              </a>
+            </template>
             <!-- <div
               v-for="(item, index) in $company.item?.guestContacts.phones"
               :key="index"
@@ -351,7 +352,10 @@
           </div>
         </div>
       </div>
-      <div v-if="!$uiSettings.item?.exclusive" class="row no-wrap items-center gap-3">
+      <div
+        v-if="!$uiSettings.item?.exclusive"
+        class="row no-wrap items-center gap-3"
+      >
         <div>Работает на</div>
         <CustomIcon
           :color="`#${$uiSettings.item?.bottomMenuColor.on_color}`"
@@ -389,30 +393,30 @@ const infoBlocks = computed(() => {
       label: 'Акции и новости',
       click: () => {
         scrollToBlock('offers')
-      }
+      },
     },
     {
       label: 'О разработчике',
       click: () => {
         window.open('https://corex.studio/', '_blank')
       },
-      hidden: companyGroupRepo.item?.externalId === 'ThreePizzas'
+      hidden: companyGroupRepo.item?.externalId === 'ThreePizzas',
     },
     {
       label: 'О заведении',
       click: () => {
         router.push({
-          name: 'aboutUs'
+          name: 'aboutUs',
         })
-      }
+      },
     },
     {
       label: uiSettingsRepo.item?.becomeFranchisee?.title || 'Франшиза',
       hidden: !uiSettingsRepo.item?.becomeFranchisee,
       click: () => {
         window.open(uiSettingsRepo.item?.becomeFranchisee?.link || '', '_blank')
-      }
-    }
+      },
+    },
   ]
 })
 
@@ -423,7 +427,7 @@ const currentHost = computed(() => {
 const scrollToBlock = (v: string, tab?: string) => {
   if (router.isIncludesRouteName(['home'])) {
     void router.push({
-      name: 'home'
+      name: 'home',
     })
     // setTimeout(() => {
     //   scrollToBlock(v, tab)
@@ -447,6 +451,6 @@ const openLink = (link: string) => {
 .app-link-block {
   height: 44px;
   width: 134px;
-  background-color: #3b3b3bb8
+  background-color: #3b3b3bb8;
 }
 </style>
