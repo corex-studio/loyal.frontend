@@ -22,6 +22,7 @@ export class BaseAuthentication {
       refresh: '/token/refresh/',
       changePassword: '/users/change_password/',
       setLanguage: 'users/set_language/',
+      tgAuth: 'bot_actions/authorize_user/',
     },
     apiHeader: {
       key: 'Authorization',
@@ -36,11 +37,6 @@ export class BaseAuthentication {
     this.setTokensAndHeaders()
   }
 
-  private setTokensAndHeaders() {
-    this.tokens = this.tokensClass.getFromStorage()
-    this.setApiHeader()
-  }
-
   async me() {
     this.setTokensAndHeaders()
     if (!this.tokens.accessIsValid) throw Error('Access token is not valid.')
@@ -50,21 +46,20 @@ export class BaseAuthentication {
     return this.user
   }
 
-  async refresh(): Promise<void> {
-    const result: AxiosResponse<TokensRaw> = await api.post(
-      this.settings.urls.refresh,
-      { refresh: this.tokens.refresh },
-    )
-    this.tokens = new this.tokensClass(result.data.access, result.data.refresh)
-    this.setApiHeader()
-  }
-
-  private async _loadUser(): Promise<Customer> {
+  async tgAuth(telegram_id: any) {
     try {
-      const response: AxiosResponse<CustomerRaw> = await api.get(
-        this.settings.urls.me,
+      const response: AxiosResponse<TokensRaw> = await api.post(
+        this.settings.urls.tgAuth,
+        { telegram_id },
       )
-      return new Customer(response.data)
+      this.tokens = new this.tokensClass(
+        response.data.access,
+        response.data.refresh,
+      )
+      this.setApiHeader()
+      localStorage.setItem('access', response.data.access)
+      localStorage.getItem('refresh', response.data.refresh)
+      return
     } catch (e) {
       if (isAxiosError(e)) {
         if ([400, 401].includes(e.response?.status as number)) {
@@ -72,8 +67,17 @@ export class BaseAuthentication {
           window.location.reload()
         }
       }
-      throw Error('Fail with load user.')
+      throw Error('Fail with telegram authentication.')
     }
+  }
+
+  async refresh(): Promise<void> {
+    const result: AxiosResponse<TokensRaw> = await api.post(
+      this.settings.urls.refresh,
+      { refresh: this.tokens.refresh },
+    )
+    this.tokens = new this.tokensClass(result.data.access, result.data.refresh)
+    this.setApiHeader()
   }
 
   async requestAuth(data: any) {
@@ -173,6 +177,28 @@ export class BaseAuthentication {
     } else shouldRefresh = true
     if (shouldRefresh && this.tokens.refreshIsValid) {
       await this.refresh()
+    }
+  }
+
+  private setTokensAndHeaders() {
+    this.tokens = this.tokensClass.getFromStorage()
+    this.setApiHeader()
+  }
+
+  private async _loadUser(): Promise<Customer> {
+    try {
+      const response: AxiosResponse<CustomerRaw> = await api.get(
+        this.settings.urls.me,
+      )
+      return new Customer(response.data)
+    } catch (e) {
+      if (isAxiosError(e)) {
+        if ([400, 401].includes(e.response?.status as number)) {
+          this.tokens.removeTokens()
+          window.location.reload()
+        }
+      }
+      throw Error('Fail with load user.')
     }
   }
 }
