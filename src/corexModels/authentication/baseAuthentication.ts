@@ -67,7 +67,7 @@ export class BaseAuthentication {
           // window.location.reload()
         }
       }
-      throw Error('Fail with telegram authentication.')
+      // throw Error('Fail with telegram authentication.')
     }
   }
 
