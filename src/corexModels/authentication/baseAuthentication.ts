@@ -22,15 +22,15 @@ export class BaseAuthentication {
       refresh: '/token/refresh/',
       changePassword: '/users/change_password/',
       setLanguage: 'users/set_language/',
-      tgAuth: 'bot_actions/authorize_user/',
+      tgAuth: 'bot_actions/authorize_user/'
     },
     apiHeader: {
       key: 'Authorization',
-      type: 'Bearer',
+      type: 'Bearer'
     },
     companyGroupHeader: {
-      key: 'Company-Group',
-    },
+      key: 'Company-Group'
+    }
   }
 
   constructor() {
@@ -50,11 +50,11 @@ export class BaseAuthentication {
     try {
       const response: AxiosResponse<TokensRaw> = await api.post(
         this.settings.urls.tgAuth,
-        { telegram_id },
+        { telegram_id }
       )
       this.tokens = new this.tokensClass(
         response.data.access,
-        response.data.refresh,
+        response.data.refresh
       )
       this.setApiHeader()
       localStorage.setItem('access', response.data.access)
@@ -64,7 +64,7 @@ export class BaseAuthentication {
       if (isAxiosError(e)) {
         if ([400, 401].includes(e.response?.status as number)) {
           this.tokens.removeTokens()
-          window.location.reload()
+          // window.location.reload()
         }
       }
       throw Error('Fail with telegram authentication.')
@@ -74,7 +74,7 @@ export class BaseAuthentication {
   async refresh(): Promise<void> {
     const result: AxiosResponse<TokensRaw> = await api.post(
       this.settings.urls.refresh,
-      { refresh: this.tokens.refresh },
+      { refresh: this.tokens.refresh }
     )
     this.tokens = new this.tokensClass(result.data.access, result.data.refresh)
     this.setApiHeader()
@@ -90,7 +90,8 @@ export class BaseAuthentication {
         session?: { key: string; end_time: string }
       }> = await api.post(this.settings.urls.requestAuth, data)
       return response.data
-    } catch {}
+    } catch {
+    }
   }
 
   async login(data: any) {
@@ -98,13 +99,13 @@ export class BaseAuthentication {
     try {
       const response: AxiosResponse<TokensRaw> = await api.post(
         this.settings.urls.login,
-        data,
+        data
       )
       this.tokenAuth(response.data.access, response.data.refresh)
 
       return {
         user: this.user,
-        tokens: this.tokens,
+        tokens: this.tokens
       }
     } catch (e) {
       throw Error('Fail login')
@@ -138,7 +139,7 @@ export class BaseAuthentication {
   async setLanguage(language: string) {
     try {
       return await api.put(this.settings.urls.setLanguage, {
-        language: language,
+        language: language
       })
     } catch (e) {
       throw Error('Language change fail')
@@ -157,13 +158,13 @@ export class BaseAuthentication {
     Object.assign(api.defaults.headers, {
       [apiHeader.key]: apiHeader.type
         ? `${apiHeader.type} ${this.tokens.access}`
-        : this.tokens.access,
+        : this.tokens.access
     })
   }
 
   setCompanyGroupHeader(v: string): void {
     Object.assign(api.defaults.headers, {
-      [this.settings.companyGroupHeader.key]: v,
+      [this.settings.companyGroupHeader.key]: v
     })
   }
 
@@ -188,7 +189,7 @@ export class BaseAuthentication {
   private async _loadUser(): Promise<Customer> {
     try {
       const response: AxiosResponse<CustomerRaw> = await api.get(
-        this.settings.urls.me,
+        this.settings.urls.me
       )
       return new Customer(response.data)
     } catch (e) {
