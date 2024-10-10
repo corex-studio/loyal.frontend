@@ -206,11 +206,13 @@
 <script lang="ts" setup>
 import { orderRepo } from 'src/models/order/orderRepo'
 import {
-  orderStatusTypeNames,
-  OrderStatusType,
-  PaymentObjectType,
   OrderPaymentService,
-  PaymentType, OrderSystemSource
+  OrderStatusType,
+  orderStatusTypeNames,
+  OrderSystemSource,
+  PaymentObjectType,
+  PaymentStatusType,
+  PaymentType
 } from 'src/models/order/order'
 import { nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -221,7 +223,6 @@ import { CartType } from 'src/models/carts/cart'
 import { beautifyNumber } from 'src/models/store'
 import { useEventBus } from '@vueuse/core'
 import { orderUpdatedKey } from 'src/services/eventBusKeys'
-import { PaymentStatusType } from 'src/models/order/order'
 import OrderPaymentModal from 'components/OrderPaymentModal.vue'
 import OrderNotPaid from './OrderNotPaid.vue'
 import OrderCancelled from './OrderCancelled.vue'
@@ -317,7 +318,7 @@ const preloadOrder = async () => {
   if (!orderRepo.item) {
     await orderRepo.retrieve(String(route.params.orderId))
   }
-  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id)
+  void salesPointRepo.getAvailablePayments(orderRepo.item?.salesPoint.id, orderRepo.item)
 }
 
 onMounted(() => {

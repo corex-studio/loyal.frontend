@@ -1,4 +1,4 @@
-import { AvailableHours } from './../carts/cart'
+import { AvailableHours, Cart } from './../carts/cart'
 import { Menu, MenuRaw } from './../menu/menu'
 import { AvailablePaymentType, PaymentSettings, SalesPoint } from './salesPoint'
 import BaseRepo from 'src/corexModels/apiModels/baseRepo'
@@ -8,7 +8,7 @@ import { Schedule, ScheduleDay, ScheduleRaw } from './schedule/schedule'
 import { Image, ImageRaw } from '../image/image'
 import { cartRepo } from '../carts/cartRepo'
 import { store } from '../store'
-import { PaymentObjectType, PaymentType } from 'src/models/order/order'
+import { Order, PaymentObjectType, PaymentType } from 'src/models/order/order'
 import { PadBaseOrderType } from 'src/models/pads/pad'
 import { QrMenuWorkingMode } from 'src/models/qrMenuSettings/qrMenuSettingsRepo'
 
@@ -142,14 +142,14 @@ export class SalesPointRepo extends BaseRepo<SalesPoint> {
     return new Menu(res)
   }
 
-  async getAvailablePayments(salesPointId?: string): Promise<PaymentSettings> {
+  async getAvailablePayments(salesPointId?: string, instance?: Cart | Order | null): Promise<PaymentSettings> {
     const res: PaymentSettings = await this.api.send({
       method: 'GET',
       action: 'get_available_payments',
       id: salesPointId,
       params: {
-        cart: cartRepo.item?.id || undefined,
-        delivery_type: cartRepo.item?.type || undefined
+        instance: instance?.id,
+        delivery_type: instance?.type
       }
     })
     salesPointRepo.paymentSettings = res

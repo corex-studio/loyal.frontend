@@ -115,7 +115,7 @@ const onPayOrder = (item: Order) => {
     paymentUrl.value = item.paymentUrl
     paymentModal.value = true
   } else if (item.paymentType === PaymentType.PAY_LATER) {
-    void salesPointRepo.getAvailablePayments(item.salesPoint.id)
+    void salesPointRepo.getAvailablePayments(item.salesPoint.id, item)
     detailOrderItem.value = item
     selectPaymentTypeModelValue.value = true
   }
